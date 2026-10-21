@@ -3450,6 +3450,10 @@ class _LiveCombat:
     # C21 — roster summons each owner has made: never reset and never purged,
     # so a summon id is never reused.
     summon_counts: dict[str, int] = field(default_factory=dict)
+    # The battlefield ``topology`` was built from, kept so ``CombatState``
+    # (``combat_state.py``) can rebuild the same topology. ``GridTopology`` is
+    # never mutated after ``start_combat``, so the scene is all of it.
+    grid_scene: GridScene | None = None
 
 
 @dataclass(frozen=True)
@@ -3573,9 +3577,13 @@ def resolve_legendary_resistance(handle: CombatHandle, entity_id: str) -> int:
     returns the new armed count; otherwise raises
     ``IntentRejectedError("no_legendary_resistance", …)``.
     """
-    live = _get_live(handle)
+    return _arm_legendary_resistance(_get_live(handle), entity_id)
+
+
+def _arm_legendary_resistance(live: _LiveCombat, entity_id: str) -> int:
+    """The body of ``resolve_legendary_resistance``, on a combat in hand."""
     if live.ended:
-        raise IntentRejectedError("combat_ended", f"handle={handle.handle_id}")
+        raise IntentRejectedError("combat_ended", f"handle={live.handle_id}")
     bearer = _find_combatant(live, entity_id)
     if (
         bearer is None
@@ -4919,6 +4927,18 @@ async def _handle_move_mark(live: _LiveCombat, caster: Combatant, intent: Player
     # Bonus action — caster keeps the turn (SRD §Action Economy).
 
 
+def _publish(live: _LiveCombat, event: CombatEvent) -> None:
+    """Deliver ``event`` everywhere an event goes, without folding it into the
+    running state: the log, the host's queue and every per-call listener. A
+    ``Death`` the damage fold synthesizes, already recorded, comes through here
+    so a per-call capture (``begin_combat``, the stateless calls) sees it too.
+    """
+    live.event_log.append(event)
+    live.event_queue.put_nowait(event)
+    for listener in live.event_listeners:
+        listener(event)
+
+
 def _emit(live: _LiveCombat, event: CombatEvent) -> None:
     """Append to the event log, update outcome-tracking running state, then enqueue.
 
@@ -4934,10 +4954,7 @@ def _emit(live: _LiveCombat, event: CombatEvent) -> None:
     legacy combat semantics — monsters die immediately at 0 HP (SRD §Damage
     at 0 Hit Points); only PCs route through death saves.
     """
-    live.event_log.append(event)
-    live.event_queue.put_nowait(event)
-    for listener in live.event_listeners:
-        listener(event)
+    _publish(live, event)
 
     if isinstance(event, TurnStarted):
         _emit_apply_turn_started(live, event)
@@ -5244,8 +5261,7 @@ def _emit_apply_damage(live: _LiveCombat, event: DamageApplied) -> None:
             killer = live.current_actor_id
             death_event = Death(target_id=event.target_id, reason="damage")
             _record_death(live, death_event, killer_id=killer)
-            live.event_log.append(death_event)
-            live.event_queue.put_nowait(death_event)
+            _publish(live, death_event)
 
 
 def _apply_zero_hp_to_character(
@@ -5274,8 +5290,7 @@ def _apply_zero_hp_to_character(
     if remainder >= hp_max:
         death_event = Death(target_id=event.target_id, reason="instant_kill")
         _record_death(live, death_event, killer_id=live.current_actor_id)
-        live.event_log.append(death_event)
-        live.event_queue.put_nowait(death_event)
+        _publish(live, death_event)
         for idx, c in enumerate(live.initiative):
             if c.entity_id == event.target_id:
                 live.initiative[idx] = c.model_copy(update={"is_alive": False})
@@ -5307,8 +5322,7 @@ def _apply_zero_hp_to_character(
     if outcome == "dead":
         death_event = Death(target_id=event.target_id, reason="death_saves")
         _record_death(live, death_event, killer_id=live.current_actor_id)
-        live.event_log.append(death_event)
-        live.event_queue.put_nowait(death_event)
+        _publish(live, death_event)
 
 
 def _emit_apply_healing(live: _LiveCombat, event: HealingApplied) -> None:
@@ -5401,7 +5415,9 @@ def _emit_apply_effect_applied(live: _LiveCombat, event: EffectApplied) -> None:
         existing_keys = {(ac.condition, ac.source_effect_id) for ac in target_combatant.conditions}
         new_conditions = list(target_combatant.conditions)
         dirty = False
-        for status in applied.statuses:
+        # Sorted: a set iterates in the process's string-hash order, and this
+        # order becomes ``Combatant.conditions``, which ``CombatState`` keeps.
+        for status in sorted(applied.statuses):
             # SRD §Condition Immunity — an immune target never acquires the
             # condition. ``activities/effects.py::apply_activity_effects``
             # already SUPPRESSES the matching ``ConditionApplied``; without the
@@ -7706,12 +7722,14 @@ def _seed_active_effects(live: _LiveCombat, active_effects: Sequence[ActiveEffec
         # condition riders stay live), exactly as the emit-path keeps the
         # ``EffectApplied`` and drops only the ``ConditionApplied``.
         target_combatant = _find_combatant(live, eff.target_id)
-        statuses = {
+        # Sorted, so the order the statuses land in is the same in every
+        # process (a set iterates in string-hash order).
+        statuses = [
             s
-            for s in eff.statuses
+            for s in sorted(eff.statuses)
             if target_combatant is None
             or not is_condition_immune(target_combatant, s, imposed=eff.statuses)
-        }
+        ]
 
         # Conditions-by-effect: every status the effect imposes is
         # attributed to (target_id, id, origin), so expire/concentration
@@ -7843,15 +7861,51 @@ async def start_combat(
 
     ``grid_scene`` is the battlefield: every ``zone_id`` on ``party`` and
     ``encounter`` must name one of its in-bounds, unblocked cells.
+
+    The handle keeps the combat in this process between calls. A host that
+    keeps the state itself opens the combat with ``begin_combat``
+    (``combat_state.py``) instead, which returns a ``CombatState``.
+    """
+    live, start_events = _open_combat(
+        session_id=session_id,
+        party=party,
+        encounter=encounter,
+        grid_scene=grid_scene,
+        # The SAME instance draws the initiative rolls and every later
+        # in-combat die of this handle (unless a call passes its own seed).
+        rng=random.Random(rng_seed),
+        handle_id=f"combat:{session_id}:{rng_seed:08x}",
+        scene_location_id=scene_location_id,
+        active_effects=active_effects,
+    )
+    _REGISTRY[live.handle_id] = live
+    return StartCombatResult(
+        handle=CombatHandle(handle_id=live.handle_id),
+        events=start_events,
+    )
+
+
+def _open_combat(
+    *,
+    session_id: str,
+    party: list[PartyMemberSpec],
+    encounter: list[EncounterMemberSpec],
+    grid_scene: GridScene,
+    rng: random.Random,
+    handle_id: str,
+    scene_location_id: str,
+    active_effects: Sequence[ActiveEffect],
+) -> tuple[_LiveCombat, list[CombatEvent]]:
+    """The body of ``start_combat`` and ``begin_combat``: build the combat
+    from its specs, open the first turn, and return it with the events the
+    opening emitted. ``rng`` draws the initiative rolls. Registers nothing:
+    ``start_combat`` puts the combat in the registry, ``begin_combat``
+    returns it as a ``CombatState``.
     """
     if not party:
         raise ValueError("start_combat: party must be non-empty")
     if not encounter:
         raise ValueError("start_combat: encounter must be non-empty")
-
-    # Hoisted so the SAME instance seeds both the initiative-rolling draws
-    # below and every subsequent in-combat draw via ``_LiveCombat.rng``.
-    rng = random.Random(rng_seed)
 
     # SRD 5.2 Initiative: "every participant rolls Initiative; they make a
     # Dexterity check". Entities with a fixed int ``initiative`` skip the
@@ -7906,7 +7960,6 @@ async def start_combat(
 
     topology = _resolve_topology(party, encounter, grid_scene)
 
-    handle_id = f"combat:{session_id}:{rng_seed:08x}"
     live = _LiveCombat(
         handle_id=handle_id,
         session_id=session_id,
@@ -7918,6 +7971,7 @@ async def start_combat(
         event_queue=asyncio.Queue(),
         scene_location_id=scene_location_id,
         scene_sunlight=grid_scene.sunlight,
+        grid_scene=grid_scene,
         actor_zone=actor_zone,
         monster_slug_by_entity=monster_slug_by_entity,
         xp_value_by_entity=xp_value_by_entity,
@@ -7940,7 +7994,6 @@ async def start_combat(
         monster = get_lib_loader().get_monster(slug)
         if monster is not None:
             live.monster_action_uses_by_entity[entity_id] = _hydrate_monster_action_uses(monster)
-    _REGISTRY[handle_id] = live
     _register_default_turn_hooks(live)
 
     # Seed _LiveCombat.active_effects from the caller: the equipped-magic-item
@@ -7997,11 +8050,7 @@ async def start_combat(
         _begin_turn(live, new_round=True)
     finally:
         live.event_listeners.remove(start_events.append)
-
-    return StartCombatResult(
-        handle=CombatHandle(handle_id=handle_id),
-        events=start_events,
-    )
+    return live, start_events
 
 
 def _own_attacks_per_action(current: Combatant) -> int:
@@ -11705,7 +11754,7 @@ def _apply_magic_missile_shield_carveout(
     NOT a general force-immunity mechanic (docs/dev/reaction-queue.md,
     "Magic Missile carve-out").
     """
-    for target_id in shielded_target_ids:
+    for target_id in sorted(shielded_target_ids):
         entry = payload["passive_damage_modifiers"].setdefault(target_id, {})
         immunities = list(entry.get("immunities", ()))
         if "force" not in immunities:
@@ -12229,11 +12278,31 @@ def _pc_attack_context_kwargs(
     }
 
 
+def _reseed(live: _LiveCombat, seed: int | None) -> None:
+    """Contract 03, "Determinism and seeds": a call that carries its own seed
+    draws every die from ``random.Random(seed)``, never from where the
+    combat's stream had got to. ``None`` keeps the stream (the 0.7.0 handle
+    behaviour)."""
+    if seed is not None:
+        live.rng = random.Random(seed)
+
+
 async def submit_player_intent(
     handle: CombatHandle,
     actor_id: str,
     intent: PlayerIntent,
+    *,
+    seed: int | None = None,
 ) -> None:
+    """Accept a PC intent for the current turn and resolve it on the combat
+    ``handle`` names. ``seed``, when given, draws this call's dice from
+    ``random.Random(seed)``; see ``_submit_player_intent``."""
+    live = _get_live(handle)
+    _reseed(live, seed)
+    await _submit_player_intent(live, actor_id, intent)
+
+
+async def _submit_player_intent(live: _LiveCombat, actor_id: str, intent: PlayerIntent) -> None:
     """Accept a PC intent for the current turn, validate it, resolve it.
 
     Validation:
@@ -12246,7 +12315,7 @@ async def submit_player_intent(
     resolvers under ``activities``, emitting the resulting
     ``CombatEvent`` stream.
     """
-    live = _get_live(handle)
+    handle = CombatHandle(handle_id=live.handle_id)
     current = _validate_intent_preconditions(live, handle, actor_id, intent=intent)
 
     # Turn-non-ending intents (move_mark / move / dash) dispatch through
@@ -13049,7 +13118,22 @@ def _resolve_opportunity_attack(live: _LiveCombat, reactor: Combatant, mover: Co
 
 
 async def advance_monster_turn(
-    handle: CombatHandle, *, legendary: bool = False, actor_id: str | None = None
+    handle: CombatHandle,
+    *,
+    legendary: bool = False,
+    actor_id: str | None = None,
+    seed: int | None = None,
+) -> None:
+    """Drive one monster turn, or a legendary action, on the combat ``handle``
+    names. ``seed``, when given, draws this call's dice from
+    ``random.Random(seed)``; see ``_advance_monster_turn``."""
+    live = _get_live(handle)
+    _reseed(live, seed)
+    await _advance_monster_turn(live, legendary=legendary, actor_id=actor_id)
+
+
+async def _advance_monster_turn(
+    live: _LiveCombat, *, legendary: bool = False, actor_id: str | None = None
 ) -> None:
     """Drive one monster turn through typed selection + the Activity resolver.
 
@@ -13095,9 +13179,8 @@ async def advance_monster_turn(
     ``IntentRejectedError("no_legendary_action", ...)`` when nothing
     qualifies right now.
     """
-    live = _get_live(handle)
     if live.ended:
-        raise IntentRejectedError("combat_ended", f"handle={handle.handle_id}")
+        raise IntentRejectedError("combat_ended", f"handle={live.handle_id}")
 
     if legendary:
         _take_legendary_action(live, _eligible_legendary_actor(live, actor_id))
@@ -13413,7 +13496,16 @@ def _project_outcome(live: _LiveCombat) -> CombatOutcome:
     total_xp = sum(
         live.xp_value_by_entity.get(eid, 0) for eid in live.dead_ids if eid in live.encounter_ids
     )
-    surviving_pcs = [eid for eid in live.party_ids if eid not in live.dead_ids]
+    # In initiative order, not ``party_ids`` set order, so ``xp_awarded``
+    # serializes the same way in every process.
+    surviving_pcs = [
+        c.entity_id
+        for c in live.initiative
+        if c.entity_id in live.party_ids and c.entity_id not in live.dead_ids
+    ]
+    surviving_pcs += sorted(
+        eid for eid in live.party_ids if eid not in live.dead_ids and eid not in surviving_pcs
+    )
     xp_awarded: dict[str, int] = {}
     if total_xp > 0 and surviving_pcs:
         per_pc = total_xp // len(surviving_pcs)
@@ -13446,6 +13538,16 @@ async def end_combat(handle: CombatHandle) -> EndCombatResult:
     ``UnknownHandleError`` (``_keep_ended``).
     """
     live = _get_live(handle)
+    already_ended = live.ended and live.final_outcome is not None
+    result = _close_combat(live)
+    if not already_ended:
+        _keep_ended(live)
+    return result
+
+
+def _close_combat(live: _LiveCombat) -> EndCombatResult:
+    """The body of ``end_combat``, on a combat in hand: project the outcome,
+    emit ``CombatEnded`` and mark the combat ended. Idempotent."""
     surviving = tuple(eff for target_list in live.active_effects.values() for eff in target_list)
     if live.ended and live.final_outcome is not None:
         return EndCombatResult(
@@ -13466,7 +13568,6 @@ async def end_combat(handle: CombatHandle) -> EndCombatResult:
 
     live.ended = True
     live.final_outcome = outcome
-    _keep_ended(live)
     # Re-snapshot after CombatEnded emission in case any listener mutated
     # the active_effects registry (e.g. expire handler).
     surviving = tuple(eff for target_list in live.active_effects.values() for eff in target_list)

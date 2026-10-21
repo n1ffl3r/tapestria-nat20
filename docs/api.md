@@ -25,6 +25,23 @@ For what the engine actually resolves behind these signatures, see the
         - PlayerIntent
         - CombatHandle
 
+## Combat as state
+
+::: dnd5e_engine.combat_state
+    options:
+      members_order: source
+      members:
+        - CombatState
+        - CombatStep
+        - EndCombatStep
+        - begin_combat
+        - resolve_intent
+        - resolve_monster_turn
+        - arm_legendary_resistance
+        - close_combat
+        - load_combat
+        - combat_state_of
+
 ## Results and outcome
 
 ::: dnd5e_engine.results

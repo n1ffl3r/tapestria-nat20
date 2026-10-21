@@ -14,10 +14,9 @@ Both encode SRD formulas a host reads on every roll:
 
 from __future__ import annotations
 
-import random
-
 import pytest
 
+from dnd5e_engine.rules.dice import UNSEEDED
 from dnd5e_engine.rules.skills import (
     SKILL_ABILITIES,
     SKILL_DISPLAY_NAMES,
@@ -33,7 +32,7 @@ from dnd5e_engine.rules.skills import (
 def fixed_dice(monkeypatch: pytest.MonkeyPatch):
     def _install(values: list[int]) -> None:
         stream = iter(values)
-        monkeypatch.setattr(random, "randint", lambda low, high: next(stream))
+        monkeypatch.setattr(UNSEEDED, "randint", lambda low, high: next(stream))
 
     return _install
 

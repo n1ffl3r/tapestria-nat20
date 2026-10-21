@@ -60,6 +60,18 @@ TOP_LEVEL = {
     "roll_dice_str",
     "start_combat",
     "submit_player_intent",
+    # Spec 02a (fork): the combat as serializable state, resolved one seeded
+    # call at a time.
+    "CombatState",
+    "CombatStep",
+    "EndCombatStep",
+    "arm_legendary_resistance",
+    "begin_combat",
+    "close_combat",
+    "combat_state_of",
+    "load_combat",
+    "resolve_intent",
+    "resolve_monster_turn",
 }
 
 PUBLIC_MODULES = [
@@ -81,6 +93,7 @@ PUBLIC_MODULES = [
     "dnd5e_engine.types.conditions",
     "dnd5e_engine.types.effects",
     "dnd5e_engine.testing",
+    "dnd5e_engine.combat_state",
 ]
 
 

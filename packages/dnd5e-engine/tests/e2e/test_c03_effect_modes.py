@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import dataclasses
 import random
 
 from dnd5e_engine.check import CheckSpec, resolve_check
@@ -54,10 +55,8 @@ def test_c03_s01_multiply_mode_multiplies_accumulated_bucket_bonus():
         active_effects=(add_effect, multiply_effect),
     )
 
-    random.seed(4242)
-    baseline = resolve_check(baseline_spec)
-    random.seed(4242)
-    multiplied = resolve_check(multiplied_spec)
+    baseline = resolve_check(dataclasses.replace(baseline_spec, rng=random.Random(4242)))
+    multiplied = resolve_check(dataclasses.replace(multiplied_spec, rng=random.Random(4242)))
 
     assert multiplied.modifier - baseline.modifier == 3
     assert multiplied.roll_total - baseline.roll_total == 3
@@ -103,10 +102,12 @@ def test_c03_s02_upgrade_mode_only_raises_never_lowers_bucket_bonus():
         target_id="char:test",
         changes=[ActiveEffectChange(key="check.bonus", mode="add", value=2)],
     )
-    random.seed(9001)
-    baseline_a_result = resolve_check(_spec((baseline_a,)))
-    random.seed(9001)
-    with_upgrade_a_result = resolve_check(_spec((baseline_a, upgrade_effect)))
+    baseline_a_result = resolve_check(
+        dataclasses.replace(_spec((baseline_a,)), rng=random.Random(9001))
+    )
+    with_upgrade_a_result = resolve_check(
+        dataclasses.replace(_spec((baseline_a, upgrade_effect)), rng=random.Random(9001))
+    )
 
     assert with_upgrade_a_result.modifier - baseline_a_result.modifier == 3
     assert with_upgrade_a_result.roll_total - baseline_a_result.roll_total == 3
@@ -120,10 +121,12 @@ def test_c03_s02_upgrade_mode_only_raises_never_lowers_bucket_bonus():
         target_id="char:test",
         changes=[ActiveEffectChange(key="check.bonus", mode="add", value=7)],
     )
-    random.seed(1337)
-    baseline_b_result = resolve_check(_spec((baseline_b,)))
-    random.seed(1337)
-    with_upgrade_b_result = resolve_check(_spec((baseline_b, upgrade_effect)))
+    baseline_b_result = resolve_check(
+        dataclasses.replace(_spec((baseline_b,)), rng=random.Random(1337))
+    )
+    with_upgrade_b_result = resolve_check(
+        dataclasses.replace(_spec((baseline_b, upgrade_effect)), rng=random.Random(1337))
+    )
 
     assert with_upgrade_b_result.modifier - baseline_b_result.modifier == 0
     assert with_upgrade_b_result.roll_total - baseline_b_result.roll_total == 0

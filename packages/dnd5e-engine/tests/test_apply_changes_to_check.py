@@ -40,7 +40,7 @@ def test_filter_changes_by_bucket_skill():
 
 
 def test_apply_changes_to_check_add_flat(monkeypatch):
-    monkeypatch.setattr(dice_mod.random, "randint", lambda a, b: 10)
+    monkeypatch.setattr(dice_mod.UNSEEDED, "randint", lambda a, b: 10)
     effect = ActiveEffect(
         id="effect:cloak",
         name="Cloak of Protection",

@@ -188,6 +188,15 @@ def _canonical_spell(slug: str) -> dict[str, Any]:
 #: row substring → (probe over the shipped source, substring the row must carry
 #: iff the probe is True).
 _PROBES: dict[str, tuple[Any, str]] = {
+    # Spec 02a: the stateless calls exist, and no roller falls back to the
+    # process-global ``random`` module.
+    "Combat state and per-call seeds": (
+        lambda: (
+            "async def resolve_intent(" in _src("combat_state.py")
+            and "(rng or random)" not in _src("rules/dice.py") + _src("rules/effects.py")
+        ),
+        "✅",
+    ),
     # F1c/F1d: every save path adds a real ability + proficiency modifier.
     "Saving throws, half-on-save": (
         lambda: "save_modifier(" in _src("orchestrator.py"),

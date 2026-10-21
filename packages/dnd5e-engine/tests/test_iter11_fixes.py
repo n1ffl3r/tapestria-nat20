@@ -69,7 +69,7 @@ def test_strength_only_check_dis_doesnt_leak_to_perception(monkeypatch):
     """flags.disadvantage.check.strength (Weakening Breath) must NOT
     disadvantage a Perception (Wisdom) check."""
     rolls = iter([18, 5])
-    monkeypatch.setattr(dice_mod.random, "randint", lambda a, b: next(rolls))
+    monkeypatch.setattr(dice_mod.UNSEEDED, "randint", lambda a, b: next(rolls))
 
     eff = ActiveEffect(
         id="effect:weakening",
@@ -101,7 +101,7 @@ def test_strength_only_check_dis_doesnt_leak_to_perception(monkeypatch):
 def test_strength_only_check_dis_applies_to_athletics(monkeypatch):
     """flags.disadvantage.check.strength DOES apply to Athletics (Strength)."""
     rolls = iter([18, 5])
-    monkeypatch.setattr(dice_mod.random, "randint", lambda a, b: next(rolls))
+    monkeypatch.setattr(dice_mod.UNSEEDED, "randint", lambda a, b: next(rolls))
 
     eff = ActiveEffect(
         id="effect:weakening",
@@ -133,7 +133,7 @@ def test_strength_only_check_dis_applies_to_athletics(monkeypatch):
 def test_broad_check_dis_still_applies_to_any_skill(monkeypatch):
     """A broad flags.disadvantage.check (no ability suffix) applies to any skill."""
     rolls = iter([18, 5])
-    monkeypatch.setattr(dice_mod.random, "randint", lambda a, b: next(rolls))
+    monkeypatch.setattr(dice_mod.UNSEEDED, "randint", lambda a, b: next(rolls))
 
     eff = ActiveEffect(
         id="effect:frightened",

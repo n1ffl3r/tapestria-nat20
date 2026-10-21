@@ -1,8 +1,10 @@
 """Dice rolling primitives.
 
 Every roller takes an optional ``rng``. Pass a seeded ``random.Random`` for
-reproducible results; omit it and the roll is drawn from the process-global
-``random`` module, which is NOT reproducible unless the caller seeds it.
+reproducible results; omit it and the roll is drawn from ``UNSEEDED``, the
+operating system's random source, which is never reproducible. Nothing here
+touches the process-global ``random`` module, so no caller's seeding of it, or
+use of it, can change an engine roll (spec 02a, acceptance criterion 8).
 
 In-combat resolution never reaches this module — it draws from the
 ``random.Random`` threaded from ``start_combat(rng_seed=...)`` via
@@ -14,9 +16,16 @@ from __future__ import annotations
 import random
 from dataclasses import dataclass
 
-# The process-global ``random`` module satisfies the small surface these
-# helpers use (``randint``), so it doubles as the default generator.
 _Rng = random.Random
+
+#: The generator a roll without an ``rng`` draws from: the operating system's
+#: random source, never the process-global ``random`` module.
+UNSEEDED: random.Random = random.SystemRandom()
+
+
+def draw_from(rng: random.Random | None) -> random.Random:
+    """``rng``, or ``UNSEEDED`` when the caller passed none."""
+    return UNSEEDED if rng is None else rng
 
 
 @dataclass(frozen=True)
@@ -36,7 +45,7 @@ def roll(sides: int, count: int = 1, modifier: int = 0, *, rng: _Rng | None = No
         raise ValueError(f"Dice must have at least 1 side, got {sides}")
     if count < 1:
         raise ValueError(f"Must roll at least 1 die, got {count}")
-    draw = (rng or random).randint
+    draw = draw_from(rng).randint
     dice = [draw(1, sides) for _ in range(count)]
     return RollResult(dice=dice, modifier=modifier, total=sum(dice) + modifier)
 
@@ -71,14 +80,14 @@ def roll_d100(*, rng: _Rng | None = None) -> RollResult:
 
 def roll_with_advantage(modifier: int = 0, *, rng: _Rng | None = None) -> RollResult:
     """Roll 2d20, take the highest."""
-    draw = (rng or random).randint
+    draw = draw_from(rng).randint
     a, b = draw(1, 20), draw(1, 20)
     return RollResult(dice=[a, b], modifier=modifier, total=max(a, b) + modifier)
 
 
 def roll_with_disadvantage(modifier: int = 0, *, rng: _Rng | None = None) -> RollResult:
     """Roll 2d20, take the lowest."""
-    draw = (rng or random).randint
+    draw = draw_from(rng).randint
     a, b = draw(1, 20), draw(1, 20)
     return RollResult(dice=[a, b], modifier=modifier, total=min(a, b) + modifier)
 
@@ -124,15 +133,16 @@ def drop_lowest(rolls: list[int], drop: int = 1) -> list[int]:
     return sorted(rolls, reverse=True)[: len(rolls) - drop]
 
 
-def roll_4d6_drop_lowest() -> int:
+def roll_4d6_drop_lowest(*, rng: _Rng | None = None) -> int:
     """Standard D&D stat generation: roll 4d6, drop the lowest."""
-    rolls = [random.randint(1, 6) for _ in range(4)]
+    draw = draw_from(rng).randint
+    rolls = [draw(1, 6) for _ in range(4)]
     return sum(drop_lowest(rolls, 1))
 
 
-def generate_ability_scores_4d6() -> dict[str, int]:
+def generate_ability_scores_4d6(*, rng: _Rng | None = None) -> dict[str, int]:
     """Generate a full set of ability scores using 4d6 drop lowest."""
-    stats = [roll_4d6_drop_lowest() for _ in range(6)]
+    stats = [roll_4d6_drop_lowest(rng=rng) for _ in range(6)]
     keys = ["strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma"]
     return dict(zip(keys, stats, strict=True))
 
