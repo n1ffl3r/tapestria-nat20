@@ -187,10 +187,15 @@ def test_recharge_roll_only_after_the_action_was_spent():
         handle, live = await _start(
             [_hero(initiative=1)], [_foe("magma-mephit", initiative=20, hp=18, ac=11)], seed=7
         )
-        uses = live.monster_action_uses_by_entity["mon:foe"]["fire-breath"]
-        assert uses.recharge_spent is False
+
+        def uses():
+            # Read afresh each time: a combat rebuilt from its CombatState
+            # (``NAT20_ROUNDTRIP_STATE``) holds a new entry, not this one.
+            return live.monster_action_uses_by_entity["mon:foe"]["fire-breath"]
+
+        assert uses().recharge_spent is False
         await advance_monster_turn(handle)  # turn 1 — the mephit breathes, spending it
-        assert uses.recharge_spent is True
+        assert uses().recharge_spent is True
         await _pass(handle)
         await advance_monster_turn(handle)  # turn 2 — the roll happens at turn start
         return handle, live

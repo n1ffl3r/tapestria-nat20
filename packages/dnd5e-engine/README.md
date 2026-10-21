@@ -120,6 +120,11 @@ All exported names live in `__all__` in `src/dnd5e_engine/__init__.py`. The key 
   `.events`, `.final_active_effects`).
 - `narration_events(handle)` — async iterator streaming the `CombatEvent` union for the
   narrator.
+- `begin_combat(...)`, `resolve_intent(state, ...)`, `resolve_monster_turn(state, ...)`,
+  `close_combat(state)`: the same loop with no handle. Each takes a `CombatState` (and a
+  `seed` when it rolls) and returns the events and the new state; nothing stays in the
+  engine between calls. `load_combat(state)` and `combat_state_of(handle)` move a combat
+  between the two.
 - `get_actor_active_effects(handle, entity_id)` — read-only snapshot of one combatant's
   active effects.
 - `resolve_check(spec)` — resolve an out-of-combat ability check / saving throw

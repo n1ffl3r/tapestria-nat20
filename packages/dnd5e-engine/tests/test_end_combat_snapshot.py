@@ -93,7 +93,7 @@ def test_end_combat_returns_surviving_effects(monkeypatch):
     from dnd5e_engine.orchestrator import end_combat, start_combat
     from dnd5e_engine.types.effects import ActiveEffect, ActiveEffectDuration
 
-    monkeypatch.setattr(dice_mod.random, "randint", lambda a, b: 10)
+    monkeypatch.setattr(dice_mod.UNSEEDED, "randint", lambda a, b: 10)
 
     bless = ActiveEffect(
         id="effect:bless",

@@ -581,6 +581,23 @@ counts are pinned by `packages/dnd5e-engine/tests/test_capability_matrix.py`.
   fall back to the Python registry. Still open after C12 and C18 (neither
   reads the category); unowned.
   (`packages/dnd5e-engine/src/dnd5e_engine/rules/conditions.py`)
+- **`CombatState` mirrors `_LiveCombat` field for field (2026-10-21, spec
+  02a B1).** Its groups follow the private dataclass, not a host's tables, so a
+  new `_LiveCombat` field that a later call reads must be added to
+  `CombatState` (and `STATE_VERSION` bumped when a field changes meaning);
+  `make test-roundtrip` fails until it is. The order of its maps and lists is
+  part of the state: the engine iterates `effects`, `concentration` and the rest
+  in insertion order, so a host that splits a state across rows must restore
+  that order.
+  (`packages/dnd5e-engine/src/dnd5e_engine/combat_state.py::CombatState`)
+- **`CombatState.at_turn` moves the turn without starting it (2026-10-21,
+  spec 02a B1).** It sets the round, the slot and the active combatant, but runs
+  none of the turn-start work (`TurnStarted`'s resets of the Action, Bonus
+  Action, Reaction and movement, the `turn_start` hooks, a pending death save),
+  so the combatant acts with the turn resources the state already holds. Right
+  for a host whose record names a turn already under way; a host opening a new
+  turn from its own record needs a call that starts it.
+  (`packages/dnd5e-engine/src/dnd5e_engine/combat_state.py::CombatState.at_turn`)
 - **`orchestrator.py` is ~13.4k lines**, well over a third of the engine,
   holding the reaction queue, item/feature charge accounting, the monster
   turn, the effect lifecycle, the conjurations and the turn loop. Each is a

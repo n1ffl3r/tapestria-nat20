@@ -7,6 +7,51 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+Spec 02a (the fork's work order for its host), session B1: the combat as
+serializable state, and a seed on every call that rolls.
+
+### Added
+
+- **`CombatState`** (`dnd5e_engine.combat_state`): a combat in progress as a
+  pydantic model that round-trips through JSON without loss. It holds the
+  round, the initiative order and the active combatant, every combatant with its position,
+  Temporary Hit Points, turn resources, Reaction, conditions and death saving
+  throws, every active effect with its concentration time and pending repeat
+  saves, readied reactions, each monster's spent recharge, per-day uses and
+  legendary pools, the conjurations in play, and the events of the turn in
+  progress. `CombatState.at_turn(round, active_combatant)` moves a state's turn.
+- **Stateless calls**: `begin_combat`, `resolve_intent`, `resolve_monster_turn`,
+  `arm_legendary_resistance` and `close_combat` take a `CombatState` (and a seed
+  when they roll) and return a `CombatStep` (`EndCombatStep` for
+  `close_combat`): the events and the new state. Nothing stays in the engine
+  between calls.
+- **`load_combat(state)`** and **`combat_state_of(handle)`** move a combat
+  between a handle and a state.
+- **`seed=`** on `submit_player_intent` and `advance_monster_turn`: the call
+  draws from `random.Random(seed)` instead of the handle's stream.
+- **`make test-roundtrip`** reruns the suite with every handle call rebuilding
+  its combat from its `CombatState`; **`make test-hashseed`** (part of `make
+  check`) does it under two string-hash seeds and requires identical traces.
+
+### Changed
+
+- **No roll reads the global `random` module.** A dice helper given no `rng`
+  (`rules.dice`, `roll_dice_str`, `resolve_check` without `CheckSpec.rng`)
+  draws from `rules.dice.UNSEEDED`, the operating system's random source,
+  instead. Tests that stubbed `random.randint` now stub `UNSEEDED.randint`;
+  tests that seeded the global module pass `CheckSpec.rng`.
+  `roll_4d6_drop_lowest` and `generate_ability_scores_4d6` take an optional
+  `rng`.
+- **Set order no longer reaches output.** A seeded effect's statuses, an
+  applied effect's conditions and the XP award's survivors are taken in a fixed
+  order, so the same combat serializes the same way in every process.
+
+### Fixed
+
+- **The `Death` a monster's damage synthesizes reaches per-call listeners.** It
+  went to the log and the queue only, so `StartCombatResult.events`,
+  `EndCombatResult.events` and the new `CombatStep.events` could miss it.
+
 ## [0.7.0]
 
 Lockstep release with `dnd5e-srd-data` 0.7.0 and `nat20-bridge` 0.7.0. The

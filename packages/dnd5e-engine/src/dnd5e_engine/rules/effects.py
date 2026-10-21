@@ -18,6 +18,7 @@ from __future__ import annotations
 import random
 from collections.abc import Iterable
 
+from dnd5e_engine.rules.dice import draw_from
 from dnd5e_engine.types.effects import ActiveEffect, ActiveEffectChange
 
 
@@ -25,8 +26,9 @@ def roll_dice_str(expr: str, rng: random.Random | None = None) -> int:
     """Roll a plain ``"NdM"`` / ``"NdM+K"`` / ``"NdM-K"`` expression.
 
     Pass a seeded ``random.Random`` as ``rng`` for a reproducible result. With
-    ``rng=None`` the dice are drawn from the process-global ``random`` module,
-    which is only reproducible if the caller seeds it. In-combat rolls never
+    ``rng=None`` the dice are drawn from the operating system's random source
+    (``rules.dice.UNSEEDED``), never the process-global ``random`` module, and
+    are not reproducible. In-combat rolls never
     come through here — they use the seeded generator threaded from
     ``start_combat(rng_seed=...)``.
     """
@@ -52,7 +54,7 @@ def roll_dice_str(expr: str, rng: random.Random | None = None) -> int:
     n_str, _, d_str = dice_part.partition("d")
     n = int(n_str or "1")
     d = int(d_str)
-    draw = (rng or random).randint
+    draw = draw_from(rng).randint
     total = sum(draw(1, d) for _ in range(n))
     return sign * (total + flat_v)
 

@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import dataclasses
+
 from dnd5e_engine import PlayerIntent
 from dnd5e_engine.check import CheckSpec, resolve_check
 from dnd5e_engine.events import ActorMoved, DamageApplied
@@ -130,10 +132,8 @@ def test_c02_s02_expertise_doubles_proficiency_bonus_on_skill_check():
         expertise_skills=("stealth",),
     )
 
-    random.seed(1234)
-    base = resolve_check(base_spec)
-    random.seed(1234)
-    expert = resolve_check(expert_spec)
+    base = resolve_check(dataclasses.replace(base_spec, rng=random.Random(1234)))
+    expert = resolve_check(dataclasses.replace(expert_spec, rng=random.Random(1234)))
 
     assert expert.modifier - base.modifier == base_spec.proficiency_bonus
     assert expert.roll_total - base.roll_total == base_spec.proficiency_bonus

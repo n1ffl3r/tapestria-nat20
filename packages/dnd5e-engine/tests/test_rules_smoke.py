@@ -35,7 +35,7 @@ def test_saving_throw_proficient_adds_bonus(monkeypatch):
     # Pin d20 to 10 for determinism.
     import dnd5e_engine.rules.dice as dice_mod
 
-    monkeypatch.setattr(dice_mod.random, "randint", lambda a, b: 10)
+    monkeypatch.setattr(dice_mod.UNSEEDED, "randint", lambda a, b: 10)
 
     from dnd5e_engine.rules.skills import saving_throw
 
@@ -57,7 +57,7 @@ def test_saving_throw_proficient_adds_bonus(monkeypatch):
 def test_saving_throw_non_proficient_no_bonus(monkeypatch):
     import dnd5e_engine.rules.dice as dice_mod
 
-    monkeypatch.setattr(dice_mod.random, "randint", lambda a, b: 8)
+    monkeypatch.setattr(dice_mod.UNSEEDED, "randint", lambda a, b: 8)
 
     from dnd5e_engine.rules.skills import saving_throw
 

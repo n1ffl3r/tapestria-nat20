@@ -60,7 +60,7 @@ def test_check_kind_literal_values():
 
 
 def test_resolve_check_skill_no_effects(monkeypatch):
-    monkeypatch.setattr(dice_mod.random, "randint", lambda a, b: 12)
+    monkeypatch.setattr(dice_mod.UNSEEDED, "randint", lambda a, b: 12)
 
     from dnd5e_engine.check import resolve_check
 
@@ -85,7 +85,7 @@ def test_resolve_check_skill_no_effects(monkeypatch):
 
 
 def test_resolve_check_ability_no_effects(monkeypatch):
-    monkeypatch.setattr(dice_mod.random, "randint", lambda a, b: 8)
+    monkeypatch.setattr(dice_mod.UNSEEDED, "randint", lambda a, b: 8)
 
     from dnd5e_engine.check import resolve_check
 
@@ -108,7 +108,7 @@ def test_resolve_check_ability_no_effects(monkeypatch):
 
 
 def test_resolve_check_saving_throw_no_effects(monkeypatch):
-    monkeypatch.setattr(dice_mod.random, "randint", lambda a, b: 6)
+    monkeypatch.setattr(dice_mod.UNSEEDED, "randint", lambda a, b: 6)
 
     from dnd5e_engine.check import resolve_check
 
@@ -132,7 +132,7 @@ def test_resolve_check_saving_throw_no_effects(monkeypatch):
 
 def test_resolve_check_skill_with_bless(monkeypatch):
     """Bless: +1d4 on check bucket → folded into roll_total."""
-    monkeypatch.setattr(dice_mod.random, "randint", lambda a, b: 10)
+    monkeypatch.setattr(dice_mod.UNSEEDED, "randint", lambda a, b: 10)
     import dnd5e_engine.rules.effects as eff_mod
 
     monkeypatch.setattr(eff_mod, "roll_dice_str", lambda s, rng=None: 3)
@@ -173,7 +173,7 @@ def test_resolve_check_skill_with_bless(monkeypatch):
 
 def test_resolve_check_saving_throw_with_cloak_of_protection(monkeypatch):
     """Cloak of Protection: +1 flat on saving_throw bucket."""
-    monkeypatch.setattr(dice_mod.random, "randint", lambda a, b: 8)
+    monkeypatch.setattr(dice_mod.UNSEEDED, "randint", lambda a, b: 8)
 
     from dnd5e_engine.check import resolve_check
     from dnd5e_engine.types.effects import ActiveEffect, ActiveEffectChange
@@ -205,7 +205,7 @@ def test_resolve_check_saving_throw_with_cloak_of_protection(monkeypatch):
 
 def test_resolve_check_ignores_non_matching_change_key(monkeypatch):
     """A change on a non-matching key (attack.roll.bonus) is ignored on a skill check."""
-    monkeypatch.setattr(dice_mod.random, "randint", lambda a, b: 12)
+    monkeypatch.setattr(dice_mod.UNSEEDED, "randint", lambda a, b: 12)
 
     from dnd5e_engine.check import resolve_check
     from dnd5e_engine.types.effects import ActiveEffect, ActiveEffectChange
@@ -238,7 +238,7 @@ def test_resolve_check_skill_with_explicit_advantage(monkeypatch):
     """Caller-supplied advantage (e.g. hidden attacker) raises the d20."""
     # roll_with_advantage takes the higher of two d20s
     rolls = iter([4, 17])
-    monkeypatch.setattr(dice_mod.random, "randint", lambda a, b: next(rolls))
+    monkeypatch.setattr(dice_mod.UNSEEDED, "randint", lambda a, b: next(rolls))
 
     from dnd5e_engine.check import resolve_check
 
@@ -258,7 +258,7 @@ def test_resolve_check_skill_with_explicit_advantage(monkeypatch):
 
 def test_resolve_check_invariant_roll_total_equals_natural_plus_modifier(monkeypatch):
     """DiceOutcome contract: roll_total = natural_roll + modifier, with or without effects."""
-    monkeypatch.setattr(dice_mod.random, "randint", lambda a, b: 10)
+    monkeypatch.setattr(dice_mod.UNSEEDED, "randint", lambda a, b: 10)
     import dnd5e_engine.rules.effects as eff_mod
 
     monkeypatch.setattr(eff_mod, "roll_dice_str", lambda s, rng=None: 3)

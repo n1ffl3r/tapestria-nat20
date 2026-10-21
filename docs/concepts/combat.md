@@ -1,8 +1,15 @@
 # Combat model
 
-Combat in Nat20 is a stateful, turn-based loop driven through an opaque
-**`CombatHandle`**. You open a combat, submit intents turn by turn, and close
-it — the engine owns all runtime state in memory behind the handle.
+Combat in Nat20 is a turn-based loop. There are two ways to drive it, on the
+same resolution code:
+
+- **Through a handle.** You open a combat with `start_combat`, submit intents
+  turn by turn through an opaque **`CombatHandle`**, and close it. The engine
+  keeps the combat in memory behind the handle.
+- **As state.** You open it with `begin_combat` and keep the
+  **`CombatState`** yourself. Every call takes the state and a seed and returns
+  the events and the new state; nothing stays in the engine between calls. See
+  [Combat as state](#combat-as-state).
 
 ## The loop
 
@@ -53,6 +60,50 @@ never enters `party_ids` or `encounter_ids`, and the `CombatOutcome` holds no
 Hit Points, XP or death of its own. A `DeathRecord.killer_id` can still name
 it, as the current actor that dealt the blow: `CombatantJoined.origin_caster_id`
 names its caster.
+
+## Combat as state
+
+`CombatState` (`dnd5e_engine.combat_state`) is a pydantic model holding
+everything a combat needs for its next call. It round-trips through JSON
+without loss, so a host can store it anywhere and resume from it in another
+process:
+
+| Call | Takes | Returns |
+| --- | --- | --- |
+| `begin_combat(session_id=, party=, encounter=, grid_scene=, seed=)` | The specs `start_combat` takes; the seed draws engine-rolled Initiative | `CombatStep` |
+| `resolve_intent(state, actor_id=, intent=, seed=)` | A state and one `PlayerIntent` | `CombatStep` |
+| `resolve_monster_turn(state, seed=, legendary=False, actor_id=None)` | A state whose active combatant is a monster, or a legendary-action window | `CombatStep` |
+| `arm_legendary_resistance(state, entity_id)` | A state (it rolls nothing, so no seed) | `CombatStep` |
+| `close_combat(state)` | A state | `EndCombatStep`: the outcome, the closing events, the effects still active, the ended state |
+
+A `CombatStep` is the events the call emitted, in order, and the new state.
+The state passed in is never changed, so a rejected intent
+(`IntentRejectedError`, as on the handle path) leaves the caller's state as it
+was.
+
+**What the state holds.** The round, the initiative order and the active
+combatant; each combatant (its statistics, Hit Points, conditions, death saving
+throws, turn resources and Reaction), its position, Temporary Hit Points and
+spell slots; every active effect, the concentration each caster holds and the
+rounds left on it, and every pending end-of-turn repeat save; each readied
+reaction; each monster's spent recharge actions, per-day uses and legendary
+pools; the conjurations in play; and the events of the turn in progress, which
+the turn's end reads. The `CombatState` docstring lists every field, and the
+module docstring lists what is left out and why it cannot matter.
+
+**Seeds.** Every die a call rolls comes from `random.Random(seed)`. The same
+state, call and seed give byte-identical output, in any process; nothing reads
+the global `random` module or the clock. A host records each call's seed with
+its result to replay it.
+
+**A host's own record.** A host that stores the round and the active combatant
+itself can move a state's turn with `state.at_turn(round, active_combatant)`.
+
+**Between the two styles.** `load_combat(state)` puts a state behind a handle,
+and `combat_state_of(handle)` reads a handle's state back. `submit_player_intent`
+and `advance_monster_turn` take an optional `seed=` too: with it, the call
+draws from that seed, exactly as the stateless call does; without it, the
+handle keeps the one dice stream `start_combat(rng_seed=...)` began.
 
 ## Conditions a host adjudicates
 

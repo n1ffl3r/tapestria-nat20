@@ -34,7 +34,7 @@ def test_resolve_check_skill_picks_up_specific_bucket(monkeypatch):
     """A check.skill_check.bonus change lands on a skill check resolution."""
     import dnd5e_engine.rules.dice as dice_mod
 
-    monkeypatch.setattr(dice_mod.random, "randint", lambda a, b: 10)
+    monkeypatch.setattr(dice_mod.UNSEEDED, "randint", lambda a, b: 10)
     eff = _effect("check.skill_check.bonus", value=5)
 
     spec = CheckSpec(
@@ -54,7 +54,7 @@ def test_resolve_check_skill_picks_up_specific_bucket(monkeypatch):
 def test_resolve_check_ability_picks_up_ability_specific_bucket(monkeypatch):
     import dnd5e_engine.rules.dice as dice_mod
 
-    monkeypatch.setattr(dice_mod.random, "randint", lambda a, b: 10)
+    monkeypatch.setattr(dice_mod.UNSEEDED, "randint", lambda a, b: 10)
     eff = _effect("check.ability_check.bonus", value=3)
     spec = CheckSpec(
         kind="ability",
@@ -73,7 +73,7 @@ def test_resolve_check_save_picks_up_per_ability_bucket(monkeypatch):
     """save.wisdom.bonus lands on a Wisdom save (Cloak of Mind Shielding style)."""
     import dnd5e_engine.rules.dice as dice_mod
 
-    monkeypatch.setattr(dice_mod.random, "randint", lambda a, b: 10)
+    monkeypatch.setattr(dice_mod.UNSEEDED, "randint", lambda a, b: 10)
     eff = _effect("save.wisdom.bonus", value=2)
     spec = CheckSpec(
         kind="saving_throw",
@@ -94,7 +94,7 @@ def test_resolve_check_save_per_ability_bucket_does_not_leak_to_other_ability(
     """A save.wisdom.bonus must NOT influence a Dex save."""
     import dnd5e_engine.rules.dice as dice_mod
 
-    monkeypatch.setattr(dice_mod.random, "randint", lambda a, b: 10)
+    monkeypatch.setattr(dice_mod.UNSEEDED, "randint", lambda a, b: 10)
     eff = _effect("save.wisdom.bonus", value=2)
     spec = CheckSpec(
         kind="saving_throw",
@@ -114,7 +114,7 @@ def test_resolve_check_save_generic_bucket_applies_to_any_save(monkeypatch):
     """A save.bonus change still applies regardless of ability."""
     import dnd5e_engine.rules.dice as dice_mod
 
-    monkeypatch.setattr(dice_mod.random, "randint", lambda a, b: 10)
+    monkeypatch.setattr(dice_mod.UNSEEDED, "randint", lambda a, b: 10)
     eff = _effect("save.bonus", value=1)
     spec = CheckSpec(
         kind="saving_throw",
@@ -133,7 +133,7 @@ def test_resolve_check_generic_and_specific_buckets_stack(monkeypatch):
     """Both buckets apply if both are present on the same effect."""
     import dnd5e_engine.rules.dice as dice_mod
 
-    monkeypatch.setattr(dice_mod.random, "randint", lambda a, b: 10)
+    monkeypatch.setattr(dice_mod.UNSEEDED, "randint", lambda a, b: 10)
     eff = ActiveEffect(
         id="effect:test_stack",
         name="Stacking Buff",
@@ -162,7 +162,7 @@ def test_resolve_check_no_per_ability_when_kind_is_skill(monkeypatch):
     """save.wisdom.bonus must NOT influence a skill check resolution."""
     import dnd5e_engine.rules.dice as dice_mod
 
-    monkeypatch.setattr(dice_mod.random, "randint", lambda a, b: 10)
+    monkeypatch.setattr(dice_mod.UNSEEDED, "randint", lambda a, b: 10)
     eff = _effect("save.wisdom.bonus", value=2)
     spec = CheckSpec(
         kind="skill",

@@ -4,7 +4,10 @@ Everything exported here is listed in ``__all__`` below; that list is the
 package's stable contract and is pinned by ``tests/test_public_api_surface.py``.
 
 The four combat-loop coroutines are ``start_combat``, ``submit_player_intent``,
-``advance_monster_turn`` and ``end_combat``; ``resolve_check`` is the standalone
+``advance_monster_turn`` and ``end_combat``; a host that keeps the combat's
+state itself uses ``begin_combat``, ``resolve_intent``, ``resolve_monster_turn``
+and ``close_combat`` instead, each taking a ``CombatState`` and a seed and
+returning the events and the new state (``combat_state.py``); ``resolve_check`` is the standalone
 ability/skill/saving-throw resolver, and ``build_party_member`` turns a
 ``CharacterBuildSpec`` into a combat-ready ``PartyMemberSpec``.
 
@@ -39,6 +42,18 @@ from dnd5e_engine.build_spec import (
     make_build_spec,
 )
 from dnd5e_engine.check import CheckKind, CheckResult, CheckSpec, resolve_check
+from dnd5e_engine.combat_state import (
+    CombatState,
+    CombatStep,
+    EndCombatStep,
+    arm_legendary_resistance,
+    begin_combat,
+    close_combat,
+    combat_state_of,
+    load_combat,
+    resolve_intent,
+    resolve_monster_turn,
+)
 from dnd5e_engine.events import AdvantageSource, CombatEvent, IntentType
 from dnd5e_engine.lib_loader import configure_lib_loader
 from dnd5e_engine.orchestrator import (
@@ -101,10 +116,13 @@ __all__ = [
     "CombatHandle",
     "CombatInstance",
     "CombatOutcome",
+    "CombatState",
+    "CombatStep",
     "DeathRecord",
     "DerivedSheet",
     "EncounterMemberSpec",
     "EndCombatResult",
+    "EndCombatStep",
     "GridScene",
     "HitDicePool",
     "IntentRejectedError",
@@ -119,8 +137,12 @@ __all__ = [
     "StartCombatResult",
     "WallSegment",
     "advance_monster_turn",
+    "arm_legendary_resistance",
+    "begin_combat",
     "build_party_member",
     "cell_id",
+    "close_combat",
+    "combat_state_of",
     "configure_lib_loader",
     "derive_multiclass_slots",
     "derive_pact_slots",
@@ -130,6 +152,7 @@ __all__ = [
     "end_combat",
     "get_actor_active_effects",
     "get_live",
+    "load_combat",
     "make_build_spec",
     "narration_events",
     "parse_cell",
@@ -137,8 +160,10 @@ __all__ = [
     "recover_item_uses",
     "recover_slotless_casts",
     "resolve_check",
+    "resolve_intent",
     "resolve_legendary_resistance",
     "resolve_long_rest",
+    "resolve_monster_turn",
     "resolve_ritual_cast",
     "resolve_short_rest",
     "roll_dice_str",

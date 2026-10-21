@@ -45,7 +45,7 @@ def test_skill_check_inherits_disadvantage_from_frightened_effect(monkeypatch):
     """Frightened actor → skill check rolled at disadvantage."""
     # First call: d20 = 18, second call (disadvantage takes lower): d20 = 5.
     rolls = iter([18, 5])
-    monkeypatch.setattr(dice_mod.random, "randint", lambda a, b: next(rolls))
+    monkeypatch.setattr(dice_mod.UNSEEDED, "randint", lambda a, b: next(rolls))
 
     spec = CheckSpec(
         kind="skill",
@@ -64,7 +64,7 @@ def test_skill_check_inherits_disadvantage_from_frightened_effect(monkeypatch):
 def test_skill_check_without_effect_is_normal(monkeypatch):
     """Without a flag-tagged effect, the roll uses the first d20."""
     rolls = iter([18, 5])
-    monkeypatch.setattr(dice_mod.random, "randint", lambda a, b: next(rolls))
+    monkeypatch.setattr(dice_mod.UNSEEDED, "randint", lambda a, b: next(rolls))
 
     spec = CheckSpec(
         kind="skill",
@@ -83,7 +83,7 @@ def test_skill_check_without_effect_is_normal(monkeypatch):
 def test_saving_throw_inherits_advantage_from_resistance_effect(monkeypatch):
     """flags.advantage.save (broad) lifts a saving throw to advantage."""
     rolls = iter([5, 18])
-    monkeypatch.setattr(dice_mod.random, "randint", lambda a, b: next(rolls))
+    monkeypatch.setattr(dice_mod.UNSEEDED, "randint", lambda a, b: next(rolls))
 
     spec = CheckSpec(
         kind="saving_throw",
@@ -102,7 +102,7 @@ def test_saving_throw_inherits_advantage_from_resistance_effect(monkeypatch):
 def test_per_ability_save_flag_applies_only_to_matching_ability(monkeypatch):
     """flags.disadvantage.save.dexterity must not affect a Wisdom save."""
     rolls = iter([18, 5])
-    monkeypatch.setattr(dice_mod.random, "randint", lambda a, b: next(rolls))
+    monkeypatch.setattr(dice_mod.UNSEEDED, "randint", lambda a, b: next(rolls))
 
     eff = ActiveEffect(
         id="effect:test",
@@ -134,7 +134,7 @@ def test_per_ability_save_flag_applies_only_to_matching_ability(monkeypatch):
 def test_per_ability_save_flag_applies_to_matching_ability(monkeypatch):
     """flags.disadvantage.save.wisdom DOES affect a Wisdom save."""
     rolls = iter([18, 5])
-    monkeypatch.setattr(dice_mod.random, "randint", lambda a, b: next(rolls))
+    monkeypatch.setattr(dice_mod.UNSEEDED, "randint", lambda a, b: next(rolls))
 
     eff = ActiveEffect(
         id="effect:test",
@@ -167,7 +167,7 @@ def test_spec_advantage_or_flag_advantage_either_triggers(monkeypatch):
     """A spec.advantage=True OR a flags.advantage effect both produce advantage.
     Either path independently triggers the higher-roll selection."""
     rolls = iter([5, 18])
-    monkeypatch.setattr(dice_mod.random, "randint", lambda a, b: next(rolls))
+    monkeypatch.setattr(dice_mod.UNSEEDED, "randint", lambda a, b: next(rolls))
 
     eff = ActiveEffect(
         id="effect:bardic_inspiration",

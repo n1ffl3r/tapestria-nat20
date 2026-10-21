@@ -17,11 +17,12 @@ drop into a game server, a bot, a VTT backend, or a test harness.
 
 ## Why Nat20
 
-- **Deterministic, seedable engine.** Every in-combat roll flows through the
-  RNG seeded by `start_combat(rng_seed=...)`, so a combat is reproducible from
-  its seed and intent sequence alone — ideal for tests, replays, and AI-driven
-  hosts that need a rules oracle. Standalone checks take their own seed via
-  `CheckSpec.rng`.
+- **Deterministic, seedable engine.** Every in-combat roll flows through a
+  seeded RNG, never the global `random` module: `start_combat(rng_seed=...)`
+  seeds a handle's combat, and a combat kept as a `CombatState` takes a seed on
+  every call, so the same state, call and seed always give the same result.
+  That suits tests, replays, and AI-driven hosts that need a rules oracle.
+  Standalone checks take their own seed via `CheckSpec.rng`.
 - **Pure Python, zero I/O.** The engine performs no I/O of its own. Content
   loads through the companion `dnd5e-srd-data` package via an explicit
   `BundledAssetLoader`. Easy to embed, easy to reason about.
