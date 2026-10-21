@@ -34,9 +34,11 @@ __all__ = [
     "default_reaction_policy",
 ]
 
-#: The reactions the engine offers at their SRD triggers, by SRD key: three
+#: The reactions the engine offers at their SRD triggers, by SRD key: four
 #: reaction spells and the Opportunity Attack every creature has.
-ReactionKey = Literal["shield", "counterspell", "hellish-rebuke", "opportunity-attack"]
+ReactionKey = Literal[
+    "shield", "counterspell", "hellish-rebuke", "feather-fall", "opportunity-attack"
+]
 
 #: A player's decision on one prompt.
 ReactionDecision = Literal["use", "pass"]

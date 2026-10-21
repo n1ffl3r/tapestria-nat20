@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 Spec 02a (the fork's work order for its host), session B1: the combat as
 serializable state, and a seed on every call that rolls. Session B2: a resolution that pauses for a reaction, and Shield, Counterspell,
 Hellish Rebuke and opportunity attacks taken as Reactions at their SRD triggers.
+Then falling: cell elevation, climbing, falls from forced movement, and Feather
+Fall.
 
 ### Added
 
@@ -43,6 +45,25 @@ Hellish Rebuke and opportunity attacks taken as Reactions at their SRD triggers.
 - **`ActivityResolutionContext.on_would_hit`**: called once an attack roll
   would hit, before `AttackRolled` and any damage; the AC it returns is
   compared again.
+- **Elevation** (`GridScene.elevation_cells`, `default_elevation`,
+  `GridTopology.elevation_ft`). SRD 5.2.1 "Climbing": "each foot of movement
+  costs 1 extra foot (2 extra feet in Difficult Terrain). You ignore this extra
+  cost if you have a Climb Speed". A step between heights climbs the
+  difference: `edge_distance` and `reachable_cells` take `climber=`, and every
+  walk and route is priced for the mover (a Climb or Fly Speed pays 1 foot a
+  foot). An empty map leaves every cost as it was. `SpatialTopology.edge_distance`
+  gains the same keyword, so a custom topology must accept it.
+- **Falling.** SRD 5.2.1 "Falling [Hazard]": "1d6 Bludgeoning damage at the end
+  of the fall for every 10 feet it fell, to a maximum of 20d6", then Prone
+  "unless it avoids taking any damage from the fall". A push stops before a
+  higher cell and on a lower one, where the creature falls: the new
+  `CreatureFell` event, then `DamageApplied` (`source_id="hazard:falling"`) and
+  Prone. A flier stays aloft unless Incapacitated, Prone or at Fly Speed 0, or
+  it can hover (`CombatantMovementModes.hover`).
+- **Feather Fall is offered when a creature falls** (`reaction_key=
+  "feather-fall"`), to every creature that knows it, can pay for it and is the
+  faller or sees it within 60 feet; it prevents the damage and Prone of a fall
+  of 600 feet or less.
 - **`make test-roundtrip`** reruns the suite with every handle call rebuilding
   its combat from its `CombatState`; **`make test-hashseed`** (part of `make
   check`) does it under two string-hash seeds and requires identical traces.
@@ -76,6 +97,9 @@ Hellish Rebuke and opportunity attacks taken as Reactions at their SRD triggers.
   within 60 feet of yourself". It is offered after each damaging attack or
   spell activity and cast at the attacker; a rebuke that drops a monster ends
   its Multiattack. The 0.7.0 own-turn cast at `last_damaged_by` still works.
+- **A templated monster keeps its stat block's special speeds.** Its
+  `movement_modes` (Climb, Fly, Swim, Burrow and hover) come from the stat
+  block at the start of combat, as they already did on a transformation.
 - **A character's opportunity attack goes through the policy**
   (`reaction_key="opportunity-attack"`), which the default policy uses; a
   monster's is always taken.

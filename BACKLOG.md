@@ -417,8 +417,25 @@ counts are pinned by `packages/dnd5e-engine/tests/test_capability_matrix.py`.
 
 ## Movement (2026-08-22)
 
-- **No elevation.** The grid is strictly 2-D, so flying creatures have no
-  altitude and `movement_modes` beyond walk speed do not affect positioning.
+- **Elevation is a surface height only (amended 2026-10-21, falling).**
+  `GridScene.elevation_cells` prices climbing and makes a push over an edge a
+  fall, but the rest of the grid stays 2-D:
+  - nothing tracks a creature's altitude in the air, so a flier stands on the
+    surface of its cell, and a flier knocked Prone or Incapacitated there does
+    not fall (SRD 5.2.1 "Flying": "you fall if you have the Incapacitated or
+    Prone condition");
+  - range, reach, line of sight, cover and areas of effect measure across the
+    grid and ignore height;
+  - a walk never falls: it climbs down, and there is no jump or deliberate
+    drop;
+  - a fall into water or another liquid takes full damage (SRD 5.2.1 "Falling":
+    "can use its Reaction to make a DC 15 Strength (Athletics) or Dexterity
+    (Acrobatics) check to hit the surface head or feet first. On a successful
+    check, any damage resulting from the fall is halved"), since a cell has no
+    liquid tag;
+  - Swim and Burrow Speeds still do not affect movement.
+  (`packages/dnd5e-engine/src/dnd5e_engine/spatial.py::GridTopology.edge_distance`,
+  `packages/dnd5e-engine/src/dnd5e_engine/orchestrator.py::_resolve_fall`)
 - **No multi-tile creature footprints (amended 2026-09-26, C21b; amended
   2026-10-04, C26b).** Every creature occupies one cell regardless of size, a
   Large summoned Draconic Spirit included: its placement needs one free cell.
@@ -1397,11 +1414,14 @@ zone + apply logic:
   (`packages/dnd5e-engine/src/dnd5e_engine/rest.py`)
 - **Absorb Elements has no reaction path.** (See "Reactions are not
   data-driven" above.)
-- **Feather Fall has no trigger (2026-10-21, spec 02a B2).** SRD 5.2.1 Feather
-  Fall: "Reaction, which you take when you or a creature you can see within 60
-  feet of you falls". The engine models no falling ("Not modelled by design"),
-  so nothing ever offers it.
-  (`packages/dnd5e-engine/src/dnd5e_engine/reactions.py::ReactionKey`)
+- **Feather Fall saves one falling creature, at once (2026-10-21,
+  falling).** SRD 5.2.1 Feather Fall: "Choose up to five falling creatures
+  within range. A falling creature's rate of descent slows to 60 feet per round
+  until the spell ends." Each fall is offered on its own and a cast covers only
+  that creature, so a Thunderwave that pushes three creatures off a ledge takes
+  three casts. The slowed descent resolves at once: the creature lands in the
+  same call, not over the following rounds.
+  (`packages/dnd5e-engine/src/dnd5e_engine/orchestrator.py::_offer_feather_fall`)
 - **A reaction spell cannot be countered (2026-10-21, spec 02a B2).** SRD
   5.2.1 Counterspell answers "a creature ... casting a spell", which includes a
   Shield or Hellish Rebuke cast as a Reaction, but Counterspell is offered only
@@ -1535,8 +1555,8 @@ now calls the engine rather than standing in for it. Residual gaps:
 ## Not modelled by design (recorded so nobody re-audits them)
 
 Hiding vs passive
-Perception, falling, suffocation/drowning, underwater, extreme weather,
-hazards/traps, objects as targets, mounted combat, elevation, multi-tile
+Perception, suffocation/drowning, underwater, extreme weather,
+hazards/traps other than falling, objects as targets, mounted combat, multi-tile
 footprints. Exploration-tier; revisit only if a host asks. Mounted combat
 covers the steeds Find Steed and Phantom Steed summon (SRD 5.2 Find Steed:
 the steed "functions as a controlled mount while you ride it"), so both

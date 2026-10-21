@@ -127,7 +127,25 @@ always did, and a character that passes keeps its Reaction. A monster or NPC is
 never asked: contract 03 has monsters decide "by their stat block behavior and
 directive. No pause.", and this engine's monsters always take the attack.
 
-## Readied spells and Feather Fall
+## Feather Fall
+
+SRD 5.2.1 Feather Fall: "Casting Time: Reaction, which you take when you or a
+creature you can see within 60 feet of you falls"; "A falling creature's rate of
+descent slows to 60 feet per round until the spell ends. If a creature lands
+before the spell ends, the creature takes no damage from the fall, and the
+spell ends for that creature."
+
+- **When:** a creature falls ([Elevation, climbing and falling](grid.md#elevation-climbing-and-falling)),
+  before the fall's damage, when the fall would deal any (10 feet or more).
+- **Who is offered it,** in initiative order: every creature that knows Feather
+  Fall, can pay for it, can cast a spell as a Reaction, and is the falling
+  creature or sees it within 60 feet. The first to use it casts it at the
+  falling creature, and the offer ends.
+- **Its effect:** a fall of 600 feet or less (the spell's 1 minute at 60 feet
+  per round) deals no damage, so the creature lands standing. A longer fall
+  deals damage for the distance past 600 feet.
+
+## Readied spells
 
 A spell other than these, readied with a `"ready"` intent, still fires on its
 `reaction_trigger`: `"hit_by_attack"` once an attack roll hits the creature,
@@ -135,10 +153,6 @@ A spell other than these, readied with a `"ready"` intent, still fires on its
 when another creature casts a spell. `PlayerIntent.reaction_trigger` accepts
 only those three values. The set is not data-driven: a new reaction spell needs
 engine code (`BACKLOG.md`).
-
-SRD 5.2.1 Feather Fall is taken "when you or a creature you can see within 60
-feet of you falls". The engine models no falling, so it has no trigger and is
-never offered.
 
 ## Reaction economy
 

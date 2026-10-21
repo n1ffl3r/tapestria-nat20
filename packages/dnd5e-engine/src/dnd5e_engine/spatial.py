@@ -137,7 +137,7 @@ class SpatialTopology(Protocol):
 
     def is_adjacent(self, a: str, b: str) -> bool: ...
 
-    def edge_distance(self, a: str, b: str) -> int | None: ...
+    def edge_distance(self, a: str, b: str, *, climber: bool = False) -> int | None: ...
 
     def within_range(self, caster: str, target: str, range_ft: int) -> bool: ...
 
@@ -181,6 +181,8 @@ class GridTopology:
         self._lighting: dict[str, LightLevel] = dict(scene.lighting)
         self._default_lighting: LightLevel = scene.default_lighting
         self._obscurement: dict[str, Obscurement] = dict(scene.obscurement_cells)
+        self._elevation: dict[str, int] = dict(scene.elevation_cells)
+        self._default_elevation = scene.default_elevation
 
     @property
     def cell_size_ft(self) -> int:
@@ -229,17 +231,34 @@ class GridTopology:
                     return False
         return True
 
-    def edge_distance(self, a: str, b: str) -> int | None:
+    def elevation_ft(self, cid: str) -> int:
+        """The height, in feet, of the surface in ``cid`` (``GridScene.elevation_cells``,
+        else ``default_elevation``)."""
+        return self._elevation.get(cid, self._default_elevation)
+
+    def edge_distance(self, a: str, b: str, *, climber: bool = False) -> int | None:
         """One step's movement cost, in feet, entering ``b`` from adjacent ``a``;
         ``None`` when the step is illegal (not adjacent, ``b`` blocked, a wall
         crosses the step, or a diagonal cuts a blocked corner — SRD 5.2
         §Playing on a Grid "Corners"). SRD 5.2 §Difficult Terrain: entering a
-        difficult-terrain cell costs double (keyed on the cell ENTERED)."""
+        difficult-terrain cell costs double (keyed on the cell ENTERED).
+
+        A step between cells of different elevation also climbs the height
+        difference, up or down. SRD 5.2.1 "Climbing": "While you're climbing,
+        each foot of movement costs 1 extra foot (2 extra feet in Difficult
+        Terrain). You ignore this extra cost if you have a Climb Speed and use
+        it to climb." Each foot climbed costs 2 feet (3 into difficult
+        terrain); a ``climber`` (a Climb or Fly Speed) pays 1 (2 into
+        difficult terrain)."""
         if not self.is_adjacent(a, b) or not self._step_is_legal(a, b):
             return None
+        difficult = b in self._difficult
         cost = self._cell_size_ft
-        if b in self._difficult:
+        if difficult:
             cost *= 2
+        climbed = abs(self.elevation_ft(b) - self.elevation_ft(a))
+        if climbed:
+            cost += climbed * (1 + int(difficult) + int(not climber))
         return cost
 
     def within_range(self, caster: str, target: str, range_ft: int) -> bool:
@@ -533,8 +552,10 @@ class GridTopology:
         yourself"). Direction is the sign of ``target - origin`` per axis (one
         of the 8 grid directions). The walk stops early at the grid edge, a
         blocked cell, a wall, a corner cut (``edge_distance`` is ``None``) or an
-        occupied cell — the creature is moved as far as it can go. Grid-only;
-        not part of ``SpatialTopology``."""
+        occupied cell — the creature is moved as far as it can go. A push never
+        climbs: it stops before a higher cell. It stops on a lower cell, where
+        the creature falls (the caller resolves the fall). Grid-only; not part
+        of ``SpatialTopology``."""
         if not self._in_bounds(origin) or not self._in_bounds(target) or origin == target:
             return []
         oc, orow = parse_cell(origin)
@@ -551,9 +572,12 @@ class GridTopology:
                 not self._in_bounds(nxt)
                 or nxt in occupied
                 or self.edge_distance(current, nxt) is None
+                or self.elevation_ft(nxt) > self.elevation_ft(current)
             ):
                 break
             out.append(nxt)
+            if self.elevation_ft(nxt) < self.elevation_ft(current):
+                break
             current = nxt
         return out
 
@@ -625,12 +649,18 @@ class GridTopology:
         return []
 
     def reachable_cells(
-        self, start: str, budget_ft: int, *, avoid: Collection[str] = ()
+        self,
+        start: str,
+        budget_ft: int,
+        *,
+        avoid: Collection[str] = (),
+        climber: bool = False,
     ) -> dict[str, tuple[int, str | None]]:
         """Every cell a creature standing on ``start`` can walk to for at most
         ``budget_ft`` of movement, mapped to ``(cost_ft, previous_cell)``:
         the cheapest route's price (SRD 5.2 §Difficult Terrain: entering a
-        difficult cell costs double) and the cell that route enters it from
+        difficult cell costs double; a climb costs extra for a creature that
+        is not a ``climber``, see ``edge_distance``) and the cell that route enters it from
         (``None`` for ``start``, cost 0). Follow ``previous_cell`` back to
         ``start`` for the route itself.
 
@@ -653,7 +683,7 @@ class GridTopology:
             if cost > reached[cid][0]:
                 continue
             for nb in self._neighbors(cid):
-                step = self.edge_distance(cid, nb)
+                step = self.edge_distance(cid, nb, climber=climber)
                 if nb in avoid_set or step is None or cost + step > budget_ft:
                     continue
                 known = reached.get(nb)

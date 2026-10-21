@@ -498,6 +498,26 @@ class CombatantMoved(BaseModel):
     forced: bool
 
 
+class CreatureFell(BaseModel):
+    """Emitted when a creature falls: forced movement took it off a higher cell
+    into a lower one (``GridScene.elevation_cells``). SRD 5.2.1 "Falling
+    [Hazard]": "A creature that falls takes 1d6 Bludgeoning damage at the end
+    of the fall for every 10 feet it fell, to a maximum of 20d6. When the
+    creature lands, it has the Prone condition unless it avoids taking any
+    damage from the fall."
+
+    ``distance_ft`` is the height fallen; ``zone`` is the cell it lands in.
+    A Feather Fall cast in response follows (``ReactionTriggered``,
+    ``SpellCast``), then the fall's ``DamageApplied`` (``source_id``
+    ``"hazard:falling"``) and ``ConditionApplied`` Prone, when it took
+    damage."""
+
+    type: Literal["creature_fell"] = "creature_fell"
+    target_id: str
+    zone: str
+    distance_ft: int
+
+
 class DashTaken(BaseModel):
     """Emitted when a Dash intent succeeds.
 
@@ -769,6 +789,7 @@ CombatEvent = Annotated[
     | ZoneTransit
     | ActorMoved
     | CombatantMoved
+    | CreatureFell
     | CombatantJoined
     | CombatantLeft
     | DashTaken
@@ -816,6 +837,7 @@ ALL_COMBAT_EVENT_TYPES: tuple[type[BaseModel], ...] = (
     ZoneTransit,
     ActorMoved,
     CombatantMoved,
+    CreatureFell,
     CombatantJoined,
     CombatantLeft,
     DashTaken,
@@ -856,6 +878,7 @@ __all__ = [
     "ConditionApplied",
     "ConditionRemoved",
     "ConditionType",
+    "CreatureFell",
     "DamageApplied",
     "DamageType",
     "DashTaken",
