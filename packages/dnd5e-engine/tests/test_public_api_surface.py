@@ -61,7 +61,14 @@ TOP_LEVEL = {
     "start_combat",
     "submit_player_intent",
     # Spec 02a (fork): the combat as serializable state, resolved one seeded
-    # call at a time.
+    # call at a time, and reactions a host answers.
+    "CombatSuspension",
+    "Continuation",
+    "resume",
+    "state_digest",
+    "ReactionChoice",
+    "ReactionPrompt",
+    "default_reaction_policy",
     "CombatState",
     "CombatStep",
     "EndCombatStep",
@@ -94,6 +101,7 @@ PUBLIC_MODULES = [
     "dnd5e_engine.types.effects",
     "dnd5e_engine.testing",
     "dnd5e_engine.combat_state",
+    "dnd5e_engine.reactions",
 ]
 
 

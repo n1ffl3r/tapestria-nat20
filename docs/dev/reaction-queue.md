@@ -5,7 +5,18 @@ trigger detection, Counterspell, Shield, the monster-reactor opportunity
 attack, and Disengage. These share one piece of machinery and were designed
 together rather than piecemeal; this note is that shared design.
 
-**Hard governing constraint: reactions are pre-armed auto-fire.** There is no mid-resolution host round-trip anywhere
+!!! note "Superseded in part by spec 02a"
+
+    This note describes the 0.7.0 design. Since spec 02a, a resolution can
+    pause for a reaction: the stateless calls offer a reaction at its SRD
+    trigger to the host's `ReactionPolicy`, which can suspend the call, and
+    `resume` finishes it ([Reactions](../concepts/reactions.md)). Shield is
+    offered after an attack roll that would hit, not drained before the roll,
+    and a readied spell on `"hit_by_attack"` is released at that same point.
+    The queue below still holds `"ready"` intents, Counterspell and the other
+    readied spells.
+
+**Hard governing constraint (0.7.0): reactions are pre-armed auto-fire.** There is no mid-resolution host round-trip anywhere
 in this design — `submit_player_intent` / `advance_monster_turn` remain the
 only two ingress points, and a queued reaction is drained and fully resolved
 entirely inside whichever of those two calls processes the trigger. A host

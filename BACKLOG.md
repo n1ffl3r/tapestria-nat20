@@ -599,6 +599,19 @@ counts are pinned by `packages/dnd5e-engine/tests/test_capability_matrix.py`.
   for a host whose record names a turn already under way; a host opening a new
   turn from its own record needs a call that starts it.
   (`packages/dnd5e-engine/src/dnd5e_engine/combat_state.py::CombatState.at_turn`)
+- **A reaction prompt cannot tell whether a hit would be lethal (2026-10-21,
+  spec 02a B2).** `ReactionPrompt` carries the attack total, the natural d20
+  and whether it is a Critical Hit, but Shield is decided before damage is
+  rolled, so a host doctrine "use it only if the attack would drop the
+  character to 0 Hit Points" has nothing to read but the target's Hit Points
+  and the attacker's damage expression.
+  (`packages/dnd5e-engine/src/dnd5e_engine/reactions.py::ReactionPrompt`)
+- **No monster is offered a reaction spell (2026-10-21, spec 02a B2).** Shield
+  is offered to a creature that knows it through `spells_known` or a slotless
+  cast, which only characters carry; a stat block's reaction (the Mage's
+  "Protective Magic (3/Day). The mage casts Counterspell or Shield in response
+  to the spell's trigger") is never offered.
+  (`packages/dnd5e-engine/src/dnd5e_engine/orchestrator.py::_offer_shield`)
 - **`orchestrator.py` is ~13.4k lines**, well over a third of the engine,
   holding the reaction queue, item/feature charge accounting, the monster
   turn, the effect lifecycle, the conjurations and the turn loop. Each is a
@@ -1383,7 +1396,9 @@ zone + apply logic:
   (`packages/dnd5e-engine/src/dnd5e_engine/rest.py`)
 - **Absorb Elements has no reaction path**; Hellish Rebuke is only a
   `last_damaged_by` target validator, not a trigger. (See "Reactions are not
-  data-driven" above.)
+  data-driven" above.) Spec 02a's next step offers Hellish Rebuke, Counterspell
+  and opportunity attacks through `ReactionPolicy`, as Shield is (2026-10-21);
+  Feather Fall has no trigger while falling is not modelled.
 - **Four concentration spells raise after spending their slot (2026-09-26,
   pre-existing).** Delayed Blast Fireball and Tsunami read `@item.uses.value`,
   Spider Climb reads `@attributes.movement.walk`, and Phantasmal Killer's save

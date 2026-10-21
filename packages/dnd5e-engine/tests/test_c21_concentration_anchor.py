@@ -240,10 +240,13 @@ def test_a_monster_cast_is_anchored_when_its_target_saves(seed: int, anchored: b
 
 
 def test_a_readied_concentration_spell_now_concentrates() -> None:
-    """A readied Fog Cloud fires on the foe's attack as a self-cast; the
-    readied site now runs the same fold, so the spell concentrates (1 hour:
-    600 rounds). Seed 1: the cast draws nothing; the foe's d20 5 misses AC 25."""
-    hero = pc(spells_known=["fog-cloud"], spell_slots={1: 1}, ac=25)
+    """A readied Fog Cloud fires as a self-cast when the foe's attack hits
+    ("hit_by_attack": the reactor is hit by an attack); the readied site runs
+    the same fold, so the spell concentrates (1 hour: 600 rounds). AC 1 makes
+    the foe's attack hit, and Constitution 30 holds Concentration through its
+    damage. (Until spec 02a the readied spell fired before the roll, on a
+    miss.)"""
+    hero = pc(spells_known=["fog-cloud"], spell_slots={1: 1}, ac=1, constitution=30)
     handle, live = start([hero], seed=1)
     act(
         handle,

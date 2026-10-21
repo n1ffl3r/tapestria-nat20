@@ -8,7 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 Spec 02a (the fork's work order for its host), session B1: the combat as
-serializable state, and a seed on every call that rolls.
+serializable state, and a seed on every call that rolls. Session B2, first
+part: a resolution that pauses for a reaction, and Shield taken as a Reaction
+after an attack roll that would hit.
 
 ### Added
 
@@ -29,6 +31,19 @@ serializable state, and a seed on every call that rolls.
   between a handle and a state.
 - **`seed=`** on `submit_player_intent` and `advance_monster_turn`: the call
   draws from `random.Random(seed)` instead of the handle's stream.
+- **Reactions a host answers** (`dnd5e_engine.reactions`): `ReactionPrompt`,
+  `ReactionPolicy` (`"use"`, `"pass"` or `"suspend"`), `ReactionChoice` and
+  `default_reaction_policy`. `resolve_intent` and `resolve_monster_turn` take
+  `reactions=`; a `"suspend"` answer returns a `CombatStep` whose `suspension`
+  (`CombatSuspension`) holds the prompt and a plain-JSON `Continuation`.
+- **`resume(state, suspension, decision, seed)`** finishes a suspended call:
+  it rejects with `IntentRejectedError("state_changed", ...)` when the state
+  moved, replays the call to the pause with its recorded answers, draws every
+  die after the decision from `seed`, and can suspend again.
+  **`state_digest(state)`** is the digest it checks.
+- **`ActivityResolutionContext.on_would_hit`**: called once an attack roll
+  would hit, before `AttackRolled` and any damage; the AC it returns is
+  compared again.
 - **`make test-roundtrip`** reruns the suite with every handle call rebuilding
   its combat from its `CombatState`; **`make test-hashseed`** (part of `make
   check`) does it under two string-hash seeds and requires identical traces.
@@ -42,11 +57,24 @@ serializable state, and a seed on every call that rolls.
   tests that seeded the global module pass `CheckSpec.rng`.
   `roll_4d6_drop_lowest` and `generate_ability_scores_4d6` take an optional
   `rng`.
+- **Shield is a Reaction taken after the roll.** SRD 5.2.1 Shield: "Reaction,
+  which you take when you are hit by an attack roll or targeted by the Magic
+  Missile spell". It is offered after an attack roll that would hit, to a
+  creature that knows it (or readied it), can pay for it and has its Reaction,
+  with no `ready` intent or Action; its +5 AC decides the triggering roll again.
+  A readied Shield, or any spell readied on `"hit_by_attack"`, now fires only
+  when the attack hits, where it fired before the roll, on a hit or a miss.
+  Four tests that pinned the firing on a miss now make the attack hit.
 - **Set order no longer reaches output.** A seeded effect's statuses, an
   applied effect's conditions and the XP award's survivors are taken in a fixed
   order, so the same combat serializes the same way in every process.
 
 ### Fixed
+
+- **A reaction resolved inside another resolution keeps its own effects.** The
+  enclosing resolution's concentration and effect bookkeeping skips the
+  reaction's events (`_resolution_events`), so an attacker's spell never claims
+  the target's Shield or readied Fog Cloud as its own concentration.
 
 - **The `Death` a monster's damage synthesizes reaches per-call listeners.** It
   went to the log and the queue only, so `StartCombatResult.events`,

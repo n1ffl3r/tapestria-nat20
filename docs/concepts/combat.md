@@ -30,8 +30,8 @@ AI](monsters.md).
 
 A `"move"` intent names a destination cell, and the engine walks the
 fewest-cells legal route there in one intent ([Grid](grid.md#pathing)). Off-turn reactions
-(Shield, Counterspell, opportunity attacks) are never prompted for
-mid-resolution; they must be [pre-armed](reactions.md).
+are offered at their triggers: the stateless calls let a host answer or pause
+for them, and the handle calls take the default answer ([Reactions](reactions.md)).
 
 ### Summoned creatures
 
@@ -95,6 +95,12 @@ module docstring lists what is left out and why it cannot matter.
 state, call and seed give byte-identical output, in any process; nothing reads
 the global `random` module or the clock. A host records each call's seed with
 its result to replay it.
+
+**Reactions.** `resolve_intent` and `resolve_monster_turn` take a
+`reactions=` policy that answers each reaction a resolution offers. A
+`"suspend"` answer returns a step whose `suspension` holds a plain-JSON
+continuation, and `resume(state, suspension, decision, seed)` finishes the
+call; see [Reactions](reactions.md).
 
 **A host's own record.** A host that stores the round and the active combatant
 itself can move a state's turn with `state.at_turn(round, active_combatant)`.

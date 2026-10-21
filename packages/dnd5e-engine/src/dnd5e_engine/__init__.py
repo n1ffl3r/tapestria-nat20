@@ -45,6 +45,8 @@ from dnd5e_engine.check import CheckKind, CheckResult, CheckSpec, resolve_check
 from dnd5e_engine.combat_state import (
     CombatState,
     CombatStep,
+    CombatSuspension,
+    Continuation,
     EndCombatStep,
     arm_legendary_resistance,
     begin_combat,
@@ -53,6 +55,8 @@ from dnd5e_engine.combat_state import (
     load_combat,
     resolve_intent,
     resolve_monster_turn,
+    resume,
+    state_digest,
 )
 from dnd5e_engine.events import AdvantageSource, CombatEvent, IntentType
 from dnd5e_engine.lib_loader import configure_lib_loader
@@ -76,6 +80,7 @@ from dnd5e_engine.outcome import (
     DeathRecord,
     LootDrop,
 )
+from dnd5e_engine.reactions import ReactionChoice, ReactionPrompt, default_reaction_policy
 from dnd5e_engine.rest import (
     HitDicePool,
     RecoveryPeriod,
@@ -118,6 +123,8 @@ __all__ = [
     "CombatOutcome",
     "CombatState",
     "CombatStep",
+    "CombatSuspension",
+    "Continuation",
     "DeathRecord",
     "DerivedSheet",
     "EncounterMemberSpec",
@@ -131,6 +138,8 @@ __all__ = [
     "LootDrop",
     "PartyMemberSpec",
     "PlayerIntent",
+    "ReactionChoice",
+    "ReactionPrompt",
     "RecoveryPeriod",
     "RestOutcome",
     "RitualCast",
@@ -144,6 +153,7 @@ __all__ = [
     "close_combat",
     "combat_state_of",
     "configure_lib_loader",
+    "default_reaction_policy",
     "derive_multiclass_slots",
     "derive_pact_slots",
     "derive_sheet",
@@ -166,7 +176,9 @@ __all__ = [
     "resolve_monster_turn",
     "resolve_ritual_cast",
     "resolve_short_rest",
+    "resume",
     "roll_dice_str",
     "start_combat",
+    "state_digest",
     "submit_player_intent",
 ]

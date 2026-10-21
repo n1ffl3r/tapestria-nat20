@@ -44,6 +44,8 @@ the two.
 from __future__ import annotations
 
 import asyncio
+import hashlib
+import json
 import random
 from collections.abc import Sequence
 from typing import Any, Literal
@@ -55,6 +57,7 @@ from dnd5e_engine.events import CombatEvent, TurnStarted
 from dnd5e_engine.orchestrator import (
     _REGISTRY,
     CombatHandle,
+    IntentRejectedError,
     PlayerIntent,
     ReactionTrigger,
     _advance_monster_turn,
@@ -71,15 +74,25 @@ from dnd5e_engine.orchestrator import (
     _Transform,
 )
 from dnd5e_engine.outcome import CombatOutcome, DeathRecord
+from dnd5e_engine.reactions import (
+    ReactionChoice,
+    ReactionDecision,
+    ReactionPolicy,
+    ReactionPrompt,
+    ReactionSuspended,
+)
 from dnd5e_engine.spatial import GridTopology
 from dnd5e_engine.specs import EncounterMemberSpec, GridScene, PartyMemberSpec
 from dnd5e_engine.types.combat import Combatant, MonsterActionUses
 from dnd5e_engine.types.effects import ActiveEffect
 
 __all__ = [
+    "CombatCall",
     "CombatState",
     "CombatStep",
+    "CombatSuspension",
     "ConstructState",
+    "Continuation",
     "EffectKey",
     "EndCombatStep",
     "LegendaryWindow",
@@ -96,6 +109,8 @@ __all__ = [
     "load_combat",
     "resolve_intent",
     "resolve_monster_turn",
+    "resume",
+    "state_digest",
 ]
 
 #: Bumped whenever a field changes meaning, so a stored state never loads
@@ -358,12 +373,49 @@ class CombatState(_Model):
         )
 
 
+class CombatCall(_Model):
+    """One resolving call, as a continuation replays it: a player intent
+    (``kind="intent"``) or a monster turn or legendary action
+    (``kind="monster_turn"``)."""
+
+    kind: Literal["intent", "monster_turn"]
+    actor_id: str | None = None
+    intent: PlayerIntent | None = None
+    legendary: bool = False
+
+
+class Continuation(_Model):
+    """Everything ``resume`` needs to finish a suspended call, as plain JSON:
+    the call, its seed, every reaction answer it took before the pause, and the
+    digest of the state it started from (``state_digest``)."""
+
+    version: Literal[1] = 1
+    call: CombatCall
+    seed: int
+    choices: list[ReactionChoice] = Field(default_factory=list)
+    state_digest: str
+
+
+class CombatSuspension(_Model):
+    """A call paused at a reaction's trigger because the policy answered
+    ``"suspend"``: the prompt to put to the player, and the continuation."""
+
+    prompt: ReactionPrompt
+    continuation: Continuation
+
+
 class CombatStep(_Model):
     """What a resolving call returns: the events it emitted, in order, and the
-    combat's state after them."""
+    combat's state after them.
+
+    When the call paused for a reaction, ``suspension`` holds the pause;
+    ``state`` is then the state the call started from, unchanged, and
+    ``events`` are the events up to the trigger, for display only: the
+    finished resolution ``resume`` returns emits them again."""
 
     events: list[CombatEvent]
     state: CombatState
+    suspension: CombatSuspension | None = None
 
 
 class EndCombatStep(_Model):
@@ -750,29 +802,128 @@ async def begin_combat(
     )
 
 
+def state_digest(state: CombatState) -> str:
+    """SHA-256 of the state's canonical JSON (sorted keys, no whitespace), as
+    lowercase hex: contract 03's ``state_digest``, for a ``CombatState``."""
+    canonical = json.dumps(state.model_dump(mode="json"), sort_keys=True, separators=(",", ":"))
+    return hashlib.sha256(canonical.encode()).hexdigest()
+
+
+async def _run_call(
+    state: CombatState,
+    call: CombatCall,
+    seed: int,
+    *,
+    choices: Sequence[ReactionChoice] = (),
+    reactions: ReactionPolicy | None = None,
+) -> CombatStep:
+    """Run ``call`` against a fresh combat built from ``state``, answering its
+    reaction prompts from ``choices`` first, then from ``reactions``."""
+    live = _live_from_state(state, random.Random(seed))
+    live.reaction_policy = reactions
+    live.reaction_replay = list(choices)
+    events = _capture(live)
+    try:
+        if call.kind == "intent":
+            if call.actor_id is None or call.intent is None:
+                raise ValueError("an intent call names its actor and its intent")
+            await _submit_player_intent(live, call.actor_id, call.intent)
+        else:
+            await _advance_monster_turn(live, legendary=call.legendary, actor_id=call.actor_id)
+    except ReactionSuspended as paused:
+        live.event_listeners.remove(events.append)
+        return CombatStep(
+            events=_EVENTS.validate_json(_EVENTS.dump_json(events)),
+            state=state,
+            suspension=CombatSuspension(
+                prompt=paused.prompt,
+                continuation=Continuation(
+                    call=call,
+                    seed=seed,
+                    choices=list(live.reaction_record),
+                    state_digest=state_digest(state),
+                ),
+            ),
+        )
+    if live.reaction_replay:
+        raise RuntimeError("resume replay finished before reaching every recorded reaction")
+    return _step(live, events)
+
+
 async def resolve_intent(
-    state: CombatState, *, actor_id: str, intent: PlayerIntent, seed: int
+    state: CombatState,
+    *,
+    actor_id: str,
+    intent: PlayerIntent,
+    seed: int,
+    reactions: ReactionPolicy | None = None,
 ) -> CombatStep:
     """Resolve one player intent against ``state``, drawing every die from
     ``random.Random(seed)``: ``submit_player_intent`` without a handle. Raises
     ``IntentRejectedError`` exactly as it does; ``state`` itself is never
-    changed, so a rejected intent leaves the caller's state as it was."""
-    live = _live_from_state(state, random.Random(seed))
-    events = _capture(live)
-    await _submit_player_intent(live, actor_id, intent)
-    return _step(live, events)
+    changed, so a rejected intent leaves the caller's state as it was.
+
+    ``reactions`` answers each reaction the resolution offers
+    (``reactions.py``); ``None`` is ``default_reaction_policy``. A
+    ``"suspend"`` answer returns a step whose ``suspension`` is set."""
+    call = CombatCall(kind="intent", actor_id=actor_id, intent=intent)
+    return await _run_call(state, call, seed, reactions=reactions)
 
 
 async def resolve_monster_turn(
-    state: CombatState, *, seed: int, legendary: bool = False, actor_id: str | None = None
+    state: CombatState,
+    *,
+    seed: int,
+    legendary: bool = False,
+    actor_id: str | None = None,
+    reactions: ReactionPolicy | None = None,
 ) -> CombatStep:
     """Play the current monster's turn, or with ``legendary=True`` one
     legendary action, against ``state``: ``advance_monster_turn`` without a
-    handle, drawing every die from ``random.Random(seed)``."""
-    live = _live_from_state(state, random.Random(seed))
-    events = _capture(live)
-    await _advance_monster_turn(live, legendary=legendary, actor_id=actor_id)
-    return _step(live, events)
+    handle, drawing every die from ``random.Random(seed)``. ``reactions`` as
+    for ``resolve_intent``."""
+    call = CombatCall(kind="monster_turn", actor_id=actor_id, legendary=legendary)
+    return await _run_call(state, call, seed, reactions=reactions)
+
+
+async def resume(
+    state: CombatState,
+    suspension: CombatSuspension,
+    decision: ReactionDecision,
+    seed: int,
+    *,
+    reactions: ReactionPolicy | None = None,
+) -> CombatStep:
+    """Finish a suspended call with the player's ``decision``: the whole
+    resolution, from its start, as the host commits it (contract 03,
+    "Reactions").
+
+    ``state`` must be the state the call started from: when its digest differs
+    from the continuation's, nothing resolves and this raises
+    ``IntentRejectedError("state_changed", ...)``. The call is replayed from
+    that state and its own seed, its earlier reaction prompts answered as they
+    were, up to the paused one, which takes ``decision``; every die after it
+    comes from ``seed``. The step holds every event of the whole call. A later
+    prompt is answered by ``reactions`` and can suspend again."""
+    continuation = suspension.continuation
+    if state_digest(state) != continuation.state_digest:
+        raise IntentRejectedError(
+            "state_changed", "the combat state is not the one the suspended call started from"
+        )
+    prompt = suspension.prompt
+    answered = ReactionChoice(
+        reactor_id=prompt.reactor_id,
+        reaction_key=prompt.reaction_key,
+        decision=decision,
+        seed=seed,
+    )
+    return await _run_call(
+        state,
+        continuation.call,
+        continuation.seed,
+        choices=[*continuation.choices, answered],
+        reactions=reactions,
+    )
 
 
 def arm_legendary_resistance(state: CombatState, entity_id: str) -> CombatStep:

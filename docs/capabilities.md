@@ -136,16 +136,17 @@ Create Food and Water*) are out of scope for a combat engine by nature.
 
 ## Reactions
 
-Reactions work, with one constraint that shapes any host integration:
-
-> **The engine never pauses mid-resolution to ask whether you want to react.**
-> A creature must *pre-arm* its reaction on its own turn with a `"ready"`
-> intent. The engine then fires it automatically when the trigger occurs.
+A reaction is offered at its SRD trigger, inside the resolution that reaches
+it. The stateless calls take a `ReactionPolicy` that answers each offer with
+`"use"`, `"pass"` or `"suspend"`; a suspended call returns a plain-JSON
+continuation, and `resume` finishes it with the player's decision
+([Reactions](concepts/reactions.md)). Without a policy, a reaction the creature
+pre-armed with a `"ready"` intent is used and any other is passed, as in 0.7.0.
 
 | Reaction | Status |
 |---|---|
 | Opportunity attack | ✅ Resolved — needs no arming: every walk that leaves an enemy's reach draws it, whoever drives the mover (a `move` intent, the monster AI's closing walk or its flee); Disengage suppresses it from either side, and a summon makes none (BACKLOG.md) |
-| Shield (incl. vs. Magic Missile) | ✅ Resolved — answers an attack roll only: a monster's save action (a Breath Weapon) leaves it readied (C26b) |
+| Shield (incl. vs. Magic Missile) | ✅ Resolved: offered as a Reaction after an attack roll that would hit, and on being targeted by Magic Missile, to a creature that knows Shield (or readied it), can pay for it, and has its Reaction; "+5 bonus to AC, including against the triggering attack" decides the roll again. A save action (a Breath Weapon) offers nothing (C26b). No `ready` intent or Action is needed (spec 02a) |
 | Counterspell | ✅ Resolved — slot-gated at the readied level and 60 ft range/LoS-gated at drain time (an ineligible reactor's armed reaction is skipped, not popped) |
 | Readied spell cast | ✅ Resolved — a readied leveled spell (e.g. Shield) needs an unexpended slot at its readied level; an ineligible reactor's armed reaction is skipped, not popped |
 | Arbitrary SRD "Ready an action with a custom trigger" | ❌ Not modelled |

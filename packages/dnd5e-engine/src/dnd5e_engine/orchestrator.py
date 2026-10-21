@@ -116,7 +116,7 @@ from dnd5e_engine.activities.conjuration import (
 )
 from dnd5e_engine.activities.context import ActivityResolutionContext
 from dnd5e_engine.activities.d20 import AdvantageSources, roll_d20_test
-from dnd5e_engine.activities.dice import roll_damage_part
+from dnd5e_engine.activities.dice import roll_damage_part, roll_expr
 from dnd5e_engine.activities.effects import is_condition_immune
 from dnd5e_engine.activities.forced_movement import FORCED_MOVEMENT_RIDERS
 from dnd5e_engine.activities.monster_actions import (
@@ -195,6 +195,14 @@ from dnd5e_engine.outcome import (
     CombatOutcome,
     DeathRecord,
     LootDrop,
+)
+from dnd5e_engine.reactions import (
+    ReactionChoice,
+    ReactionDecision,
+    ReactionPolicy,
+    ReactionPrompt,
+    ReactionSuspended,
+    default_reaction_policy,
 )
 from dnd5e_engine.rest import (
     FEATURE_USE_COUNTER_PREFIX,
@@ -319,7 +327,7 @@ class PlayerIntent(BaseModel):
     redeem_granted_die: GrantedDie | None = None
     # SRD §Reactions — the trigger condition a ``"ready"`` intent pre-arms
     # 's pending-reaction queue). Consumed by
-    # ``_pop_pending_reaction`` / ``_drain_targeted_reactions`` when a
+    # ``_pop_pending_reaction`` / ``_release_readied_spell`` when a
     # matching triggering intent is later submitted by any combatant.
     reaction_trigger: ReactionTrigger | None = None
     # SRD §Movement — the destination cell id (``cell_id(col, row)``) of a
@@ -457,6 +465,10 @@ class IntentRejectedError(CombatSeamError):
         # when ``entity_id`` is not an encounter member with the Legendary
         # Resistance trait, or has no unarmed use left in its per-day pool.
         "no_legendary_resistance",
+        # Spec 02a: ``resume`` given a state other than the one the
+        # suspended call started from (contract 03: "resume re-checks the
+        # digest and rejects with state_changed if the state moved").
+        "state_changed",
     ]
 
     def __init__(self, reason: RejectionReason, detail: str) -> None:
@@ -1818,7 +1830,7 @@ def _apply_forced_movement_riders(
     if origin_cell is None:
         return
     seen: set[str] = set()
-    for ev in list(live.event_log[pre_event_count:]):
+    for ev in _resolution_events(live, pre_event_count):
         if not isinstance(ev, SaveRolled) or ev.target_id in seen:
             continue
         seen.add(ev.target_id)
@@ -1854,7 +1866,9 @@ def _record_sneak_attack_spent(
         return
     has_advantage, has_disadvantage = attacker_advantage_flags(actx)
     damaged_ids = {
-        e.target_id for e in live.event_log[pre_event_count:] if isinstance(e, DamageApplied)
+        e.target_id
+        for e in _resolution_events(live, pre_event_count)
+        if isinstance(e, DamageApplied)
     }
     fired = any(
         target.entity_id in damaged_ids
@@ -2857,6 +2871,7 @@ def _resolve_monster_cast(
         current,
         target_list,
         rng=live.rng,
+        on_would_hit=_hit_hook(live, current.entity_id),
         event_emitter=lambda ev: _emit(live, ev),
         slot_level=slot_level,
         base_spell_level=spell.level,
@@ -2997,20 +3012,8 @@ def _resolve_monster_attack_activities(
     future hook added to one caller can't silently miss the other.
     ``cover_origin`` is an area's point of origin (``_resolve_monster_area``).
     """
-    # SRD §Reactions — drain the attacked PC's pending ``hit_by_attack``
-    # reaction (Shield) BEFORE the sidecar projection below, so the
-    # just-applied +5 AC effect folds into THIS attack's hydration
-    # payload — the monster-attacker / PC-defender direction. Shield's own
-    # resolution draws no dice, so the attack's d20 keeps its seed-stream
-    # position. SRD 5.2 Shield answers "being hit by an attack roll": a
-    # save action (a Breath Weapon) leaves it readied.
-    if any(isinstance(a, AttackActivity) for a in activities):
-        _drain_targeted_reactions(
-            live,
-            trigger="hit_by_attack",
-            triggering_actor_id=actor.entity_id,
-            targets=target_list,
-        )
+    # SRD 5.2.1 Shield answers being "hit by an attack roll": it is offered
+    # after the roll, from ``attack.py`` (``on_would_hit``), not here.
     # The orchestrator owns the per-entity passive sidecars; project them
     # once and hand the two dicts ``build_activity_context`` needs in (it
     # stays pure — no orchestrator import, no double-compute). Mirrors the
@@ -3030,6 +3033,7 @@ def _resolve_monster_attack_activities(
         actor,
         target_list,
         rng=live.rng,
+        on_would_hit=_hit_hook(live, actor.entity_id),
         event_emitter=lambda ev: _emit(live, ev),
         slot_level=None,
         base_spell_level=None,
@@ -3454,6 +3458,18 @@ class _LiveCombat:
     # (``combat_state.py``) can rebuild the same topology. ``GridTopology`` is
     # never mutated after ``start_combat``, so the scene is all of it.
     grid_scene: GridScene | None = None
+    # Spec 02a: the reaction answers of the call in progress (``reactions.py``).
+    # Call inputs and outputs, never state: the stateless calls set the policy
+    # and the choices to replay, and read back the choices the call took.
+    reaction_policy: ReactionPolicy | None = None
+    reaction_replay: list[ReactionChoice] = field(default_factory=list)
+    reaction_record: list[ReactionChoice] = field(default_factory=list)
+    # The ``event_log`` spans of reactions resolved INSIDE another resolution
+    # (Shield after the attack roll), as ``[start, end)``. Each folded its own
+    # events, so the enclosing resolution's folds skip them
+    # (``_resolution_events``): the attacker's cast must not claim the
+    # target's Shield or readied Fog Cloud as its own effect.
+    nested_event_spans: list[tuple[int, int]] = field(default_factory=list)
 
 
 @dataclass(frozen=True)
@@ -6506,6 +6522,19 @@ def _area_source_id(intent: PlayerIntent) -> str:
 # ── Concentration writeback ─────────────────────────────────────────────────
 
 
+def _resolution_events(live: _LiveCombat, pre_event_count: int) -> list[CombatEvent]:
+    """The events a resolution produced since ``pre_event_count``, less those
+    of reactions resolved inside it (``live.nested_event_spans``)."""
+    spans = [(start, end) for start, end in live.nested_event_spans if end > pre_event_count]
+    if not spans:
+        return live.event_log[pre_event_count:]
+    return [
+        ev
+        for index, ev in enumerate(live.event_log[pre_event_count:], start=pre_event_count)
+        if not any(start <= index < end for start, end in spans)
+    ]
+
+
 def _writeback_concentration(live: _LiveCombat, caster: Combatant, pre_event_count: int) -> None:
     """Project post-evaluation concentration events onto the caster's Combatant.
 
@@ -6522,7 +6551,7 @@ def _writeback_concentration(live: _LiveCombat, caster: Combatant, pre_event_cou
     is the one who emits the concentration spell. Events on prior turns
     are ignored via ``pre_event_count`` slicing.
     """
-    new_events = live.event_log[pre_event_count:]
+    new_events = _resolution_events(live, pre_event_count)
     tracked_name: str | None = None
     for ev in new_events:
         if isinstance(ev, EffectApplied) and ev.effect.flags.get("concentration"):
@@ -6604,7 +6633,7 @@ def _record_effect_lifecycle_links(
     ``pre_event_count`` slice). Events from prior turns have already
     been folded in; re-walking them would double-count.
     """
-    new_events = live.event_log[pre_event_count:]
+    new_events = _resolution_events(live, pre_event_count)
     # SRD 5.2 §Concentration — "You lose Concentration on an effect the
     # moment you start casting a spell that requires Concentration."
     # (Foundry mixin.mjs:470-476 ends the oldest effect before beginning
@@ -6721,7 +6750,7 @@ def _apply_concentration_anchor(
         return
     if any(
         isinstance(ev, EffectApplied) and ev.effect.flags.get("concentration")
-        for ev in live.event_log[pre_event_count:]
+        for ev in _resolution_events(live, pre_event_count)
     ):
         return
     identity = _anchor_identity(spell.slug, caster.entity_id)
@@ -9440,7 +9469,9 @@ def _end_superseded_enchantments(
     if actx is None or actx.conjuration is None or actx.conjuration.weapon_slug is None:
         return
     applied_now = {
-        id(ev.effect) for ev in live.event_log[pre_event_count:] if isinstance(ev, EffectApplied)
+        id(ev.effect)
+        for ev in _resolution_events(live, pre_event_count)
+        if isinstance(ev, EffectApplied)
     }
     superseded = [
         effect
@@ -9745,6 +9776,7 @@ def _resolve_construct_attack(
         owner,
         target_list,
         rng=live.rng,
+        on_would_hit=_hit_hook(live, owner.entity_id),
         event_emitter=lambda ev: _emit(live, ev),
         slot_level=construct.slot_level,
         base_spell_level=spec.base_level,
@@ -10410,7 +10442,7 @@ def _apply_transform_riders(
     if form is None:  # validated before the slot was spent
         return
     judged: set[str] = set()
-    for event in live.event_log[pre_event_count:]:
+    for event in _resolution_events(live, pre_event_count):
         if not isinstance(event, SaveRolled) or event.target_id in judged:
             continue
         judged.add(event.target_id)
@@ -11709,34 +11741,34 @@ def _drain_pre_resolution_reactions(
     intent: PlayerIntent,
     targets: Sequence[Combatant],
 ) -> set[str]:
-    """Drain target-owned pending reactions for a resolving PC intent and a
-    construct cast (Spiritual Weapon's immediate attack).
-
-    ``"attack"`` intents fire ``hit_by_attack`` reactions (Shield's +5 AC
-    lands before the hit/miss comparison); a ``magic-missile`` cast fires
-    ``targeted_by_magic_missile`` reactions, returning the target ids whose
-    reaction fired so the caller can inject the force carve-out. Every
-    other intent drains nothing (the overwhelmingly common case).
+    """Offer the reactions a resolving PC intent triggers before it resolves:
+    SRD 5.2.1 Shield, "which you take when you are hit by an attack roll or
+    targeted by the Magic Missile spell". A ``magic-missile`` cast offers each
+    target Shield and returns the target ids that took it, so the caller can
+    inject the force carve-out. Shield against an attack roll is offered after
+    the roll (``_offer_hit_reactions``), so every other intent offers nothing
+    here.
     """
-    if intent.intent_type == "attack" or (
-        intent.intent_type == "cast_spell"
-        and CONJURATION_ALLOWLIST.get(intent.spell_id or "") == "construct"
-    ):
-        _drain_targeted_reactions(
-            live,
-            trigger="hit_by_attack",
-            triggering_actor_id=current.entity_id,
-            targets=targets,
-        )
+    if intent.intent_type != "cast_spell" or intent.spell_id != "magic-missile":
         return set()
-    if intent.intent_type == "cast_spell" and intent.spell_id == "magic-missile":
-        return _drain_targeted_reactions(
+    fired: set[str] = set()
+    for target in targets:
+        shielded = _offer_shield(
             live,
-            trigger="targeted_by_magic_missile",
+            target.entity_id,
             triggering_actor_id=current.entity_id,
-            targets=targets,
+            trigger="targeted_by_magic_missile",
+            description=f"{current.entity_id} targets {target.entity_id} with Magic Missile",
         )
-    return set()
+        released = _release_readied_spell(
+            live,
+            "targeted_by_magic_missile",
+            triggering_actor_id=current.entity_id,
+            owner_id=target.entity_id,
+        )
+        if shielded or released:
+            fired.add(target.entity_id)
+    return fired
 
 
 def _apply_magic_missile_shield_carveout(
@@ -11837,6 +11869,7 @@ def _resolve_readied_spell_cast(
     spell = get_lib_loader().get_spell(popped.spell_id or "")
     if spell is None:
         return
+    span_start = len(live.event_log)
 
     for idx, c in enumerate(live.initiative):
         if c.entity_id == reactor.entity_id:
@@ -11916,6 +11949,7 @@ def _resolve_readied_spell_cast(
             live.reaction_effects_pending_expiry.setdefault(reactor.entity_id, []).append(
                 (ev.effect.target_id, ev.effect.id, ev.effect.origin)
             )
+    live.nested_event_spans.append((span_start, len(live.event_log)))
 
 
 def _readied_cast_eligible(
@@ -11933,34 +11967,194 @@ def _readied_cast_eligible(
     return _cast_payable(live, reactor, spell, level)
 
 
-def _drain_targeted_reactions(
-    live: _LiveCombat,
-    *,
-    trigger: ReactionTrigger,
-    triggering_actor_id: str,
-    targets: Sequence[Combatant],
-) -> set[str]:
-    """Pop + fully resolve one matching reaction per entry in ``targets``
-    (each target can own at most one match). Returns the set of target
-    entity_ids whose reaction fired — Shield vs. Magic Missile's force
-    carve-out needs to know which targets just got shielded."""
-    fired: set[str] = set()
-    for target in targets:
-        popped = _pop_pending_reaction(
-            live,
-            trigger,
-            triggering_actor_id=triggering_actor_id,
-            only_owner_id=target.entity_id,
-            eligible=lambda reactor, pending: _readied_cast_eligible(live, reactor, pending),
+#: SRD 5.2.1 Shield, the reaction spell offered at its own triggers.
+_SHIELD: Final = "shield"
+
+
+def _release_readied_spell(
+    live: _LiveCombat, trigger: ReactionTrigger, *, triggering_actor_id: str, owner_id: str
+) -> bool:
+    """Release a spell other than Shield that ``owner_id`` readied for
+    ``trigger`` (the 0.7.0 ``ready`` path: a choice the player already made),
+    as the trigger occurs. Shield itself is offered by ``_offer_shield``.
+    Returns True when one was cast."""
+    popped = _pop_pending_reaction(
+        live,
+        trigger,
+        triggering_actor_id=triggering_actor_id,
+        only_owner_id=owner_id,
+        eligible=lambda reactor, pending: (
+            pending.spell_id != _SHIELD and _readied_cast_eligible(live, reactor, pending)
+        ),
+    )
+    if popped is None:
+        return False
+    reactor = _find_combatant(live, popped.owner_id)
+    if reactor is None:  # pragma: no cover - _pop_pending_reaction scans live.initiative
+        return False
+    _resolve_readied_spell_cast(live, reactor, popped)
+    return True
+
+
+def _decide_reaction(live: _LiveCombat, prompt: ReactionPrompt) -> ReactionDecision:
+    """Answer one reaction prompt (``reactions.py``).
+
+    A replayed call (``resume``) answers from its recorded choices first, in
+    order; a choice a resume made also reseeds the dice, in place, so every die
+    after it comes from the resume's seed. Otherwise the call's policy answers,
+    or ``default_reaction_policy`` when the host gave none. ``"suspend"``
+    unwinds the call (``ReactionSuspended``). Every answer is recorded, so a
+    later resume can replay it.
+    """
+    if live.reaction_replay:
+        choice = live.reaction_replay.pop(0)
+        if (choice.reactor_id, choice.reaction_key) != (prompt.reactor_id, prompt.reaction_key):
+            raise RuntimeError(
+                f"resume replay diverged: expected {choice.reactor_id}'s {choice.reaction_key}, "
+                f"reached {prompt.reactor_id}'s {prompt.reaction_key}"
+            )
+        if choice.seed is not None:
+            live.rng.seed(choice.seed)
+        live.reaction_record.append(choice)
+        return choice.decision
+    policy = live.reaction_policy or default_reaction_policy
+    answer = policy(prompt)
+    if answer == "suspend":
+        raise ReactionSuspended(prompt)
+    live.reaction_record.append(
+        ReactionChoice(
+            reactor_id=prompt.reactor_id, reaction_key=prompt.reaction_key, decision=answer
         )
-        if popped is None:
-            continue
-        reactor = _find_combatant(live, popped.owner_id)
-        if reactor is None:
-            continue
-        _resolve_readied_spell_cast(live, reactor, popped)
-        fired.add(target.entity_id)
-    return fired
+    )
+    return answer
+
+
+def _shield_slot_level(
+    live: _LiveCombat, reactor: Combatant, readied: _PendingReaction | None
+) -> int | None:
+    """The level ``reactor`` would cast Shield at: a readied Shield's own
+    level, else the lowest level it can pay for (its slotless cast, else a
+    slot). ``None`` when it can pay for none."""
+    spell = get_lib_loader().get_spell(_SHIELD)
+    if spell is None:
+        return None
+    if readied is not None:
+        level = readied.slot_level if readied.slot_level is not None else spell.level
+        return level if _cast_payable(live, reactor, spell, level) else None
+    return next(
+        (level for level in range(spell.level, 10) if _cast_payable(live, reactor, spell, level)),
+        None,
+    )
+
+
+def _offer_shield(
+    live: _LiveCombat,
+    reactor_id: str,
+    *,
+    triggering_actor_id: str,
+    trigger: ReactionTrigger,
+    description: str,
+    attack_total: int | None = None,
+    attack_natural: int | None = None,
+    critical: bool = False,
+) -> bool:
+    """SRD 5.2.1 Shield: "Casting Time: Reaction, which you take when you are
+    hit by an attack roll or targeted by the Magic Missile spell". Offer it to
+    ``reactor_id`` when that creature can take it: it knows Shield (or readied
+    it), can pay for it, is alive, not Incapacitated and not shape-shifted
+    (shape-shifted creatures "can't cast spells"), and still has its Reaction
+    ("Once you take a Reaction, you can't take another one until the start of
+    your next turn"). On ``"use"`` it casts Shield as its Reaction and returns
+    True."""
+    reactor = _find_combatant(live, reactor_id)
+    if reactor is None or reactor_id == triggering_actor_id:
+        return False
+    if not reactor.is_alive or reactor.hp_current <= 0 or not reactor.reaction_available:
+        return False
+    if conditions_block_actions(_condition_names(reactor)) or reactor_id in live.transforms:
+        return False
+    readied = next(
+        (
+            pr
+            for pr in live.pending_reactions
+            if pr.owner_id == reactor_id and pr.trigger == trigger and pr.spell_id == _SHIELD
+        ),
+        None,
+    )
+    knows = _SHIELD in live.spells_known_by_entity.get(reactor_id, ()) or _SHIELD in (
+        reactor.slotless_casts
+    )
+    if readied is None and not knows:
+        return False
+    level = _shield_slot_level(live, reactor, readied)
+    if level is None:
+        return False
+    prompt = ReactionPrompt(
+        reactor_id=reactor_id,
+        reaction_key=_SHIELD,
+        trigger=description[:300],
+        triggering_actor_id=triggering_actor_id,
+        readied=readied is not None,
+        attack_total=attack_total,
+        attack_natural=attack_natural,
+        critical=critical,
+    )
+    if _decide_reaction(live, prompt) == "pass":
+        return False
+    if readied is not None:
+        live.pending_reactions.remove(readied)
+    _resolve_readied_spell_cast(
+        live,
+        reactor,
+        _PendingReaction(owner_id=reactor_id, trigger=trigger, spell_id=_SHIELD, slot_level=level),
+    )
+    return True
+
+
+def _passive_ac_bonus(live: _LiveCombat, entity_id: str) -> int:
+    """The AC bonus ``entity_id``'s active effects give it right now (the
+    ``passive_ac_bonus`` sidecar ``build_activity_context`` reads)."""
+    entry = _build_hydration_payload(live)["save_modifiers"].get(entity_id, {})
+    bonus = entry.get("passive_ac_bonus")
+    return int(roll_expr(str(bonus), live.rng)) if bonus else 0
+
+
+def _offer_hit_reactions(
+    live: _LiveCombat, attacker_id: str, target: Combatant, natural: int, total: int, critical: bool
+) -> int:
+    """``ActivityResolutionContext.on_would_hit``: an attack roll by
+    ``attacker_id`` would hit ``target``. Offers the target Shield and returns
+    the AC it gained, which ``attack.py`` adds to this roll's comparison:
+    "+5 bonus to AC, including against the triggering attack"."""
+    before = _passive_ac_bonus(live, target.entity_id)
+    shielded = _offer_shield(
+        live,
+        target.entity_id,
+        triggering_actor_id=attacker_id,
+        trigger="hit_by_attack",
+        description=(
+            f"{attacker_id} hits {target.entity_id} with an attack roll of {total}"
+            + (" (a Critical Hit)" if critical else "")
+        ),
+        attack_total=total,
+        attack_natural=natural,
+        critical=critical,
+    )
+    released = _release_readied_spell(
+        live, "hit_by_attack", triggering_actor_id=attacker_id, owner_id=target.entity_id
+    )
+    if not shielded and not released:
+        return 0
+    return _passive_ac_bonus(live, target.entity_id) - before
+
+
+def _hit_hook(live: _LiveCombat, attacker_id: str) -> Callable[[Combatant, int, int, bool], int]:
+    """The ``on_would_hit`` hook for an attack ``attacker_id`` makes."""
+
+    def hook(target: Combatant, natural: int, total: int, critical: bool) -> int:
+        return _offer_hit_reactions(live, attacker_id, target, natural, total, critical)
+
+    return hook
 
 
 def _drain_counterspell_reaction(
@@ -12665,6 +12859,7 @@ async def _submit_player_intent(live: _LiveCombat, actor_id: str, intent: Player
             current,
             targets,
             rng=live.rng,
+            on_would_hit=_hit_hook(live, current.entity_id),
             event_emitter=lambda ev: _emit(live, ev),
             slot_level=intent.slot_level,
             base_spell_level=cast_spell.level if cast_spell is not None else None,
@@ -13079,10 +13274,6 @@ def _resolve_opportunity_attack(live: _LiveCombat, reactor: Combatant, mover: Co
         return
     targets = [mover]
     weapon = _enchanted_weapon(live, reactor, attack.weapon)
-    # SRD Shield: "+5 bonus to AC, including against the triggering attack".
-    _drain_targeted_reactions(
-        live, trigger="hit_by_attack", triggering_actor_id=reactor.entity_id, targets=targets
-    )
     payload = _build_hydration_payload(live, caster=reactor)
     pre_event_count = len(live.event_log)
     kwargs = _pc_attack_context_kwargs(
@@ -13096,6 +13287,7 @@ def _resolve_opportunity_attack(live: _LiveCombat, reactor: Combatant, mover: Co
         reactor,
         targets,
         rng=live.rng,
+        on_would_hit=_hit_hook(live, reactor.entity_id),
         event_emitter=lambda ev: _emit(live, ev),
         slot_level=None,
         base_spell_level=None,

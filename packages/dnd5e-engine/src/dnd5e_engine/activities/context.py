@@ -582,6 +582,15 @@ class ActivityResolutionContext:
     # only for the resolution an opportunity attack runs; ``attack.py`` stamps
     # it on every ``AttackRolled`` that resolution emits.
     is_opportunity_attack: bool = False
+    # SRD 5.2.1 Shield: "Casting Time: Reaction, which you take when you are
+    # hit by an attack roll". Called once an attack roll is known to hit, before
+    # ``AttackRolled`` is emitted and before any damage, with the target, the
+    # natural d20, the total and whether it is a Critical Hit. It returns the
+    # AC the target gains right now ("including against the triggering
+    # attack"), and the roll is compared again. The orchestrator offers the
+    # target's reactions here (``_offer_hit_reactions``); ``None`` (pure tests)
+    # offers nothing.
+    on_would_hit: Callable[[Combatant, int, int, bool], int] | None = None
 
     def ability_mod(self, ability: str) -> int:
         return (self.caster_abilities.get(ability, 10) - 10) // 2

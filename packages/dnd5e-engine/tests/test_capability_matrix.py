@@ -858,8 +858,8 @@ _PROBES: dict[str, tuple[Any, str]] = {
     "Shield (incl. vs. Magic Missile)": (
         lambda: (
             "def _apply_magic_missile_shield_carveout(" in _src("orchestrator.py")
-            and "if any(isinstance(a, AttackActivity) for a in activities):"
-            in _src("orchestrator.py")
+            and "def _offer_shield(" in _src("orchestrator.py")
+            and "ctx.on_would_hit(" in _src("activities/attack.py")
         ),
         "✅",
     ),

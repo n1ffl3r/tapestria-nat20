@@ -1,83 +1,97 @@
 # Reactions
 
-Reactions work — opportunity attacks, Shield, Counterspell — but they work
-differently from how a table plays them, and the difference shapes any
-integration. Read this before wiring a host.
+SRD 5.2.1 "Reaction": "A Reaction is a special action taken in response to a
+trigger defined in the Reaction's description. You can take a Reaction on
+another creature's turn". The engine offers a reaction at its SRD trigger,
+inside the resolution that reaches it, and asks the host what to do.
 
-## The constraint: reactions are pre-armed
+## Offers, policies and pauses
 
-**The engine never pauses mid-resolution to ask whether a creature wants to
-react.** There is no callback, no "do you want to cast Shield?" prompt, and no
-mid-turn round-trip to the host.
+When a resolution reaches a reaction's trigger and a creature can take it, the
+engine builds a `ReactionPrompt` (`dnd5e_engine.reactions`): who may react,
+which reaction (`reaction_key`), what triggered it, and for an attack roll its
+total, its natural d20 and whether it is a Critical Hit. The host's
+`ReactionPolicy` answers each prompt:
 
-This is deliberate. `submit_player_intent` and `advance_monster_turn` are the
-only two ways into the engine, and each resolves to completion before it
-returns. A reaction is therefore *armed in advance* and fires automatically when
-its trigger occurs.
+| Answer | Effect |
+|---|---|
+| `"use"` | The creature takes the reaction now, and the resolution goes on. |
+| `"pass"` | It does not, and the resolution goes on. |
+| `"suspend"` | The call stops here and returns a `CombatSuspension`. |
+
+The stateless calls take the policy as `reactions=`:
 
 ```python
-# On the wizard's own turn, arm Shield against being hit.
-await submit_player_intent(
-    handle,
-    actor_id="char:wizard",
-    intent=PlayerIntent(
-        intent_type="ready",
-        spell_id="shield",
-        reaction_trigger="hit_by_attack",
-    ),
-)
-
-# Later, on the goblin's turn, the armed Shield fires by itself if the
-# goblin attacks the wizard — no host involvement.
-await advance_monster_turn(handle)
+step = await resolve_monster_turn(state, seed=seed, reactions=lambda prompt: "suspend")
+if step.suspension is not None:
+    prompt = step.suspension.prompt          # put this to the player
+    step = await resume(state, step.suspension, "use", seed=next_seed)
 ```
 
-If you want a player to *choose* in the moment, your host has to ask them
-before their turn ends and arm accordingly. You cannot ask them mid-resolution.
+A policy must be deterministic: the same prompt in the same state gets the same
+answer. Without a policy, a reaction the creature readied with a `"ready"`
+intent is used and any other is passed, which is the 0.7.0 behaviour; the
+handle calls (`submit_player_intent`, `advance_monster_turn`) always use that
+default, so they never pause.
 
-## Recognized triggers
+## Suspension and resume
 
-`PlayerIntent.reaction_trigger` accepts a closed set:
+A suspended step's `state` is the state the call started from, unchanged: a
+pause commits nothing. Its `events` are the events up to the trigger, for
+display only. `suspension.continuation` is plain JSON: the call, its seed, every
+answer the call took before the pause, and `state_digest(state)`.
 
-| Trigger | Fires when |
+`resume(state, suspension, decision, seed, reactions=...)`:
+
+1. rejects with `IntentRejectedError("state_changed", ...)` when `state` is not
+   the one the call started from;
+2. replays the call from that state and its own seed, answering its earlier
+   prompts as they were answered, so it reaches the same trigger with the same
+   dice;
+3. takes `decision` there, and draws every die after it from `seed`;
+4. finishes the call, or pauses again at a later prompt the policy suspends.
+
+The finished step holds every event of the whole call, from its start, as if it
+had never paused.
+
+## Shield
+
+SRD 5.2.1 Shield: "Casting Time: Reaction, which you take when you are hit by an
+attack roll or targeted by the Magic Missile spell", and "Until the start of
+your next turn, you have a +5 bonus to AC, including against the triggering
+attack, and you take no damage from Magic Missile."
+
+- **After the attack roll.** An attack roll that would hit offers the target
+  Shield before any damage; a miss offers nothing. On `"use"`, Shield is cast as
+  the target's Reaction, its +5 AC counts against the triggering roll, which is
+  compared again, and `AttackRolled` reports the final outcome after
+  `ReactionTriggered`, `SpellCast` and `EffectApplied`.
+- **On being targeted by Magic Missile,** before the darts land; on `"use"` the
+  target takes no force damage from that cast.
+- **Who is offered it:** a creature that knows Shield (`spells_known` or a
+  slotless cast) or readied it, can pay for it (its slotless cast, else the
+  lowest slot it has), is not Incapacitated or shape-shifted, and still has its
+  Reaction. No `ready` intent and no Action are needed.
+- **Its effect** ends at the start of the caster's next turn.
+
+## Other reactions
+
+Until spec 02a's next step lands, the other reactions keep the 0.7.0 model:
+
+| Reaction | Trigger |
 |---|---|
-| `"hit_by_attack"` | The reactor is hit by an attack (Shield) |
-| `"cast_spell"` | Another creature casts a spell (Counterspell) |
-| `"targeted_by_magic_missile"` | The reactor is targeted by Magic Missile |
+| Opportunity attack | Every walk that leaves an enemy's reach draws one, on either side, unless the mover took the Disengage action; a summon makes none. A character strikes with `PartyMemberSpec.opportunity_attack_weapon_id`, else the first melee weapon in its `equipment`, else an Unarmed Strike; a monster with the first non-ranged attack on its stat block. |
+| Counterspell | Armed with `PlayerIntent(intent_type="ready", spell_id="counterspell", reaction_trigger="cast_spell")`; fires when another creature within 60 feet casts a spell. |
+| Any other readied spell | Fires on its `reaction_trigger`: `"hit_by_attack"` once an attack roll hits the creature, `"targeted_by_magic_missile"` when Magic Missile targets it, `"cast_spell"` when another creature casts a spell. |
 
-Opportunity attacks are separate: they need no arming. Every walk that leaves
-an enemy's reach draws one, on either side, unless the mover took the Disengage
-action; a summon makes none. A character strikes with
-`PartyMemberSpec.opportunity_attack_weapon_id`, else the first melee weapon in
-its `equipment`, else an Unarmed Strike; a monster with the first non-ranged
-attack on its stat block.
-
-!!! note "This set is not data-driven"
-
-    A new reaction spell cannot be added as data today — the trigger vocabulary
-    is a `Literal` in the orchestrator, and Shield / Counterspell / Magic
-    Missile carry named special cases. This is a known architectural gap,
-    tracked in `BACKLOG.md`.
+`PlayerIntent.reaction_trigger` accepts only those three values. The set is not
+data-driven: a new reaction spell needs engine code (`BACKLOG.md`).
 
 ## Reaction economy
 
-Each creature has one reaction per round, refreshed at the start of its turn —
-the same budget an opportunity attack spends. Arming a reaction does not spend
-it; firing does.
+Each creature has one Reaction per round, refreshed at the start of its turn,
+the same budget an opportunity attack spends. Readying a reaction spends the
+Action, not the Reaction; taking it spends the Reaction.
 
-## Known limits
-
-Two gaps are worth knowing about before you rely on these (both in `BACKLOG.md`):
-
-- **Counterspell ignores its 60 ft range.** An armed reactor counters a cast at
-  any distance.
-- **A readied spell fires without a slot.** The reaction spends a spell slot
-  when one is available but fires regardless, so a reactor with an empty pool
-  gets a free cast.
-
-Neither is reachable by accident — the host chooses to arm the reaction — but
-neither is gated by the engine.
-
-For the full design, including how the queue drains relative to attack
-resolution and why Shield's AC bonus lands before the hit/miss comparison, see
-the [reaction queue design note](../dev/reaction-queue.md).
+For the 0.7.0 design of the readied-reaction queue, see the
+[reaction queue design note](../dev/reaction-queue.md).
