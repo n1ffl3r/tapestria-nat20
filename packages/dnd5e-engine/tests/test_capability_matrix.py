@@ -750,9 +750,10 @@ _PROBES: dict[str, tuple[Any, str]] = {
         lambda: "def has_line_of_sight(" in _src("spatial.py"),
         "✅",
     ),
-    "Elevation / flying altitude": (
-        lambda: not re.search("elevation|altitude", _src("spatial.py"), re.IGNORECASE),
-        "❌",
+    # Cells have a surface height; nothing tracks a creature in the air.
+    "| Elevation, climbing and falling |": (
+        lambda: "def elevation_ft(" in _src("spatial.py") and "altitude" not in _src("spatial.py"),
+        "⚠️",
     ),
     # A footprint needs a creature size, which the combatant model lacks.
     "Multi-tile (Large+) creature footprints": (
@@ -861,6 +862,16 @@ _PROBES: dict[str, tuple[Any, str]] = {
             and "def _offer_shield(" in _src("orchestrator.py")
             and "ctx.on_would_hit(" in _src("activities/attack.py")
         ),
+        "✅",
+    ),
+    # Spec 02a: Hellish Rebuke is offered after damage, at the attacker.
+    "| Hellish Rebuke |": (
+        lambda: "def _offer_damage_reactions(" in _src("orchestrator.py"),
+        "✅",
+    ),
+    # A fall offers Feather Fall before its damage.
+    "| Feather Fall |": (
+        lambda: "def _offer_feather_fall(" in _src("orchestrator.py"),
         "✅",
     ),
     # A readied reaction fires only on one of the engine's named triggers.

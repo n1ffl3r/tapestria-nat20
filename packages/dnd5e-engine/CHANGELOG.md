@@ -8,9 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 Spec 02a (the fork's work order for its host), session B1: the combat as
-serializable state, and a seed on every call that rolls. Session B2, first
-part: a resolution that pauses for a reaction, and Shield taken as a Reaction
-after an attack roll that would hit.
+serializable state, and a seed on every call that rolls. Session B2: a resolution that pauses for a reaction, and Shield, Counterspell,
+Hellish Rebuke and opportunity attacks taken as Reactions at their SRD triggers.
+Then falling: cell elevation, climbing, falls from forced movement, and Feather
+Fall.
 
 ### Added
 
@@ -44,6 +45,25 @@ after an attack roll that would hit.
 - **`ActivityResolutionContext.on_would_hit`**: called once an attack roll
   would hit, before `AttackRolled` and any damage; the AC it returns is
   compared again.
+- **Elevation** (`GridScene.elevation_cells`, `default_elevation`,
+  `GridTopology.elevation_ft`). SRD 5.2.1 "Climbing": "each foot of movement
+  costs 1 extra foot (2 extra feet in Difficult Terrain). You ignore this extra
+  cost if you have a Climb Speed". A step between heights climbs the
+  difference: `edge_distance` and `reachable_cells` take `climber=`, and every
+  walk and route is priced for the mover (a Climb or Fly Speed pays 1 foot a
+  foot). An empty map leaves every cost as it was. `SpatialTopology.edge_distance`
+  gains the same keyword, so a custom topology must accept it.
+- **Falling.** SRD 5.2.1 "Falling [Hazard]": "1d6 Bludgeoning damage at the end
+  of the fall for every 10 feet it fell, to a maximum of 20d6", then Prone
+  "unless it avoids taking any damage from the fall". A push stops before a
+  higher cell and on a lower one, where the creature falls: the new
+  `CreatureFell` event, then `DamageApplied` (`source_id="hazard:falling"`) and
+  Prone. A flier stays aloft unless Incapacitated, Prone or at Fly Speed 0, or
+  it can hover (`CombatantMovementModes.hover`).
+- **Feather Fall is offered when a creature falls** (`reaction_key=
+  "feather-fall"`), to every creature that knows it, can pay for it and is the
+  faller or sees it within 60 feet; it prevents the damage and Prone of a fall
+  of 600 feet or less.
 - **`make test-roundtrip`** reruns the suite with every handle call rebuilding
   its combat from its `CombatState`; **`make test-hashseed`** (part of `make
   check`) does it under two string-hash seeds and requires identical traces.
@@ -65,6 +85,24 @@ after an attack roll that would hit.
   A readied Shield, or any spell readied on `"hit_by_attack"`, now fires only
   when the attack hits, where it fired before the roll, on a hit or a miss.
   Three tests that pinned the firing on a miss now make the attack hit.
+- **Counterspell is offered as a Reaction at any cast it can see.** SRD 5.2.1:
+  "Reaction, which you take when you see a creature within 60 feet of yourself
+  casting a spell with Verbal, Somatic, or Material components". It is offered,
+  through the policy, to every creature that knows it (or readied it), can pay
+  for it and sees the caster within 60 feet, against a character's cast and now
+  a monster's stat-block cast too (a countered monster spell spends its daily
+  use). A failed attempt leaves the cast to the next creature.
+- **Hellish Rebuke is a Reaction to taking damage.** SRD 5.2.1: "Reaction,
+  which you take in response to taking damage from a creature that you can see
+  within 60 feet of yourself". It is offered after each damaging attack or
+  spell activity and cast at the attacker; a rebuke that drops a monster ends
+  its Multiattack. The 0.7.0 own-turn cast at `last_damaged_by` still works.
+- **A templated monster keeps its stat block's special speeds.** Its
+  `movement_modes` (Climb, Fly, Swim, Burrow and hover) come from the stat
+  block at the start of combat, as they already did on a transformation.
+- **A character's opportunity attack goes through the policy**
+  (`reaction_key="opportunity-attack"`), which the default policy uses; a
+  monster's is always taken.
 - **Set order no longer reaches output.** A seeded effect's statuses, an
   applied effect's conditions and the XP award's survivors are taken in a fixed
   order, so the same combat serializes the same way in every process.

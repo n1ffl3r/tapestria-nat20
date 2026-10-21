@@ -89,6 +89,10 @@ class CombatantMovementModes(BaseModel):
     swim: int | None = None
     fly: int | None = None
     burrow: int | None = None
+    # SRD 5.2.1 "Flying": a flier falls "if you have the Incapacitated or
+    # Prone condition or your Fly Speed is reduced to 0. You can stay aloft
+    # in those circumstances if you can hover."
+    hover: bool = False
 
 
 class DerivedPassiveStats(BaseModel):

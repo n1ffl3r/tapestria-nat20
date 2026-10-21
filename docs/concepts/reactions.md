@@ -29,8 +29,9 @@ if step.suspension is not None:
 ```
 
 A policy must be deterministic: the same prompt in the same state gets the same
-answer. Without a policy, a reaction the creature readied with a `"ready"`
-intent is used and any other is passed, which is the 0.7.0 behaviour; the
+answer. Without a policy, an opportunity attack and a reaction the creature
+readied with a `"ready"` intent are used and any other is passed, which is the
+0.7.0 behaviour; the
 handle calls (`submit_player_intent`, `advance_monster_turn`) always use that
 default, so they never pause.
 
@@ -74,18 +75,84 @@ attack, and you take no damage from Magic Missile."
   Reaction. No `ready` intent and no Action are needed.
 - **Its effect** ends at the start of the caster's next turn.
 
-## Other reactions
+## Counterspell
 
-Until spec 02a's next step lands, the other reactions keep the 0.7.0 model:
+SRD 5.2.1 Counterspell: "Casting Time: Reaction, which you take when you see a
+creature within 60 feet of yourself casting a spell with Verbal, Somatic, or
+Material components"; "The creature makes a Constitution saving throw. On a
+failed save, the spell dissipates with no effect, and the action, Bonus Action,
+or Reaction used to cast it is wasted. If that spell was cast with a spell slot,
+the slot isn't expended."
 
-| Reaction | Trigger |
-|---|---|
-| Opportunity attack | Every walk that leaves an enemy's reach draws one, on either side, unless the mover took the Disengage action; a summon makes none. A character strikes with `PartyMemberSpec.opportunity_attack_weapon_id`, else the first melee weapon in its `equipment`, else an Unarmed Strike; a monster with the first non-ranged attack on its stat block. |
-| Counterspell | Armed with `PlayerIntent(intent_type="ready", spell_id="counterspell", reaction_trigger="cast_spell")`; fires when another creature within 60 feet casts a spell. |
-| Any other readied spell | Fires on its `reaction_trigger`: `"hit_by_attack"` once an attack roll hits the creature, `"targeted_by_magic_missile"` when Magic Missile targets it, `"cast_spell"` when another creature casts a spell. |
+- **When:** as a character casts on its turn, and as a monster casts a spell
+  from its stat block, before the spell has any effect.
+- **Who is offered it,** in initiative order: every other creature that knows
+  Counterspell (or readied it on `"cast_spell"`), can pay for it (at level 3 or
+  above), can cast a spell as a Reaction, and sees the caster within 60 feet.
+- **A failed attempt** (the caster makes its save) leaves the cast to the next
+  creature in the order.
+- **When countered,** `CastFailed(reason="countered")`: a character keeps its
+  slot (a slotless cast is still spent) and its turn ends, as a cast always
+  ends it in this engine; a monster's daily use is spent.
 
-`PlayerIntent.reaction_trigger` accepts only those three values. The set is not
-data-driven: a new reaction spell needs engine code (`BACKLOG.md`).
+## Hellish Rebuke
+
+SRD 5.2.1 Hellish Rebuke: "Casting Time: Reaction, which you take in response to
+taking damage from a creature that you can see within 60 feet of yourself";
+"The creature that damaged you is momentarily surrounded by green flames. It
+makes a Dexterity saving throw, taking 2d10 Fire damage on a failed save or half
+as much damage on a successful one."
+
+- **When:** after each attack or spell activity that deals damage, before the
+  attacker's next attack.
+- **Who is offered it:** each creature that took damage, knows Hellish Rebuke,
+  can pay for it, can cast a spell as a Reaction (so not at 0 Hit Points), and
+  sees the attacker within 60 feet.
+- **Its effect** is cast at the attacker. A rebuke that drops a monster in the
+  middle of its Multiattack ends the attacks it has left.
+
+## Opportunity attacks
+
+SRD 5.2.1 "Opportunity Attacks": "You can make an Opportunity Attack when a
+creature that you can see leaves your reach". Every walk that leaves an enemy's
+reach draws one, on either side, unless the mover took the Disengage action; a
+summon makes none. A character strikes with
+`PartyMemberSpec.opportunity_attack_weapon_id`, else the first melee weapon in
+its `equipment`, else an Unarmed Strike; a monster with the first non-ranged
+attack on its stat block.
+
+A character is offered its opportunity attack through the policy
+(`reaction_key="opportunity-attack"`); the default policy uses it, as 0.7.0
+always did, and a character that passes keeps its Reaction. A monster or NPC is
+never asked: contract 03 has monsters decide "by their stat block behavior and
+directive. No pause.", and this engine's monsters always take the attack.
+
+## Feather Fall
+
+SRD 5.2.1 Feather Fall: "Casting Time: Reaction, which you take when you or a
+creature you can see within 60 feet of you falls"; "A falling creature's rate of
+descent slows to 60 feet per round until the spell ends. If a creature lands
+before the spell ends, the creature takes no damage from the fall, and the
+spell ends for that creature."
+
+- **When:** a creature falls ([Elevation, climbing and falling](grid.md#elevation-climbing-and-falling)),
+  before the fall's damage, when the fall would deal any (10 feet or more).
+- **Who is offered it,** in initiative order: every creature that knows Feather
+  Fall, can pay for it, can cast a spell as a Reaction, and is the falling
+  creature or sees it within 60 feet. The first to use it casts it at the
+  falling creature, and the offer ends.
+- **Its effect:** a fall of 600 feet or less (the spell's 1 minute at 60 feet
+  per round) deals no damage, so the creature lands standing. A longer fall
+  deals damage for the distance past 600 feet.
+
+## Readied spells
+
+A spell other than these, readied with a `"ready"` intent, still fires on its
+`reaction_trigger`: `"hit_by_attack"` once an attack roll hits the creature,
+`"targeted_by_magic_missile"` when Magic Missile targets it, `"cast_spell"`
+when another creature casts a spell. `PlayerIntent.reaction_trigger` accepts
+only those three values. The set is not data-driven: a new reaction spell needs
+engine code (`BACKLOG.md`).
 
 ## Reaction economy
 

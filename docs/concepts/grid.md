@@ -16,7 +16,7 @@ encoded as `"col,row"`. Two helpers handle the encoding:
 - `parse_cell(zone_id)` — decode it back into coordinates.
 
 A `GridScene` declares `width`, `height`, an optional `cell_size_ft`, and a
-list of `blocked_cells` — impassable squares movement may not enter. Four
+list of `blocked_cells` — impassable squares movement may not enter. Five
 more fields are additive (each defaults empty, preserving prior behavior):
 
 - `wall_segments` — a list of `WallSegment(x1, y1, x2, y2)` grid-corner
@@ -29,6 +29,9 @@ more fields are additive (each defaults empty, preserving prior behavior):
   (SRD 5.2 §Difficult Terrain).
 - `lighting` / `default_lighting` / `obscurement_cells` — the vision model, see
   [Vision and light](#vision-and-light) below.
+- `elevation_cells` / `default_elevation`: the height, in feet, of the surface
+  in each cell, see [Elevation, climbing and falling](#elevation-climbing-and-falling)
+  below.
 
 ## Movement
 
@@ -83,6 +86,50 @@ Movement a creature does not choose — Thunderwave's push today — goes throug
 `CombatantMoved(..., forced=True)` rather than `ActorMoved`, so a renderer can
 distinguish "is pushed 10 feet" from "moves". Forced movement provokes no
 opportunity attack and spends none of the target's budget.
+
+### Elevation, climbing and falling
+
+`GridScene.elevation_cells` maps a cell to the height, in feet, of the surface
+in it; every other cell stands at `default_elevation` (0). A ledge, a pit or a
+rooftop is a group of cells at another height.
+
+**Climbing.** SRD 5.2.1 "Climbing": "While you're climbing, each foot of
+movement costs 1 extra foot (2 extra feet in Difficult Terrain). You ignore this
+extra cost if you have a Climb Speed and use it to climb." A step between cells
+of different height climbs the difference, up or down, on top of the step's
+ordinary cost:
+
+| Mover | Each foot climbed costs | Into difficult terrain |
+|---|---|---|
+| No Climb or Fly Speed | 2 feet | 3 feet |
+| A Climb or Fly Speed (`movement_modes`) | 1 foot | 2 feet |
+
+A 5-foot step up a 10-foot ledge therefore costs 25 feet, or 15 with a Climb
+Speed. `edge_distance(a, b, climber=...)` and `reachable_cells(..., climber=...)`
+price it, so a `move` intent, the monster AI's closing walk and its flee all pay
+for the climb. A walk never falls: it climbs down.
+
+**Falling.** SRD 5.2.1 "Falling [Hazard]": "A creature that falls takes 1d6
+Bludgeoning damage at the end of the fall for every 10 feet it fell, to a
+maximum of 20d6. When the creature lands, it has the Prone condition unless it
+avoids taking any damage from the fall." A push never climbs: it stops before a
+higher cell. A push that carries a creature into a lower cell stops there, and
+the creature falls the height difference:
+
+1. `CreatureFell(target_id, zone, distance_ft)`;
+2. a fall of 10 feet or more offers [Feather Fall](reactions.md#feather-fall);
+3. the damage, through the ordinary damage path (resistances, concentration,
+   0 Hit Points), as `DamageApplied` with `source_id="hazard:falling"`;
+4. Prone (`ConditionApplied`), when the creature took any damage.
+
+A creature with a Fly Speed stays aloft instead (SRD 5.2.1 "Flying": "you fall
+if you have the Incapacitated or Prone condition or your Fly Speed is reduced to
+0. You can stay aloft in those circumstances if you can hover"). A templated
+monster takes its special speeds and `hover` from its stat block.
+
+Limits: nothing tracks a creature's altitude in the air, so a flier is always
+on the surface of its cell; range, reach, line of sight and areas of effect
+measure across the grid and ignore height.
 
 ## Line of sight, cover, and AoE templates
 
