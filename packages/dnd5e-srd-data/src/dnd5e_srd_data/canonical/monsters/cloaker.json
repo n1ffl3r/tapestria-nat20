@@ -188,8 +188,8 @@
           "range": {
             "override": false,
             "special": "",
-            "units": "self",
-            "value": null
+            "units": "ft",
+            "value": "5"
           },
           "sort": 0,
           "target": {
@@ -399,8 +399,8 @@
           "range": {
             "override": false,
             "special": "",
-            "units": "self",
-            "value": null
+            "units": "ft",
+            "value": "10"
           },
           "sort": 0,
           "target": {
@@ -675,7 +675,9 @@
     }
   ],
   "alignment": "Chaotic Neutral",
-  "condition_immunities": [],
+  "condition_immunities": [
+    "frightened"
+  ],
   "cr": 8.0,
   "creature_size": "large",
   "creature_type": "aberration",

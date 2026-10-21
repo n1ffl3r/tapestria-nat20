@@ -43,7 +43,8 @@ def chapter_lists(
     lists: dict[str, dict[str, TableRow]] = {}
     current: str | None = None
     level: int | None = None
-    for _, line in lines:
+    for _, raw in lines:
+        line = raw.strip()
         section = SECTION.match(line)
         if section:
             current, level = section.group(1).lower(), None
@@ -73,8 +74,8 @@ def chapter_pages(
     """The page each class's "<Class> Spell List" section starts on."""
     lines = pdf_text.plain_lines(*CLASS_PAGES) if lines is None else lines
     pages: dict[str, int] = {}
-    for page, line in lines:
-        section = SECTION.match(line)
+    for page, raw in lines:
+        section = SECTION.match(raw.strip())
         if section:
             pages.setdefault(section.group(1).lower(), page)
     return pages

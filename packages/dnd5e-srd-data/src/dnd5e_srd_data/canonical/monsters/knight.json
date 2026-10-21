@@ -483,7 +483,9 @@
     }
   ],
   "alignment": "Neutral",
-  "condition_immunities": [],
+  "condition_immunities": [
+    "frightened"
+  ],
   "cr": 3.0,
   "creature_size": "medium",
   "creature_type": "humanoid",

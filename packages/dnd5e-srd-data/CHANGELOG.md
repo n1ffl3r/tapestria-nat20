@@ -36,9 +36,33 @@ dungeons-and-agents fork, workstream A).
   spells: 260 verified, 63 corrected, 16 divergence; 8 spell lists: 5
   verified, 3 divergence. `audit/srd_5_2_1_divergences.json` records each
   divergence and its issue.
+- **The stat block audit** (`tools/srd_audit/stat_blocks.py`): every monster's
+  size, type, alignment, AC, HP, speed, ability scores, saves, skills,
+  resistances and immunities, senses, CR and Proficiency Bonus, the traits and
+  actions in each section, and every action's attack bonus, reach or range,
+  saves, damage, area, recharge and uses, compared with its stat block in the
+  PDF. The corpus side derives a monster attack's numbers the way the engine
+  does. 344 monsters: 24 verified, 311 corrected, 9 divergence (#7).
 
 ### Changed
 
+- **Monster attacks keep what Foundry stores on the item**: a melee attack's
+  reach (`system.range.reach`, else 5 feet: SRD 5.2.1 "A creature has a reach of
+  5 feet unless a rule says otherwise"), a ranged attack's normal range, and
+  the Finesse property, which makes an attack use Dexterity when it is the
+  higher modifier (Goblin Warrior, Scimitar: "Melee Attack Roll: +4" with Str 8
+  and Dex 15). A thrown melee weapon's melee attack reaches 5 feet, not its
+  throwing range.
+- **Monster corrections against SRD 5.2.1** (`_MONSTER_SRD_CORRECTIONS`, 134
+  entries over 101 monsters, each quoting its stat block): condition
+  immunities (14 monsters) and resistances (9) Foundry left empty; AC (Elk,
+  Flying Snake); 21 reaches (Adult Brass Dragon's Rend reaches 10 feet, the
+  Kraken's Tentacle 30); damage types and dice (Ankheg's Bite is Slashing,
+  Behir's Lightning Breath 12d10, untyped parts typed); 13 save DCs and
+  abilities (the five lycanthropes' curse DCs, Pit Fiend's Bite save, which had
+  no ability); three recharges (Ghost, Minotaur of Baphomet, Succubus); and 19
+  traits and actions filed in the wrong section (Aboleth's Eldritch
+  Restoration is a trait).
 - **Spell corrections against SRD 5.2.1** (`_SPELL_SRD_CORRECTIONS` in
   `tools/translators/foundry.py`, each quoting its SRD sentence): Raise Dead
   has Touch range; Mirage Arcane's range is Sight (`spec`); Forbiddance is a

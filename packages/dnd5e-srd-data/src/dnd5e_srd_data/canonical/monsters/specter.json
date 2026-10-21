@@ -44,7 +44,7 @@
             "critical": {
               "bonus": ""
             },
-            "include_base": true,
+            "include_base": false,
             "parts": [
               {
                 "bonus": "",

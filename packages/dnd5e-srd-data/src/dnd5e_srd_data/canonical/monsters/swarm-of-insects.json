@@ -60,7 +60,7 @@
                   "number": 1
                 },
                 "types": [
-                  "piercing"
+                  "poison"
                 ]
               }
             ]
@@ -84,8 +84,8 @@
           "range": {
             "override": false,
             "special": "",
-            "units": "self",
-            "value": null
+            "units": "ft",
+            "value": "5"
           },
           "sort": 0,
           "target": {
@@ -173,7 +173,7 @@
                   "number": 1
                 },
                 "types": [
-                  "piercing"
+                  "poison"
                 ]
               }
             ]
@@ -197,8 +197,8 @@
           "range": {
             "override": false,
             "special": "",
-            "units": "self",
-            "value": null
+            "units": "ft",
+            "value": "5"
           },
           "sort": 0,
           "target": {

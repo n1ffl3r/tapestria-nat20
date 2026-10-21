@@ -178,8 +178,8 @@
           "range": {
             "override": false,
             "special": "",
-            "units": "self",
-            "value": null
+            "units": "ft",
+            "value": "5"
           },
           "sort": 0,
           "target": {
@@ -412,7 +412,14 @@
     }
   ],
   "alignment": "Neutral Evil",
-  "condition_immunities": [],
+  "condition_immunities": [
+    "blinded",
+    "charmed",
+    "deafened",
+    "frightened",
+    "stunned",
+    "unconscious"
+  ],
   "cr": 1.0,
   "creature_size": "medium",
   "creature_type": "monstrosity",

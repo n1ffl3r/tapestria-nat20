@@ -20,131 +20,6 @@
             "value": null
           },
           "applied_effects": [],
-          "bonuses": {
-            "ac": "",
-            "attack_damage": "",
-            "hd": "",
-            "healing": "",
-            "hp": "",
-            "save_damage": ""
-          },
-          "consumption": {
-            "scaling": {
-              "allowed": false,
-              "max": ""
-            },
-            "spell_slot": true,
-            "targets": []
-          },
-          "creature_sizes": [],
-          "creature_types": [],
-          "description": {
-            "chat_flavor": ""
-          },
-          "duration": {
-            "concentration": false,
-            "override": false,
-            "special": "",
-            "units": "inst",
-            "value": null
-          },
-          "effects": [],
-          "flags": {},
-          "id": "Owl7RGIwLt3N0Vaj",
-          "img": "",
-          "kind": "summon",
-          "match": {
-            "ability": "",
-            "attacks": false,
-            "disposition": false,
-            "proficiency": false,
-            "saves": false
-          },
-          "name": "Incubus",
-          "profiles": [
-            {
-              "count": "1",
-              "cr": "",
-              "id": "rY6YwVLswioAGOId",
-              "level": {
-                "max": null,
-                "min": null
-              },
-              "name": "Incubus",
-              "types": [],
-              "uuid": "Compendium.dnd5e.actors24.Actor.mmIncubus0000000"
-            }
-          ],
-          "range": {
-            "override": false,
-            "special": "",
-            "units": "self",
-            "value": null
-          },
-          "sort": 0,
-          "summon": {
-            "identifier": null,
-            "mode": "",
-            "prompt": false
-          },
-          "target": {
-            "affects": {
-              "choice": false,
-              "count": "",
-              "special": "",
-              "type": ""
-            },
-            "override": false,
-            "prompt": false,
-            "template": {
-              "contiguous": false,
-              "count": "",
-              "height": "",
-              "size": "",
-              "stationary": false,
-              "type": "",
-              "units": "ft",
-              "width": ""
-            }
-          },
-          "temp_hp": "",
-          "uses": {
-            "max": "",
-            "recovery": [],
-            "spent": 0
-          },
-          "visibility": {
-            "identifier": "",
-            "level": {
-              "max": null,
-              "min": null
-            },
-            "require_attunement": false,
-            "require_identification": false,
-            "require_magic": false
-          }
-        }
-      ],
-      "description": "When the [[lookup @name lowercase]]{monster} finishes a Long Rest, it can shape-shift into an Incubus, using that stat block instead of this one.",
-      "kind": "action",
-      "legendary_cost": null,
-      "mechanic": null,
-      "name": "Incubus Form",
-      "recharge": null,
-      "slug": "incubus-form",
-      "uses_per_day": null
-    },
-    {
-      "activities": [
-        {
-          "activation": {
-            "condition": "",
-            "override": false,
-            "reaction_conditions": [],
-            "type": "action",
-            "value": null
-          },
-          "applied_effects": [],
           "consumption": {
             "scaling": {
               "allowed": false,
@@ -303,8 +178,8 @@
           "range": {
             "override": false,
             "special": "",
-            "units": "self",
-            "value": null
+            "units": "ft",
+            "value": "5"
           },
           "sort": 0,
           "target": {
@@ -451,7 +326,7 @@
       "legendary_cost": null,
       "mechanic": null,
       "name": "Charm",
-      "recharge": "5-6",
+      "recharge": null,
       "slug": "charm",
       "uses_per_day": null
     },
@@ -756,6 +631,132 @@
     "survival": null
   },
   "slug": "succubus",
-  "special_abilities": [],
+  "special_abilities": [
+    {
+      "activities": [
+        {
+          "activation": {
+            "condition": "",
+            "override": false,
+            "reaction_conditions": [],
+            "type": "action",
+            "value": null
+          },
+          "applied_effects": [],
+          "bonuses": {
+            "ac": "",
+            "attack_damage": "",
+            "hd": "",
+            "healing": "",
+            "hp": "",
+            "save_damage": ""
+          },
+          "consumption": {
+            "scaling": {
+              "allowed": false,
+              "max": ""
+            },
+            "spell_slot": true,
+            "targets": []
+          },
+          "creature_sizes": [],
+          "creature_types": [],
+          "description": {
+            "chat_flavor": ""
+          },
+          "duration": {
+            "concentration": false,
+            "override": false,
+            "special": "",
+            "units": "inst",
+            "value": null
+          },
+          "effects": [],
+          "flags": {},
+          "id": "Owl7RGIwLt3N0Vaj",
+          "img": "",
+          "kind": "summon",
+          "match": {
+            "ability": "",
+            "attacks": false,
+            "disposition": false,
+            "proficiency": false,
+            "saves": false
+          },
+          "name": "Incubus",
+          "profiles": [
+            {
+              "count": "1",
+              "cr": "",
+              "id": "rY6YwVLswioAGOId",
+              "level": {
+                "max": null,
+                "min": null
+              },
+              "name": "Incubus",
+              "types": [],
+              "uuid": "Compendium.dnd5e.actors24.Actor.mmIncubus0000000"
+            }
+          ],
+          "range": {
+            "override": false,
+            "special": "",
+            "units": "self",
+            "value": null
+          },
+          "sort": 0,
+          "summon": {
+            "identifier": null,
+            "mode": "",
+            "prompt": false
+          },
+          "target": {
+            "affects": {
+              "choice": false,
+              "count": "",
+              "special": "",
+              "type": ""
+            },
+            "override": false,
+            "prompt": false,
+            "template": {
+              "contiguous": false,
+              "count": "",
+              "height": "",
+              "size": "",
+              "stationary": false,
+              "type": "",
+              "units": "ft",
+              "width": ""
+            }
+          },
+          "temp_hp": "",
+          "uses": {
+            "max": "",
+            "recovery": [],
+            "spent": 0
+          },
+          "visibility": {
+            "identifier": "",
+            "level": {
+              "max": null,
+              "min": null
+            },
+            "require_attunement": false,
+            "require_identification": false,
+            "require_magic": false
+          }
+        }
+      ],
+      "description": "When the [[lookup @name lowercase]]{monster} finishes a Long Rest, it can shape-shift into an Incubus, using that stat block instead of this one.",
+      "kind": "special",
+      "legendary_cost": null,
+      "mechanic": null,
+      "name": "Incubus Form",
+      "recharge": null,
+      "slug": "incubus-form",
+      "uses_per_day": null
+    }
+  ],
   "spellcasting_ability": "cha"
 }

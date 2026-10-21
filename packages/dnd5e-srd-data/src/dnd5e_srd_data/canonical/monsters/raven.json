@@ -20,104 +20,6 @@
             "value": null
           },
           "applied_effects": [],
-          "check": {
-            "ability": "",
-            "associated": [
-              "ins"
-            ],
-            "dc": {
-              "calculation": "",
-              "formula": "14"
-            }
-          },
-          "consumption": {
-            "scaling": {
-              "allowed": false,
-              "max": ""
-            },
-            "spell_slot": true,
-            "targets": []
-          },
-          "description": {
-            "chat_flavor": ""
-          },
-          "duration": {
-            "concentration": false,
-            "override": false,
-            "special": "",
-            "units": "inst",
-            "value": null
-          },
-          "effects": [],
-          "flags": {},
-          "id": "QY46N3x1OIBN2Bu1",
-          "img": "",
-          "kind": "check",
-          "name": "",
-          "range": {
-            "override": false,
-            "special": "",
-            "units": "self",
-            "value": null
-          },
-          "sort": 0,
-          "target": {
-            "affects": {
-              "choice": false,
-              "count": "",
-              "special": "",
-              "type": ""
-            },
-            "override": false,
-            "prompt": true,
-            "template": {
-              "contiguous": false,
-              "count": "",
-              "height": "",
-              "size": "",
-              "stationary": false,
-              "type": "",
-              "units": "ft",
-              "width": ""
-            }
-          },
-          "uses": {
-            "max": "",
-            "recovery": [],
-            "spent": 0
-          },
-          "visibility": {
-            "identifier": "",
-            "level": {
-              "max": null,
-              "min": null
-            },
-            "require_attunement": false,
-            "require_identification": false,
-            "require_magic": false
-          }
-        }
-      ],
-      "description": "The [[lookup @name lowercase]]{monster} can mimic simple sounds it has heard, such as a whisper or chitter. A hearer can discern the sounds are imitations with a successful [[/check format=long]].",
-      "kind": "action",
-      "legendary_cost": null,
-      "mechanic": null,
-      "name": "Mimicry",
-      "recharge": null,
-      "slug": "mimicry",
-      "uses_per_day": null
-    },
-    {
-      "activities": [
-        {
-          "activation": {
-            "condition": "",
-            "override": false,
-            "reaction_conditions": [],
-            "type": "action",
-            "value": null
-          },
-          "applied_effects": [],
           "attack": {
             "ability": "dex",
             "bonus": "",
@@ -182,8 +84,8 @@
           "range": {
             "override": false,
             "special": "",
-            "units": "self",
-            "value": null
+            "units": "ft",
+            "value": "5"
           },
           "sort": 0,
           "target": {
@@ -309,6 +211,105 @@
     "survival": null
   },
   "slug": "raven",
-  "special_abilities": [],
+  "special_abilities": [
+    {
+      "activities": [
+        {
+          "activation": {
+            "condition": "",
+            "override": false,
+            "reaction_conditions": [],
+            "type": "action",
+            "value": null
+          },
+          "applied_effects": [],
+          "check": {
+            "ability": "",
+            "associated": [
+              "ins"
+            ],
+            "dc": {
+              "calculation": "",
+              "formula": "14"
+            }
+          },
+          "consumption": {
+            "scaling": {
+              "allowed": false,
+              "max": ""
+            },
+            "spell_slot": true,
+            "targets": []
+          },
+          "description": {
+            "chat_flavor": ""
+          },
+          "duration": {
+            "concentration": false,
+            "override": false,
+            "special": "",
+            "units": "inst",
+            "value": null
+          },
+          "effects": [],
+          "flags": {},
+          "id": "QY46N3x1OIBN2Bu1",
+          "img": "",
+          "kind": "check",
+          "name": "",
+          "range": {
+            "override": false,
+            "special": "",
+            "units": "self",
+            "value": null
+          },
+          "sort": 0,
+          "target": {
+            "affects": {
+              "choice": false,
+              "count": "",
+              "special": "",
+              "type": ""
+            },
+            "override": false,
+            "prompt": true,
+            "template": {
+              "contiguous": false,
+              "count": "",
+              "height": "",
+              "size": "",
+              "stationary": false,
+              "type": "",
+              "units": "ft",
+              "width": ""
+            }
+          },
+          "uses": {
+            "max": "",
+            "recovery": [],
+            "spent": 0
+          },
+          "visibility": {
+            "identifier": "",
+            "level": {
+              "max": null,
+              "min": null
+            },
+            "require_attunement": false,
+            "require_identification": false,
+            "require_magic": false
+          }
+        }
+      ],
+      "description": "The [[lookup @name lowercase]]{monster} can mimic simple sounds it has heard, such as a whisper or chitter. A hearer can discern the sounds are imitations with a successful [[/check format=long]].",
+      "kind": "special",
+      "legendary_cost": null,
+      "mechanic": null,
+      "name": "Mimicry",
+      "recharge": null,
+      "slug": "mimicry",
+      "uses_per_day": null
+    }
+  ],
   "spellcasting_ability": null
 }

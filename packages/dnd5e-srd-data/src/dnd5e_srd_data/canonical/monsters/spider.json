@@ -47,6 +47,23 @@
             "include_base": false,
             "parts": [
               {
+                "bonus": "1",
+                "custom": {
+                  "enabled": false,
+                  "formula": ""
+                },
+                "denomination": 0,
+                "number": null,
+                "scaling": {
+                  "formula": "",
+                  "mode": "",
+                  "number": 1
+                },
+                "types": [
+                  "piercing"
+                ]
+              },
+              {
                 "bonus": "",
                 "custom": {
                   "enabled": false,
@@ -84,8 +101,8 @@
           "range": {
             "override": false,
             "special": "",
-            "units": "self",
-            "value": null
+            "units": "ft",
+            "value": "5"
           },
           "sort": 0,
           "target": {

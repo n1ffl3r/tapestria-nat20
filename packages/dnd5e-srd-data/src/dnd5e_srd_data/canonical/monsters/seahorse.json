@@ -95,7 +95,7 @@
         }
       ],
       "description": "While underwater, the [[lookup @name lowercase]]{monster} moves up to its Swim Speed without provoking &amp;Reference[Opportunity Attacks].",
-      "kind": "bonus_action",
+      "kind": "action",
       "legendary_cost": null,
       "mechanic": null,
       "name": "Bubble Dash",

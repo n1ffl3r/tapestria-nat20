@@ -111,8 +111,8 @@
           "range": {
             "override": false,
             "special": "",
-            "units": "self",
-            "value": null
+            "units": "ft",
+            "value": "5"
           },
           "sort": 0,
           "target": {
@@ -912,8 +912,8 @@
           "range": {
             "override": false,
             "special": "",
-            "units": "self",
-            "value": null
+            "units": "ft",
+            "value": "60"
           },
           "sort": 0,
           "target": {
@@ -1105,12 +1105,12 @@
             "on_save": "none",
             "parts": [
               {
-                "bonus": "",
+                "bonus": "@mod",
                 "custom": {
                   "enabled": false,
                   "formula": ""
                 },
-                "denomination": 8,
+                "denomination": 6,
                 "number": 6,
                 "scaling": {
                   "formula": "",

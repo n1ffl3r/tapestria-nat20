@@ -86,12 +86,6 @@
   "fine-clothes": {
     "weight": "2024 edition/source divergence; Foundry value preserved."
   },
-  "flying-snake": {
-    "ac": "SRD 5.2 prints Armor Class 14 for a DEX 15 snake; the Foundry actor ships ac.calc default with no flat value, no armor and no effect, so Foundry itself computes 12 (10 + DEX modifier 2). No raw field explains the 14; Foundry value preserved."
-  },
-  "forbiddance": {
-    "ritual": "2024 SRD changed this spell's ritual flag (canonical=False, 2014 oracle=True). Genuine edition change; Foundry/2024 value preserved."
-  },
   "hand-crossbow": {
     "cost_gp": "Foundry 2024 pack ships cost_gp=75.0 gp; 5e-bits 2024 oracle ships 25.0 gp. Genuine cross-source numeric disagreement between two independent 2024 transcriptions; Foundry value preserved.",
     "weight": "Foundry 2024 pack ships weight=3.0 lb; 5e-bits 2024 oracle ships 2.0 lb. Genuine cross-source numeric disagreement between two independent 2024 transcriptions; Foundry value preserved."

@@ -94,8 +94,8 @@
           "range": {
             "override": false,
             "special": "",
-            "units": "self",
-            "value": null
+            "units": "ft",
+            "value": "5"
           },
           "sort": 0,
           "target": {
@@ -397,7 +397,10 @@
     }
   ],
   "alignment": "Unaligned",
-  "condition_immunities": [],
+  "condition_immunities": [
+    "exhaustion",
+    "petrified"
+  ],
   "cr": 5.0,
   "creature_size": "large",
   "creature_type": "construct",

@@ -205,8 +205,8 @@
           "range": {
             "override": false,
             "special": "",
-            "units": "self",
-            "value": null
+            "units": "ft",
+            "value": "5"
           },
           "sort": 0,
           "target": {
@@ -1265,7 +1265,10 @@
     }
   ],
   "alignment": "Lawful Evil",
-  "condition_immunities": [],
+  "condition_immunities": [
+    "charmed",
+    "frightened"
+  ],
   "cr": 13.0,
   "creature_size": "medium",
   "creature_type": "fiend",

@@ -21,7 +21,7 @@
           },
           "applied_effects": [],
           "attack": {
-            "ability": "",
+            "ability": "dex",
             "bonus": "",
             "critical": {
               "threshold": null
@@ -210,7 +210,7 @@
             "override": false,
             "special": "",
             "units": "ft",
-            "value": "150"
+            "value": "30"
           },
           "sort": 0,
           "target": {

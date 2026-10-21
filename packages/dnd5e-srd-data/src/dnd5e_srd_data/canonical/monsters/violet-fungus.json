@@ -178,8 +178,8 @@
           "range": {
             "override": false,
             "special": "",
-            "units": "self",
-            "value": null
+            "units": "ft",
+            "value": "10"
           },
           "sort": 0,
           "target": {
@@ -230,7 +230,12 @@
     }
   ],
   "alignment": "Unaligned",
-  "condition_immunities": [],
+  "condition_immunities": [
+    "blinded",
+    "charmed",
+    "deafened",
+    "frightened"
+  ],
   "cr": 0.25,
   "creature_size": "medium",
   "creature_type": "plant",

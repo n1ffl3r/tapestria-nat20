@@ -84,8 +84,8 @@
           "range": {
             "override": false,
             "special": "",
-            "units": "self",
-            "value": null
+            "units": "ft",
+            "value": "5"
           },
           "sort": 0,
           "target": {
@@ -141,7 +141,9 @@
   "creature_size": "tiny",
   "creature_type": "beast",
   "damage_immunities": [],
-  "damage_resistances": [],
+  "damage_resistances": [
+    "poison"
+  ],
   "damage_vulnerabilities": [],
   "description": "",
   "hp": 5,

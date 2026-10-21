@@ -84,8 +84,8 @@
           "range": {
             "override": false,
             "special": "",
-            "units": "self",
-            "value": null
+            "units": "ft",
+            "value": "5"
           },
           "sort": 0,
           "target": {
@@ -136,7 +136,16 @@
     }
   ],
   "alignment": "Unaligned",
-  "condition_immunities": [],
+  "condition_immunities": [
+    "blinded",
+    "charmed",
+    "deafened",
+    "exhaustion",
+    "frightened",
+    "grappled",
+    "prone",
+    "restrained"
+  ],
   "cr": 0.5,
   "creature_size": "medium",
   "creature_type": "ooze",

@@ -73,8 +73,9 @@ def column_lines(layout: str) -> list[str]:
 
 
 @cache
-def spell_chapter_lines() -> tuple[tuple[int, str], ...]:
-    """The Spells chapter's lines with their pages, after verifying the PDF pin."""
+def layout_lines(first: int, last: int) -> tuple[tuple[int, str], ...]:
+    """Pages ``first`` to ``last`` (1-based, inclusive) read column by column in layout
+    mode, with their pages, after verifying the PDF pin."""
     from pypdf import PdfReader
 
     path, sha256 = srd_index.pinned_pdf()
@@ -82,9 +83,14 @@ def spell_chapter_lines() -> tuple[tuple[int, str], ...]:
     reader = PdfReader(str(path))
     return tuple(
         (number, line)
-        for number in SPELL_PAGES
+        for number in range(first, last + 1)
         for line in column_lines(reader.pages[number - 1].extract_text(extraction_mode="layout"))
     )
+
+
+def spell_chapter_lines() -> tuple[tuple[int, str], ...]:
+    """The Spells chapter's lines with their pages."""
+    return layout_lines(SPELL_PAGES.start, SPELL_PAGES.stop - 1)
 
 
 def spell_texts(
@@ -123,7 +129,8 @@ def spell_texts(
 def plain_lines(first: int, last: int) -> tuple[tuple[int, str], ...]:
     """Pages ``first`` to ``last`` (1-based, inclusive) in pypdf's plain extraction, the
     reading ``tools/srd_index.py`` uses, with their pages. Tables keep their row order here,
-    where layout mode can cut a table's last column off at the gutter."""
+    where layout mode can cut a table's last column off at the gutter. A line keeps its
+    leading space, which marks an indented paragraph."""
     from pypdf import PdfReader
 
     path, sha256 = srd_index.pinned_pdf()
@@ -134,7 +141,7 @@ def plain_lines(first: int, last: int) -> tuple[tuple[int, str], ...]:
         for page in reader.pages[first - 1 : last]
     ]
     return tuple(
-        (first + offset, line.strip())
+        (first + offset, line.rstrip())
         for offset, page in enumerate(pages)
         for line in page.split("\n")
     )

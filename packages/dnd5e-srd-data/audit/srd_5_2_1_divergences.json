@@ -2,101 +2,219 @@
  "description": "Corpus records that differ from the SRD 5.2.1 PDF and stay so for now. Each entry names the fields that differ, the reason, and the issue where the owner approves it. tools/srd_audit/ledger.py marks these records 'divergence' and fails on any other difference.",
  "spell_lists": {
   "bard": {
-   "fields": ["spells"],
+   "fields": [
+    "spells"
+   ],
    "issue": "https://github.com/n1ffl3r/tapestria-nat20/issues/3",
    "reason": "The SRD disagrees with itself. Phantasmal Force's heading reads 'Level 2 Illusion (Bard, Sorcerer, Wizard)', but the Bard chapter's Level 2 table omits it. The list follows the spell's heading, so all 339 spells are on a list."
   },
   "sorcerer": {
-   "fields": ["spells"],
+   "fields": [
+    "spells"
+   ],
    "issue": "https://github.com/n1ffl3r/tapestria-nat20/issues/3",
    "reason": "The SRD disagrees with itself. Phantasmal Force's heading reads 'Level 2 Illusion (Bard, Sorcerer, Wizard)' and Mind Spike's 'Level 2 Divination (Sorcerer, Warlock, Wizard)', but the Sorcerer chapter's Level 2 table omits both. The list follows the spells' headings."
   },
   "wizard": {
-   "fields": ["spells"],
+   "fields": [
+    "spells"
+   ],
    "issue": "https://github.com/n1ffl3r/tapestria-nat20/issues/3",
    "reason": "The SRD disagrees with itself. Phantasmal Force's heading reads 'Level 2 Illusion (Bard, Sorcerer, Wizard)', but the Wizard chapter's Level 2 table omits it. The list follows the spell's heading."
   }
  },
  "spells": {
   "arcane-hand": {
-   "fields": ["attack", "damage", "save", "scaling"],
+   "fields": [
+    "attack",
+    "damage",
+    "save",
+    "scaling"
+   ],
    "issue": "https://github.com/n1ffl3r/tapestria-nat20/issues/3",
    "reason": "The hand's attacks and saves are its own actions. The corpus records only the summon, whose Foundry actor is not in the corpus, so no record holds 'make a melee spell attack', '5d8 Force damage', or the Strength and Dexterity saves."
   },
   "arcane-sword": {
-   "fields": ["attack", "damage"],
+   "fields": [
+    "attack",
+    "damage"
+   ],
    "issue": "https://github.com/n1ffl3r/tapestria-nat20/issues/3",
    "reason": "The sword's melee spell attack and its 4d12 Force damage belong to the summoned sword, whose Foundry actor is not in the corpus."
   },
   "conjure-elemental": {
-   "fields": ["damage", "save", "scaling"],
+   "fields": [
+    "damage",
+    "save",
+    "scaling"
+   ],
    "issue": "https://github.com/n1ffl3r/tapestria-nat20/issues/3",
    "reason": "The spirit's Dexterity save, its 8d8 and 4d8 damage of the spirit's type, and their 1d8 scaling belong to the summoned spirit, whose Foundry actor is not in the corpus."
   },
   "conjure-fey": {
-   "fields": ["attack", "damage", "scaling"],
+   "fields": [
+    "attack",
+    "damage",
+    "scaling"
+   ],
    "issue": "https://github.com/n1ffl3r/tapestria-nat20/issues/3",
    "reason": "The spirit's melee spell attack, its 3d12 Psychic damage, and its 1d12 scaling belong to the summoned spirit, whose Foundry actor is not in the corpus."
   },
   "faithful-hound": {
-   "fields": ["damage", "save"],
+   "fields": [
+    "damage",
+    "save"
+   ],
    "issue": "https://github.com/n1ffl3r/tapestria-nat20/issues/3",
    "reason": "The hound's bite (a Dexterity save against 4d8 Force damage) belongs to the summoned hound, whose Foundry actor is not in the corpus."
   },
   "spiritual-weapon": {
-   "fields": ["attack", "damage", "scaling"],
+   "fields": [
+    "attack",
+    "damage",
+    "scaling"
+   ],
    "issue": "https://github.com/n1ffl3r/tapestria-nat20/issues/3",
    "reason": "The force's melee spell attack, its 1d8 Force damage, and its 1d8 scaling are not in the record; the engine resolves them itself as a construct (CONJURATION_ALLOWLIST in dnd5e_engine/activities/conjuration.py)."
   },
   "fire-shield": {
-   "fields": ["damage"],
+   "fields": [
+    "damage"
+   ],
    "issue": "https://github.com/n1ffl3r/tapestria-nat20/issues/3",
    "reason": "The shield's 2d8 Fire or Cold damage to a creature that hits you is in the description only; the record's effects grant only the Resistance."
   },
   "forcecage": {
-   "fields": ["save"],
+   "fields": [
+    "save"
+   ],
    "issue": "https://github.com/n1ffl3r/tapestria-nat20/issues/3",
    "reason": "The Charisma save a trapped creature makes to teleport out is in the description only."
   },
   "power-word-stun": {
-   "fields": ["save"],
+   "fields": [
+    "save"
+   ],
    "issue": "https://github.com/n1ffl3r/tapestria-nat20/issues/3",
    "reason": "The Stunned target's end-of-turn Constitution save is in the Stunned effect's description only, not in an activity."
   },
   "prismatic-wall": {
-   "fields": ["save"],
+   "fields": [
+    "save"
+   ],
    "issue": "https://github.com/n1ffl3r/tapestria-nat20/issues/3",
    "reason": "The violet layer's Wisdom save at the start of your next turn is in the description only; the record holds the Constitution and Dexterity saves."
   },
   "teleport": {
-   "fields": ["damage"],
+   "fields": [
+    "damage"
+   ],
    "issue": "https://github.com/n1ffl3r/tapestria-nat20/issues/3",
    "reason": "The 3d10 Force damage of a Mishap is in the description only."
   },
   "wall-of-stone": {
-   "fields": ["save"],
+   "fields": [
+    "save"
+   ],
    "issue": "https://github.com/n1ffl3r/tapestria-nat20/issues/3",
    "reason": "The Dexterity save of a creature the wall would surround is in the description only."
   },
   "wish": {
-   "fields": ["damage"],
+   "fields": [
+    "damage"
+   ],
    "issue": "https://github.com/n1ffl3r/tapestria-nat20/issues/3",
    "reason": "The stress of casting it for another effect, 1d10 Necrotic damage per level of the spell, is in the description only."
   },
   "darkness": {
-   "fields": ["area"],
+   "fields": [
+    "area"
+   ],
    "issue": "https://github.com/n1ffl3r/tapestria-nat20/issues/3",
    "reason": "The record holds the 15-foot-radius Sphere, not the alternative 15-foot Emanation from an object ('Alternatively, you cast the spell on an object ... causing the Darkness to fill a 15-foot Emanation originating from that object')."
   },
   "daylight": {
-   "fields": ["area"],
+   "fields": [
+    "area"
+   ],
    "issue": "https://github.com/n1ffl3r/tapestria-nat20/issues/3",
    "reason": "The record holds the 60-foot-radius Sphere, not the alternative 60-foot Emanation from an object."
   },
   "eyebite": {
-   "fields": ["range"],
+   "fields": [
+    "range"
+   ],
    "issue": "https://github.com/n1ffl3r/tapestria-nat20/issues/3",
    "reason": "The SRD gives 'Range: Self' and has you choose 'One creature of your choice within 60 feet of you'. The record keeps Foundry's 60 feet, because the engine resolves a Self or Touch spell on its caster (_spell_is_self_or_targetless in dnd5e_engine/orchestrator.py), so Self would turn Eyebite on the caster. Matching the SRD needs that engine change."
+  }
+ },
+ "monsters": {
+  "archmage": {
+   "fields": [
+    "condition_immunities"
+   ],
+   "issue": "https://github.com/n1ffl3r/tapestria-nat20/issues/7",
+   "reason": "The SRD gives 'Immunities Psychic; Charmed (with Mind Blank)', an immunity that holds while the Archmage's Mind Blank lasts. The corpus records no Charmed immunity, and has no field for a conditional one."
+  },
+  "couatl": {
+   "fields": [
+    "bonus_actions",
+    "bonus_actions.divine-aid"
+   ],
+   "issue": "https://github.com/n1ffl3r/tapestria-nat20/issues/7",
+   "reason": "The corpus lacks the Bonus Action 'Divine Aid (2/Day). The couatl casts Bless, Lesser Restoration, or Sanctuary'; the pinned Foundry pack does not ship it."
+  },
+  "death-dog": {
+   "fields": [
+    "actions.bite"
+   ],
+   "issue": "https://github.com/n1ffl3r/tapestria-nat20/issues/7",
+   "reason": "The bite's disease ('the target's Hit Point maximum decreases by 5 (1d10)' after each Long Rest on a failed save) is in the description only; the corpus records the Constitution save, not the reduction."
+  },
+  "gnoll-warrior": {
+   "fields": [
+    "bonus_actions",
+    "bonus_actions.rampage"
+   ],
+   "issue": "https://github.com/n1ffl3r/tapestria-nat20/issues/7",
+   "reason": "The corpus lacks the Bonus Action 'Rampage (1/Day). Immediately after dealing damage to a creature that is already Bloodied, the gnoll moves up to half its Speed, and it makes one Rend attack.'; the pinned Foundry pack does not ship it."
+  },
+  "goat-of-traveling": {
+   "fields": [
+    "stat_block"
+   ],
+   "issue": "https://github.com/n1ffl3r/tapestria-nat20/issues/7",
+   "srd_page": 221,
+   "reason": "A helper of the Figurine of Wondrous Power (srd/aliases.json). The SRD prints no stat block for it; the corpus ships Foundry's."
+  },
+  "mummy": {
+   "fields": [
+    "actions.rotting-fist"
+   ],
+   "issue": "https://github.com/n1ffl3r/tapestria-nat20/issues/7",
+   "reason": "The curse's 'Hit Point maximum decreases by 10 (3d6)' every 24 hours is in the description only; the corpus records the fist's damage, not the reduction."
+  },
+  "mummy-lord": {
+   "fields": [
+    "actions.rotting-fist"
+   ],
+   "issue": "https://github.com/n1ffl3r/tapestria-nat20/issues/7",
+   "reason": "The curse's 'Hit Point maximum decreases by 10 (3d6)' every 24 hours is in the description only; the corpus records the fist's damage, not the reduction."
+  },
+  "phantom-steed": {
+   "fields": [
+    "stat_block"
+   ],
+   "issue": "https://github.com/n1ffl3r/tapestria-nat20/issues/7",
+   "srd_page": 152,
+   "reason": "A helper of the Phantom Steed spell (srd/aliases.json). The SRD prints no stat block for it; the corpus ships Foundry's."
+  },
+  "rakshasa": {
+   "fields": [
+    "damage_vulnerabilities"
+   ],
+   "issue": "https://github.com/n1ffl3r/tapestria-nat20/issues/7",
+   "reason": "The SRD gives 'Vulnerabilities Piercing damage from weapons wielded by creatures under the effect of a Bless spell'. The corpus records no vulnerability, and has no field for a conditional one."
   }
  }
 }

@@ -303,8 +303,8 @@
           "range": {
             "override": false,
             "special": "",
-            "units": "self",
-            "value": null
+            "units": "ft",
+            "value": "5"
           },
           "sort": 0,
           "target": {
@@ -402,7 +402,7 @@
             ],
             "dc": {
               "calculation": "",
-              "formula": "8 + @mod + @prof"
+              "formula": "11"
             },
             "ignore_cover": false
           },
@@ -641,8 +641,8 @@
           "range": {
             "override": false,
             "special": "",
-            "units": "self",
-            "value": null
+            "units": "ft",
+            "value": "5"
           },
           "sort": 0,
           "target": {

@@ -188,8 +188,8 @@
           "range": {
             "override": false,
             "special": "",
-            "units": "self",
-            "value": null
+            "units": "ft",
+            "value": "15"
           },
           "sort": 0,
           "target": {
@@ -400,8 +400,8 @@
           "range": {
             "override": false,
             "special": "",
-            "units": "self",
-            "value": null
+            "units": "ft",
+            "value": "15"
           },
           "sort": 0,
           "target": {
@@ -535,8 +535,8 @@
           "range": {
             "override": false,
             "special": "",
-            "units": "self",
-            "value": null
+            "units": "ft",
+            "value": "30"
           },
           "sort": 0,
           "target": {
@@ -674,7 +674,7 @@
             ],
             "dc": {
               "calculation": "",
-              "formula": "8 + @mod + @prof"
+              "formula": "27"
             },
             "ignore_cover": false
           },
