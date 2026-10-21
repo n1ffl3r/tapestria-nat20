@@ -2031,6 +2031,34 @@ pool entries.
   the project).
   (`packages/dnd5e-engine/src/dnd5e_engine/activities/attack.py::_implicit_mod_damage_parts`)
 
+## SRD 5.2.1 item audit (2026-10-21, spec 02a session A3)
+
+- **Sixteen item records have no SRD item to compare until the owner approves
+  them (n1ffl3r/tapestria-nat20#10).** Eight traps, which the SRD prints in the
+  Gameplay Toolbox as traps, not items; and eight helper records Foundry adds
+  (the Folding Boat's activation, Demon Armor's clawed gauntlets, the base Ring
+  and Scroll, an Unarmed Strike attack record, and three pints of water).
+  (`packages/dnd5e-srd-data/audit/srd_5_2_1_divergences.json`)
+- **The SRD's mounts, tack, and vehicles are not in the corpus.** The
+  Equipment chapter's Mounts and Other Animals; Tack, Harness, and Drawn
+  Vehicles; and Airborne and Waterborne Vehicles tables have no corpus records,
+  nor do the Gaming Set and Musical Instrument parent entries (their variants
+  are records). The ledger covers corpus records, so none of these has an entry.
+  (`packages/dnd5e-srd-data/tools/srd_audit/items.py::equipment_facts`)
+- **A magic item's price and weight are not compared.** The SRD prices magic
+  items only through its Magic Item Rarities and Values table (a value by
+  rarity, halved for a consumable) and weighs none; the corpus keeps Foundry's.
+  A magic item's charges are compared only where its text states its own ("This
+  wand has 7 charges").
+  (`packages/dnd5e-srd-data/tools/srd_audit/items.py::MAGIC_NOT_COMPARED`)
+- **The generic item translator's pack-folder rule never fires.**
+  `_ITEM_KIND_BY_PACK_SUBDIR` expects a `packs/_source/items/<subdir>/` layout;
+  the pinned pack is `equipment24/consumables/potions/...`, so every generic
+  item falls to the rarity-and-attunement heuristic. The item audit's
+  `item_kind` corrections cover the SRD items it misfiles; a fix to the rule
+  would make them stale.
+  (`packages/dnd5e-srd-data/tools/translators/foundry.py::_pack_subdir`)
+
 ---
 
 # Test & fidelity

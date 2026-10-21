@@ -31,12 +31,16 @@ from typing import Any
 
 import yaml
 
-from tools.srd_audit import pdf_text, spell_lists, spells, stat_blocks
+from tools.srd_audit import items, pdf_text, spell_lists, spells, stat_blocks
 from tools.translators.foundry import (
+    item_srd_corrections,
     monster_srd_corrections,
     spell_srd_corrections,
     srd_rules_disabled,
+    translate_armor_yaml,
+    translate_generic_item_yaml,
     translate_monster_yaml,
+    translate_weapon_yaml,
 )
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -45,7 +49,7 @@ DIVERGENCES_PATH = ROOT / "audit" / "srd_5_2_1_divergences.json"
 INDEX_PATH = ROOT / "srd" / "index.json"
 CANONICAL = ROOT / "src" / "dnd5e_srd_data" / "canonical"
 FOUNDRY = ROOT / "raw_sources" / "foundry"
-AUDITED_CATEGORIES = ("monsters", "spell_lists", "spells")
+AUDITED_CATEGORIES = ("items", "monsters", "spell_lists", "spells")
 ALIASES_PATH = ROOT / "srd" / "aliases.json"
 # The pages holding every stat block: the summon forms in the Spells chapter, the
 # figurines and the Avatar of Death in the Magic Items chapter, and the Monsters and
@@ -430,6 +434,159 @@ def monster_entries(
     return entries
 
 
+# The item field each correction path changes.
+ITEM_FIELDS = {
+    "attunement_constraint": "attunement_by",
+    "cost_gp": "cost",
+    "item_kind": "category",
+    "rarity": "rarity",
+    "uses": "charges",
+    "versatile_damage": "versatile",
+    "weight": "weight",
+}
+
+
+def _translate_item(path: Path) -> dict[str, Any]:
+    """The item as the translator gives it with the SRD rules and corrections off, routed
+    as ``tools/regen.py`` routes it."""
+    if "/weapons/" in path.as_posix():
+        translator = translate_weapon_yaml
+    elif "/armor/" in path.as_posix():
+        translator = translate_armor_yaml
+    else:
+        doc = yaml.safe_load(path.read_text(encoding="utf-8"))
+        system = doc.get("system") or {}
+        translator = translate_generic_item_yaml
+        if doc.get("type") == "weapon":
+            translator = translate_weapon_yaml
+        elif doc.get("type") == "equipment" and (system.get("armor") or {}).get("value"):
+            translator = translate_armor_yaml
+    with srd_rules_disabled():
+        item = translator(path, ingest_date=date(2000, 1, 1), ingest_version="ledger")
+    return item.model_dump(mode="json")
+
+
+def item_changes(record: Mapping[str, Any], magic: bool, fields: list[str]) -> list[dict[str, Any]]:
+    """The audited fields the translator's corrections changed, each with the SRD text it
+    rests on."""
+    before = items.corpus_facts(_translate_item(_raw_path(record)), magic)
+    after = items.corpus_facts(record, magic)
+    corrections = item_srd_corrections(record["slug"])
+    changes = []
+    for field in sorted(set(fields) | {ITEM_FIELDS[c.path] for c in corrections}):
+        if before.get(field) == after.get(field):
+            continue
+        quotes = [c.srd for c in corrections if ITEM_FIELDS[c.path] == field]
+        if not quotes:
+            raise ValueError(f"{record['slug']}: {field} changed with no SRD text to cite")
+        changes.append(
+            {"field": field, "from": before.get(field), "to": after.get(field), "srd": quotes}
+        )
+    return changes
+
+
+def item_entry(
+    slug: str,
+    record: Mapping[str, Any],
+    srd_facts: Mapping[str, Any],
+    page: int,
+    text: str,
+    magic: bool,
+    parent: str | None,
+    divergence: Mapping[str, Any] | None,
+    with_changes: bool,
+) -> dict[str, Any]:
+    srd, corpus, not_compared = items.audited(
+        srd_facts, items.corpus_facts(record, magic), magic, parent
+    )
+    differences = spells.compare(srd, corpus)
+    entry: dict[str, Any] = {"name": record["name"], "srd_page": page, "compared": srd}
+    if not_compared:
+        entry["not_compared"] = dict(sorted(not_compared.items()))
+    for correction in item_srd_corrections(slug):
+        if not contains(text, correction.srd):
+            raise ValueError(f"{slug}: correction quote not in the SRD text: {correction.srd!r}")
+    changes = item_changes(record, magic, sorted(srd)) if with_changes else []
+    if differences:
+        if divergence is None or sorted(divergence["fields"]) != sorted(differences):
+            raise ValueError(f"{slug}: unrecorded differences from the SRD: {differences}")
+        entry["status"] = "divergence"
+        entry["differences"] = differences
+        entry["divergence"] = dict(divergence)
+    elif divergence is not None:
+        raise ValueError(f"{slug}: recorded as a divergence but matches the SRD")
+    else:
+        entry["status"] = "corrected" if changes else "verified"
+    if changes:
+        entry["changes"] = changes
+    return entry
+
+
+def item_entries(
+    index: Mapping[str, Any], divergences: Mapping[str, Any], with_changes: bool
+) -> dict[str, Any]:
+    """Every corpus item against its SRD entry: a Magic Items chapter entry, else an
+    Equipment chapter row or heading (or a sample poison's). A variant is compared with
+    its parent (srd/aliases.json). A record with no SRD item to compare (a trap, or a
+    helper record Foundry adds) is a divergence."""
+    lines = pdf_text.plain_lines(*items.EQUIPMENT_PAGES) + pdf_text.plain_lines(*items.POISON_PAGES)
+    equipment = items.equipment_facts(lines)
+    equipment_text = "\n".join(line for _, line in lines)
+    texts = items.magic_item_texts()
+    pages = {s["name"]: s["page"] for s in index["categories"]["magic_items"]}
+    aliases = {
+        alias["name"]: alias
+        for alias in load_json(ALIASES_PATH)["aliases"]
+        if alias["corpus_category"] == "items"
+    }
+    entries: dict[str, Any] = {}
+    errors: list[str] = []
+    for slug, record in canonical_records("items").items():
+        name = record["name"]
+        divergence = divergences["items"].get(slug)
+        alias = aliases.get(name)
+        srd_name = alias["of"] if alias and alias["kind"] == "variant" else name
+        # A magic item's variant is a form of its entry; an equipment variant is the row
+        # itself ("Arcane Focus (Varies)").
+        magic_variant = alias is not None and alias["of_category"] == "magic_items"
+        parent = srd_name if srd_name != name and magic_variant else None
+        found = None
+        if not (alias and alias["kind"] == "helper"):
+            if srd_name in texts:
+                text = texts[srd_name]
+                found = (
+                    items.magic_item_facts(text),
+                    pages.get(srd_name, text.page),
+                    text.text,
+                    True,
+                )
+            elif (row := items.equipment_entry(equipment, srd_name)) is not None:
+                found = (row[1][1], row[1][0], equipment_text, False)
+        if found is None:
+            if divergence is None:
+                errors.append(f"{slug}: no SRD item to compare")
+            else:
+                entries[slug] = {
+                    "name": name,
+                    "srd_page": int(divergence["srd_page"]),
+                    "compared": {},
+                    "status": "divergence",
+                    "differences": {"srd_entry": {"srd": None, "corpus": slug}},
+                    "divergence": dict(divergence),
+                }
+            continue
+        facts, page, text_body, magic = found
+        try:
+            entries[slug] = item_entry(
+                slug, record, facts, page, text_body, magic, parent, divergence, with_changes
+            )
+        except ValueError as error:
+            errors.append(str(error))
+    if errors:
+        raise ValueError("\n".join(errors))
+    return entries
+
+
 def build(with_changes: bool = True) -> dict[str, Any]:
     """The ledger. ``with_changes`` reads the raw Foundry sources to list what the
     translator changed; without them every matching record reads as verified."""
@@ -485,6 +642,7 @@ def build(with_changes: bool = True) -> dict[str, Any]:
         "source": index["source"],
         "audited_categories": list(AUDITED_CATEGORIES),
         "records": {
+            "items": item_entries(index, divergences, with_changes),
             "monsters": monster_entries(index, divergences, with_changes),
             "spell_lists": list_records,
             "spells": spell_records,

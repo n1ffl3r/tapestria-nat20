@@ -13,7 +13,7 @@ from collections.abc import Iterable, Iterator, Mapping, Sequence
 from dataclasses import dataclass
 from datetime import date
 from pathlib import Path
-from typing import Any, Literal, TypeVar
+from typing import Any, Literal, TypeVar, cast
 
 import yaml
 from pydantic import BaseModel
@@ -963,7 +963,7 @@ def translate_weapon_yaml(
     # mean "no mastery" → None.
     mastery_raw = system.get("mastery")
     mastery = mastery_raw.strip() or None if isinstance(mastery_raw, str) else None
-    return Weapon(
+    weapon = Weapon(
         slug=slug_str,
         name=doc["name"],
         description=_description(doc),
@@ -986,6 +986,7 @@ def translate_weapon_yaml(
         provenance=_provenance(yaml_path, ingest_date, ingest_version),
         review=ReviewState(),
     )
+    return cast(Weapon, _apply_item_srd_corrections(weapon))
 
 
 def translate_armor_yaml(
@@ -1007,7 +1008,7 @@ def translate_armor_yaml(
     if isinstance(armor_props, dict):
         armor_props = [k for k, v in armor_props.items() if v]
     armor_magical = "mgc" in armor_props
-    return Armor(
+    armor_item = Armor(
         slug=_slug(doc, yaml_path),
         name=doc["name"],
         description=_description(doc),
@@ -1035,6 +1036,7 @@ def translate_armor_yaml(
         provenance=_provenance(yaml_path, ingest_date, ingest_version),
         review=ReviewState(),
     )
+    return cast(Armor, _apply_item_srd_corrections(armor_item))
 
 
 _SIZE_MAP = {
@@ -2135,15 +2137,15 @@ def translate_generic_item_yaml(
     mapped_kind = _ITEM_KIND_BY_PACK_SUBDIR.get(subdir) if subdir is not None else None
     # Magic-item subdirs (potion/scroll/wand/ring/rod) — always magic_item.
     if mapped_kind == "magic_item":
-        return MagicItem(**base_kwargs)
+        return _apply_item_srd_corrections(MagicItem(**base_kwargs))
     # Mundane-baseline subdirs (equipment/tool/loot/ammunition/food/poison/
     # spellcasting-focus) + unknown/trinket: rarity/attunement promotes to
     # magic_item. Catches Foundry-mixed packs where magic items sit alongside
     # mundane gear — amulet-of-health (uncommon) and ioun-stone-of-absorption
     # (rare) live in equipment/ but are clearly magic items by SRD.
     if requires_attunement or rarity != ItemRarity.COMMON:
-        return MagicItem(**base_kwargs)
-    return Item(**base_kwargs)
+        return _apply_item_srd_corrections(MagicItem(**base_kwargs))
+    return _apply_item_srd_corrections(Item(**base_kwargs))
 
 
 # ---------------------------------------------------------------------------
@@ -4005,6 +4007,146 @@ def _apply_monster_srd_corrections(monster: Monster) -> Monster:
             e for e in entries if _ACTION_LIST_BY_KIND.get(e["kind"], "actions") == field
         ]
     return Monster.model_validate(blob)
+
+
+#: The item audit's corrections (``audit/srd_5_2_1_ledger.json``, spec 02a acceptance
+#: criterion 4), keyed by item slug. Each quotes the item's SRD 5.2.1 table row, heading,
+#: or kind line; the pins live in ``tests/test_item_srd_5_2_1_corrections.py``. A weight is
+#: the table row's: a bundle of ammunition, a full pack, a full Waterskin. A cost that
+#: "Varies" is no one price (``None``). An ``item_kind`` correction files an item the Magic
+#: Items chapter prints as a magic item.
+_ITEM_SRD_CORRECTIONS: dict[str, tuple[_SrdCorrection, ...]] = {
+    "ammunition-varies": (_SrdCorrection("cost_gp", 0.0, None, "Ammunition Varies Varies"),),
+    "arcane-focus-varies": (_SrdCorrection("cost_gp", 0.0, None, "Arcane Focus Varies Varies"),),
+    "druidic-focus-varies": (_SrdCorrection("cost_gp", 0.0, None, "Druidic Focus Varies Varies"),),
+    "holy-symbol-varies": (_SrdCorrection("cost_gp", 0.0, None, "Holy Symbol Varies Varies"),),
+    "ammunition-1-2-or-3": (
+        _SrdCorrection(
+            "item_kind",
+            "item",
+            "magic_item",
+            "Weapon (Any Ammunition), Uncommon (+1), Rare (+2), or Very Rare (+3)",
+        ),
+    ),
+    "arrows": (_SrdCorrection("weight", 0.05, 1.0, "Arrows 20 Quiver 1 lb. 1 GP"),),
+    "bagpipes": (_SrdCorrection("weight", 1.0, 6.0, "Bagpipes (30 GP, 6 lb.)"),),
+    "bead-of-nourishment": (
+        _SrdCorrection("item_kind", "item", "magic_item", "Wondrous Item, Common"),
+    ),
+    "bolts": (_SrdCorrection("weight", 0.075, 1.5, "Bolts 20 Case 1½ lb. 1 GP"),),
+    "bullets-firearm": (
+        _SrdCorrection("weight", 0.2, 2.0, "Bullets, Firearm 10 Pouch 2 lb. 3 GP"),
+    ),
+    "bullets-sling": (_SrdCorrection("weight", 0.075, 1.5, "Bullets, Sling 20 Pouch 1½ lb. 4 CP"),),
+    "burglars-pack": (_SrdCorrection("weight", 5.0, 42.0, "Burglar's Pack 42 lb. 16 GP"),),
+    "chain": (_SrdCorrection("weight", 0.0, 10.0, "Chain 10 lb. 5 GP"),),
+    "diplomats-pack": (_SrdCorrection("weight", 25.0, 39.0, "Diplomat's Pack 39 lb. 39 GP"),),
+    "dragon-orb": (
+        _SrdCorrection(
+            "uses",
+            None,
+            {
+                "auto_destroy": False,
+                "max": "7",
+                "recovery": [{"formula": "1d4 + 3", "period": "dawn", "type": "formula"}],
+                "spent": 0,
+            },
+            "The orb has 7 charges and regains 1d4 + 3 expended charges daily at dawn.",
+        ),
+    ),
+    "dungeoneers-pack": (_SrdCorrection("weight", 5.0, 55.0, "Dungeoneer's Pack 55 lb. 12 GP"),),
+    "dwarven-thrower": (
+        _SrdCorrection(
+            "attunement_constraint",
+            "by a Dwarf or a Creature Attuned to a @UUID[Compendium",
+            "by a Dwarf or a Creature Attuned to a Belt of Dwarvenkind",
+            "(Requires Attunement by a Dwarf or a Creature Attuned to a Belt of Dwarvenkind)",
+        ),
+    ),
+    "entertainers-pack": (_SrdCorrection("weight", 5.0, 58.5, "Entertainer's Pack 58½ lb. 40 GP"),),
+    "explorers-pack": (_SrdCorrection("weight", 5.0, 55.0, "Explorer's Pack 55 lb. 10 GP"),),
+    "feather-token": (
+        _SrdCorrection("item_kind", "item", "magic_item", "Wondrous Item, Rarity Varies"),
+    ),
+    "figurine-of-wondrous-power": (
+        _SrdCorrection("item_kind", "item", "magic_item", "Wondrous Item, Rarity Varies"),
+    ),
+    "handy-haversack": (
+        _SrdCorrection("item_kind", "item", "magic_item", "Wondrous Item, Rare"),
+        _SrdCorrection("rarity", "common", "rare", "Wondrous Item, Rare"),
+    ),
+    "herbalism-kit": (
+        _SrdCorrection(
+            "weight", 8.0, 3.0, "Herbalism Kit (5 GP) Ability: Intelligence Weight: 3 lb."
+        ),
+    ),
+    "hooded-lantern": (_SrdCorrection("cost_gp", 10.0, 5.0, "Lantern, Hooded 2 lb. 5 GP"),),
+    "horn-of-valhalla": (
+        _SrdCorrection(
+            "item_kind",
+            "item",
+            "magic_item",
+            "Wondrous Item, Rare (Silver or Brass), Very Rare (Bronze), or Legendary (Iron)",
+        ),
+    ),
+    "needles": (_SrdCorrection("weight", 0.02, 1.0, "Needles 50 Pouch 1 lb. 1 GP"),),
+    "potion-of-climbing": (_SrdCorrection("item_kind", "item", "magic_item", "Potion, Common"),),
+    "potion-of-giant-strength": (
+        _SrdCorrection("item_kind", "item", "magic_item", "Potion, Rarity Varies"),
+    ),
+    "priests-pack": (_SrdCorrection("weight", 5.0, 29.0, "Priest's Pack 29 lb. 33 GP"),),
+    "scholars-pack": (_SrdCorrection("weight", 5.0, 22.0, "Scholar's Pack 22 lb. 40 GP"),),
+    "spell-scroll": (_SrdCorrection("item_kind", "item", "magic_item", "Scroll, Rarity Varies"),),
+    "spell-scroll-cantrip": (
+        _SrdCorrection("item_kind", "item", "magic_item", "Scroll, Rarity Varies"),
+    ),
+    "spell-scroll-level-1": (
+        _SrdCorrection("item_kind", "item", "magic_item", "Scroll, Rarity Varies"),
+    ),
+    "spikes-iron": (_SrdCorrection("weight", 0.5, 5.0, "Spikes, Iron 5 lb. 1 GP"),),
+    "trident": (
+        _SrdCorrection(
+            "versatile_damage",
+            {"damage_type": "piercing", "dice": "1d8"},
+            {"damage_type": "piercing", "dice": "1d10"},
+            "Trident 1d8 Piercing Thrown (Range 20/60), Versatile (1d10) Topple 4 lb. 5 GP",
+        ),
+    ),
+    "war-pick": (
+        _SrdCorrection(
+            "versatile_damage",
+            None,
+            {"damage_type": "piercing", "dice": "1d10"},
+            "War Pick 1d8 Piercing Versatile (1d10) Sap 2 lb. 5 GP",
+        ),
+    ),
+    "waterskin": (_SrdCorrection("weight", 1.0, 5.0, "Waterskin 5 lb. (full) 2 SP"),),
+}
+
+
+_ITEM_MODELS: dict[str, type[Item]] = {
+    "item": Item,
+    "weapon": Weapon,
+    "armor": Armor,
+    "magic_item": MagicItem,
+}
+
+
+def item_srd_corrections(slug: str) -> tuple[_SrdCorrection, ...]:
+    """The SRD 5.2.1 corrections the translator applies to item ``slug``."""
+    return _ITEM_SRD_CORRECTIONS.get(slug, ())
+
+
+def _apply_item_srd_corrections(item: Item) -> Item:
+    """Apply ``_ITEM_SRD_CORRECTIONS``, revalidating as the model the record's
+    ``item_kind`` names. Only a generic item's kind is corrected; a weapon or armor keeps
+    its model."""
+    corrections = item_srd_corrections(item.slug)
+    if not corrections or not _SRD_RULES["enabled"]:
+        return item
+    blob = item.model_dump(mode="json")
+    _apply_srd_corrections(item.slug, blob, corrections)
+    return _ITEM_MODELS[blob["item_kind"]].model_validate(blob)
 
 
 def translate_spell_yaml(

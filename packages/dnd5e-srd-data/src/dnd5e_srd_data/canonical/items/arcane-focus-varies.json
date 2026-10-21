@@ -1,7 +1,7 @@
 {
   "activities": [],
   "attunement_constraint": null,
-  "cost_gp": 0.0,
+  "cost_gp": null,
   "description": "An Arcane Focus takes one of the forms in the Arcane Focuses table and is bejeweled or carved to channel arcane magic. A Sorcerer, Warlock, or Wizard can use such an item as a Spellcasting Focus.\n\nArcane Focuses\n\nFocus\n\nWeight\n\nCost\n\nCrystal\n\n1 lb.\n\n10 GP\n\nOrb\n\n3 lb.\n\n20 GP\n\nRod\n\n2 lb.\n\n10 GP\n\nStaff (also a Quarterstaff)\n\n4 lb.\n\n5 GP\n\nWand\n\n1 lb.\n\n10 GP",
   "item_kind": "item",
   "name": "Arcane Focus (Varies)",

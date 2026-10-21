@@ -141,7 +141,7 @@
   "uses": null,
   "versatile_damage": {
     "damage_type": "piercing",
-    "dice": "1d8"
+    "dice": "1d10"
   },
   "weapon_category": "martial_melee",
   "weight": 4.0

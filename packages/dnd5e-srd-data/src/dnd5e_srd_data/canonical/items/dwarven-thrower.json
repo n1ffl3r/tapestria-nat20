@@ -227,7 +227,7 @@
       }
     }
   ],
-  "attunement_constraint": "by a Dwarf or a Creature Attuned to a @UUID[Compendium",
+  "attunement_constraint": "by a Dwarf or a Creature Attuned to a Belt of Dwarvenkind",
   "cost_gp": 40015.0,
   "damage_parts": [
     {

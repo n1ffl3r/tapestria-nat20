@@ -138,7 +138,10 @@
   },
   "slug": "war-pick",
   "uses": null,
-  "versatile_damage": null,
+  "versatile_damage": {
+    "damage_type": "piercing",
+    "dice": "1d10"
+  },
   "weapon_category": "martial_melee",
   "weight": 2.0
 }

@@ -3,7 +3,7 @@
   "attunement_constraint": null,
   "cost_gp": 0.0,
   "description": "Wondrous Item, Rarity Varies\n\nThis object looks like a feather. Different types of feather tokens exist, each with a different single-use effect. The GM chooses the kind of token or determines it randomly by rolling on the Feather Tokens table. The type of token determines its rarity.\n\n@Embed[Compendium.dnd5e.tables24.RollTable.dmgQuaalsFeather caption=false rollable]",
-  "item_kind": "item",
+  "item_kind": "magic_item",
   "name": "Feather Token",
   "passive_effects": [],
   "provenance": {

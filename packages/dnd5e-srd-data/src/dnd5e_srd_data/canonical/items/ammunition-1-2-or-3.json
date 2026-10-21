@@ -130,7 +130,7 @@
   "attunement_constraint": null,
   "cost_gp": 0.0,
   "description": "Weapon (Any Ammunition), Uncommon (+1), Rare (+2), or Very Rare (+3)\n\nYou have a bonus to attack rolls and damage rolls made with this piece of magic ammunition. The bonus is determined by the rarity of the ammunition. Once it hits a target, the ammunition is no longer magical.\n\nThis ammunition is typically found or sold in quantities of ten or twenty pieces. Ten pieces of this ammunition are equivalent in value to a potion of the same rarity.\n\n@Embed[Compendium.dnd5e.content24.JournalEntry.dmgFoundryRefere.JournalEntryPage.Ok4iCgD25ENgoRxE cite=false caption=false classes=\"hide-in-embed\"]",
-  "item_kind": "item",
+  "item_kind": "magic_item",
   "name": "Ammunition, +1, +2, or +3",
   "passive_effects": [
     {
