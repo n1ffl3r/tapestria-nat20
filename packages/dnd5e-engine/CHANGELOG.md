@@ -64,7 +64,7 @@ after an attack roll that would hit.
   with no `ready` intent or Action; its +5 AC decides the triggering roll again.
   A readied Shield, or any spell readied on `"hit_by_attack"`, now fires only
   when the attack hits, where it fired before the roll, on a hit or a miss.
-  Four tests that pinned the firing on a miss now make the attack hit.
+  Three tests that pinned the firing on a miss now make the attack hit.
 - **Set order no longer reaches output.** A seeded effect's statuses, an
   applied effect's conditions and the XP award's survivors are taken in a fixed
   order, so the same combat serializes the same way in every process.
