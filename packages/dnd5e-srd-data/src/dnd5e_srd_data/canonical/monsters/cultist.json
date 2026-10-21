@@ -59,7 +59,9 @@
                   "mode": "",
                   "number": 1
                 },
-                "types": []
+                "types": [
+                  "slashing"
+                ]
               },
               {
                 "bonus": "1",
@@ -99,8 +101,8 @@
           "range": {
             "override": false,
             "special": "",
-            "units": "self",
-            "value": null
+            "units": "ft",
+            "value": "5"
           },
           "sort": 0,
           "target": {

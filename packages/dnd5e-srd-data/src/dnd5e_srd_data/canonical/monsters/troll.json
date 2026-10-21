@@ -20,186 +20,6 @@
             "value": null
           },
           "applied_effects": [],
-          "bonuses": {
-            "ac": "",
-            "attack_damage": "",
-            "hd": "",
-            "healing": "",
-            "hp": "",
-            "save_damage": ""
-          },
-          "consumption": {
-            "scaling": {
-              "allowed": false,
-              "max": ""
-            },
-            "spell_slot": true,
-            "targets": []
-          },
-          "creature_sizes": [],
-          "creature_types": [],
-          "description": {
-            "chat_flavor": ""
-          },
-          "duration": {
-            "concentration": false,
-            "override": false,
-            "special": "",
-            "units": "inst",
-            "value": null
-          },
-          "effects": [
-            {
-              "id": "PFledLQkQ75osOlZ",
-              "level": {
-                "max": null,
-                "min": null
-              },
-              "on_save": null,
-              "riders": null
-            },
-            {
-              "id": "AVZPkC07GONXpRMe",
-              "level": {
-                "max": null,
-                "min": null
-              },
-              "on_save": null,
-              "riders": null
-            },
-            {
-              "id": "l1PiPpfAiF9TWs88",
-              "level": {
-                "max": null,
-                "min": null
-              },
-              "on_save": null,
-              "riders": null
-            },
-            {
-              "id": "DCB7xWKhKSEmZHNn",
-              "level": {
-                "max": null,
-                "min": null
-              },
-              "on_save": null,
-              "riders": null
-            },
-            {
-              "id": "9Tc60NhDJH43WdEU",
-              "level": {
-                "max": null,
-                "min": null
-              },
-              "on_save": null,
-              "riders": null
-            },
-            {
-              "id": "drQriWAwmwosemzp",
-              "level": {
-                "max": null,
-                "min": null
-              },
-              "on_save": null,
-              "riders": null
-            }
-          ],
-          "flags": {},
-          "id": "1RdczIOwv3VBCELH",
-          "img": "",
-          "kind": "summon",
-          "match": {
-            "ability": "",
-            "attacks": false,
-            "disposition": false,
-            "proficiency": false,
-            "saves": false
-          },
-          "name": "Troll Limb",
-          "profiles": [
-            {
-              "count": "1",
-              "cr": "",
-              "id": "Oo1ooV67nRAPVyLL",
-              "level": {
-                "max": null,
-                "min": null
-              },
-              "name": "Troll Limb",
-              "types": [],
-              "uuid": "Compendium.dnd5e.actors24.Actor.mmTrollLimb00000"
-            }
-          ],
-          "range": {
-            "override": false,
-            "special": "",
-            "units": "self",
-            "value": null
-          },
-          "sort": 0,
-          "summon": {
-            "identifier": null,
-            "mode": "",
-            "prompt": false
-          },
-          "target": {
-            "affects": {
-              "choice": false,
-              "count": "",
-              "special": "",
-              "type": ""
-            },
-            "override": false,
-            "prompt": false,
-            "template": {
-              "contiguous": false,
-              "count": "",
-              "height": "",
-              "size": "",
-              "stationary": false,
-              "type": "",
-              "units": "ft",
-              "width": ""
-            }
-          },
-          "temp_hp": "",
-          "uses": {
-            "max": "",
-            "recovery": [],
-            "spent": 0
-          },
-          "visibility": {
-            "identifier": "",
-            "level": {
-              "max": null,
-              "min": null
-            },
-            "require_attunement": false,
-            "require_identification": false,
-            "require_magic": false
-          }
-        }
-      ],
-      "description": "If the [[lookup @name lowercase]]{monster} ends any turn Bloodied and took 15+ Slashing damage during that turn, one of the [[lookup @name lowercase]]{monster}l's limbs is severed, falls into the [[lookup @name lowercase]]{monster}'s space, and becomes a Troll Limb. The limb acts immediately after the [[lookup @name lowercase]]{monster}'s turn. The [[lookup @name lowercase]]{monster} has 1 &amp;Reference[Exhaustion apply=false] level for each missing limb, and it grows replacement limbs the next time it regains Hit Points.\n\nFoundry Note\n\nThis feature provides an Active Effect condition in the character sheet's Effects tab to enable each level of Exhaustion. Since the condition can be applied multiple times, the GM must manually manage the level of Exhaustion. There is an active effect available for each level of exhaustion.",
-      "kind": "action",
-      "legendary_cost": null,
-      "mechanic": null,
-      "name": "Loathsome Limbs",
-      "recharge": null,
-      "slug": "loathsome-limbs",
-      "uses_per_day": 4
-    },
-    {
-      "activities": [
-        {
-          "activation": {
-            "condition": "",
-            "override": false,
-            "reaction_conditions": [],
-            "type": "action",
-            "value": null
-          },
-          "applied_effects": [],
           "consumption": {
             "scaling": {
               "allowed": false,
@@ -358,8 +178,8 @@
           "range": {
             "override": false,
             "special": "",
-            "units": "self",
-            "value": null
+            "units": "ft",
+            "value": "10"
           },
           "sort": 0,
           "target": {
@@ -582,6 +402,186 @@
   },
   "slug": "troll",
   "special_abilities": [
+    {
+      "activities": [
+        {
+          "activation": {
+            "condition": "",
+            "override": false,
+            "reaction_conditions": [],
+            "type": "action",
+            "value": null
+          },
+          "applied_effects": [],
+          "bonuses": {
+            "ac": "",
+            "attack_damage": "",
+            "hd": "",
+            "healing": "",
+            "hp": "",
+            "save_damage": ""
+          },
+          "consumption": {
+            "scaling": {
+              "allowed": false,
+              "max": ""
+            },
+            "spell_slot": true,
+            "targets": []
+          },
+          "creature_sizes": [],
+          "creature_types": [],
+          "description": {
+            "chat_flavor": ""
+          },
+          "duration": {
+            "concentration": false,
+            "override": false,
+            "special": "",
+            "units": "inst",
+            "value": null
+          },
+          "effects": [
+            {
+              "id": "PFledLQkQ75osOlZ",
+              "level": {
+                "max": null,
+                "min": null
+              },
+              "on_save": null,
+              "riders": null
+            },
+            {
+              "id": "AVZPkC07GONXpRMe",
+              "level": {
+                "max": null,
+                "min": null
+              },
+              "on_save": null,
+              "riders": null
+            },
+            {
+              "id": "l1PiPpfAiF9TWs88",
+              "level": {
+                "max": null,
+                "min": null
+              },
+              "on_save": null,
+              "riders": null
+            },
+            {
+              "id": "DCB7xWKhKSEmZHNn",
+              "level": {
+                "max": null,
+                "min": null
+              },
+              "on_save": null,
+              "riders": null
+            },
+            {
+              "id": "9Tc60NhDJH43WdEU",
+              "level": {
+                "max": null,
+                "min": null
+              },
+              "on_save": null,
+              "riders": null
+            },
+            {
+              "id": "drQriWAwmwosemzp",
+              "level": {
+                "max": null,
+                "min": null
+              },
+              "on_save": null,
+              "riders": null
+            }
+          ],
+          "flags": {},
+          "id": "1RdczIOwv3VBCELH",
+          "img": "",
+          "kind": "summon",
+          "match": {
+            "ability": "",
+            "attacks": false,
+            "disposition": false,
+            "proficiency": false,
+            "saves": false
+          },
+          "name": "Troll Limb",
+          "profiles": [
+            {
+              "count": "1",
+              "cr": "",
+              "id": "Oo1ooV67nRAPVyLL",
+              "level": {
+                "max": null,
+                "min": null
+              },
+              "name": "Troll Limb",
+              "types": [],
+              "uuid": "Compendium.dnd5e.actors24.Actor.mmTrollLimb00000"
+            }
+          ],
+          "range": {
+            "override": false,
+            "special": "",
+            "units": "self",
+            "value": null
+          },
+          "sort": 0,
+          "summon": {
+            "identifier": null,
+            "mode": "",
+            "prompt": false
+          },
+          "target": {
+            "affects": {
+              "choice": false,
+              "count": "",
+              "special": "",
+              "type": ""
+            },
+            "override": false,
+            "prompt": false,
+            "template": {
+              "contiguous": false,
+              "count": "",
+              "height": "",
+              "size": "",
+              "stationary": false,
+              "type": "",
+              "units": "ft",
+              "width": ""
+            }
+          },
+          "temp_hp": "",
+          "uses": {
+            "max": "",
+            "recovery": [],
+            "spent": 0
+          },
+          "visibility": {
+            "identifier": "",
+            "level": {
+              "max": null,
+              "min": null
+            },
+            "require_attunement": false,
+            "require_identification": false,
+            "require_magic": false
+          }
+        }
+      ],
+      "description": "If the [[lookup @name lowercase]]{monster} ends any turn Bloodied and took 15+ Slashing damage during that turn, one of the [[lookup @name lowercase]]{monster}l's limbs is severed, falls into the [[lookup @name lowercase]]{monster}'s space, and becomes a Troll Limb. The limb acts immediately after the [[lookup @name lowercase]]{monster}'s turn. The [[lookup @name lowercase]]{monster} has 1 &amp;Reference[Exhaustion apply=false] level for each missing limb, and it grows replacement limbs the next time it regains Hit Points.\n\nFoundry Note\n\nThis feature provides an Active Effect condition in the character sheet's Effects tab to enable each level of Exhaustion. Since the condition can be applied multiple times, the GM must manually manage the level of Exhaustion. There is an active effect available for each level of exhaustion.",
+      "kind": "special",
+      "legendary_cost": null,
+      "mechanic": null,
+      "name": "Loathsome Limbs",
+      "recharge": null,
+      "slug": "loathsome-limbs",
+      "uses_per_day": 4
+    },
     {
       "activities": [
         {

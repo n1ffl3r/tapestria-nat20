@@ -60,7 +60,7 @@
                   "number": 1
                 },
                 "types": [
-                  "slashing"
+                  "bludgeoning"
                 ]
               }
             ]
@@ -94,8 +94,8 @@
           "range": {
             "override": false,
             "special": "",
-            "units": "self",
-            "value": null
+            "units": "ft",
+            "value": "10"
           },
           "sort": 0,
           "target": {
@@ -323,7 +323,7 @@
       "name": "Ink Cloud",
       "recharge": null,
       "slug": "ink-cloud",
-      "uses_per_day": null
+      "uses_per_day": 1
     }
   ],
   "alignment": "Unaligned",

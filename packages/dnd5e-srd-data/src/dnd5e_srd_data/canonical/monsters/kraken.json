@@ -188,8 +188,8 @@
           "range": {
             "override": false,
             "special": "",
-            "units": "self",
-            "value": null
+            "units": "ft",
+            "value": "30"
           },
           "sort": 0,
           "target": {
@@ -990,7 +990,7 @@
         }
       ],
       "description": "Dexterity Saving Throw: DC [[lookup @save.dc.value activity=YorssyWMumAsvzx3]], [[lookup @target.affects.labels.statblock activity=YorssyWMumAsvzx3]] Grappled by the [[lookup @name lowercase]]{monster} (it can have up to four creatures swallowed at a time).\n\nFailure: [[/damage average activity=YorssyWMumAsvzx3]] damage. If the target is Large or smaller, it is swallowed and no longer Grappled. A swallowed creature has the &amp;Reference[Restrained apply=false] condition, has &amp;Reference[Total Cover] against attacks and other effects outside the [[lookup @name lowercase]]{monster}, and takes [[/damage average activity=zrWNjO9mkbN28spL]] damage at the start of each of its turns.\n\nIf the [[lookup @name lowercase]]{monster} takes 50 damage or more on a single turn from a creature inside it, the [[lookup @name lowercase]]{monster} must succeed on a [[/save format=long activity=rGeGukkm2t2fXsoy]] at the end of that turn or regurgitate all swallowed creatures, each of which falls in a space within 10 feet of the [[lookup @name lowercase]]{monster} with the &amp;Reference[Prone apply=false] condition. If the [[lookup @name lowercase]]{monster} dies, any swallowed creature no longer has the Restrained condition and can escape from the corpse using 15 feet of movement, exiting Prone.",
-      "kind": "bonus_action",
+      "kind": "action",
       "legendary_cost": null,
       "mechanic": null,
       "name": "Swallow",

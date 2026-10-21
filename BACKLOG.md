@@ -1944,13 +1944,6 @@ pool entries.
   C28).
   (`packages/dnd5e-srd-data/src/dnd5e_srd_data/schema/monster.py::MonsterAction`,
   `packages/dnd5e-engine/src/dnd5e_engine/orchestrator.py::_resolve_monster_attack_activities`)
-- **Three monster recharges disagree between the pinned Foundry pack and the
-  SRD 5.2 creature text (2026-10-04, C26a).** The Ghost's Possession ships no
-  recharge (open5e's SRD 5.2 text: Recharge 6), the Minotaur of Baphomet's Gore
-  recharges on a 6 (5–6), and the Succubus's Charm on 5–6 (no recharge). None
-  is an area action, so C26a's correction table left them; each needs checking
-  against the SRD 5.2 document before it gets a correction row.
-  (`packages/dnd5e-srd-data/tools/translators/foundry.py::_MONSTER_ACTION_CORRECTIONS`)
 
 ## SRD 5.2.1 spell audit (2026-10-21, spec 02a session A1)
 
@@ -1971,6 +1964,29 @@ pool entries.
   Bludgeoning damage") ships `on_save: half`; the ledger's fields (spec 02a's
   list) do not include save-for-half, so such records read as verified.
   (`packages/dnd5e-srd-data/tools/srd_audit/spells.py::corpus_facts`)
+
+## SRD 5.2.1 stat block audit (2026-10-21, spec 02a session A2)
+
+- **Nine stat blocks stay different from the SRD 5.2.1 PDF until the owner
+  approves them (n1ffl3r/tapestria-nat20#7).** A conditional immunity or
+  vulnerability the schema has no field for (Archmage's "Charmed (with Mind
+  Blank)", Rakshasa's Bless-only Piercing vulnerability); two Bonus Actions the
+  pinned Foundry pack does not ship (Couatl's Divine Aid, Gnoll Warrior's
+  Rampage); three Hit Point maximum reductions held only in prose (Death Dog,
+  Mummy, Mummy Lord); and two helpers with no SRD stat block (Goat of
+  Traveling, Phantom Steed).
+  (`packages/dnd5e-srd-data/audit/srd_5_2_1_divergences.json`)
+- **A stat block's long range is not in the corpus.** The audit compares an
+  attack's reach or normal range; the translator keeps one distance per attack
+  activity, so "range 80/320 ft." holds 80, and a "Melee or Ranged" attack
+  holds its reach, not its throwing range.
+  (`packages/dnd5e-srd-data/tools/translators/foundry.py::_with_item_reach_and_finesse`)
+- **The engine adds a stat block's damage modifier only under a stat-block
+  carrier.** The audit derives a monster attack's damage the way Foundry and the
+  engine's carrier path do (the governing ability's modifier on the base part);
+  a plain monster attack still rolls its parts as shipped, without it (#40 in
+  the project).
+  (`packages/dnd5e-engine/src/dnd5e_engine/activities/attack.py::_implicit_mod_damage_parts`)
 
 ---
 

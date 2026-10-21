@@ -178,8 +178,8 @@
           "range": {
             "override": false,
             "special": "",
-            "units": "self",
-            "value": null
+            "units": "ft",
+            "value": "5"
           },
           "sort": 0,
           "target": {
@@ -311,8 +311,8 @@
           "range": {
             "override": false,
             "special": "",
-            "units": "self",
-            "value": null
+            "units": "ft",
+            "value": "60"
           },
           "sort": 0,
           "target": {
@@ -534,7 +534,7 @@
         }
       ],
       "description": "The [[lookup @name lowercase]]{monster} pulls each creature Grappled by it up to 30 feet straight toward it.",
-      "kind": "bonus_action",
+      "kind": "action",
       "legendary_cost": null,
       "mechanic": null,
       "name": "Reel",

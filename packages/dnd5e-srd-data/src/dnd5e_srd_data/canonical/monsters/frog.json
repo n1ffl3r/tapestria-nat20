@@ -44,16 +44,16 @@
             "critical": {
               "bonus": ""
             },
-            "include_base": true,
+            "include_base": false,
             "parts": [
               {
-                "bonus": "",
+                "bonus": "1",
                 "custom": {
                   "enabled": false,
                   "formula": ""
                 },
-                "denomination": 4,
-                "number": 1,
+                "denomination": 0,
+                "number": null,
                 "scaling": {
                   "formula": "",
                   "mode": "",
@@ -84,8 +84,8 @@
           "range": {
             "override": false,
             "special": "",
-            "units": "self",
-            "value": null
+            "units": "ft",
+            "value": "5"
           },
           "sort": 0,
           "target": {

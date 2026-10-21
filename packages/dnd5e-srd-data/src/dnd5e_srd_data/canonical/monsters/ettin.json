@@ -375,7 +375,14 @@
     }
   ],
   "alignment": "Chaotic Evil",
-  "condition_immunities": [],
+  "condition_immunities": [
+    "blinded",
+    "charmed",
+    "deafened",
+    "frightened",
+    "stunned",
+    "unconscious"
+  ],
   "cr": 4.0,
   "creature_size": "large",
   "creature_type": "giant",

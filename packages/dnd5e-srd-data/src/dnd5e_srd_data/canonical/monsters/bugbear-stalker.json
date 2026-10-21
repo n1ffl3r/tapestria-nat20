@@ -85,7 +85,7 @@
             "override": false,
             "special": "",
             "units": "ft",
-            "value": "30"
+            "value": "10"
           },
           "sort": 0,
           "target": {
@@ -413,8 +413,8 @@
               "dex"
             ],
             "dc": {
-              "calculation": "dex",
-              "formula": "8 + @mod + @prof"
+              "calculation": "",
+              "formula": "13"
             },
             "ignore_cover": false
           },

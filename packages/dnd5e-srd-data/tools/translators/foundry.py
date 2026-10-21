@@ -3,12 +3,13 @@
 from __future__ import annotations
 
 import ast
+import contextlib
 import functools
 import json
 import math
 import re
 import sys
-from collections.abc import Iterable, Mapping, Sequence
+from collections.abc import Iterable, Iterator, Mapping, Sequence
 from dataclasses import dataclass
 from datetime import date
 from pathlib import Path
@@ -1470,7 +1471,76 @@ def _daily_uses_max(uses: dict[str, Any]) -> int | None:
     return value if value > 0 else None
 
 
-def _resolve_monster_activities(system: dict[str, Any]) -> list[Activity]:
+#: Whether the translator applies its SRD 5.2.1 rules and correction tables. The ledger
+#: (``tools/srd_audit/ledger.py``) switches them off to see a record as the pinned Foundry
+#: pack gives it, and so tell a corrected record from a verified one.
+_SRD_RULES = {"enabled": True}
+
+
+@contextlib.contextmanager
+def srd_rules_disabled() -> Iterator[None]:
+    """Translate without the SRD 5.2.1 rules and corrections (the stat block audit)."""
+    _SRD_RULES["enabled"] = False
+    try:
+        yield
+    finally:
+        _SRD_RULES["enabled"] = True
+
+
+def _ability_mod_of(abilities: Mapping[str, Any], key: str) -> int:
+    raw = (abilities.get(key) or {}).get("value") if isinstance(abilities.get(key), dict) else None
+    try:
+        return (int(raw) - 10) // 2 if raw is not None else 0
+    except (TypeError, ValueError):
+        return 0
+
+
+def _with_item_reach_and_finesse(
+    activity: AttackActivity, system: Mapping[str, Any], abilities: Mapping[str, Any]
+) -> AttackActivity:
+    """An attack as its stat block gives it, from what Foundry keeps on the item rather
+    than the activity, which the activity alone loses:
+
+    - the item's reach (``system.range.reach``), when the activity inherits its range:
+      SRD 5.2.1 Adult Red Dragon, Rend: "Melee Attack Roll: +14, reach 10 ft.";
+    - the Finesse property (``fin``), which makes the attack use the higher of Strength and
+      Dexterity (SRD 5.2.1 "Finesse": "When making an attack with a Finesse weapon, use
+      your choice of your Strength or Dexterity modifier for the attack and damage
+      rolls"): Goblin Warrior, Scimitar: "Melee Attack Roll: +4" with Str 8 and Dex 15.
+    """
+    if not _SRD_RULES["enabled"]:
+        return activity
+    item_range = system.get("range") or {}
+    # The activity keeps one distance. A melee attack's is its reach: the item's, or 5 feet
+    # when the item records none (SRD 5.2.1 "Reach": "A creature has a reach of 5 feet
+    # unless a rule says otherwise."). A ranged attack's is its normal range. Foundry
+    # leaves a "Melee or Ranged" attack's type empty and records both on the item; its
+    # reach is kept, and a thrown melee weapon's throwing range is not its reach ("Melee or
+    # Ranged Attack Roll: +3, reach 5 ft. or range 20/60 ft.").
+    kind = activity.attack.type.value
+    thrown = "thr" in set(system.get("properties") or [])
+    normal = item_range.get("value")
+    if kind == "ranged" or (kind == "" and normal and not item_range.get("reach") and not thrown):
+        distance = normal
+    else:
+        distance = item_range.get("reach") or 5
+    if distance and not activity.range.override:
+        activity = activity.model_copy(
+            update={
+                "range": activity.range.model_copy(update={"units": "ft", "value": str(distance)})
+            }
+        )
+    properties = set(system.get("properties") or [])
+    finesse = "fin" in properties and not activity.attack.ability
+    if finesse and _ability_mod_of(abilities, "dex") > _ability_mod_of(abilities, "str"):
+        attack = activity.attack.model_copy(update={"ability": "dex"})
+        activity = activity.model_copy(update={"attack": attack})
+    return activity
+
+
+def _resolve_monster_activities(
+    system: dict[str, Any], abilities: Mapping[str, Any] | None = None
+) -> list[Activity]:
     """Translate an embedded monster item's ``system.activities`` and resolve
     weapon base damage inline.
 
@@ -1486,7 +1556,12 @@ def _resolve_monster_activities(system: dict[str, Any]) -> list[Activity]:
     sole trigger for base injection — it is not gated on ``parts`` being empty —
     so the base part is preserved alongside any riders. Ordering is
     deterministic: base first, then the activity's existing rider parts."""
-    activities = _translate_activities(system)
+    activities = [
+        _with_item_reach_and_finesse(a, system, abilities or {})
+        if isinstance(a, AttackActivity)
+        else a
+        for a in _translate_activities(system)
+    ]
     base = (system.get("damage") or {}).get("base")
     if not isinstance(base, dict):
         return activities
@@ -1587,7 +1662,10 @@ def _label_bare_item_tokens(description: str, item_names: Mapping[str, str]) -> 
 
 
 def _build_monster_action(
-    item: dict[str, Any], *, item_names: Mapping[str, str] | None = None
+    item: dict[str, Any],
+    *,
+    item_names: Mapping[str, str] | None = None,
+    abilities: Mapping[str, Any] | None = None,
 ) -> tuple[MonsterAction, MonsterActionKind]:
     """Translate one embedded item document into a ``MonsterAction``. Returns
     the action plus its resolved kind so the caller can bucket it."""
@@ -1618,7 +1696,7 @@ def _build_monster_action(
         name=name,
         kind=kind,
         description=description,
-        activities=_resolve_monster_activities(system),
+        activities=_resolve_monster_activities(system, abilities),
         recharge=recharge,
         uses_per_day=uses_per_day,
         legendary_cost=legendary_cost,
@@ -1755,7 +1833,11 @@ def _monster_actions(
             continue
         if item_type not in {"weapon", "feat"}:
             continue
-        action, kind = _build_monster_action(item, item_names=item_names)
+        action, kind = _build_monster_action(
+            item,
+            item_names=item_names,
+            abilities=((doc.get("system") or {}).get("abilities") or {}),
+        )
         if kind is MonsterActionKind.LEGENDARY:
             legendary_actions.append(action)
         elif kind is MonsterActionKind.LAIR or kind is MonsterActionKind.REGIONAL:
@@ -1933,7 +2015,7 @@ def translate_monster_yaml(
     slug = _slug(doc, yaml_path)
     actions = _apply_monster_action_corrections(slug, actions)
 
-    return Monster(
+    monster = Monster(
         slug=slug,
         name=doc["name"],
         description=_description(doc),
@@ -1967,6 +2049,7 @@ def translate_monster_yaml(
         provenance=_provenance(yaml_path, ingest_date, ingest_version),
         review=ReviewState(),
     )
+    return _apply_monster_srd_corrections(monster)
 
 
 # Pack-subdir → item kind. The Foundry pack layout puts magic-item categories
@@ -2353,9 +2436,10 @@ def _apply_spell_save_cover_overrides(slug: str, activities: list[Activity]) -> 
 
 
 @dataclass(frozen=True)
-class _SpellCorrection:
-    """One SRD 5.2.1 correction to a translated spell: ``path`` names a field of the
-    spell's JSON form (``"range"``, ``"activities[<_id>].save.ability"``), ``was`` is what
+class _SrdCorrection:
+    """One SRD 5.2.1 correction to a translated record: ``path`` names a field of the
+    record's JSON form (``"range"``, ``"activities[<_id>].save.ability"``,
+    ``"actions[bite].activities[<_id>].damage.parts[0].types"``), ``was`` is what
     the pinned Foundry pack gives, ``value`` is what the SRD text gives, and ``srd`` quotes
     the sentence it rests on. ``was`` is checked at regen, so a Foundry pin that fixes the
     field upstream fails loudly instead of leaving a stale correction."""
@@ -2369,16 +2453,16 @@ class _SpellCorrection:
 #: The spell audit's corrections (``audit/srd_5_2_1_ledger.json``, spec 02a acceptance
 #: criterion 4), keyed by spell slug. The pins live in
 #: ``tests/test_spell_srd_5_2_1_corrections.py``.
-_SPELL_SRD_CORRECTIONS: dict[str, tuple[_SpellCorrection, ...]] = {
-    "forbiddance": (_SpellCorrection("ritual", False, True, "Casting Time: 10 minutes or Ritual"),),
+_SPELL_SRD_CORRECTIONS: dict[str, tuple[_SrdCorrection, ...]] = {
+    "forbiddance": (_SrdCorrection("ritual", False, True, "Casting Time: 10 minutes or Ritual"),),
     "hypnotic-pattern": (
-        _SpellCorrection("concentration", False, True, "Duration: Concentration, up to 1 minute"),
+        _SrdCorrection("concentration", False, True, "Duration: Concentration, up to 1 minute"),
     ),
     "resilient-sphere": (
-        _SpellCorrection("concentration", False, True, "Duration: Concentration, up to 1 minute"),
+        _SrdCorrection("concentration", False, True, "Duration: Concentration, up to 1 minute"),
     ),
     "raise-dead": (
-        _SpellCorrection(
+        _SrdCorrection(
             "range",
             {"units": "self", "value": None, "special": None},
             {"units": "touch", "value": None, "special": None},
@@ -2386,7 +2470,7 @@ _SPELL_SRD_CORRECTIONS: dict[str, tuple[_SpellCorrection, ...]] = {
         ),
     ),
     "mirage-arcane": (
-        _SpellCorrection(
+        _SrdCorrection(
             "range",
             {"units": "any", "value": None, "special": "within sight"},
             {"units": "spec", "value": None, "special": "Sight"},
@@ -2396,7 +2480,7 @@ _SPELL_SRD_CORRECTIONS: dict[str, tuple[_SpellCorrection, ...]] = {
     # Foundry records the second casting time (Enrichment's 8 hours) as "special"; the
     # header lists the Action first, and the Enrichment activity keeps its own 8 hours.
     "plant-growth": (
-        _SpellCorrection(
+        _SrdCorrection(
             "casting_time",
             {"unit": "special", "value": 1, "condition": ""},
             {"unit": "action", "value": 1, "condition": ""},
@@ -2404,7 +2488,7 @@ _SPELL_SRD_CORRECTIONS: dict[str, tuple[_SpellCorrection, ...]] = {
         ),
     ),
     "phantasmal-killer": (
-        _SpellCorrection(
+        _SrdCorrection(
             "activities[dnd5eactivity000].save.ability",
             [],
             ["wis"],
@@ -2414,7 +2498,7 @@ _SPELL_SRD_CORRECTIONS: dict[str, tuple[_SpellCorrection, ...]] = {
         ),
     ),
     "glyph-of-warding": (
-        _SpellCorrection(
+        _SrdCorrection(
             "activities[dnd5eactivity100].target.template",
             {
                 "contiguous": False,
@@ -2441,7 +2525,7 @@ _SPELL_SRD_CORRECTIONS: dict[str, tuple[_SpellCorrection, ...]] = {
         ),
     ),
     "pass-without-trace": (
-        _SpellCorrection(
+        _SrdCorrection(
             "activities[dnd5eactivity000].target.template",
             {
                 "contiguous": False,
@@ -2471,41 +2555,1456 @@ _SPELL_SRD_CORRECTIONS: dict[str, tuple[_SpellCorrection, ...]] = {
 _CORRECTION_STEP = re.compile(r"([a-z_]+)(?:\[([^\]]+)\])?")
 
 
-def _correction_parent(blob: dict[str, Any], path: str) -> tuple[dict[str, Any], str]:
-    """The mapping that holds ``path``'s last key, and that key. ``activities[<_id>]``
-    selects the activity with that ``id``."""
+def _select(items: list[Any], selector: str) -> int:
+    """The index ``selector`` names in ``items``: a number, or an item's ``id`` or ``slug``."""
+    if selector.isdigit():
+        return int(selector)
+    return next(n for n, item in enumerate(items) if selector in (item.get("id"), item.get("slug")))
+
+
+def _correction_parent(blob: dict[str, Any], path: str) -> tuple[Any, Any]:
+    """The container that holds ``path``'s last step, and the key or index in it.
+    ``name[<selector>]`` selects an item of the list ``name`` by index, ``id``, or
+    ``slug``."""
     steps = path.split(".")
     node: Any = blob
-    for step in steps[:-1]:
+    for position, step in enumerate(steps):
         match = _CORRECTION_STEP.fullmatch(step)
         if match is None:
             raise ValueError(f"bad correction path {path!r}")
-        node = node[match.group(1)]
-        if match.group(2) is not None:
-            node = next(item for item in node if item.get("id") == match.group(2))
-    return node, steps[-1]
+        name, selector = match.groups()
+        last = position == len(steps) - 1
+        if last and selector is None:
+            return node, name
+        node = node[name]
+        if last:
+            return node, _select(node, selector)
+        if selector is not None:
+            node = node[_select(node, selector)]
+    raise ValueError(f"bad correction path {path!r}")
 
 
-def spell_srd_corrections(slug: str) -> tuple[_SpellCorrection, ...]:
+def spell_srd_corrections(slug: str) -> tuple[_SrdCorrection, ...]:
     """The SRD 5.2.1 corrections the translator applies to ``slug``."""
     return _SPELL_SRD_CORRECTIONS.get(slug, ())
 
 
-def _apply_spell_srd_corrections(spell: Spell) -> Spell:
-    """Apply ``_SPELL_SRD_CORRECTIONS``, refusing one whose ``was`` no longer matches."""
-    corrections = spell_srd_corrections(spell.slug)
-    if not corrections:
-        return spell
-    blob = spell.model_dump(mode="json")
+def _apply_srd_corrections(
+    slug: str, blob: dict[str, Any], corrections: tuple[_SrdCorrection, ...]
+) -> None:
+    """Apply ``corrections`` to a record's JSON form in place, refusing one whose ``was``
+    no longer matches."""
     for correction in corrections:
         parent, key = _correction_parent(blob, correction.path)
         if parent[key] != correction.was:
             raise ValueError(
-                f"{spell.slug}: {correction.path} is {parent[key]!r}, not {correction.was!r};"
+                f"{slug}: {correction.path} is {parent[key]!r}, not {correction.was!r};"
                 " the correction is stale"
             )
         parent[key] = correction.value
+
+
+def _apply_spell_srd_corrections(spell: Spell) -> Spell:
+    """Apply ``_SPELL_SRD_CORRECTIONS``."""
+    corrections = spell_srd_corrections(spell.slug)
+    if not corrections:
+        return spell
+    blob = spell.model_dump(mode="json")
+    _apply_srd_corrections(spell.slug, blob, corrections)
     return Spell.model_validate(blob)
+
+
+#: The stat block audit's corrections (``audit/srd_5_2_1_ledger.json``, spec 02a acceptance
+#: criterion 4), keyed by monster slug. Each quotes the stat block's SRD 5.2.1 text; the
+#: pins live in ``tests/test_monster_srd_5_2_1_corrections.py``. A ``kind`` correction
+#: moves the entry to the section the SRD prints it in (a trait to ``special_abilities``).
+_MONSTER_SRD_CORRECTIONS: dict[str, tuple[_SrdCorrection, ...]] = {
+    "draconic-spirit": (
+        _SrdCorrection(
+            "actions[rend].activities[dnd5eactivity000].range.value",
+            "5",
+            "10",
+            "Rend. Melee Attack Roll: Bonus equals your spell attack modifier, reach 10 feet.",
+        ),
+    ),
+    "aboleth": (
+        _SrdCorrection(
+            "actions[tentacle].activities[EeiSFNs2NulOBg6i].range.value",
+            "10",
+            "15",
+            "Tentacle. Melee Attack Roll: +9, reach 15 ft. Hit: 12 (2d6 + 5) Bludgeoning damage.",
+        ),
+        _SrdCorrection(
+            "actions[eldritch-restoration].kind",
+            "action",
+            "special",
+            (
+                "Eldritch Restoration. If destroyed, the aboleth gains a new body in 5d10 days, "
+                "reviving with all its Hit Points in the Far Realm or another location chosen by "
+                "the GM."
+            ),
+        ),
+    ),
+    "adult-brass-dragon": (
+        _SrdCorrection(
+            "actions[rend].activities[VP3t6lmmuXKGCRwX].range.value",
+            "5",
+            "10",
+            (
+                "Rend. Melee Attack Roll: +11, reach 10 ft. Hit: 17 (2d10 + 6) Slashing damage "
+                "plus 4 (1d8) Fire damage."
+            ),
+        ),
+    ),
+    "adult-gold-dragon": (
+        _SrdCorrection(
+            "actions[weakening-breath].activities[EGZ4bS4HpJkfNG9s].save.dc",
+            {"calculation": "", "formula": "13"},
+            {"calculation": "", "formula": "21"},
+            (
+                "Weakening Breath. Strength Saving Throw: DC 21, each creature that isn't "
+                "currently affected by this breath in a 60-foot Cone."
+            ),
+        ),
+    ),
+    "adult-green-dragon": (
+        _SrdCorrection(
+            "actions[rend].activities[VP3t6lmmuXKGCRwX].range.value",
+            "5",
+            "10",
+            (
+                "Rend. Melee Attack Roll: +11, reach 10 ft. Hit: 15 (2d8 + 6) Slashing damage "
+                "plus 7 (2d6) Poison damage."
+            ),
+        ),
+    ),
+    "adult-silver-dragon": (
+        _SrdCorrection(
+            "actions[rend].activities[VP3t6lmmuXKGCRwX].range.value",
+            "5",
+            "10",
+            (
+                "Rend. Melee Attack Roll: +13, reach 10 ft. Hit: 17 (2d8 + 8) Slashing damage "
+                "plus 4 (1d8) Cold damage."
+            ),
+        ),
+    ),
+    "air-elemental": (
+        _SrdCorrection(
+            "actions[whirlwind].activities[GQzr4EMMm6kkZVdC].damage.parts[0].bonus",
+            "@mod",
+            "@abilities.str.mod",
+            (
+                "Whirlwind (Recharge 4–6). Strength Saving Throw: DC 13, one Medium or smaller "
+                "creature in the elemental's space."
+            ),
+        ),
+    ),
+    "ancient-black-dragon": (
+        _SrdCorrection(
+            "actions[rend].activities[VP3t6lmmuXKGCRwX].range.value",
+            "5",
+            "15",
+            (
+                "Rend. Melee Attack Roll: +15, reach 15 ft. Hit: 17 (2d8 + 8) Slashing damage "
+                "plus 9 (2d8) Acid damage."
+            ),
+        ),
+    ),
+    "ancient-gold-dragon": (
+        _SrdCorrection(
+            "saving_throws.dex",
+            None,
+            9,
+            "Dex 14 +2 +9",
+        ),
+        _SrdCorrection(
+            "saving_throws.wis",
+            None,
+            10,
+            "WIS 17 +3 +10",
+        ),
+        _SrdCorrection(
+            "legendary_resistance_uses",
+            3,
+            4,
+            "Legendary Resistance (4/Day, or 5/Day in Lair).",
+        ),
+        _SrdCorrection(
+            "actions[rend].activities[VP3t6lmmuXKGCRwX].range.value",
+            "5",
+            "15",
+            "Rend. Melee Attack Roll: +17 to hit, reach 15 ft.",
+        ),
+    ),
+    "ancient-green-dragon": (
+        _SrdCorrection(
+            "actions[rend].activities[VP3t6lmmuXKGCRwX].range.value",
+            "5",
+            "15",
+            (
+                "Rend. Melee Attack Roll: +15, reach 15 ft. Hit: 17 (2d8 + 8) Slashing damage "
+                "plus 10 (3d6) Poison damage."
+            ),
+        ),
+    ),
+    "ancient-white-dragon": (
+        _SrdCorrection(
+            "legendary_actions[freezing-burst].activities[U2i9u4ELjeLQfePP].save.dc",
+            {"calculation": "con", "formula": "8 + @mod + @prof"},
+            {"calculation": "", "formula": "20"},
+            (
+                "Freezing Burst. Constitution Saving Throw: DC 20, each creature in a "
+                "30-foot-radius Sphere centered on a point the dragon can see within 120 feet."
+            ),
+        ),
+    ),
+    "animated-rug-of-smothering": (
+        _SrdCorrection(
+            "actions[smother].activities[Y1lxdDPzkSRnAUGz].damage.parts[0].types",
+            [],
+            ["bludgeoning"],
+            "Smother. Melee Attack Roll: +5, reach 5 ft. Hit: 10 (2d6 + 3) Bludgeoning damage.",
+        ),
+    ),
+    "ankheg": (
+        _SrdCorrection(
+            "actions[bite].activities[xWlMeXFjELfSUWX9].damage.parts[0].types",
+            ["piercing"],
+            ["slashing"],
+            (
+                "Bite. Melee Attack Roll: +5 (with Advantage if the target is Grappled by the "
+                "ankheg), reach 5 ft."
+            ),
+        ),
+    ),
+    "axe-beak": (
+        _SrdCorrection(
+            "actions[beak].activities[Z4M0zMA6a5PidURr].damage.parts[0].types",
+            ["piercing"],
+            ["slashing"],
+            "Beak. Melee Attack Roll: +4, reach 5 ft. Hit: 6 (1d8 + 2) Slashing damage.",
+        ),
+    ),
+    "badger": (
+        _SrdCorrection(
+            "damage_resistances",
+            [],
+            ["poison"],
+            "Resistances Poison",
+        ),
+    ),
+    "barbed-devil": (
+        _SrdCorrection(
+            "actions[claws].activities[sd9m31XuipJgWhlM].damage.parts[0].types",
+            ["slashing"],
+            ["piercing"],
+            "Claws. Melee Attack Roll: +6, reach 5 ft. Hit: 10 (2d6 + 3) Piercing damage.",
+        ),
+        _SrdCorrection(
+            "actions[tail].activities[LLodCm31qWyIpHyK].damage.parts[0].types",
+            ["bludgeoning"],
+            ["slashing"],
+            "Tail. Melee Attack Roll: +6, reach 10 ft. Hit: 14 (2d10 + 3) Slashing damage.",
+        ),
+    ),
+    "behir": (
+        _SrdCorrection(
+            "actions[lightning-breath].activities[LpjgVwftzGNMgTUJ].damage.parts[0].denomination",
+            6,
+            10,
+            (
+                "Lightning Breath (Recharge 5–6). Dexterity Saving Throw: DC 16, each creature "
+                "in a 90-foot-long, 5-foot-wide Line."
+            ),
+        ),
+    ),
+    "bugbear-stalker": (
+        _SrdCorrection(
+            "actions[quick-grapple].activities[aDWVHpJgsNPPNrDs].save.dc",
+            {"calculation": "dex", "formula": "8 + @mod + @prof"},
+            {"calculation": "", "formula": "13"},
+            (
+                "Quick Grapple. Dexterity Saving Throw: DC 13, one Medium or smaller creature "
+                "the bugbear can see within 10 feet."
+            ),
+        ),
+    ),
+    "centaur-trooper": (
+        _SrdCorrection(
+            "actions[pike].activities[HjEJjclqCeGjAymL].range.value",
+            "5",
+            "10",
+            "Pike. Melee Attack Roll: +6, reach 10 ft. Hit: 9 (1d10 + 4) Piercing damage.",
+        ),
+    ),
+    "cloaker": (
+        _SrdCorrection(
+            "condition_immunities",
+            [],
+            ["frightened"],
+            "Immunities Frightened",
+        ),
+    ),
+    "cockatrice": (
+        _SrdCorrection(
+            "condition_immunities",
+            [],
+            ["petrified"],
+            "Immunities Petrified",
+        ),
+    ),
+    "cultist": (
+        _SrdCorrection(
+            "actions[ritual-sickle].activities[fhlmKxtRzVaTeFzt].damage.parts[0].types",
+            [],
+            ["slashing"],
+            (
+                "Ritual Sickle. Melee Attack Roll: +3, reach 5 ft. Hit: 3 (1d4 + 1) Slashing "
+                "damage plus 1 Necrotic damage."
+            ),
+        ),
+    ),
+    "death-dog": (
+        _SrdCorrection(
+            "condition_immunities",
+            [],
+            ["blinded", "charmed", "deafened", "frightened", "stunned", "unconscious"],
+            "Immunities Blinded, Charmed, Deafened, Frightened, Stunned, Unconscious",
+        ),
+    ),
+    "deva": (
+        _SrdCorrection(
+            "condition_immunities",
+            [],
+            ["charmed", "exhaustion", "frightened"],
+            "Immunities Charmed, Exhaustion, Frightened",
+        ),
+    ),
+    "djinni": (
+        _SrdCorrection(
+            "actions[storm-bolt].activities[yFK9YkQVSAkJ5yIK].damage.include_base",
+            True,
+            False,
+            "Storm Bolt. Ranged Attack Roll: +9, range 120 feet. Hit: 13 (3d8) Thunder damage.",
+        ),
+        _SrdCorrection(
+            "actions[wishes].kind",
+            "action",
+            "special",
+            "Wishes. The djinni has a 30 percent chance of knowing the Wish spell.",
+        ),
+    ),
+    "dragon-turtle": (
+        _SrdCorrection(
+            "actions[bite].activities[xWlMeXFjELfSUWX9].range.value",
+            "5",
+            "15",
+            (
+                "Bite. Melee Attack Roll: +13, reach 15 ft. Hit: 23 (3d10 + 7) Piercing damage "
+                "plus 7 (2d6) Fire damage."
+            ),
+        ),
+    ),
+    "efreeti": (
+        _SrdCorrection(
+            "actions[wishes].kind",
+            "action",
+            "special",
+            "Wishes. The efreeti has a 30 percent chance of knowing the Wish spell.",
+        ),
+    ),
+    "elk": (
+        _SrdCorrection(
+            "ac",
+            11,
+            10,
+            "AC 10 Initiative +0 (10)",
+        ),
+    ),
+    "ettin": (
+        _SrdCorrection(
+            "condition_immunities",
+            [],
+            ["blinded", "charmed", "deafened", "frightened", "stunned", "unconscious"],
+            "Immunities Blinded, Charmed, Deafened, Frightened, Stunned, Unconscious",
+        ),
+    ),
+    "flying-snake": (
+        _SrdCorrection(
+            "ac",
+            12,
+            14,
+            "AC 14 Initiative +2 (12)",
+        ),
+        _SrdCorrection(
+            "actions[bite].activities[xWlMeXFjELfSUWX9].damage.parts",
+            [
+                {
+                    "bonus": "",
+                    "custom": {"enabled": False, "formula": ""},
+                    "denomination": 4,
+                    "number": 2,
+                    "scaling": {"formula": "", "mode": "", "number": 1},
+                    "types": ["poison"],
+                }
+            ],
+            [
+                {
+                    "bonus": "1",
+                    "custom": {"enabled": False, "formula": ""},
+                    "denomination": 0,
+                    "number": None,
+                    "scaling": {"formula": "", "mode": "", "number": 1},
+                    "types": ["piercing"],
+                },
+                {
+                    "bonus": "",
+                    "custom": {"enabled": False, "formula": ""},
+                    "denomination": 4,
+                    "number": 2,
+                    "scaling": {"formula": "", "mode": "", "number": 1},
+                    "types": ["poison"],
+                },
+            ],
+            (
+                "Bite. Melee Attack Roll: +4, reach 5 ft. Hit: 1 Piercing damage plus 5 (2d4) "
+                "Poison damage."
+            ),
+        ),
+    ),
+    "frog": (
+        _SrdCorrection(
+            "actions[bite].activities[xWlMeXFjELfSUWX9].damage.parts[0]",
+            {
+                "bonus": "",
+                "custom": {"enabled": False, "formula": ""},
+                "denomination": 4,
+                "number": 1,
+                "scaling": {"formula": "", "mode": "", "number": 1},
+                "types": ["piercing"],
+            },
+            {
+                "bonus": "1",
+                "custom": {"enabled": False, "formula": ""},
+                "denomination": 0,
+                "number": None,
+                "scaling": {"formula": "", "mode": "", "number": 1},
+                "types": ["piercing"],
+            },
+            "Bite. Melee Attack Roll: +3, reach 5 ft. Hit: 1 Piercing damage.",
+        ),
+        _SrdCorrection(
+            "actions[bite].activities[xWlMeXFjELfSUWX9].damage.include_base",
+            True,
+            False,
+            "Bite. Melee Attack Roll: +3, reach 5 ft. Hit: 1 Piercing damage.",
+        ),
+    ),
+    "frost-giant": (
+        _SrdCorrection(
+            "actions[frost-axe].activities[iFTGcmvp6oEsMCDL].damage.parts[0].types",
+            [],
+            ["slashing"],
+            (
+                "Frost Axe. Melee Attack Roll: +9, reach 10 ft. Hit: 19 (2d12 + 6) Slashing "
+                "damage plus 9 (2d8) Cold damage."
+            ),
+        ),
+    ),
+    "ghost": (
+        _SrdCorrection(
+            "actions[possession].recharge",
+            None,
+            "6",
+            (
+                "Possession (Recharge 6). Charisma Saving Throw: DC 13, one Humanoid the ghost "
+                "can see within 5 feet."
+            ),
+        ),
+    ),
+    "giant-badger": (
+        _SrdCorrection(
+            "damage_resistances",
+            [],
+            ["poison"],
+            "Resistances Poison",
+        ),
+    ),
+    "giant-constrictor-snake": (
+        _SrdCorrection(
+            "actions[bite].activities[xWlMeXFjELfSUWX9].range.value",
+            "5",
+            "10",
+            "Bite. Melee Attack Roll: +6, reach 10 ft. Hit: 11 (2d6 + 4) Piercing damage.",
+        ),
+    ),
+    "giant-crab": (
+        _SrdCorrection(
+            "actions[claw].activities[W1T7dZnG8GMMwyEP].damage.parts[0].types",
+            ["slashing"],
+            ["bludgeoning"],
+            "Claw. Melee Attack Roll: +3, reach 5 ft. Hit: 4 (1d6 + 1) Bludgeoning damage.",
+        ),
+    ),
+    "giant-eagle": (
+        _SrdCorrection(
+            "damage_resistances",
+            [],
+            ["necrotic", "radiant"],
+            "Resistances Necrotic, Radiant",
+        ),
+    ),
+    "giant-elk": (
+        _SrdCorrection(
+            "damage_resistances",
+            [],
+            ["necrotic", "radiant"],
+            "Resistances Necrotic, Radiant",
+        ),
+    ),
+    "giant-fire-beetle": (
+        _SrdCorrection(
+            "damage_resistances",
+            [],
+            ["fire"],
+            "Resistances Fire",
+        ),
+        _SrdCorrection(
+            "actions[bite].activities[xWlMeXFjELfSUWX9].damage.parts[0].types",
+            [],
+            ["fire"],
+            "Bite. Melee Attack Roll: +1, reach 5 ft. Hit: 1 Fire damage.",
+        ),
+    ),
+    "giant-frog": (
+        _SrdCorrection(
+            "skills.stealth",
+            None,
+            4,
+            "Skills Perception +2, Stealth +4",
+        ),
+        _SrdCorrection(
+            "actions[bite].activities[xWlMeXFjELfSUWX9].damage.parts[0].bonus",
+            "",
+            "1",
+            "Bite. Melee Attack Roll: +3, reach 5 ft. Hit: 5 (1d6 + 2) Piercing damage.",
+        ),
+        _SrdCorrection(
+            "special_abilities[swallow].kind",
+            "special",
+            "action",
+            "Swallow. The frog swallows a Small or smaller target it is grappling.",
+        ),
+    ),
+    "giant-insect": (
+        _SrdCorrection(
+            "actions[poison-jab].activities[dnd5eactivity000].range.value",
+            "5",
+            "10",
+            "Poison Jab. Melee Attack Roll: Bonus equals your spell attack modifier, reach 10 ft.",
+        ),
+        _SrdCorrection(
+            "actions[venomous-spew].kind",
+            "action",
+            "bonus_action",
+            (
+                "Venomous Spew (Centipede Only). Constitution Saving Throw: Your spell save DC, "
+                "one creature the insect can see within 10 feet."
+            ),
+        ),
+    ),
+    "giant-octopus": (
+        _SrdCorrection(
+            "actions[tentacles].activities[nWfAZlRGSlOZbasr].range.value",
+            "5",
+            "10",
+            "Tentacles. Melee Attack Roll: +5, reach 10 ft. Hit: 10 (2d6 + 3) Bludgeoning damage.",
+        ),
+        _SrdCorrection(
+            "actions[tentacles].activities[nWfAZlRGSlOZbasr].damage.parts[0].types",
+            ["slashing"],
+            ["bludgeoning"],
+            "Tentacles. Melee Attack Roll: +5, reach 10 ft. Hit: 10 (2d6 + 3) Bludgeoning damage.",
+        ),
+        _SrdCorrection(
+            "actions[ink-cloud].uses_per_day",
+            None,
+            1,
+            "Ink Cloud (1/Day). Trigger: The octopus takes damage while underwater.",
+        ),
+    ),
+    "giant-owl": (
+        _SrdCorrection(
+            "damage_resistances",
+            [],
+            ["necrotic", "radiant"],
+            "Resistances Necrotic, Radiant",
+        ),
+    ),
+    "giant-seahorse": (
+        _SrdCorrection(
+            "actions[ram].activities[YI7aqJ7iiFSYAT7z].damage.parts[0].types",
+            [],
+            ["bludgeoning"],
+            (
+                "Ram. Melee Attack Roll: +4, reach 5 ft. Hit: 9 (2d6 + 2) Bludgeoning damage, or "
+                "11 (2d8 + 2) Bludgeoning damage if the seahorse moved 20+ feet straight toward "
+                "the target immediately before the hit."
+            ),
+        ),
+    ),
+    "giant-venomous-snake": (
+        _SrdCorrection(
+            "actions[bite].activities[xWlMeXFjELfSUWX9].range.value",
+            "5",
+            "10",
+            (
+                "Bite. Melee Attack Roll: +6, reach 10 ft. Hit: 6 (1d4 + 4) Piercing damage plus "
+                "4 (1d8) Poison damage."
+            ),
+        ),
+    ),
+    "giant-vulture": (
+        _SrdCorrection(
+            "damage_resistances",
+            [],
+            ["necrotic"],
+            "Resistances Necrotic",
+        ),
+    ),
+    "gibbering-mouther": (
+        _SrdCorrection(
+            "condition_immunities",
+            [],
+            ["prone"],
+            "Immunities Prone",
+        ),
+    ),
+    "gorgon": (
+        _SrdCorrection(
+            "condition_immunities",
+            [],
+            ["exhaustion", "petrified"],
+            "Immunities Exhaustion, Petrified",
+        ),
+    ),
+    "gray-ooze": (
+        _SrdCorrection(
+            "condition_immunities",
+            [],
+            [
+                "blinded",
+                "charmed",
+                "deafened",
+                "exhaustion",
+                "frightened",
+                "grappled",
+                "prone",
+                "restrained",
+            ],
+            (
+                "Immunities Blinded, Charmed, Deafened, Exhaustion, Frightened, Grappled, Prone, "
+                "Restrained"
+            ),
+        ),
+    ),
+    "green-hag": (
+        _SrdCorrection(
+            "actions[coven-magic].kind",
+            "action",
+            "special",
+            (
+                "Coven Magic. While within 30 feet of at least two hag allies, the hag can cast "
+                "one of the following spells, requiring no Material components, using the "
+                "spell's normal casting time, and using Intelligence as the spellcasting ability "
+                "(spell save DC 11): Augury, Find Familiar, Identify, Locate Object, Scrying, or "
+                "Unseen Servant."
+            ),
+        ),
+        _SrdCorrection(
+            "actions[mimicry].kind",
+            "action",
+            "special",
+            "Mimicry. The hag can mimic animal sounds and humanoid voices.",
+        ),
+    ),
+    "guardian-naga": (
+        _SrdCorrection(
+            "actions[bite].activities[xWlMeXFjELfSUWX9].range.value",
+            "5",
+            "10",
+            (
+                "Bite. Melee Attack Roll: +8, reach 10 ft. Hit: 17 (2d12 + 4) Piercing damage "
+                "plus 22 (4d10) Poison damage."
+            ),
+        ),
+    ),
+    "homunculus": (
+        _SrdCorrection(
+            "actions[bite].activities[xWlMeXFjELfSUWX9].damage.parts[0].bonus",
+            "",
+            "1",
+            (
+                "Bite. Melee Attack Roll: +4, reach 5 ft. Hit: 1 Piercing damage, and the target "
+                "is subjected to the following effect."
+            ),
+        ),
+        _SrdCorrection(
+            "actions[bite].activities[xWlMeXFjELfSUWX9].damage.include_base",
+            True,
+            False,
+            (
+                "Bite. Melee Attack Roll: +4, reach 5 ft. Hit: 1 Piercing damage, and the target "
+                "is subjected to the following effect."
+            ),
+        ),
+    ),
+    "horned-devil": (
+        _SrdCorrection(
+            "actions[infernal-tail].activities[tJYeyUk3iPYJq9xM].damage.parts[0].bonus",
+            "@mod",
+            "@abilities.str.mod",
+            (
+                "Infernal Tail. Dexterity Saving Throw: DC 17 , one creature the devil can see "
+                "within 10 feet."
+            ),
+        ),
+    ),
+    "iron-golem": (
+        _SrdCorrection(
+            "actions[fiery-bolt].activities[cTIUSr5mWEJl1bhK].attack.flat",
+            False,
+            True,
+            "Fiery Bolt. Ranged Attack Roll: +10, range 120 ft. Hit: 36 (8d8) Fire damage.",
+        ),
+        _SrdCorrection(
+            "actions[fiery-bolt].activities[cTIUSr5mWEJl1bhK].attack.bonus",
+            "",
+            "10",
+            "Fiery Bolt. Ranged Attack Roll: +10, range 120 ft. Hit: 36 (8d8) Fire damage.",
+        ),
+    ),
+    "knight": (
+        _SrdCorrection(
+            "condition_immunities",
+            [],
+            ["frightened"],
+            "Immunities Frightened",
+        ),
+    ),
+    "kraken": (
+        _SrdCorrection(
+            "actions[tentacle].activities[EeiSFNs2NulOBg6i].range.value",
+            "10",
+            "30",
+            (
+                "Tentacle. Melee Attack Roll: +17 , reach 30 ft. Hit: 24 (4d6 + 10) Bludgeoning "
+                "damage."
+            ),
+        ),
+        _SrdCorrection(
+            "actions[swallow].kind",
+            "bonus_action",
+            "action",
+            (
+                "Swallow. Dexterity Saving Throw: DC 25, one creature Grappled by the kraken (it "
+                "can have up to four creatures swallowed at a time)."
+            ),
+        ),
+    ),
+    "lizard": (
+        _SrdCorrection(
+            "actions[bite].activities[xWlMeXFjELfSUWX9].damage.parts[0]",
+            {
+                "bonus": "",
+                "custom": {"enabled": False, "formula": ""},
+                "denomination": 4,
+                "number": 1,
+                "scaling": {"formula": "", "mode": "", "number": 1},
+                "types": ["piercing"],
+            },
+            {
+                "bonus": "1",
+                "custom": {"enabled": False, "formula": ""},
+                "denomination": 0,
+                "number": None,
+                "scaling": {"formula": "", "mode": "", "number": 1},
+                "types": ["piercing"],
+            },
+            "Bite. Melee Attack Roll: +2, reach 5 ft. Hit: 1 Piercing damage.",
+        ),
+        _SrdCorrection(
+            "actions[bite].activities[xWlMeXFjELfSUWX9].damage.include_base",
+            True,
+            False,
+            "Bite. Melee Attack Roll: +2, reach 5 ft. Hit: 1 Piercing damage.",
+        ),
+    ),
+    "mimic": (
+        _SrdCorrection(
+            "actions[pseudopod].activities[oPXdl3BBYsuoemkT].range.value",
+            "30",
+            "5",
+            (
+                "Pseudopod. Melee Attack Roll: +5, reach 5 ft. Hit: 7 (1d8 + 3) Bludgeoning "
+                "damage plus 4 (1d8) Acid damage."
+            ),
+        ),
+        _SrdCorrection(
+            "actions[bite].activities[Hx8Io6Uz1mJDm4Nf].damage.parts[1].denomination",
+            4,
+            8,
+            (
+                "Bite. Melee Attack Roll: +5 (with Advantage if the target is Grappled by the "
+                "mimic), reach 5 ft."
+            ),
+        ),
+        _SrdCorrection(
+            "actions[pseudopod].activities[oPXdl3BBYsuoemkT].damage.parts[1].denomination",
+            4,
+            8,
+            (
+                "Pseudopod. Melee Attack Roll: +5, reach 5 ft. Hit: 7 (1d8 + 3) Bludgeoning "
+                "damage plus 4 (1d8) Acid damage."
+            ),
+        ),
+        _SrdCorrection(
+            "actions[adhesive].kind",
+            "action",
+            "special",
+            "Adhesive (Object Form Only). The mimic adheres to anything that touches it.",
+        ),
+    ),
+    "minotaur-of-baphomet": (
+        _SrdCorrection(
+            "actions[gore].recharge",
+            "6",
+            "5-6",
+            (
+                "Gore (Recharge 5–6). Melee Attack Roll: +6, reach 5 ft. Hit: 18 (4d6 + 4) "
+                "Piercing damage."
+            ),
+        ),
+    ),
+    "mummy-lord": (
+        _SrdCorrection(
+            "actions[dreadful-glare].activities[8LmlZfevSQkOxGSN].damage.parts[0].denomination",
+            8,
+            6,
+            (
+                "Dreadful Glare. Wisdom Saving Throw: DC 17 , one creature the mummy can see "
+                "within 60 feet."
+            ),
+        ),
+        _SrdCorrection(
+            "actions[dreadful-glare].activities[8LmlZfevSQkOxGSN].damage.parts[0].bonus",
+            "",
+            "@mod",
+            (
+                "Dreadful Glare. Wisdom Saving Throw: DC 17 , one creature the mummy can see "
+                "within 60 feet."
+            ),
+        ),
+    ),
+    "night-hag": (
+        _SrdCorrection(
+            "actions[coven-magic].kind",
+            "action",
+            "special",
+            (
+                "Coven Magic. While within 30 feet of at least two hag allies, the hag can cast "
+                "one of the following spells, requiring no Material components, using the "
+                "spell's normal casting time, and using Intelligence as the spellcasting ability "
+                "(spell save DC 14): Augury, Find Familiar, Identify, Locate Object, Scrying, or "
+                "Unseen Servant."
+            ),
+        ),
+    ),
+    "ogre-zombie": (
+        _SrdCorrection(
+            "saving_throws.int",
+            -2,
+            None,
+            "Int 3 −4 −4",
+        ),
+    ),
+    "otyugh": (
+        _SrdCorrection(
+            "actions[tentacle-slam].activities[VC2iSwNPNaZ7M2bT].damage.parts[0].types",
+            [],
+            ["bludgeoning"],
+            (
+                "Tentacle Slam. Constitution Saving Throw: DC 14, each creature Grappled by the "
+                "otyugh."
+            ),
+        ),
+    ),
+    "pit-fiend": (
+        _SrdCorrection(
+            "actions[bite].activities[xWlMeXFjELfSUWX9].range.value",
+            "5",
+            "10",
+            "Bite. Melee Attack Roll: +14, reach 10 ft. Hit: 18 (3d6 + 8) Piercing damage.",
+        ),
+        _SrdCorrection(
+            "actions[bite].activities[fM7YmQ4hBtRXJkMe].save.ability",
+            [],
+            ["con"],
+            "Bite. Melee Attack Roll: +14, reach 10 ft. Hit: 18 (3d6 + 8) Piercing damage.",
+        ),
+    ),
+    "planetar": (
+        _SrdCorrection(
+            "condition_immunities",
+            [],
+            ["charmed", "exhaustion", "frightened"],
+            "Immunities Charmed, Exhaustion, Frightened",
+        ),
+    ),
+    "plesiosaurus": (
+        _SrdCorrection(
+            "actions[bite].activities[xWlMeXFjELfSUWX9].range.value",
+            "5",
+            "10",
+            "Bite. Melee Attack Roll: +6, reach 10 ft. Hit: 11 (2d6 + 4) Piercing damage.",
+        ),
+    ),
+    "polar-bear": (
+        _SrdCorrection(
+            "damage_resistances",
+            [],
+            ["cold"],
+            "Resistances Cold",
+        ),
+    ),
+    "purple-worm": (
+        _SrdCorrection(
+            "actions[tail-stinger].activities[zYAOR7GLu8t8ypzY].damage.parts[0].types",
+            [],
+            ["piercing"],
+            (
+                "Tail Stinger. Melee Attack Roll: +14, reach 10 ft. Hit: 16 (2d6 + 9) Piercing "
+                "damage plus 35 (10d6) Poison damage."
+            ),
+        ),
+        _SrdCorrection(
+            "actions[swallow].activities[rGeGukkm2t2fXsoy].save.dc",
+            {"calculation": "str", "formula": "8 + @mod + @prof"},
+            {"calculation": "", "formula": "21"},
+            (
+                "Swallow. Strength Saving Throw: DC 19, one Large or smaller creature Grappled "
+                "by the worm (it can have up to three creatures swallowed at a time)."
+            ),
+        ),
+    ),
+    "rakshasa": (
+        _SrdCorrection(
+            "condition_immunities",
+            [],
+            ["charmed", "frightened"],
+            "Immunities Charmed, Frightened",
+        ),
+    ),
+    "raven": (
+        _SrdCorrection(
+            "actions[mimicry].kind",
+            "action",
+            "special",
+            (
+                "Mimicry. The raven can mimic simple sounds it has heard, such as a whisper or "
+                "chitter."
+            ),
+        ),
+    ),
+    "remorhaz": (
+        _SrdCorrection(
+            "actions[heat-aura].kind",
+            "action",
+            "special",
+            (
+                "Heat Aura. At the end of each of the remorhaz's turns, each creature in a "
+                "5-foot Emanation originating from the remorhaz takes 16 (3d10) Fire damage."
+            ),
+        ),
+    ),
+    "roper": (
+        _SrdCorrection(
+            "actions[reel].kind",
+            "bonus_action",
+            "action",
+            "Reel. The roper pulls each creature Grappled by it up to 30 feet straight toward it.",
+        ),
+    ),
+    "rust-monster": (
+        _SrdCorrection(
+            "actions[antennae].activities[dcSC7EuknnM0uoqY].save.dc",
+            {"calculation": "", "formula": "8 + @mod + @prof"},
+            {"calculation": "", "formula": "11"},
+            (
+                "Antennae. The rust monster targets one nonmagical metal object—armor or a "
+                "weapon—worn or carried by a creature within 5 feet of itself."
+            ),
+        ),
+    ),
+    "sea-hag": (
+        _SrdCorrection(
+            "actions[coven-magic].kind",
+            "action",
+            "special",
+            (
+                "Coven Magic. While within 30 feet of at least two hag allies, the hag can cast "
+                "one of the following spells, requiring no Material components, using the "
+                "spell's normal casting time, and using Intelligence as the spellcasting ability "
+                "(spell save DC 11): Augury, Find Familiar, Identify, Locate Object, Scrying, or "
+                "Unseen Servant."
+            ),
+        ),
+    ),
+    "seahorse": (
+        _SrdCorrection(
+            "actions[bubble-dash].kind",
+            "bonus_action",
+            "action",
+            (
+                "Bubble Dash. While underwater, the seahorse moves up to its Swim Speed without "
+                "provoking Opportunity Attacks."
+            ),
+        ),
+    ),
+    "shambling-mound": (
+        _SrdCorrection(
+            "skills.stealth",
+            None,
+            3,
+            "Skills Stealth +3",
+        ),
+    ),
+    "shrieker-fungus": (
+        _SrdCorrection(
+            "condition_immunities",
+            [],
+            ["blinded", "charmed", "deafened", "frightened"],
+            "Immunities Blinded, Charmed, Deafened, Frightened",
+        ),
+    ),
+    "solar": (
+        _SrdCorrection(
+            "actions[divine-aid].kind",
+            "action",
+            "bonus_action",
+            (
+                "Divine Aid (3/Day). The solar casts Cure Wounds (level 2 version), Lesser "
+                "Restoration, or Remove Curse, using the same spellcasting ability as "
+                "Spellcasting."
+            ),
+        ),
+    ),
+    "specter": (
+        _SrdCorrection(
+            "actions[life-drain].activities[ZCPz7voSLon5Bg5E].damage.include_base",
+            True,
+            False,
+            "Life Drain. Melee Attack Roll: +4, reach 5 ft. Hit: 7 (2d6) Necrotic damage.",
+        ),
+    ),
+    "sphinx-of-valor": (
+        _SrdCorrection(
+            "actions[roar].uses_per_day",
+            None,
+            3,
+            "Roar (3/Day). The sphinx emits a magical roar.",
+        ),
+    ),
+    "spider": (
+        _SrdCorrection(
+            "actions[bite].activities[xWlMeXFjELfSUWX9].damage.parts",
+            [
+                {
+                    "bonus": "",
+                    "custom": {"enabled": False, "formula": ""},
+                    "denomination": 4,
+                    "number": 1,
+                    "scaling": {"formula": "", "mode": "", "number": 1},
+                    "types": ["poison"],
+                }
+            ],
+            [
+                {
+                    "bonus": "1",
+                    "custom": {"enabled": False, "formula": ""},
+                    "denomination": 0,
+                    "number": None,
+                    "scaling": {"formula": "", "mode": "", "number": 1},
+                    "types": ["piercing"],
+                },
+                {
+                    "bonus": "",
+                    "custom": {"enabled": False, "formula": ""},
+                    "denomination": 4,
+                    "number": 1,
+                    "scaling": {"formula": "", "mode": "", "number": 1},
+                    "types": ["poison"],
+                },
+            ],
+            (
+                "Bite. Melee Attack Roll: +4, reach 5 ft. Hit: 1 Piercing damage plus 2 (1d4) "
+                "Poison damage."
+            ),
+        ),
+    ),
+    "spirit-naga": (
+        _SrdCorrection(
+            "actions[bite].activities[xWlMeXFjELfSUWX9].range.value",
+            "5",
+            "10",
+            (
+                "Bite. Melee Attack Roll: +7 , reach 10 ft. Hit: 7 (1d6 + 4) Piercing damage "
+                "plus 14 (4d6) Poison damage."
+            ),
+        ),
+    ),
+    "stone-golem": (
+        _SrdCorrection(
+            "actions[force-bolt].activities[S5O0aUU1pU4syS7J].attack.flat",
+            False,
+            True,
+            "Force Bolt. Ranged Attack Roll: +9, range 120 ft. Hit: 22 (4d10) Force damage.",
+        ),
+        _SrdCorrection(
+            "actions[force-bolt].activities[S5O0aUU1pU4syS7J].attack.bonus",
+            "",
+            "9",
+            "Force Bolt. Ranged Attack Roll: +9, range 120 ft. Hit: 22 (4d10) Force damage.",
+        ),
+    ),
+    "succubus": (
+        _SrdCorrection(
+            "actions[charm].recharge",
+            "5-6",
+            None,
+            (
+                "Charm. The succubus casts Dominate Person (level 8 version), requiring no spell "
+                "components and using Charisma as the spellcasting ability (spell save DC 15)."
+            ),
+        ),
+        _SrdCorrection(
+            "actions[incubus-form].kind",
+            "action",
+            "special",
+            (
+                "Incubus Form. When the succubus finishes a Long Rest, it can shape-shift into "
+                "an Incubus, using that stat block instead of this one."
+            ),
+        ),
+    ),
+    "swarm-of-insects": (
+        _SrdCorrection(
+            "actions[bites].activities[nrOPHKjj59hG1On3].damage.parts[0].types",
+            ["piercing"],
+            ["poison"],
+            (
+                "Bites. Melee Attack Roll: +3, reach 5 ft. Hit: 6 (2d4 + 1) Poison damage, or 3 "
+                "(1d4 + 1) Poison damage if the swarm is Bloodied."
+            ),
+        ),
+        _SrdCorrection(
+            "actions[bites].activities[3Yo83eZUNwX51AcE].damage.parts[0].types",
+            ["piercing"],
+            ["poison"],
+            (
+                "Bites. Melee Attack Roll: +3, reach 5 ft. Hit: 6 (2d4 + 1) Poison damage, or 3 "
+                "(1d4 + 1) Poison damage if the swarm is Bloodied."
+            ),
+        ),
+    ),
+    "swarm-of-ravens": (
+        _SrdCorrection(
+            "actions[cacophony].activities[pyvvXqoxJsjkkP38].save.dc",
+            {"calculation": "", "formula": "8 + @prof"},
+            {"calculation": "", "formula": "10"},
+            (
+                "Cacophony (Recharge 6). Wisdom Saving Throw: DC 10, one creature in the swarm's "
+                "space."
+            ),
+        ),
+    ),
+    "swarm-of-venomous-snakes": (
+        _SrdCorrection(
+            "condition_immunities",
+            [],
+            [
+                "charmed",
+                "frightened",
+                "grappled",
+                "paralyzed",
+                "petrified",
+                "prone",
+                "restrained",
+                "stunned",
+            ],
+            (
+                "Immunities Charmed, Frightened, Grappled, Paralyzed, Petrified, Prone, "
+                "Restrained, Stunned"
+            ),
+        ),
+        _SrdCorrection(
+            "damage_resistances",
+            [],
+            ["bludgeoning", "piercing", "slashing"],
+            "Resistances Bludgeoning, Piercing, Slashing",
+        ),
+        _SrdCorrection(
+            "actions[bites].activities[nrOPHKjj59hG1On3].damage.parts",
+            [
+                {
+                    "bonus": "",
+                    "custom": {"enabled": False, "formula": ""},
+                    "denomination": 8,
+                    "number": 1,
+                    "scaling": {"formula": "", "mode": "", "number": 1},
+                    "types": ["piercing"],
+                }
+            ],
+            [
+                {
+                    "bonus": "",
+                    "custom": {"enabled": False, "formula": ""},
+                    "denomination": 8,
+                    "number": 1,
+                    "scaling": {"formula": "", "mode": "", "number": 1},
+                    "types": ["piercing"],
+                },
+                {
+                    "bonus": "",
+                    "custom": {"enabled": False, "formula": ""},
+                    "denomination": 6,
+                    "number": 3,
+                    "scaling": {"formula": "", "mode": "", "number": 1},
+                    "types": ["poison"],
+                },
+            ],
+            (
+                "Bites. Melee Attack Roll: +6, reach 5 ft. Hit: 8 (1d8 + 4) Piercing damage—or 6 "
+                "(1d4 + 4) Piercing damage if the swarm is Bloodied—plus 10 (3d6) Poison damage."
+            ),
+        ),
+        _SrdCorrection(
+            "actions[bites].activities[3Yo83eZUNwX51AcE].damage.parts",
+            [
+                {
+                    "bonus": "@mod",
+                    "custom": {"enabled": False, "formula": ""},
+                    "denomination": 4,
+                    "number": 1,
+                    "scaling": {"formula": "", "mode": "", "number": 1},
+                    "types": ["piercing"],
+                }
+            ],
+            [
+                {
+                    "bonus": "@mod",
+                    "custom": {"enabled": False, "formula": ""},
+                    "denomination": 4,
+                    "number": 1,
+                    "scaling": {"formula": "", "mode": "", "number": 1},
+                    "types": ["piercing"],
+                },
+                {
+                    "bonus": "",
+                    "custom": {"enabled": False, "formula": ""},
+                    "denomination": 6,
+                    "number": 3,
+                    "scaling": {"formula": "", "mode": "", "number": 1},
+                    "types": ["poison"],
+                },
+            ],
+            (
+                "Bites. Melee Attack Roll: +6, reach 5 ft. Hit: 8 (1d8 + 4) Piercing damage—or 6 "
+                "(1d4 + 4) Piercing damage if the swarm is Bloodied—plus 10 (3d6) Poison damage."
+            ),
+        ),
+    ),
+    "tarrasque": (
+        _SrdCorrection(
+            "actions[thunderous-bellow].activities[RWBqtTjGSlEgQWCl].save.dc",
+            {"calculation": "", "formula": "8 + @mod + @prof"},
+            {"calculation": "", "formula": "27"},
+            (
+                "Thunderous Bellow (Recharge 5–6). Constitution Saving Throw: DC 27 , each "
+                "creature and each object that isn't being worn or carried in a 150-foot Cone."
+            ),
+        ),
+    ),
+    "troll": (
+        _SrdCorrection(
+            "actions[loathsome-limbs].kind",
+            "action",
+            "special",
+            (
+                "Loathsome Limbs (4/Day). If the troll ends any turn Bloodied and took 15+ "
+                "Slashing damage during that turn, one of the troll's limbs is severed, falls "
+                "into the troll's space, and becomes a Troll Limb."
+            ),
+        ),
+    ),
+    "tyrannosaurus-rex": (
+        _SrdCorrection(
+            "actions[tail].activities[LLodCm31qWyIpHyK].range.value",
+            "10",
+            "15",
+            "Tail. Melee Attack Roll: +10, reach 15 ft. Hit: 25 (4d8 + 7) Bludgeoning damage.",
+        ),
+    ),
+    "unicorn": (
+        _SrdCorrection(
+            "actions[unicorns-blessing].kind",
+            "action",
+            "bonus_action",
+            (
+                "Unicorn's Blessing (3/Day). The unicorn touches another creature with its horn "
+                "and casts Cure Wounds or Lesser Restoration on that creature, using the same "
+                "spellcasting ability as Spellcasting."
+            ),
+        ),
+    ),
+    "vampire-familiar": (
+        _SrdCorrection(
+            "actions[umbral-dagger].activities[VWOxHrZXIWO7ZZeW].damage.parts[0].types",
+            [],
+            ["piercing"],
+            "Umbral Dagger. Melee or Ranged Attack Roll: +5, reach 5 ft. or range 20/60 ft.",
+        ),
+    ),
+    "violet-fungus": (
+        _SrdCorrection(
+            "condition_immunities",
+            [],
+            ["blinded", "charmed", "deafened", "frightened"],
+            "Immunities Blinded, Charmed, Deafened, Frightened",
+        ),
+    ),
+    "werebear": (
+        _SrdCorrection(
+            "movement.climb",
+            None,
+            30,
+            "Speed 30 ft., 40 ft. (bear form only), Climb 30 ft. (bear form only)",
+        ),
+        _SrdCorrection(
+            "actions[bite].activities[q7leyHRdAkccDyqG].save.dc",
+            {"calculation": "", "formula": "8 + @mod + @prof"},
+            {"calculation": "", "formula": "14"},
+            (
+                "Bite (Bear or Hybrid Form Only). Melee Attack Roll: +7 , reach 5 ft. Hit: 17 "
+                "(2d12 + 4) Piercing damage."
+            ),
+        ),
+    ),
+    "wereboar": (
+        _SrdCorrection(
+            "actions[gore].activities[lS5miercc4WPdVfN].save.dc",
+            {"calculation": "", "formula": "8 + @mod + @prof"},
+            {"calculation": "", "formula": "12"},
+            (
+                "Gore (Boar or Hybrid Form Only). Melee Attack Roll: +5, reach 5 ft. Hit: 12 "
+                "(2d8 + 3) Piercing damage."
+            ),
+        ),
+    ),
+    "wererat": (
+        _SrdCorrection(
+            "actions[bite].activities[HAz6jK7w7zFU77Wk].save.dc",
+            {"calculation": "", "formula": "8 + @mod + @prof"},
+            {"calculation": "", "formula": "11"},
+            (
+                "Bite (Rat or Hybrid Form Only). Melee Attack Roll: +5, reach 5 ft. Hit: 8 (2d4 "
+                "+ 3) Piercing damage."
+            ),
+        ),
+    ),
+    "weretiger": (
+        _SrdCorrection(
+            "actions[bite].activities[jgkWL5fxyqrDPr4D].save.dc",
+            {"calculation": "", "formula": "8 + @mod + @prof"},
+            {"calculation": "", "formula": "13"},
+            (
+                "Bite (Tiger or Hybrid Form Only). Melee Attack Roll: +5, reach 5 ft. Hit: 12 "
+                "(2d8 + 3) Piercing damage."
+            ),
+        ),
+    ),
+    "werewolf": (
+        _SrdCorrection(
+            "actions[bite].activities[GBKhdBPogHNssDIa].save.dc",
+            {"calculation": "", "formula": "8 + @mod + @prof"},
+            {"calculation": "", "formula": "12"},
+            (
+                "Bite (Wolf or Hybrid Form Only). Melee Attack Roll: +5, reach 5 ft. Hit: 12 "
+                "(2d8 + 3) Piercing damage."
+            ),
+        ),
+    ),
+    "wight": (
+        _SrdCorrection(
+            "actions[life-drain].activities[FA4Mt9cXsYfHDDcs].damage.parts[0].types",
+            [],
+            ["necrotic"],
+            "Life Drain. Constitution Saving Throw: DC 13, one creature within 5 feet.",
+        ),
+        _SrdCorrection(
+            "actions[life-drain].activities[FA4Mt9cXsYfHDDcs].damage.parts[0].bonus",
+            "@mod",
+            "2",
+            "Life Drain. Constitution Saving Throw: DC 13, one creature within 5 feet.",
+        ),
+    ),
+    "wraith": (
+        _SrdCorrection(
+            "actions[life-drain].activities[ZCPz7voSLon5Bg5E].damage.parts[0].bonus",
+            "@abilities.dex.mod",
+            "",
+            "Life Drain. Melee Attack Roll: +6, reach 5 ft. Hit: 21 (4d8 + 3) Necrotic damage.",
+        ),
+    ),
+    "young-silver-dragon": (
+        _SrdCorrection(
+            "actions[rend].activities[VP3t6lmmuXKGCRwX].damage.parts[0].types",
+            ["piercing"],
+            ["slashing"],
+            "Rend. Melee Attack Roll: +10, reach 10 ft. Hit: 15 (2d8 + 6) Slashing damage.",
+        ),
+    ),
+}
+
+
+def monster_srd_corrections(slug: str) -> tuple[_SrdCorrection, ...]:
+    """The SRD 5.2.1 corrections the translator applies to monster ``slug``."""
+    return _MONSTER_SRD_CORRECTIONS.get(slug, ())
+
+
+#: The list each action ``kind`` belongs in.
+_ACTION_LIST_BY_KIND = {
+    "special": "special_abilities",
+    "legendary": "legendary_actions",
+    "lair": "lair_actions",
+}
+
+
+def _apply_monster_srd_corrections(monster: Monster) -> Monster:
+    """Apply ``_MONSTER_SRD_CORRECTIONS``, then file each action under its kind's list."""
+    corrections = monster_srd_corrections(monster.slug)
+    if not corrections or not _SRD_RULES["enabled"]:
+        return monster
+    blob = monster.model_dump(mode="json")
+    _apply_srd_corrections(monster.slug, blob, corrections)
+    lists = ("actions", "special_abilities", "legendary_actions", "lair_actions")
+    entries = [entry for field in lists for entry in blob[field]]
+    for field in lists:
+        blob[field] = [
+            e for e in entries if _ACTION_LIST_BY_KIND.get(e["kind"], "actions") == field
+        ]
+    return Monster.model_validate(blob)
 
 
 def translate_spell_yaml(

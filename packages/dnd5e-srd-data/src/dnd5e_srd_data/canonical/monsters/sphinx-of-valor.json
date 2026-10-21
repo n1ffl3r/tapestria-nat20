@@ -178,8 +178,8 @@
           "range": {
             "override": false,
             "special": "",
-            "units": "self",
-            "value": null
+            "units": "ft",
+            "value": "5"
           },
           "sort": 0,
           "target": {
@@ -604,7 +604,7 @@
       "name": "Roar",
       "recharge": null,
       "slug": "roar",
-      "uses_per_day": null
+      "uses_per_day": 3
     },
     {
       "activities": [

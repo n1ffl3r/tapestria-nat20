@@ -56,12 +56,14 @@ def test_bundled_corpus_carries_the_typed_pool_sizes() -> None:
         return m.legendary_resistance_uses, m.legendary_action_uses
 
     # Verified against raw_sources/foundry/packs/_source/actors24/**:
-    # legres.max is 3 for the adult dragons, 4 for the ancient dragons except
-    # gold (3), Kraken, Lich, Pit Fiend and Solar, and 6 for the Tarrasque;
-    # legact.max is 3 for every legendary-action monster.
+    # legres.max is 3 for the adult dragons, 4 for the ancient dragons, Kraken,
+    # Lich, Pit Fiend and Solar, and 6 for the Tarrasque; legact.max is 3 for
+    # every legendary-action monster. Foundry gives the Ancient Gold Dragon 3;
+    # SRD 5.2.1 gives "Legendary Resistance (4/Day, or 5/Day in Lair)", which
+    # _MONSTER_SRD_CORRECTIONS restores.
     assert pools("adult-red-dragon") == (3, 3)
     assert pools("ancient-red-dragon") == (4, 3)
-    assert pools("ancient-gold-dragon") == (3, 3)
+    assert pools("ancient-gold-dragon") == (4, 3)
     assert pools("lich") == (4, 3)
     assert pools("tarrasque") == (6, 3)
     assert pools("wolf") == (None, None)

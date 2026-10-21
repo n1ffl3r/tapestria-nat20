@@ -195,8 +195,8 @@
           "range": {
             "override": false,
             "special": "",
-            "units": "self",
-            "value": null
+            "units": "ft",
+            "value": "10"
           },
           "sort": 0,
           "target": {
@@ -1672,7 +1672,11 @@
     }
   ],
   "alignment": "Lawful Good",
-  "condition_immunities": [],
+  "condition_immunities": [
+    "charmed",
+    "exhaustion",
+    "frightened"
+  ],
   "cr": 16.0,
   "creature_size": "large",
   "creature_type": "celestial",

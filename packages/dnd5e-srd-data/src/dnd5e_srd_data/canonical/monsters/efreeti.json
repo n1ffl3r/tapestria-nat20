@@ -19,118 +19,6 @@
             "type": "action",
             "value": null
           },
-          "consumption": {
-            "scaling": {
-              "allowed": false,
-              "max": ""
-            },
-            "spell_slot": true,
-            "targets": [
-              {
-                "scaling": {
-                  "formula": "",
-                  "mode": ""
-                },
-                "target": "",
-                "type": "itemUses",
-                "value": "1"
-              }
-            ]
-          },
-          "description": {
-            "chat_flavor": ""
-          },
-          "duration": {
-            "concentration": false,
-            "override": false,
-            "special": "",
-            "units": "inst",
-            "value": null
-          },
-          "flags": {},
-          "id": "A8OOJwSm8E8QPzkX",
-          "img": "",
-          "kind": "cast",
-          "name": "Cast Wish",
-          "range": {
-            "override": false,
-            "special": "",
-            "units": "self",
-            "value": null
-          },
-          "sort": 0,
-          "spell": {
-            "ability": "",
-            "challenge": {
-              "attack": null,
-              "override": false,
-              "save": null
-            },
-            "level": 9,
-            "properties": [
-              "vocal",
-              "somatic",
-              "material"
-            ],
-            "spellbook": true,
-            "uuid": "Compendium.dnd5e.spells24.Item.phbsplWish000000"
-          },
-          "target": {
-            "affects": {
-              "choice": false,
-              "count": "",
-              "special": "",
-              "type": ""
-            },
-            "override": false,
-            "prompt": true,
-            "template": {
-              "contiguous": false,
-              "count": "",
-              "height": "",
-              "size": "",
-              "stationary": false,
-              "type": "",
-              "units": "ft",
-              "width": ""
-            }
-          },
-          "uses": {
-            "max": "",
-            "recovery": [],
-            "spent": 0
-          },
-          "visibility": {
-            "identifier": "",
-            "level": {
-              "max": null,
-              "min": null
-            },
-            "require_attunement": false,
-            "require_identification": false,
-            "require_magic": false
-          }
-        }
-      ],
-      "description": "The [[lookup @name lowercase]]{monster} has a [[/r 1d100cs&lt;31#Knows Wish on 1]]{30 percent} chance of knowing the Wish spell. If the [[lookup @name lowercase]]{monster} knows it, the [[lookup @name lowercase]]{monster} can cast it only on behalf of a non-genie creature who communicates a wish in a way the [[lookup @name lowercase]]{monster} can understand. If the [[lookup @name lowercase]]{monster} casts the spell for the creature, the [[lookup @name lowercase]]{monster} suffers none of the spell's stress. Once the [[lookup @name lowercase]]{monster} has cast it three times, the [[lookup @name lowercase]]{monster} can't do so again for 365 days.",
-      "kind": "action",
-      "legendary_cost": null,
-      "mechanic": null,
-      "name": "Wishes",
-      "recharge": null,
-      "slug": "wishes",
-      "uses_per_day": null
-    },
-    {
-      "activities": [
-        {
-          "activation": {
-            "condition": "",
-            "override": false,
-            "reaction_conditions": [],
-            "type": "action",
-            "value": null
-          },
           "applied_effects": [],
           "consumption": {
             "scaling": {
@@ -307,8 +195,8 @@
           "range": {
             "override": false,
             "special": "",
-            "units": "self",
-            "value": null
+            "units": "ft",
+            "value": "5"
           },
           "sort": 0,
           "target": {
@@ -447,8 +335,8 @@
           "range": {
             "override": false,
             "special": "",
-            "units": "self",
-            "value": null
+            "units": "ft",
+            "value": "120"
           },
           "sort": 0,
           "target": {
@@ -1391,6 +1279,118 @@
   },
   "slug": "efreeti",
   "special_abilities": [
+    {
+      "activities": [
+        {
+          "activation": {
+            "condition": "",
+            "override": false,
+            "reaction_conditions": [],
+            "type": "action",
+            "value": null
+          },
+          "consumption": {
+            "scaling": {
+              "allowed": false,
+              "max": ""
+            },
+            "spell_slot": true,
+            "targets": [
+              {
+                "scaling": {
+                  "formula": "",
+                  "mode": ""
+                },
+                "target": "",
+                "type": "itemUses",
+                "value": "1"
+              }
+            ]
+          },
+          "description": {
+            "chat_flavor": ""
+          },
+          "duration": {
+            "concentration": false,
+            "override": false,
+            "special": "",
+            "units": "inst",
+            "value": null
+          },
+          "flags": {},
+          "id": "A8OOJwSm8E8QPzkX",
+          "img": "",
+          "kind": "cast",
+          "name": "Cast Wish",
+          "range": {
+            "override": false,
+            "special": "",
+            "units": "self",
+            "value": null
+          },
+          "sort": 0,
+          "spell": {
+            "ability": "",
+            "challenge": {
+              "attack": null,
+              "override": false,
+              "save": null
+            },
+            "level": 9,
+            "properties": [
+              "vocal",
+              "somatic",
+              "material"
+            ],
+            "spellbook": true,
+            "uuid": "Compendium.dnd5e.spells24.Item.phbsplWish000000"
+          },
+          "target": {
+            "affects": {
+              "choice": false,
+              "count": "",
+              "special": "",
+              "type": ""
+            },
+            "override": false,
+            "prompt": true,
+            "template": {
+              "contiguous": false,
+              "count": "",
+              "height": "",
+              "size": "",
+              "stationary": false,
+              "type": "",
+              "units": "ft",
+              "width": ""
+            }
+          },
+          "uses": {
+            "max": "",
+            "recovery": [],
+            "spent": 0
+          },
+          "visibility": {
+            "identifier": "",
+            "level": {
+              "max": null,
+              "min": null
+            },
+            "require_attunement": false,
+            "require_identification": false,
+            "require_magic": false
+          }
+        }
+      ],
+      "description": "The [[lookup @name lowercase]]{monster} has a [[/r 1d100cs&lt;31#Knows Wish on 1]]{30 percent} chance of knowing the Wish spell. If the [[lookup @name lowercase]]{monster} knows it, the [[lookup @name lowercase]]{monster} can cast it only on behalf of a non-genie creature who communicates a wish in a way the [[lookup @name lowercase]]{monster} can understand. If the [[lookup @name lowercase]]{monster} casts the spell for the creature, the [[lookup @name lowercase]]{monster} suffers none of the spell's stress. Once the [[lookup @name lowercase]]{monster} has cast it three times, the [[lookup @name lowercase]]{monster} can't do so again for 365 days.",
+      "kind": "special",
+      "legendary_cost": null,
+      "mechanic": null,
+      "name": "Wishes",
+      "recharge": null,
+      "slug": "wishes",
+      "uses_per_day": null
+    },
     {
       "activities": [],
       "description": "If the [[lookup @name lowercase]]{monster} [[lookup @item.requirements]], its body dissolves into dirt, and it gains a new body in [[/r 1d4#Days]] days, reviving with all its Hit Points somewhere on the Plane of Fire.",

@@ -178,8 +178,8 @@
           "range": {
             "override": false,
             "special": "",
-            "units": "self",
-            "value": null
+            "units": "ft",
+            "value": "5"
           },
           "sort": 0,
           "target": {
@@ -303,8 +303,8 @@
           "range": {
             "override": false,
             "special": "",
-            "units": "self",
-            "value": null
+            "units": "ft",
+            "value": "5"
           },
           "sort": 0,
           "target": {
@@ -1279,7 +1279,7 @@
         }
       ],
       "description": "The [[lookup @name]]{monster} touches another creature with its horn and casts Cure Wounds or Lesser Restoration on that creature, using the same spellcasting ability as Spellcasting.",
-      "kind": "action",
+      "kind": "bonus_action",
       "legendary_cost": null,
       "mechanic": null,
       "name": "Unicorn's Blessing",

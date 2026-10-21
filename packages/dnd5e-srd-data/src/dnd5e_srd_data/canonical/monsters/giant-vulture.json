@@ -94,8 +94,8 @@
           "range": {
             "override": false,
             "special": "",
-            "units": "self",
-            "value": null
+            "units": "ft",
+            "value": "5"
           },
           "sort": 0,
           "target": {
@@ -151,7 +151,9 @@
   "creature_size": "large",
   "creature_type": "monstrosity",
   "damage_immunities": [],
-  "damage_resistances": [],
+  "damage_resistances": [
+    "necrotic"
+  ],
   "damage_vulnerabilities": [],
   "description": "",
   "hp": 25,

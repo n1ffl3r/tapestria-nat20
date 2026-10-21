@@ -101,8 +101,8 @@
           "range": {
             "override": false,
             "special": "",
-            "units": "self",
-            "value": null
+            "units": "ft",
+            "value": "10"
           },
           "sort": 0,
           "target": {
@@ -258,8 +258,8 @@
           "range": {
             "override": false,
             "special": "",
-            "units": "self",
-            "value": null
+            "units": "ft",
+            "value": "10"
           },
           "sort": 0,
           "target": {
@@ -315,7 +315,10 @@
   "creature_size": "huge",
   "creature_type": "celestial",
   "damage_immunities": [],
-  "damage_resistances": [],
+  "damage_resistances": [
+    "necrotic",
+    "radiant"
+  ],
   "damage_vulnerabilities": [],
   "description": "",
   "hp": 42,

@@ -21,7 +21,7 @@
           },
           "applied_effects": [],
           "attack": {
-            "ability": "",
+            "ability": "dex",
             "bonus": "",
             "critical": {
               "threshold": null
@@ -134,7 +134,7 @@
           },
           "applied_effects": [],
           "attack": {
-            "ability": "",
+            "ability": "dex",
             "bonus": "",
             "critical": {
               "threshold": null

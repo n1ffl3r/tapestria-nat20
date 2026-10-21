@@ -47,7 +47,7 @@
             "include_base": true,
             "parts": [
               {
-                "bonus": "",
+                "bonus": "1",
                 "custom": {
                   "enabled": false,
                   "formula": ""
@@ -94,8 +94,8 @@
           "range": {
             "override": false,
             "special": "",
-            "units": "self",
-            "value": null
+            "units": "ft",
+            "value": "5"
           },
           "sort": 0,
           "target": {
@@ -229,106 +229,6 @@
       "name": "Bite",
       "recharge": null,
       "slug": "bite",
-      "uses_per_day": null
-    }
-  ],
-  "alignment": "Unaligned",
-  "condition_immunities": [],
-  "cr": 0.25,
-  "creature_size": "medium",
-  "creature_type": "beast",
-  "damage_immunities": [],
-  "damage_resistances": [],
-  "damage_vulnerabilities": [],
-  "description": "",
-  "hp": 18,
-  "hp_dice": "4d8",
-  "lair_actions": [],
-  "languages": [],
-  "legendary_action_uses": null,
-  "legendary_actions": [],
-  "legendary_resistance_uses": null,
-  "movement": {
-    "burrow": null,
-    "climb": null,
-    "fly": null,
-    "hover": false,
-    "swim": 30,
-    "walk": 30
-  },
-  "name": "Giant Frog",
-  "proficiency_bonus": 2,
-  "provenance": {
-    "ingest_date": "2026-05-30",
-    "ingest_version": "foundry-translator-v1",
-    "license_tag": "CC-BY-4.0",
-    "source": "foundry",
-    "source_url": "https://github.com/foundryvtt/dnd5e/blob/965ad2d0cf5d063dac675ba078b5bd3c3c0dd449/packs/_source/actors24/beast/giant-frog.yml",
-    "srd_version": [
-      "5.2"
-    ]
-  },
-  "review": {
-    "known_divergence": null,
-    "requires_user_decision": false
-  },
-  "saving_throws": {
-    "cha": null,
-    "con": null,
-    "dex": null,
-    "int": null,
-    "str": null,
-    "wis": null
-  },
-  "senses": {
-    "blindsight": null,
-    "darkvision": 30,
-    "passive_perception": 12,
-    "tremorsense": null,
-    "truesight": null
-  },
-  "skills": {
-    "acrobatics": null,
-    "animal_handling": null,
-    "arcana": null,
-    "athletics": null,
-    "deception": null,
-    "history": null,
-    "insight": null,
-    "intimidation": null,
-    "investigation": null,
-    "medicine": null,
-    "nature": null,
-    "perception": 2,
-    "performance": null,
-    "persuasion": null,
-    "religion": null,
-    "sleight_of_hand": null,
-    "stealth": null,
-    "survival": null
-  },
-  "slug": "giant-frog",
-  "special_abilities": [
-    {
-      "activities": [],
-      "description": "The [[lookup @name lowercase]]{monster} can breathe air and water.",
-      "kind": "special",
-      "legendary_cost": null,
-      "mechanic": "amphibious",
-      "name": "Amphibious",
-      "recharge": null,
-      "slug": "amphibious",
-      "uses_per_day": null
-    },
-    {
-      "activities": [],
-      "description": "The [[lookup @name lowercase]]{monster}'s Long Jump is up to 20 feet and its High Jump is up to 10 feet with or without a running start.",
-      "kind": "special",
-      "legendary_cost": null,
-      "mechanic": null,
-      "name": "Standing Leap",
-      "recharge": null,
-      "slug": "standing-leap",
       "uses_per_day": null
     },
     {
@@ -538,12 +438,112 @@
         }
       ],
       "description": "The [[lookup @name lowercase]]{monster} swallows a [[lookup @target.affects.special activity=IPD9mDjKJEXc2uMQ]] target it is grappling. While swallowed, the target isn't Grappled but has the &amp;Reference[Blinded apply=false] and &amp;Reference[Restrained apply=false] conditions, and it has &amp;Reference[Total Cover] against attacks and other effects outside the frog.\n\nWhile swallowing the target, the [[lookup @name lowercase]]{monster} can't use Bite, and if the [[lookup @name lowercase]]{monster} dies, the swallowed target is no longer Restrained and can escape from the corpse using 5 feet of movement, exiting with the &amp;Reference[Prone apply=false] condition.\n\nAt the end of the [[lookup @name lowercase]]{monster}'s next turn, the swallowed target takes [[/damage 2d4 acid average]] damage. If that damage doesn't kill it, the [[lookup @name lowercase]]{monster} disgorges it, causing it to exit &amp;Reference[Prone apply=false].",
-      "kind": "special",
+      "kind": "action",
       "legendary_cost": null,
       "mechanic": null,
       "name": "Swallow",
       "recharge": null,
       "slug": "swallow",
+      "uses_per_day": null
+    }
+  ],
+  "alignment": "Unaligned",
+  "condition_immunities": [],
+  "cr": 0.25,
+  "creature_size": "medium",
+  "creature_type": "beast",
+  "damage_immunities": [],
+  "damage_resistances": [],
+  "damage_vulnerabilities": [],
+  "description": "",
+  "hp": 18,
+  "hp_dice": "4d8",
+  "lair_actions": [],
+  "languages": [],
+  "legendary_action_uses": null,
+  "legendary_actions": [],
+  "legendary_resistance_uses": null,
+  "movement": {
+    "burrow": null,
+    "climb": null,
+    "fly": null,
+    "hover": false,
+    "swim": 30,
+    "walk": 30
+  },
+  "name": "Giant Frog",
+  "proficiency_bonus": 2,
+  "provenance": {
+    "ingest_date": "2026-05-30",
+    "ingest_version": "foundry-translator-v1",
+    "license_tag": "CC-BY-4.0",
+    "source": "foundry",
+    "source_url": "https://github.com/foundryvtt/dnd5e/blob/965ad2d0cf5d063dac675ba078b5bd3c3c0dd449/packs/_source/actors24/beast/giant-frog.yml",
+    "srd_version": [
+      "5.2"
+    ]
+  },
+  "review": {
+    "known_divergence": null,
+    "requires_user_decision": false
+  },
+  "saving_throws": {
+    "cha": null,
+    "con": null,
+    "dex": null,
+    "int": null,
+    "str": null,
+    "wis": null
+  },
+  "senses": {
+    "blindsight": null,
+    "darkvision": 30,
+    "passive_perception": 12,
+    "tremorsense": null,
+    "truesight": null
+  },
+  "skills": {
+    "acrobatics": null,
+    "animal_handling": null,
+    "arcana": null,
+    "athletics": null,
+    "deception": null,
+    "history": null,
+    "insight": null,
+    "intimidation": null,
+    "investigation": null,
+    "medicine": null,
+    "nature": null,
+    "perception": 2,
+    "performance": null,
+    "persuasion": null,
+    "religion": null,
+    "sleight_of_hand": null,
+    "stealth": 4,
+    "survival": null
+  },
+  "slug": "giant-frog",
+  "special_abilities": [
+    {
+      "activities": [],
+      "description": "The [[lookup @name lowercase]]{monster} can breathe air and water.",
+      "kind": "special",
+      "legendary_cost": null,
+      "mechanic": "amphibious",
+      "name": "Amphibious",
+      "recharge": null,
+      "slug": "amphibious",
+      "uses_per_day": null
+    },
+    {
+      "activities": [],
+      "description": "The [[lookup @name lowercase]]{monster}'s Long Jump is up to 20 feet and its High Jump is up to 10 feet with or without a running start.",
+      "kind": "special",
+      "legendary_cost": null,
+      "mechanic": null,
+      "name": "Standing Leap",
+      "recharge": null,
+      "slug": "standing-leap",
       "uses_per_day": null
     }
   ],

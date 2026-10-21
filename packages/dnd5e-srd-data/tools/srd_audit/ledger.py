@@ -25,13 +25,19 @@ import json
 import re
 import sys
 from collections.abc import Mapping
+from datetime import date
 from pathlib import Path
 from typing import Any
 
 import yaml
 
-from tools.srd_audit import pdf_text, spell_lists, spells
-from tools.translators.foundry import spell_srd_corrections
+from tools.srd_audit import pdf_text, spell_lists, spells, stat_blocks
+from tools.translators.foundry import (
+    monster_srd_corrections,
+    spell_srd_corrections,
+    srd_rules_disabled,
+    translate_monster_yaml,
+)
 
 ROOT = Path(__file__).resolve().parents[2]
 LEDGER_PATH = ROOT / "audit" / "srd_5_2_1_ledger.json"
@@ -39,7 +45,12 @@ DIVERGENCES_PATH = ROOT / "audit" / "srd_5_2_1_divergences.json"
 INDEX_PATH = ROOT / "srd" / "index.json"
 CANONICAL = ROOT / "src" / "dnd5e_srd_data" / "canonical"
 FOUNDRY = ROOT / "raw_sources" / "foundry"
-AUDITED_CATEGORIES = ("spell_lists", "spells")
+AUDITED_CATEGORIES = ("monsters", "spell_lists", "spells")
+ALIASES_PATH = ROOT / "srd" / "aliases.json"
+# The pages holding every stat block: the summon forms in the Spells chapter, the
+# figurines and the Avatar of Death in the Magic Items chapter, and the Monsters and
+# Animals chapters.
+STAT_BLOCK_PAGES = (104, 364)
 STATUSES = ("verified", "corrected", "divergence")
 # The header line each translator rule reads its corrected value from.
 RULE_HEADERS = {
@@ -229,6 +240,196 @@ def spell_list_entry(
     return entry
 
 
+def _raw_path(record: Mapping[str, Any]) -> Path:
+    url = str(record["provenance"]["source_url"])
+    return FOUNDRY / url.split("/blob/", 1)[1].split("/", 1)[1]
+
+
+def _entry_quote(text: pdf_text.RecordText, field: str) -> str | None:
+    """The SRD text an action's field rests on: its run-in heading and first sentence."""
+    if "." not in field:
+        return None
+    section, slug = field.split(".", 1)
+    _, rest = stat_blocks._header(text)
+    for entry in stat_blocks.entries(rest):
+        if entry.section == section and stat_blocks._slug(entry.name) == slug:
+            head = entry.name + (f" ({entry.tag})" if entry.tag else "")
+            # Through the damage it deals, else its first sentence ("ft." is no sentence end).
+            first = re.match(r"(.+? damage\b[^.]*\.)", entry.text) or re.match(
+                r"(.+?(?<! ft)\.)(?: [A-Z]|$)", entry.text
+            )
+            return f"{head}. {first.group(1) if first else entry.text}".strip()
+    return None
+
+
+def monster_changes(
+    record: Mapping[str, Any], text: pdf_text.RecordText, fields: list[str]
+) -> list[dict[str, Any]]:
+    """The audited fields the translator changed, each with the SRD text it rests on: a
+    correction table's quote, or the action's text for a translator rule (an item's reach
+    or Finesse property)."""
+    with srd_rules_disabled():
+        raw = translate_monster_yaml(
+            _raw_path(record), ingest_date=date(2000, 1, 1), ingest_version="ledger"
+        ).model_dump(mode="json")
+    before = stat_blocks.corpus_facts(raw)
+    after = stat_blocks.corpus_facts(record)
+    corrections = monster_srd_corrections(record["slug"])
+    # A correction to a field the audit does not compare (a summon's reach) is listed too.
+    fields = sorted(
+        set(fields)
+        | {
+            f
+            for f in set(before) | set(after)
+            if any(_corrects(c.path, f, record) for c in corrections)
+        }
+    )
+    changes = []
+    for field in fields:
+        if before.get(field) == after.get(field):
+            continue
+        quotes = [c.srd for c in corrections if _corrects(c.path, field, record)]
+        if not quotes:
+            quote = _entry_quote(text, field)
+            if quote is None:
+                raise ValueError(f"{record['slug']}: {field} changed with no SRD text to cite")
+            quotes.append(quote)
+        changes.append(
+            {"field": field, "from": before.get(field), "to": after.get(field), "srd": quotes}
+        )
+    return changes
+
+
+_KIND_SECTIONS = {
+    "action": "actions",
+    "bonus_action": "bonus_actions",
+    "reaction": "reactions",
+    "special": "traits",
+    "legendary": "legendary_actions",
+}
+SECTION_FIELDS = frozenset(_KIND_SECTIONS.values())
+
+
+def _corrects(path: str, field: str, record: Mapping[str, Any]) -> bool:
+    """Whether a monster correction at ``path`` changes the audit ``field``: a header field
+    ("movement.climb" is "speed"), an action's numbers ("actions[bite]...." is "actions.bite"
+    or, for a bonus action, "bonus_actions.bite"), or, for a ``kind`` correction, the
+    section lists and the moved entry's numbers."""
+    head = path.split(".")[0]
+    found = re.fullmatch(r"(\w+)\[([^\]]+)\]", head)
+    if found is None:
+        return {"movement": "speed", "saving_throws": "saves"}.get(head, head) == field
+    slug = found.group(2)
+    if path.endswith(".kind"):
+        return field in SECTION_FIELDS or field.endswith(f".{slug}")
+    lists = ("actions", "special_abilities", "legendary_actions", "lair_actions")
+    kinds = {a["slug"]: a["kind"] for name in lists for a in record.get(name) or []}
+    return field == f"{_KIND_SECTIONS.get(kinds.get(slug, ''), 'actions')}.{slug}"
+
+
+def monster_entry(
+    slug: str,
+    record: Mapping[str, Any],
+    text: pdf_text.RecordText,
+    page: int,
+    variant: bool,
+    divergence: Mapping[str, Any] | None,
+    with_changes: bool,
+) -> dict[str, Any]:
+    srd, read = stat_blocks.audited_facts(slug, stat_blocks.pdf_facts(text))
+    for quote in read.values():
+        if not contains(text.text, quote):
+            raise ValueError(f"{slug}: hand reading quote not in the SRD text: {quote!r}")
+    corpus = stat_blocks.corpus_facts(record)
+    not_compared = dict(stat_blocks.NOT_COMPARED.get(slug, {}))
+    if variant:
+        for field in sorted(set(srd) | set(corpus)):
+            if field not in stat_blocks.VARIANT_FIELDS:
+                not_compared[field] = (
+                    "A variant of the parent stat block, which prints this field once per"
+                    " variant (srd/aliases.json)."
+                )
+    for field in not_compared:
+        srd.pop(field, None)
+        corpus.pop(field, None)
+    differences = stat_blocks.compare(srd, corpus)
+    compared = spells.compared_fields(srd, corpus)
+    entry: dict[str, Any] = {
+        "name": record["name"],
+        "srd_page": page,
+        "compared": {field: srd.get(field) for field in compared},
+    }
+    if read:
+        entry["read_by_hand"] = dict(sorted(read.items()))
+    if not_compared:
+        entry["not_compared"] = dict(sorted(not_compared.items()))
+    for correction in monster_srd_corrections(slug):
+        if not contains(text.text, correction.srd):
+            raise ValueError(f"{slug}: correction quote not in the SRD text: {correction.srd!r}")
+    changes = monster_changes(record, text, compared) if with_changes else []
+    if differences:
+        if divergence is None or sorted(divergence["fields"]) != sorted(differences):
+            raise ValueError(f"{slug}: unrecorded differences from the SRD: {differences}")
+        entry["status"] = "divergence"
+        entry["differences"] = differences
+        entry["divergence"] = dict(divergence)
+    elif divergence is not None:
+        raise ValueError(f"{slug}: recorded as a divergence but matches the SRD")
+    else:
+        entry["status"] = "corrected" if changes else "verified"
+    if changes:
+        entry["changes"] = changes
+    return entry
+
+
+def monster_entries(
+    index: Mapping[str, Any], divergences: Mapping[str, Any], with_changes: bool
+) -> dict[str, Any]:
+    """Every corpus monster against its stat block: its own, or for a variant the parent
+    srd/aliases.json names. A record with no stat block to compare is a divergence."""
+    texts = stat_blocks.stat_block_texts(pdf_text.plain_lines(*STAT_BLOCK_PAGES))
+    pages = {s["name"]: s["page"] for s in index["categories"]["stat_blocks"]}
+    aliases = {
+        alias["name"]: alias
+        for alias in load_json(ALIASES_PATH)["aliases"]
+        if alias["corpus_category"] == "monsters"
+    }
+    entries: dict[str, Any] = {}
+    errors: list[str] = []
+    for slug, record in canonical_records("monsters").items():
+        name = record["name"]
+        divergence = divergences["monsters"].get(slug)
+        parent = aliases.get(name, {}).get("of", name)
+        if parent not in texts:
+            if divergence is None:
+                errors.append(f"{slug}: no SRD stat block to compare")
+            else:
+                entries[slug] = {
+                    "name": name,
+                    "srd_page": int(divergence["srd_page"]),
+                    "compared": {},
+                    "status": "divergence",
+                    "differences": {"stat_block": {"srd": None, "corpus": slug}},
+                    "divergence": dict(divergence),
+                }
+            continue
+        try:
+            entries[slug] = monster_entry(
+                slug,
+                record,
+                texts[parent],
+                pages.get(parent, texts[parent].page),
+                parent != name,
+                divergence,
+                with_changes,
+            )
+        except ValueError as error:
+            errors.append(str(error))
+    if errors:
+        raise ValueError("\n".join(errors))
+    return entries
+
+
 def build(with_changes: bool = True) -> dict[str, Any]:
     """The ledger. ``with_changes`` reads the raw Foundry sources to list what the
     translator changed; without them every matching record reads as verified."""
@@ -283,7 +484,11 @@ def build(with_changes: bool = True) -> dict[str, Any]:
         ),
         "source": index["source"],
         "audited_categories": list(AUDITED_CATEGORIES),
-        "records": {"spell_lists": list_records, "spells": spell_records},
+        "records": {
+            "monsters": monster_entries(index, divergences, with_changes),
+            "spell_lists": list_records,
+            "spells": spell_records,
+        },
     }
 
 

@@ -101,8 +101,8 @@
           "range": {
             "override": false,
             "special": "",
-            "units": "self",
-            "value": null
+            "units": "ft",
+            "value": "10"
           },
           "sort": 0,
           "target": {
@@ -236,8 +236,8 @@
           "range": {
             "override": false,
             "special": "",
-            "units": "self",
-            "value": null
+            "units": "ft",
+            "value": "5"
           },
           "sort": 0,
           "target": {
@@ -387,7 +387,7 @@
             "override": false,
             "special": "",
             "units": "ft",
-            "value": ""
+            "value": "5"
           },
           "sort": 0,
           "target": {
@@ -432,7 +432,7 @@
       "legendary_cost": null,
       "mechanic": null,
       "name": "Gore",
-      "recharge": "6",
+      "recharge": "5-6",
       "slug": "gore",
       "uses_per_day": null
     }

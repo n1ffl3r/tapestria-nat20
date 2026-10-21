@@ -484,7 +484,7 @@
         }
       ],
       "description": "Constitution Saving Throw: Your spell save DC, one creature the insect can see within 10 feet. Failure: The target has the &amp;Reference[Poisoned apply=false] condition until the start of the insect's next turn.",
-      "kind": "action",
+      "kind": "bonus_action",
       "legendary_cost": null,
       "mechanic": null,
       "name": "Venomous Spew",

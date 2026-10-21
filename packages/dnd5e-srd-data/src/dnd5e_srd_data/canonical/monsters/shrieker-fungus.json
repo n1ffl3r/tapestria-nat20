@@ -105,7 +105,12 @@
     }
   ],
   "alignment": "Unaligned",
-  "condition_immunities": [],
+  "condition_immunities": [
+    "blinded",
+    "charmed",
+    "deafened",
+    "frightened"
+  ],
   "cr": 0.0,
   "creature_size": "medium",
   "creature_type": "plant",

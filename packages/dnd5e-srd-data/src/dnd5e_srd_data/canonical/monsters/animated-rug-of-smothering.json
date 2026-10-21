@@ -94,8 +94,8 @@
           "range": {
             "override": false,
             "special": "",
-            "units": "self",
-            "value": null
+            "units": "ft",
+            "value": "5"
           },
           "sort": 0,
           "target": {
@@ -170,7 +170,9 @@
                   "mode": "",
                   "number": 1
                 },
-                "types": []
+                "types": [
+                  "bludgeoning"
+                ]
               }
             ]
           },

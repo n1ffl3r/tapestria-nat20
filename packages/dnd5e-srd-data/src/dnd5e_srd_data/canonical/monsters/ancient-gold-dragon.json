@@ -195,8 +195,8 @@
           "range": {
             "override": false,
             "special": "",
-            "units": "self",
-            "value": null
+            "units": "ft",
+            "value": "15"
           },
           "sort": 0,
           "target": {
@@ -1429,7 +1429,7 @@
       "uses_per_day": null
     }
   ],
-  "legendary_resistance_uses": 3,
+  "legendary_resistance_uses": 4,
   "movement": {
     "burrow": null,
     "climb": null,
@@ -1457,10 +1457,10 @@
   "saving_throws": {
     "cha": null,
     "con": null,
-    "dex": null,
+    "dex": 9,
     "int": null,
     "str": null,
-    "wis": null
+    "wis": 10
   },
   "senses": {
     "blindsight": 60,

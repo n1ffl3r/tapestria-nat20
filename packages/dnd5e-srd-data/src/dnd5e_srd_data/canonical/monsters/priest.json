@@ -320,8 +320,8 @@
           "range": {
             "override": false,
             "special": "",
-            "units": "self",
-            "value": null
+            "units": "ft",
+            "value": "60"
           },
           "sort": 0,
           "target": {

@@ -85,7 +85,7 @@
             "override": false,
             "special": "",
             "units": "ft",
-            "value": "20"
+            "value": "5"
           },
           "sort": 0,
           "target": {
@@ -303,8 +303,8 @@
           "range": {
             "override": false,
             "special": "",
-            "units": "self",
-            "value": null
+            "units": "ft",
+            "value": "5"
           },
           "sort": 0,
           "target": {
@@ -402,7 +402,7 @@
             ],
             "dc": {
               "calculation": "",
-              "formula": "8 + @mod + @prof"
+              "formula": "14"
             },
             "ignore_cover": false
           },
@@ -641,8 +641,8 @@
           "range": {
             "override": false,
             "special": "",
-            "units": "self",
-            "value": null
+            "units": "ft",
+            "value": "5"
           },
           "sort": 0,
           "target": {
@@ -807,7 +807,7 @@
   "legendary_resistance_uses": null,
   "movement": {
     "burrow": null,
-    "climb": null,
+    "climb": 30,
     "fly": null,
     "hover": false,
     "swim": null,

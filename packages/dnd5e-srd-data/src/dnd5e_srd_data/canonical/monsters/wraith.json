@@ -47,7 +47,7 @@
             "include_base": true,
             "parts": [
               {
-                "bonus": "@abilities.dex.mod",
+                "bonus": "",
                 "custom": {
                   "enabled": false,
                   "formula": ""

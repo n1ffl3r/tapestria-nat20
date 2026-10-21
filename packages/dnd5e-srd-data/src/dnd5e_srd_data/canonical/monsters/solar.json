@@ -332,8 +332,8 @@
           "range": {
             "override": false,
             "special": "",
-            "units": "self",
-            "value": null
+            "units": "ft",
+            "value": "10"
           },
           "sort": 0,
           "target": {
@@ -1196,7 +1196,7 @@
         }
       ],
       "description": "The [[lookup @name lowercase]]{monster} casts Cure Wounds (level 2 version), Lesser Restoration, or Remove Curse, using the same spellcasting ability as Spellcasting.",
-      "kind": "action",
+      "kind": "bonus_action",
       "legendary_cost": null,
       "mechanic": null,
       "name": "Divine Aid",
