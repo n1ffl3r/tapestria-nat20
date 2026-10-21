@@ -300,7 +300,7 @@
   "level": 6,
   "materials": {
     "consumed": false,
-    "cost": 0,
+    "cost": 500,
     "supply": 0,
     "value": "a gem, crystal, or reliquary worth 500+ GP"
   },

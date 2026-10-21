@@ -350,7 +350,7 @@
   "level": 9,
   "materials": {
     "consumed": false,
-    "cost": 0,
+    "cost": 5000,
     "supply": 0,
     "value": "a diamond worth 5,000+ GP"
   },

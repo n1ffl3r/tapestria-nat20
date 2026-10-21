@@ -123,7 +123,7 @@
   "level": 3,
   "materials": {
     "consumed": true,
-    "cost": 0,
+    "cost": 300,
     "supply": 0,
     "value": "a diamond worth 300+ GP, which the spell consumes"
   },

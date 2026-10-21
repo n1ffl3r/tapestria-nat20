@@ -1,4 +1,4 @@
-.PHONY: install test check check-provenance check-regen-clean refresh-upstream regen srd-index
+.PHONY: install test check check-provenance check-regen-clean refresh-upstream regen srd-index srd-ledger
 
 install:
 	uv pip install -e ".[dev]"
@@ -21,6 +21,7 @@ check:
 check-provenance:
 	uv run python tools/audit/check_foundry_pin.py
 	$(MAKE) check-regen-clean
+	$(MAKE) srd-ledger CHECK=1
 
 # Regen-clean gate: translator output MUST be deterministic.
 # Re-runs regen + asserts canonical/ is clean, but skips when the inputs
@@ -44,3 +45,9 @@ regen:
 # every alias in srd/aliases.json against it. Run before `make regen` after changing either.
 srd-index:
 	uv run python tools/srd_index.py
+
+# Maintainer-only: rebuild audit/srd_5_2_1_ledger.json, the per-record SRD 5.2.1 rules-text
+# audit, from the pinned PDF and canonical/ (and raw_sources/foundry, to tell corrected
+# records from verified ones). Run after `make regen`; CHECK=1 fails if it is stale.
+srd-ledger:
+	PYTHONPATH=. uv run python -m tools.srd_audit.ledger $(if $(CHECK),--check)

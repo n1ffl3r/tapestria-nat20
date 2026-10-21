@@ -135,7 +135,7 @@
   "level": 7,
   "materials": {
     "consumed": false,
-    "cost": 0,
+    "cost": 250,
     "supply": 0,
     "value": "a miniature sword worth 250+ GP"
   },

@@ -104,7 +104,7 @@
   "level": 9,
   "materials": {
     "consumed": true,
-    "cost": 0,
+    "cost": 25000,
     "supply": 0,
     "value": "diamonds worth 25,000+ GP, which the spell consumes"
   },

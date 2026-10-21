@@ -1,0 +1,509 @@
+{
+  "class_name": "Druid",
+  "entry_kind": "spell_list",
+  "slug": "druid",
+  "source": {
+    "document": "SRD 5.2.1",
+    "license_tag": "CC-BY-4.0",
+    "path": "srd/SRD_CC_v5.2.1.pdf",
+    "sha256": "8974902d109d6e63672d7c490bde9ccf052410503d9cfa768237154fbc5e3d87"
+  },
+  "spells": [
+    {
+      "level": 0,
+      "slug": "druidcraft"
+    },
+    {
+      "level": 0,
+      "slug": "elementalism"
+    },
+    {
+      "level": 0,
+      "slug": "guidance"
+    },
+    {
+      "level": 0,
+      "slug": "mending"
+    },
+    {
+      "level": 0,
+      "slug": "message"
+    },
+    {
+      "level": 0,
+      "slug": "poison-spray"
+    },
+    {
+      "level": 0,
+      "slug": "produce-flame"
+    },
+    {
+      "level": 0,
+      "slug": "resistance"
+    },
+    {
+      "level": 0,
+      "slug": "shillelagh"
+    },
+    {
+      "level": 0,
+      "slug": "spare-the-dying"
+    },
+    {
+      "level": 0,
+      "slug": "starry-wisp"
+    },
+    {
+      "level": 1,
+      "slug": "animal-friendship"
+    },
+    {
+      "level": 1,
+      "slug": "charm-person"
+    },
+    {
+      "level": 1,
+      "slug": "create-or-destroy-water"
+    },
+    {
+      "level": 1,
+      "slug": "cure-wounds"
+    },
+    {
+      "level": 1,
+      "slug": "detect-magic"
+    },
+    {
+      "level": 1,
+      "slug": "detect-poison-and-disease"
+    },
+    {
+      "level": 1,
+      "slug": "entangle"
+    },
+    {
+      "level": 1,
+      "slug": "faerie-fire"
+    },
+    {
+      "level": 1,
+      "slug": "fog-cloud"
+    },
+    {
+      "level": 1,
+      "slug": "goodberry"
+    },
+    {
+      "level": 1,
+      "slug": "healing-word"
+    },
+    {
+      "level": 1,
+      "slug": "ice-knife"
+    },
+    {
+      "level": 1,
+      "slug": "jump"
+    },
+    {
+      "level": 1,
+      "slug": "longstrider"
+    },
+    {
+      "level": 1,
+      "slug": "protection-from-evil-and-good"
+    },
+    {
+      "level": 1,
+      "slug": "purify-food-and-drink"
+    },
+    {
+      "level": 1,
+      "slug": "speak-with-animals"
+    },
+    {
+      "level": 1,
+      "slug": "thunderwave"
+    },
+    {
+      "level": 2,
+      "slug": "aid"
+    },
+    {
+      "level": 2,
+      "slug": "animal-messenger"
+    },
+    {
+      "level": 2,
+      "slug": "augury"
+    },
+    {
+      "level": 2,
+      "slug": "barkskin"
+    },
+    {
+      "level": 2,
+      "slug": "continual-flame"
+    },
+    {
+      "level": 2,
+      "slug": "darkvision"
+    },
+    {
+      "level": 2,
+      "slug": "enhance-ability"
+    },
+    {
+      "level": 2,
+      "slug": "enlarge-reduce"
+    },
+    {
+      "level": 2,
+      "slug": "find-traps"
+    },
+    {
+      "level": 2,
+      "slug": "flame-blade"
+    },
+    {
+      "level": 2,
+      "slug": "flaming-sphere"
+    },
+    {
+      "level": 2,
+      "slug": "gust-of-wind"
+    },
+    {
+      "level": 2,
+      "slug": "heat-metal"
+    },
+    {
+      "level": 2,
+      "slug": "hold-person"
+    },
+    {
+      "level": 2,
+      "slug": "lesser-restoration"
+    },
+    {
+      "level": 2,
+      "slug": "locate-animals-or-plants"
+    },
+    {
+      "level": 2,
+      "slug": "locate-object"
+    },
+    {
+      "level": 2,
+      "slug": "moonbeam"
+    },
+    {
+      "level": 2,
+      "slug": "pass-without-trace"
+    },
+    {
+      "level": 2,
+      "slug": "protection-from-poison"
+    },
+    {
+      "level": 2,
+      "slug": "spike-growth"
+    },
+    {
+      "level": 3,
+      "slug": "call-lightning"
+    },
+    {
+      "level": 3,
+      "slug": "conjure-animals"
+    },
+    {
+      "level": 3,
+      "slug": "daylight"
+    },
+    {
+      "level": 3,
+      "slug": "dispel-magic"
+    },
+    {
+      "level": 3,
+      "slug": "meld-into-stone"
+    },
+    {
+      "level": 3,
+      "slug": "plant-growth"
+    },
+    {
+      "level": 3,
+      "slug": "protection-from-energy"
+    },
+    {
+      "level": 3,
+      "slug": "revivify"
+    },
+    {
+      "level": 3,
+      "slug": "sleet-storm"
+    },
+    {
+      "level": 3,
+      "slug": "speak-with-plants"
+    },
+    {
+      "level": 3,
+      "slug": "water-breathing"
+    },
+    {
+      "level": 3,
+      "slug": "water-walk"
+    },
+    {
+      "level": 3,
+      "slug": "wind-wall"
+    },
+    {
+      "level": 4,
+      "slug": "blight"
+    },
+    {
+      "level": 4,
+      "slug": "charm-monster"
+    },
+    {
+      "level": 4,
+      "slug": "confusion"
+    },
+    {
+      "level": 4,
+      "slug": "conjure-minor-elementals"
+    },
+    {
+      "level": 4,
+      "slug": "conjure-woodland-beings"
+    },
+    {
+      "level": 4,
+      "slug": "control-water"
+    },
+    {
+      "level": 4,
+      "slug": "divination"
+    },
+    {
+      "level": 4,
+      "slug": "dominate-beast"
+    },
+    {
+      "level": 4,
+      "slug": "fire-shield"
+    },
+    {
+      "level": 4,
+      "slug": "freedom-of-movement"
+    },
+    {
+      "level": 4,
+      "slug": "giant-insect"
+    },
+    {
+      "level": 4,
+      "slug": "hallucinatory-terrain"
+    },
+    {
+      "level": 4,
+      "slug": "ice-storm"
+    },
+    {
+      "level": 4,
+      "slug": "locate-creature"
+    },
+    {
+      "level": 4,
+      "slug": "polymorph"
+    },
+    {
+      "level": 4,
+      "slug": "stone-shape"
+    },
+    {
+      "level": 4,
+      "slug": "stoneskin"
+    },
+    {
+      "level": 4,
+      "slug": "wall-of-fire"
+    },
+    {
+      "level": 5,
+      "slug": "antilife-shell"
+    },
+    {
+      "level": 5,
+      "slug": "awaken"
+    },
+    {
+      "level": 5,
+      "slug": "commune-with-nature"
+    },
+    {
+      "level": 5,
+      "slug": "cone-of-cold"
+    },
+    {
+      "level": 5,
+      "slug": "conjure-elemental"
+    },
+    {
+      "level": 5,
+      "slug": "contagion"
+    },
+    {
+      "level": 5,
+      "slug": "geas"
+    },
+    {
+      "level": 5,
+      "slug": "greater-restoration"
+    },
+    {
+      "level": 5,
+      "slug": "insect-plague"
+    },
+    {
+      "level": 5,
+      "slug": "mass-cure-wounds"
+    },
+    {
+      "level": 5,
+      "slug": "planar-binding"
+    },
+    {
+      "level": 5,
+      "slug": "reincarnate"
+    },
+    {
+      "level": 5,
+      "slug": "scrying"
+    },
+    {
+      "level": 5,
+      "slug": "tree-stride"
+    },
+    {
+      "level": 5,
+      "slug": "wall-of-stone"
+    },
+    {
+      "level": 6,
+      "slug": "conjure-fey"
+    },
+    {
+      "level": 6,
+      "slug": "find-the-path"
+    },
+    {
+      "level": 6,
+      "slug": "flesh-to-stone"
+    },
+    {
+      "level": 6,
+      "slug": "heal"
+    },
+    {
+      "level": 6,
+      "slug": "heroes-feast"
+    },
+    {
+      "level": 6,
+      "slug": "move-earth"
+    },
+    {
+      "level": 6,
+      "slug": "sunbeam"
+    },
+    {
+      "level": 6,
+      "slug": "transport-via-plants"
+    },
+    {
+      "level": 6,
+      "slug": "wall-of-thorns"
+    },
+    {
+      "level": 6,
+      "slug": "wind-walk"
+    },
+    {
+      "level": 7,
+      "slug": "fire-storm"
+    },
+    {
+      "level": 7,
+      "slug": "mirage-arcane"
+    },
+    {
+      "level": 7,
+      "slug": "plane-shift"
+    },
+    {
+      "level": 7,
+      "slug": "regenerate"
+    },
+    {
+      "level": 7,
+      "slug": "reverse-gravity"
+    },
+    {
+      "level": 7,
+      "slug": "symbol"
+    },
+    {
+      "level": 8,
+      "slug": "animal-shapes"
+    },
+    {
+      "level": 8,
+      "slug": "antipathy-sympathy"
+    },
+    {
+      "level": 8,
+      "slug": "befuddlement"
+    },
+    {
+      "level": 8,
+      "slug": "control-weather"
+    },
+    {
+      "level": 8,
+      "slug": "earthquake"
+    },
+    {
+      "level": 8,
+      "slug": "incendiary-cloud"
+    },
+    {
+      "level": 8,
+      "slug": "sunburst"
+    },
+    {
+      "level": 8,
+      "slug": "tsunami"
+    },
+    {
+      "level": 9,
+      "slug": "foresight"
+    },
+    {
+      "level": 9,
+      "slug": "shapechange"
+    },
+    {
+      "level": 9,
+      "slug": "storm-of-vengeance"
+    },
+    {
+      "level": 9,
+      "slug": "true-resurrection"
+    }
+  ]
+}

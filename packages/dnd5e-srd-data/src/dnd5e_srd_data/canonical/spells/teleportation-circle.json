@@ -103,7 +103,7 @@
   "level": 5,
   "materials": {
     "consumed": true,
-    "cost": 0,
+    "cost": 50,
     "supply": 0,
     "value": "rare inks worth 50+ GP, which the spell consumes"
   },

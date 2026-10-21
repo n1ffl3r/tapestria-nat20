@@ -104,7 +104,7 @@
   "level": 6,
   "materials": {
     "consumed": false,
-    "cost": 0,
+    "cost": 100,
     "supply": 0,
     "value": "a set of divination tools\u2014such as cards or runes\u2014worth 100+ GP"
   },

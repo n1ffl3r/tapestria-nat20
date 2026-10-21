@@ -104,7 +104,7 @@
   "level": 6,
   "materials": {
     "consumed": false,
-    "cost": 0,
+    "cost": 10,
     "supply": 0,
     "value": "a silver rod worth 10+ GP"
   },

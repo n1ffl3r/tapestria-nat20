@@ -104,7 +104,7 @@
   "level": 5,
   "materials": {
     "consumed": true,
-    "cost": 0,
+    "cost": 100,
     "supply": 0,
     "value": "diamond dust worth 100+ GP, which the spell consumes"
   },

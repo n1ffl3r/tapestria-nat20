@@ -20,6 +20,7 @@ from dnd5e_srd_data.schema.item import Armor, Item, MagicItem, Weapon
 from dnd5e_srd_data.schema.monster import Monster, MonsterTrait
 from dnd5e_srd_data.schema.species import Species
 from dnd5e_srd_data.schema.spell import Spell
+from dnd5e_srd_data.schema.spell_list import SpellList
 
 Category = Literal[
     "items",
@@ -33,6 +34,7 @@ Category = Literal[
     "features",
     "conditions",
     "traits",
+    "spell_lists",
 ]
 
 _CATEGORIES: tuple[str, ...] = (
@@ -47,6 +49,7 @@ _CATEGORIES: tuple[str, ...] = (
     "features",
     "conditions",
     "traits",
+    "spell_lists",
 )
 
 
@@ -88,6 +91,7 @@ class MemoryAssetLoader:
         features: Sequence[Feature] = (),
         conditions: Sequence[Condition] = (),
         traits: Sequence[MonsterTrait] = (),
+        spell_lists: Sequence[SpellList] = (),
     ) -> None:
         self._items: dict[str, Item | Weapon | Armor | MagicItem] = {i.slug: i for i in items}
         self._monsters: dict[str, Monster] = {m.slug: m for m in monsters}
@@ -100,6 +104,7 @@ class MemoryAssetLoader:
         self._features: dict[str, Feature] = {ft.slug: ft for ft in features}
         self._conditions: dict[str, Condition] = {c.slug: c for c in conditions}
         self._traits: dict[str, MonsterTrait] = {t.slug: t for t in traits}
+        self._spell_lists: dict[str, SpellList] = {sl.slug: sl for sl in spell_lists}
 
     def get_item(self, slug: str) -> Item | Weapon | Armor | MagicItem | None:
         return self._items.get(slug)
@@ -154,6 +159,9 @@ class MemoryAssetLoader:
     def get_trait(self, slug: str) -> MonsterTrait | None:
         return self._traits.get(slug)
 
+    def get_spell_list(self, class_slug: str) -> SpellList | None:
+        return self._spell_lists.get(class_slug)
+
     def list_slugs(self, category: Category) -> list[str]:
         by_category: dict[str, Mapping[str, object]] = {
             "items": self._items,
@@ -167,6 +175,7 @@ class MemoryAssetLoader:
             "features": self._features,
             "conditions": self._conditions,
             "traits": self._traits,
+            "spell_lists": self._spell_lists,
         }
         return sorted(by_category.get(category, {}))
 
@@ -304,6 +313,14 @@ class BundledAssetLoader:
         if raw is None:
             return None
         return MonsterTrait.model_validate(raw)
+
+    def get_spell_list(self, class_slug: str) -> SpellList | None:
+        """The class's spell list (SRD 5.2.1), or ``None`` for a class without one
+        (Barbarian, Fighter, Monk, Rogue) or an unknown slug."""
+        raw = self._load_json("spell_lists", class_slug)
+        if raw is None:
+            return None
+        return SpellList.model_validate(raw)
 
     def list_slugs(self, category: Category) -> list[str]:
         d = self._category_dir(category)

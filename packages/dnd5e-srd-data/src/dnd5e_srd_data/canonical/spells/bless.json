@@ -114,7 +114,7 @@
   "level": 1,
   "materials": {
     "consumed": false,
-    "cost": 0,
+    "cost": 5,
     "supply": 0,
     "value": "a Holy Symbol worth 5+ GP"
   },

@@ -114,7 +114,7 @@
   "level": 1,
   "materials": {
     "consumed": true,
-    "cost": 0,
+    "cost": 25,
     "supply": 0,
     "value": "a flask of Holy Water worth 25+ GP, which the spell consumes"
   },

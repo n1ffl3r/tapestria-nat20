@@ -171,10 +171,10 @@
           "contiguous": false,
           "count": "",
           "height": "",
-          "size": "",
+          "size": "20",
           "stationary": false,
-          "type": "",
-          "units": "",
+          "type": "sphere",
+          "units": "ft",
           "width": ""
         }
       },
@@ -216,7 +216,7 @@
   "level": 3,
   "materials": {
     "consumed": true,
-    "cost": 0,
+    "cost": 200,
     "supply": 0,
     "value": "powdered diamond worth 200+ GP, which the spell consumes"
   },

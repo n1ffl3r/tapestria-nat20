@@ -216,7 +216,7 @@
   "level": 8,
   "materials": {
     "consumed": false,
-    "cost": 0,
+    "cost": 1000,
     "supply": 0,
     "value": "a reliquary worth 1,000+ GP"
   },

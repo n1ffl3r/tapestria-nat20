@@ -335,7 +335,7 @@
   "level": 6,
   "materials": {
     "consumed": false,
-    "cost": 0,
+    "cost": 150,
     "supply": 0,
     "value": "one 150+ GP black onyx stone for each corpse"
   },

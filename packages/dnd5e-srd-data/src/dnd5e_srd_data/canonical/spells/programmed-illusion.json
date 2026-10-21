@@ -166,7 +166,7 @@
   "level": 6,
   "materials": {
     "consumed": false,
-    "cost": 0,
+    "cost": 25,
     "supply": 0,
     "value": "jade dust worth 25+ GP"
   },

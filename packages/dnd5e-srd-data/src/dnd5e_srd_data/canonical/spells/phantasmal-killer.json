@@ -72,7 +72,9 @@
         "value": null
       },
       "save": {
-        "ability": [],
+        "ability": [
+          "wis"
+        ],
         "dc": {
           "calculation": "spellcasting",
           "formula": ""

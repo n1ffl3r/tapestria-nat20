@@ -104,7 +104,7 @@
   "level": 2,
   "materials": {
     "consumed": false,
-    "cost": 0,
+    "cost": 25,
     "supply": 0,
     "value": "specially marked sticks, bones, cards, or other divinatory tokens worth 25+ GP"
   },
