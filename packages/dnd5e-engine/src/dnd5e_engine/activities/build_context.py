@@ -246,6 +246,7 @@ def build_activity_context(
     weapon_enchantment_to_hit: int = 0,
     stat_block_magnitudes: StatBlockMagnitudes | None = None,
     is_opportunity_attack: bool = False,
+    on_would_hit: Callable[[Combatant, int, int, bool], int] | None = None,
 ) -> ActivityResolutionContext:
     """Adapt the caster + the pre-computed hydration sidecars into the typed
     ``ActivityResolutionContext`` the new resolver consumes.
@@ -586,4 +587,5 @@ def build_activity_context(
         weapon_enchantment_to_hit=weapon_enchantment_to_hit,
         stat_block_magnitudes=stat_block_magnitudes,
         is_opportunity_attack=is_opportunity_attack,
+        on_would_hit=on_would_hit,
     )

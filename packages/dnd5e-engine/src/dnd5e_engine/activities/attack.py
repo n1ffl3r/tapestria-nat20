@@ -233,6 +233,17 @@ def resolve_attack(
             is_crit, is_hit = _resolve_hit_outcome(
                 natural, total, effective_ac, activity, auto_crit_on_hit=auto_crit
             )
+        if is_hit:
+            is_crit, is_hit = _offer_hit_reactions(
+                ctx,
+                target,
+                natural,
+                total,
+                effective_ac,
+                activity,
+                auto_crit=auto_crit,
+                is_crit=is_crit,
+            )
 
         ctx.event_emitter(
             AttackRolled(
@@ -378,6 +389,17 @@ def _resolve_cleave_chain(
     is_crit, is_hit = _resolve_hit_outcome(
         roll.kept, total, effective_ac, activity, auto_crit_on_hit=auto_crit
     )
+    if is_hit:
+        is_crit, is_hit = _offer_hit_reactions(
+            ctx,
+            candidate,
+            roll.kept,
+            total,
+            effective_ac,
+            activity,
+            auto_crit=auto_crit,
+            is_crit=is_crit,
+        )
     ctx.event_emitter(
         AttackRolled(
             attacker_id=ctx.caster.entity_id,
@@ -892,6 +914,35 @@ def _forced_d20(ctx: ActivityResolutionContext, target_index: int) -> int | None
     if forced is not None and target_index == 0:
         return int(forced)
     return None
+
+
+def _offer_hit_reactions(
+    ctx: ActivityResolutionContext,
+    target: Combatant,
+    natural: int,
+    total: int,
+    effective_ac: int,
+    activity: AttackActivity,
+    *,
+    auto_crit: bool,
+    is_crit: bool,
+) -> tuple[bool, bool]:
+    """An attack roll that would hit ``target`` offers its reactions, then is
+    compared again against whatever AC they added: SRD 5.2.1 Shield, "Casting
+    Time: Reaction, which you take when you are hit by an attack roll", "+5
+    bonus to AC, including against the triggering attack". Returns the final
+    ``(is_crit, is_hit)``. The gained AC also counts for this context's later
+    rolls against the target, since Shield lasts "Until the start of your next
+    turn"."""
+    if ctx.on_would_hit is None:
+        return is_crit, True
+    gained = ctx.on_would_hit(target, natural, total, is_crit)
+    if not gained:
+        return is_crit, True
+    ctx.passive_ac_bonus[target.entity_id] = ctx.passive_ac_bonus.get(target.entity_id, 0) + gained
+    return _resolve_hit_outcome(
+        natural, total, effective_ac + gained, activity, auto_crit_on_hit=auto_crit
+    )
 
 
 def _resolve_hit_outcome(

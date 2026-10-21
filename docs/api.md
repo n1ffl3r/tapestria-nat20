@@ -41,6 +41,21 @@ For what the engine actually resolves behind these signatures, see the
         - close_combat
         - load_combat
         - combat_state_of
+        - CombatSuspension
+        - Continuation
+        - resume
+        - state_digest
+
+## Reactions
+
+::: dnd5e_engine.reactions
+    options:
+      members_order: source
+      members:
+        - ReactionPrompt
+        - ReactionPolicy
+        - default_reaction_policy
+        - ReactionChoice
 
 ## Results and outcome
 

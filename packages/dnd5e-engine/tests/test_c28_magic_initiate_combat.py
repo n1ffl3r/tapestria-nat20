@@ -97,8 +97,11 @@ def test_a_tally_the_host_carries_in_is_honoured() -> None:
 
 
 def test_a_readied_shield_fires_through_its_slotless_cast() -> None:
-    # A Fighter with Magic Initiate (Wizard)'s Shield and no spell slots.
+    # A Fighter with Magic Initiate (Wizard)'s Shield and no spell slots. AC 1,
+    # so the foe's attack hits: SRD 5.2.1 Shield is taken "when you are hit by
+    # an attack roll" (until spec 02a it fired before the roll, hit or miss).
     hero = {
+        "ac": 1,
         "class_slug": "fighter",
         "spell_abilities": {"shield": "int"},
         "slotless_casts": ("shield",),
