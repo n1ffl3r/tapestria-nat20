@@ -43,6 +43,14 @@ dungeons-and-agents fork, workstream A).
   saves, damage, area, recharge and uses, compared with its stat block in the
   PDF. The corpus side derives a monster attack's numbers the way the engine
   does. 344 monsters: 24 verified, 311 corrected, 9 divergence (#7).
+- **The item audit** (`tools/srd_audit/items.py`): every magic item's category,
+  rarity, attunement and its constraint, and charges, compared with its Magic
+  Items chapter kind line and text; every other item's cost and weight, and a
+  weapon's or armor's table columns, compared with its Equipment chapter row or
+  heading or its sample poison heading. A variant is compared on its parent's
+  kind line; a field the SRD does not state is listed as not compared, and so
+  is a magic item's price and weight. 546 items: 493 verified, 37 corrected, 16
+  divergence (#10: eight traps and eight Foundry helper records).
 
 ### Changed
 
@@ -63,6 +71,18 @@ dungeons-and-agents fork, workstream A).
   no ability); three recharges (Ghost, Minotaur of Baphomet, Succubus); and 19
   traits and actions filed in the wrong section (Aboleth's Eldritch
   Restoration is a trait).
+- **Item corrections against SRD 5.2.1** (`_ITEM_SRD_CORRECTIONS`, 38 entries
+  over 37 items, each quoting its table row, heading, or kind line): ammunition
+  and Iron Spikes weigh their bundle ("Arrows 20 Quiver 1 lb. 1 GP"), where
+  Foundry weighs one piece; the seven packs weigh their contents ("Explorer's
+  Pack 55 lb. 10 GP"); Bagpipes, Chain, Herbalism Kit and Waterskin weights; the
+  Hooded Lantern costs 5 GP; Trident and War Pick are Versatile (1d10); a cost
+  that "Varies" is no price; Dwarven Thrower's attunement constraint loses
+  Foundry's link markup; the Dragon Orb has its 7 charges, which its spells
+  spend; and eleven items the Magic Items chapter prints (two potions, three
+  Spell Scrolls, +1 Ammunition, Bead of Nourishment, Feather Token, Figurine of
+  Wondrous Power, Handy Haversack, Horn of Valhalla) are magic items, the
+  Handy Haversack Rare.
 - **Spell corrections against SRD 5.2.1** (`_SPELL_SRD_CORRECTIONS` in
   `tools/translators/foundry.py`, each quoting its SRD sentence): Raise Dead
   has Touch range; Mirage Arcane's range is Sight (`spec`); Forbiddance is a

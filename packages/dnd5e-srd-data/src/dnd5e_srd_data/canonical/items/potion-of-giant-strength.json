@@ -3,7 +3,7 @@
   "attunement_constraint": null,
   "cost_gp": 0.0,
   "description": "Potion, Rarity Varies\n\nWhen you drink this potion, your Strength score changes for 1 hour. The type of giant determines the score (see the table below). The potion has no effect on you if your Strength is equal to or greater than that score.\n\nThis potion's transparent liquid has floating in it a sliver of light resembling a giant's fingernail.\n\nPotion\n\nStr.\n\nRarity\n\nPotion of Giant Strength (hill)\n\n21\n\nUncommon\n\nPotion of Giant Strength (frost or stone)\n\n23\n\nRare\n\nPotion of Giant Strength (fire)\n\n25\n\nRare\n\nPotion of Giant Strength (cloud)\n\n27\n\nVery Rare\n\nPotion of Giant Strength (storm)\n\n29\n\nLegendary",
-  "item_kind": "item",
+  "item_kind": "magic_item",
   "name": "Potion of Giant Strength",
   "passive_effects": [],
   "provenance": {

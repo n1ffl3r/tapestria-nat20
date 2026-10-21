@@ -96,7 +96,7 @@
   "attunement_constraint": null,
   "cost_gp": 50.0,
   "description": "Wondrous Item, Common\n\nThis flavorless, gelatinous bead dissolves on your tongue and provides as much nourishment as 1 day of Rations.",
-  "item_kind": "item",
+  "item_kind": "magic_item",
   "name": "Bead of Nourishment",
   "passive_effects": [],
   "provenance": {

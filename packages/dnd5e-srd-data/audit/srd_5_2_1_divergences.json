@@ -216,5 +216,135 @@
    "issue": "https://github.com/n1ffl3r/tapestria-nat20/issues/7",
    "reason": "The SRD gives 'Vulnerabilities Piercing damage from weapons wielded by creatures under the effect of a Bless spell'. The corpus records no vulnerability, and has no field for a conditional one."
   }
+ },
+ "items": {
+  "boat-utility": {
+   "fields": [
+    "srd_entry"
+   ],
+   "issue": "https://github.com/n1ffl3r/tapestria-nat20/issues/10",
+   "reason": "Foundry's activation record for the Folding Boat's command words; the SRD has no item of that name.",
+   "srd_page": 223
+  },
+  "clawed-gauntlet": {
+   "fields": [
+    "srd_entry"
+   ],
+   "issue": "https://github.com/n1ffl3r/tapestria-nat20/issues/10",
+   "reason": "Foundry's attack record for Demon Armor's clawed gauntlets; the SRD has no item of that name.",
+   "srd_page": 218
+  },
+  "collapsing-roof": {
+   "fields": [
+    "srd_entry"
+   ],
+   "issue": "https://github.com/n1ffl3r/tapestria-nat20/issues/10",
+   "reason": "The SRD prints Collapsing Roof as a trap in the Gameplay Toolbox, with a trigger and a duration, not as an item. Foundry files it as an item with no cost and no weight.",
+   "srd_page": 199
+  },
+  "falling-net": {
+   "fields": [
+    "srd_entry"
+   ],
+   "issue": "https://github.com/n1ffl3r/tapestria-nat20/issues/10",
+   "reason": "The SRD prints Falling Net as a trap in the Gameplay Toolbox, with a trigger and a duration, not as an item. Foundry files it as an item with no cost and no weight.",
+   "srd_page": 199
+  },
+  "fire-casting-statue": {
+   "fields": [
+    "srd_entry"
+   ],
+   "issue": "https://github.com/n1ffl3r/tapestria-nat20/issues/10",
+   "reason": "The SRD prints Fire-Casting Statue as a trap in the Gameplay Toolbox, with a trigger and a duration, not as an item. Foundry files it as an item with no cost and no weight.",
+   "srd_page": 199
+  },
+  "hidden-pit": {
+   "fields": [
+    "srd_entry"
+   ],
+   "issue": "https://github.com/n1ffl3r/tapestria-nat20/issues/10",
+   "reason": "The SRD prints Hidden Pit as a trap in the Gameplay Toolbox, with a trigger and a duration, not as an item. Foundry files it as an item with no cost and no weight.",
+   "srd_page": 200
+  },
+  "poisoned-darts": {
+   "fields": [
+    "srd_entry"
+   ],
+   "issue": "https://github.com/n1ffl3r/tapestria-nat20/issues/10",
+   "reason": "The SRD prints Poisoned Darts as a trap in the Gameplay Toolbox, with a trigger and a duration, not as an item. Foundry files it as an item with no cost and no weight.",
+   "srd_page": 200
+  },
+  "poisoned-needle": {
+   "fields": [
+    "srd_entry"
+   ],
+   "issue": "https://github.com/n1ffl3r/tapestria-nat20/issues/10",
+   "reason": "The SRD prints Poisoned Needle as a trap in the Gameplay Toolbox, with a trigger and a duration, not as an item. Foundry files it as an item with no cost and no weight.",
+   "srd_page": 200
+  },
+  "rolling-stone": {
+   "fields": [
+    "srd_entry"
+   ],
+   "issue": "https://github.com/n1ffl3r/tapestria-nat20/issues/10",
+   "reason": "The SRD prints Rolling Stone as a trap in the Gameplay Toolbox, with a trigger and a duration, not as an item. Foundry files it as an item with no cost and no weight.",
+   "srd_page": 201
+  },
+  "spiked-pit": {
+   "fields": [
+    "srd_entry"
+   ],
+   "issue": "https://github.com/n1ffl3r/tapestria-nat20/issues/10",
+   "reason": "The SRD prints Spiked Pit as a trap in the Gameplay Toolbox, with a trigger and a duration, not as an item. Foundry files it as an item with no cost and no weight.",
+   "srd_page": 201
+  },
+  "sup-basic-scroll": {
+   "fields": [
+    "srd_entry"
+   ],
+   "issue": "https://github.com/n1ffl3r/tapestria-nat20/issues/10",
+   "reason": "Foundry's base scroll record for Spell Scrolls; the SRD has no plain Scroll item.",
+   "srd_page": 244
+  },
+  "sup-ring-of-resistance": {
+   "fields": [
+    "srd_entry"
+   ],
+   "issue": "https://github.com/n1ffl3r/tapestria-nat20/issues/10",
+   "reason": "Foundry's base ring record for the Ring of Resistance variants; the SRD has no plain Ring item.",
+   "srd_page": 238
+  },
+  "unarmed-strike": {
+   "fields": [
+    "srd_entry"
+   ],
+   "issue": "https://github.com/n1ffl3r/tapestria-nat20/issues/10",
+   "reason": "Foundry's attack record for the Rules Glossary's Unarmed Strike, which is an attack, not an item.",
+   "srd_page": 190
+  },
+  "water-fresh-pint": {
+   "fields": [
+    "srd_entry"
+   ],
+   "issue": "https://github.com/n1ffl3r/tapestria-nat20/issues/10",
+   "reason": "Foundry's output record for the Decanter of Endless Water; the SRD has no item of that name.",
+   "srd_page": 217
+  },
+  "water-pint": {
+   "fields": [
+    "srd_entry"
+   ],
+   "issue": "https://github.com/n1ffl3r/tapestria-nat20/issues/10",
+   "reason": "Foundry's contents record for the Waterskin; the SRD has no item of that name.",
+   "srd_page": 100
+  },
+  "water-salt-pint": {
+   "fields": [
+    "srd_entry"
+   ],
+   "issue": "https://github.com/n1ffl3r/tapestria-nat20/issues/10",
+   "reason": "Foundry's output record for the Decanter of Endless Water; the SRD has no item of that name.",
+   "srd_page": 217
+  }
  }
 }

@@ -16,8 +16,8 @@ from typing import Any
 
 import pytest
 
+from tools.srd_audit import items, spells, stat_blocks
 from tools.srd_audit import ledger as ledger_tool
-from tools.srd_audit import spells, stat_blocks
 
 ROOT = Path(__file__).resolve().parents[1]
 LEDGER = json.loads((ROOT / "audit" / "srd_5_2_1_ledger.json").read_text(encoding="utf-8"))
@@ -26,7 +26,7 @@ DIVERGENCES = json.loads(
 )
 INDEX = json.loads((ROOT / "srd" / "index.json").read_text(encoding="utf-8"))
 CANONICAL = ROOT / "src" / "dnd5e_srd_data" / "canonical"
-CATEGORIES = ("monsters", "spell_lists", "spells")
+CATEGORIES = ("items", "monsters", "spell_lists", "spells")
 ISSUE = re.compile(r"^https://github\.com/n1ffl3r/[\w.-]+/issues/\d+$")
 ENTRY_KEYS = {
     "name",
@@ -85,8 +85,9 @@ def test_entry_schema(category: str) -> None:
         assert {"name", "srd_page", "status", "compared"} <= set(entry), slug
         assert isinstance(entry["srd_page"], int) and entry["srd_page"] > 0, slug
         assert entry["status"] in ledger_tool.STATUSES, slug
-        # A helper with no stat block compares nothing and is a divergence.
-        assert entry["compared"] or "stat_block" in entry.get("differences", {}), slug
+        # A record with no SRD stat block or item compares nothing and is a divergence.
+        differences = entry.get("differences", {})
+        assert entry["compared"] or {"stat_block", "srd_entry"} & set(differences), slug
         assert ("changes" in entry) == (entry["status"] == "corrected") or (
             entry["status"] == "divergence"
         ), slug
@@ -147,8 +148,50 @@ def test_the_corpus_holds_what_the_ledger_compared_for_monsters() -> None:
             assert change["to"] == corpus.get(change["field"]), (slug, change["field"])
 
 
+def _item_parents() -> dict[str, str]:
+    aliases = json.loads((ROOT / "srd" / "aliases.json").read_text(encoding="utf-8"))
+    return {
+        a["name"]: a["of"]
+        for a in aliases["aliases"]
+        if a["corpus_category"] == "items" and a["kind"] == "variant"
+    }
+
+
+MAGIC_ITEM_PAGES = {s["name"]: s["page"] for s in INDEX["categories"]["magic_items"]}
+
+
+def test_the_corpus_holds_what_the_ledger_compared_for_items() -> None:
+    """As for spells: each item holds the SRD values the ledger compared it against, and a
+    correction's ``to`` is the corpus value. A divergence has no SRD item to compare."""
+    records = _records("items")
+    parents = _item_parents()
+    for slug, entry in LEDGER["records"]["items"].items():
+        if entry["status"] == "divergence":
+            assert entry["compared"] == {}, slug
+            continue
+        magic = parents.get(entry["name"], entry["name"]) in MAGIC_ITEM_PAGES
+        corpus = items.corpus_facts(records[slug], magic)
+        for field, srd_value in entry["compared"].items():
+            assert corpus.get(field) == srd_value, (slug, field)
+        for change in entry.get("changes", []):
+            assert change["to"] == corpus.get(change["field"]), (slug, change["field"])
+
+
+def test_item_entries_carry_their_srd_page() -> None:
+    """A magic item's page is its entry's in the index, or for a variant its parent's; a
+    record with no SRD item records a page in the divergences file."""
+    parents = _item_parents()
+    for slug, entry in LEDGER["records"]["items"].items():
+        parent = parents.get(entry["name"], entry["name"])
+        if entry["status"] == "divergence":
+            assert entry["srd_page"] == DIVERGENCES["items"][slug]["srd_page"], slug
+        elif parent in MAGIC_ITEM_PAGES:
+            assert entry["srd_page"] == MAGIC_ITEM_PAGES[parent], slug
+
+
 def test_status_counts() -> None:
-    """Every spell and spell list is reviewed; the counts change only with the audit."""
+    """Every item, spell, and spell list is reviewed; the counts change only with the
+    audit."""
     counts = {
         category: {
             status: sum(e["status"] == status for e in LEDGER["records"][category].values())
@@ -157,6 +200,8 @@ def test_status_counts() -> None:
         for category in CATEGORIES
     }
     assert sum(counts["spells"].values()) == 339
+    assert counts["items"] == {"verified": 493, "corrected": 37, "divergence": 16}
+    assert counts["items"]["divergence"] == len(DIVERGENCES["items"])
     assert sum(counts["monsters"].values()) == 344
     assert counts["monsters"]["divergence"] == len(DIVERGENCES["monsters"])
     assert counts["spell_lists"] == {"verified": 5, "corrected": 0, "divergence": 3}

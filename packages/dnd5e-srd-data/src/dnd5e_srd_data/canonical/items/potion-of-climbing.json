@@ -108,7 +108,7 @@
   "attunement_constraint": null,
   "cost_gp": 50.0,
   "description": "Potion, Common\n\nWhen you drink this potion, you gain a Climb Speed equal to your Speed for 1 hour. During this time, you have Advantage on Strength (Athletics) checks to climb.\n\nThis potion is separated into brown, silver, and gray layers resembling bands of stone. Shaking the bottle fails to mix the colors.\n\nFoundry Note\n\nThe Climber Active Effect can be used for tracking but can not automate the effects.",
-  "item_kind": "item",
+  "item_kind": "magic_item",
   "name": "Potion of Climbing",
   "passive_effects": [
     {
