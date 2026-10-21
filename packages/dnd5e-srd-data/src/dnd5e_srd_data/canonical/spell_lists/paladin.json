@@ -1,0 +1,165 @@
+{
+  "class_name": "Paladin",
+  "entry_kind": "spell_list",
+  "slug": "paladin",
+  "source": {
+    "document": "SRD 5.2.1",
+    "license_tag": "CC-BY-4.0",
+    "path": "srd/SRD_CC_v5.2.1.pdf",
+    "sha256": "8974902d109d6e63672d7c490bde9ccf052410503d9cfa768237154fbc5e3d87"
+  },
+  "spells": [
+    {
+      "level": 1,
+      "slug": "bless"
+    },
+    {
+      "level": 1,
+      "slug": "command"
+    },
+    {
+      "level": 1,
+      "slug": "cure-wounds"
+    },
+    {
+      "level": 1,
+      "slug": "detect-evil-and-good"
+    },
+    {
+      "level": 1,
+      "slug": "detect-magic"
+    },
+    {
+      "level": 1,
+      "slug": "detect-poison-and-disease"
+    },
+    {
+      "level": 1,
+      "slug": "divine-favor"
+    },
+    {
+      "level": 1,
+      "slug": "divine-smite"
+    },
+    {
+      "level": 1,
+      "slug": "heroism"
+    },
+    {
+      "level": 1,
+      "slug": "protection-from-evil-and-good"
+    },
+    {
+      "level": 1,
+      "slug": "purify-food-and-drink"
+    },
+    {
+      "level": 1,
+      "slug": "searing-smite"
+    },
+    {
+      "level": 1,
+      "slug": "shield-of-faith"
+    },
+    {
+      "level": 2,
+      "slug": "aid"
+    },
+    {
+      "level": 2,
+      "slug": "find-steed"
+    },
+    {
+      "level": 2,
+      "slug": "gentle-repose"
+    },
+    {
+      "level": 2,
+      "slug": "lesser-restoration"
+    },
+    {
+      "level": 2,
+      "slug": "locate-object"
+    },
+    {
+      "level": 2,
+      "slug": "magic-weapon"
+    },
+    {
+      "level": 2,
+      "slug": "prayer-of-healing"
+    },
+    {
+      "level": 2,
+      "slug": "protection-from-poison"
+    },
+    {
+      "level": 2,
+      "slug": "shining-smite"
+    },
+    {
+      "level": 2,
+      "slug": "warding-bond"
+    },
+    {
+      "level": 2,
+      "slug": "zone-of-truth"
+    },
+    {
+      "level": 3,
+      "slug": "create-food-and-water"
+    },
+    {
+      "level": 3,
+      "slug": "daylight"
+    },
+    {
+      "level": 3,
+      "slug": "dispel-magic"
+    },
+    {
+      "level": 3,
+      "slug": "magic-circle"
+    },
+    {
+      "level": 3,
+      "slug": "remove-curse"
+    },
+    {
+      "level": 3,
+      "slug": "revivify"
+    },
+    {
+      "level": 4,
+      "slug": "aura-of-life"
+    },
+    {
+      "level": 4,
+      "slug": "banishment"
+    },
+    {
+      "level": 4,
+      "slug": "death-ward"
+    },
+    {
+      "level": 4,
+      "slug": "locate-creature"
+    },
+    {
+      "level": 5,
+      "slug": "dispel-evil-and-good"
+    },
+    {
+      "level": 5,
+      "slug": "geas"
+    },
+    {
+      "level": 5,
+      "slug": "greater-restoration"
+    },
+    {
+      "level": 5,
+      "slug": "raise-dead"
+    }
+  ]
+}

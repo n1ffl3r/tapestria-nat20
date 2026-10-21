@@ -141,7 +141,7 @@
   "level": 1,
   "materials": {
     "consumed": true,
-    "cost": 0,
+    "cost": 10,
     "supply": 0,
     "value": "burning incense worth 10+ GP, which the spell consumes"
   },

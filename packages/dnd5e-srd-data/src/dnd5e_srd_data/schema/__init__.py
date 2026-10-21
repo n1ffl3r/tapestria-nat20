@@ -129,6 +129,7 @@ from dnd5e_srd_data.schema.spell import (
     SpellRangeUnits,
     SpellSchool,
 )
+from dnd5e_srd_data.schema.spell_list import SpellList, SpellListEntry, SpellListSource
 
 __all__ = [
     "AbilityScores",
@@ -227,6 +228,9 @@ __all__ = [
     "SpellComponent",
     "SpellDuration",
     "SpellDurationUnits",
+    "SpellList",
+    "SpellListEntry",
+    "SpellListSource",
     "SpellMaterials",
     "SpellPreparation",
     "SpellRange",

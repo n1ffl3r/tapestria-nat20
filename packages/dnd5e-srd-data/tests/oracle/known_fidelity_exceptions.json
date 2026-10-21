@@ -4,5 +4,14 @@
   ],
   "spare-the-dying": [
     "spell range.value preserved when set"
+  ],
+  "plant-growth": [
+    "spell casting_time (activation type+value) preserved"
+  ],
+  "mirage-arcane": [
+    "spell range.units preserved"
+  ],
+  "raise-dead": [
+    "spell range.units preserved"
   ]
 }

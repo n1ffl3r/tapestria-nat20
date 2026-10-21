@@ -151,7 +151,7 @@
   "range": {
     "special": null,
     "units": "ft",
-    "value": null
+    "value": 15
   },
   "review": {
     "known_divergence": null,

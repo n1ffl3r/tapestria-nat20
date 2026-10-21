@@ -135,7 +135,7 @@
   "level": 3,
   "materials": {
     "consumed": false,
-    "cost": 0,
+    "cost": 100,
     "supply": 0,
     "value": "a focus worth 100+ GP, either a jeweled horn for hearing or a glass eye for seeing"
   },

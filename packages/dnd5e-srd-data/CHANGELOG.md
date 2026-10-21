@@ -22,9 +22,36 @@ dungeons-and-agents fork, workstream A).
   the parent's pages.
 - **Ice Knife**, **Giant Centipede**, **Giant Wasp**, and **Werewolf**, which
   SRD 5.2.1 contains and the old gate dropped.
+- **Class spell lists** (`canonical/spell_lists/<class>.json`, `SpellList`,
+  `BundledAssetLoader.get_spell_list` and `MemoryAssetLoader(spell_lists=)`;
+  `list_slugs("spell_lists")`): the eight spellcasting classes' lists, from the
+  classes each SRD 5.2.1 spell heading names, joined to the corpus by name.
+  Barbarian, Fighter, Monk and Rogue have none. The `AssetLoader` Protocol is
+  unchanged, so other loaders still conform.
+- **`audit/srd_5_2_1_ledger.json`**, the per-record rules-text audit, built by
+  `tools/srd_audit/` (`make srd-ledger`; `make check-provenance` checks it):
+  every spell's level, school, classes, casting time, ritual, range,
+  components, material cost and consumption, duration, concentration, attack,
+  save, damage, healing, area and scaling, compared with its PDF text. 339
+  spells: 260 verified, 63 corrected, 16 divergence; 8 spell lists: 5
+  verified, 3 divergence. `audit/srd_5_2_1_divergences.json` records each
+  divergence and its issue.
 
 ### Changed
 
+- **Spell corrections against SRD 5.2.1** (`_SPELL_SRD_CORRECTIONS` in
+  `tools/translators/foundry.py`, each quoting its SRD sentence): Raise Dead
+  has Touch range; Mirage Arcane's range is Sight (`spec`); Forbiddance is a
+  Ritual; Hypnotic Pattern and Resilient Sphere need Concentration; Plant
+  Growth's casting time is an Action; Phantasmal Killer's save is Wisdom (it
+  had no ability); Glyph of Warding's Explosive Rune is a 20-foot-radius
+  Sphere; Pass without Trace has its 30-foot Emanation.
+- **Spell material costs** are read from the component's text ("a diamond
+  worth 500+ GP"): Foundry ships `cost: 0` for every spell, and 56 spells
+  change. Sequester's material is consumed ("which the spell consumes").
+- **Range and duration formulas** are read at the spell's level: Animal
+  Messenger lasts 24 hours, Dominate Monster and Magic Circle 1 hour, and
+  Spare the Dying's range is 15 feet (each had no value).
 - **The SRD gate** (`tools/translators/srd_gate.py`) admits a Foundry document
   when the PDF index lists its name, or an alias ties it to a listed record.
   It used Foundry's `system.source.license` tag before (the open5e and 5e-bits

@@ -1,0 +1,301 @@
+{
+  "class_name": "Warlock",
+  "entry_kind": "spell_list",
+  "slug": "warlock",
+  "source": {
+    "document": "SRD 5.2.1",
+    "license_tag": "CC-BY-4.0",
+    "path": "srd/SRD_CC_v5.2.1.pdf",
+    "sha256": "8974902d109d6e63672d7c490bde9ccf052410503d9cfa768237154fbc5e3d87"
+  },
+  "spells": [
+    {
+      "level": 0,
+      "slug": "chill-touch"
+    },
+    {
+      "level": 0,
+      "slug": "eldritch-blast"
+    },
+    {
+      "level": 0,
+      "slug": "mage-hand"
+    },
+    {
+      "level": 0,
+      "slug": "minor-illusion"
+    },
+    {
+      "level": 0,
+      "slug": "poison-spray"
+    },
+    {
+      "level": 0,
+      "slug": "prestidigitation"
+    },
+    {
+      "level": 0,
+      "slug": "true-strike"
+    },
+    {
+      "level": 1,
+      "slug": "bane"
+    },
+    {
+      "level": 1,
+      "slug": "charm-person"
+    },
+    {
+      "level": 1,
+      "slug": "comprehend-languages"
+    },
+    {
+      "level": 1,
+      "slug": "detect-magic"
+    },
+    {
+      "level": 1,
+      "slug": "expeditious-retreat"
+    },
+    {
+      "level": 1,
+      "slug": "hellish-rebuke"
+    },
+    {
+      "level": 1,
+      "slug": "hex"
+    },
+    {
+      "level": 1,
+      "slug": "hideous-laughter"
+    },
+    {
+      "level": 1,
+      "slug": "illusory-script"
+    },
+    {
+      "level": 1,
+      "slug": "protection-from-evil-and-good"
+    },
+    {
+      "level": 1,
+      "slug": "speak-with-animals"
+    },
+    {
+      "level": 1,
+      "slug": "unseen-servant"
+    },
+    {
+      "level": 2,
+      "slug": "darkness"
+    },
+    {
+      "level": 2,
+      "slug": "enthrall"
+    },
+    {
+      "level": 2,
+      "slug": "hold-person"
+    },
+    {
+      "level": 2,
+      "slug": "invisibility"
+    },
+    {
+      "level": 2,
+      "slug": "mind-spike"
+    },
+    {
+      "level": 2,
+      "slug": "mirror-image"
+    },
+    {
+      "level": 2,
+      "slug": "misty-step"
+    },
+    {
+      "level": 2,
+      "slug": "ray-of-enfeeblement"
+    },
+    {
+      "level": 2,
+      "slug": "spider-climb"
+    },
+    {
+      "level": 2,
+      "slug": "suggestion"
+    },
+    {
+      "level": 3,
+      "slug": "counterspell"
+    },
+    {
+      "level": 3,
+      "slug": "dispel-magic"
+    },
+    {
+      "level": 3,
+      "slug": "fear"
+    },
+    {
+      "level": 3,
+      "slug": "fly"
+    },
+    {
+      "level": 3,
+      "slug": "gaseous-form"
+    },
+    {
+      "level": 3,
+      "slug": "hypnotic-pattern"
+    },
+    {
+      "level": 3,
+      "slug": "magic-circle"
+    },
+    {
+      "level": 3,
+      "slug": "major-image"
+    },
+    {
+      "level": 3,
+      "slug": "remove-curse"
+    },
+    {
+      "level": 3,
+      "slug": "tongues"
+    },
+    {
+      "level": 3,
+      "slug": "vampiric-touch"
+    },
+    {
+      "level": 4,
+      "slug": "banishment"
+    },
+    {
+      "level": 4,
+      "slug": "blight"
+    },
+    {
+      "level": 4,
+      "slug": "charm-monster"
+    },
+    {
+      "level": 4,
+      "slug": "dimension-door"
+    },
+    {
+      "level": 4,
+      "slug": "hallucinatory-terrain"
+    },
+    {
+      "level": 5,
+      "slug": "contact-other-plane"
+    },
+    {
+      "level": 5,
+      "slug": "dream"
+    },
+    {
+      "level": 5,
+      "slug": "hold-monster"
+    },
+    {
+      "level": 5,
+      "slug": "mislead"
+    },
+    {
+      "level": 5,
+      "slug": "planar-binding"
+    },
+    {
+      "level": 5,
+      "slug": "scrying"
+    },
+    {
+      "level": 5,
+      "slug": "teleportation-circle"
+    },
+    {
+      "level": 6,
+      "slug": "circle-of-death"
+    },
+    {
+      "level": 6,
+      "slug": "create-undead"
+    },
+    {
+      "level": 6,
+      "slug": "eyebite"
+    },
+    {
+      "level": 6,
+      "slug": "true-seeing"
+    },
+    {
+      "level": 7,
+      "slug": "etherealness"
+    },
+    {
+      "level": 7,
+      "slug": "finger-of-death"
+    },
+    {
+      "level": 7,
+      "slug": "forcecage"
+    },
+    {
+      "level": 7,
+      "slug": "plane-shift"
+    },
+    {
+      "level": 8,
+      "slug": "befuddlement"
+    },
+    {
+      "level": 8,
+      "slug": "demiplane"
+    },
+    {
+      "level": 8,
+      "slug": "dominate-monster"
+    },
+    {
+      "level": 8,
+      "slug": "glibness"
+    },
+    {
+      "level": 8,
+      "slug": "power-word-stun"
+    },
+    {
+      "level": 9,
+      "slug": "astral-projection"
+    },
+    {
+      "level": 9,
+      "slug": "foresight"
+    },
+    {
+      "level": 9,
+      "slug": "gate"
+    },
+    {
+      "level": 9,
+      "slug": "imprisonment"
+    },
+    {
+      "level": 9,
+      "slug": "power-word-kill"
+    },
+    {
+      "level": 9,
+      "slug": "true-polymorph"
+    },
+    {
+      "level": 9,
+      "slug": "weird"
+    }
+  ]
+}

@@ -38,6 +38,7 @@ from tools.translators.foundry import (
     translate_weapon_yaml,
     write_canonical_with_overrides,
 )
+from tools.translators.spell_lists import write_spell_lists
 from tools.translators.srd_gate import (
     GateDecision,
     gate_decision,
@@ -251,6 +252,7 @@ def _prune_stale_canonical() -> None:
         "features",
         "conditions",
         "traits",
+        "spell_lists",
     ):
         dst = CANONICAL / canonical_subdir
         if not dst.is_dir():
@@ -424,6 +426,11 @@ def main() -> int:
     for trait in trait_entries:
         write_canonical_with_overrides(trait, traits_dst)
     print(f"  accepted={len(trait_entries)}")
+
+    # Class spell lists (spec 02a, AC 6): Foundry ships none, so they come from the SRD
+    # 5.2.1 PDF's spell headings, recorded in srd/index.json.
+    print("[regen] spell lists …")
+    print(f"  accepted={write_spell_lists(CANONICAL)}")
 
     # Post-process: populate Class.subclass_identifiers from the subclass
     # forward references. Foundry's Subclass-type advancement entries on the

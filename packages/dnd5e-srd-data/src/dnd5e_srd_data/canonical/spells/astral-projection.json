@@ -114,7 +114,7 @@
   "level": 9,
   "materials": {
     "consumed": true,
-    "cost": 0,
+    "cost": 1000,
     "supply": 0,
     "value": "for each of the spell\u2019s targets, one jacinth worth 1,000+ GP and one silver bar worth 100+ GP, all of which the spell consumes"
   },

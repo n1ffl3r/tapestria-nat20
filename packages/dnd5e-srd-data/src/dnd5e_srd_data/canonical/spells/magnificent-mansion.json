@@ -104,7 +104,7 @@
   "level": 7,
   "materials": {
     "consumed": false,
-    "cost": 0,
+    "cost": 15,
     "supply": 0,
     "value": "a miniature door worth 15+ GP"
   },

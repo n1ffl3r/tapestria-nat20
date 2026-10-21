@@ -130,7 +130,7 @@
   "level": 6,
   "materials": {
     "consumed": false,
-    "cost": 0,
+    "cost": 500,
     "supply": 0,
     "value": "the powder of a crushed black pearl worth 500+ GP"
   },

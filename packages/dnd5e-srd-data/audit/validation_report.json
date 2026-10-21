@@ -378,13 +378,6 @@
     "slug": "acid-splash"
   },
   {
-    "canonical_value": null,
-    "field": "duration.value",
-    "kind": "spell",
-    "oracle_value": 24,
-    "slug": "animal-messenger"
-  },
-  {
     "canonical_value": false,
     "field": "concentration",
     "kind": "spell",
@@ -758,13 +751,6 @@
     "slug": "divine-favor"
   },
   {
-    "canonical_value": null,
-    "field": "duration.value",
-    "kind": "spell",
-    "oracle_value": 1,
-    "slug": "dominate-monster"
-  },
-  {
     "canonical_value": "trs",
     "field": "school",
     "kind": "spell",
@@ -832,13 +818,6 @@
     "kind": "spell",
     "oracle_value": 24,
     "slug": "find-the-path"
-  },
-  {
-    "canonical_value": false,
-    "field": "ritual",
-    "kind": "spell",
-    "oracle_value": true,
-    "slug": "forbiddance"
   },
   {
     "canonical_value": "day",
@@ -966,13 +945,6 @@
     "slug": "heroes-feast"
   },
   {
-    "canonical_value": false,
-    "field": "concentration",
-    "kind": "spell",
-    "oracle_value": true,
-    "slug": "hypnotic-pattern"
-  },
-  {
     "canonical_value": "disp",
     "field": "duration.units",
     "kind": "spell",
@@ -1011,13 +983,6 @@
       "action"
     ],
     "slug": "lesser-restoration"
-  },
-  {
-    "canonical_value": null,
-    "field": "duration.value",
-    "kind": "spell",
-    "oracle_value": 1,
-    "slug": "magic-circle"
   },
   {
     "canonical_value": "disp",
@@ -1076,26 +1041,6 @@
     "slug": "message"
   },
   {
-    "canonical_value": "any",
-    "field": "range.units",
-    "kind": "spell",
-    "oracle_value": "spec",
-    "slug": "mirage-arcane"
-  },
-  {
-    "canonical_value": [
-      1,
-      "special"
-    ],
-    "field": "casting_time",
-    "kind": "spell",
-    "oracle_value": [
-      1,
-      "action"
-    ],
-    "slug": "plant-growth"
-  },
-  {
     "canonical_value": "nec",
     "field": "school",
     "kind": "spell",
@@ -1151,13 +1096,6 @@
     "slug": "project-image"
   },
   {
-    "canonical_value": "self",
-    "field": "range.units",
-    "kind": "spell",
-    "oracle_value": "touch",
-    "slug": "raise-dead"
-  },
-  {
     "canonical_value": "nec",
     "field": "school",
     "kind": "spell",
@@ -1169,13 +1107,6 @@
     "field": "school",
     "kind": "spell",
     "oracle_value": "evo",
-    "slug": "resilient-sphere"
-  },
-  {
-    "canonical_value": false,
-    "field": "concentration",
-    "kind": "spell",
-    "oracle_value": true,
     "slug": "resilient-sphere"
   },
   {

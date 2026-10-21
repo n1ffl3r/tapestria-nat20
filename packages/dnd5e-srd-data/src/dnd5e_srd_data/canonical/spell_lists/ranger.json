@@ -1,0 +1,205 @@
+{
+  "class_name": "Ranger",
+  "entry_kind": "spell_list",
+  "slug": "ranger",
+  "source": {
+    "document": "SRD 5.2.1",
+    "license_tag": "CC-BY-4.0",
+    "path": "srd/SRD_CC_v5.2.1.pdf",
+    "sha256": "8974902d109d6e63672d7c490bde9ccf052410503d9cfa768237154fbc5e3d87"
+  },
+  "spells": [
+    {
+      "level": 1,
+      "slug": "alarm"
+    },
+    {
+      "level": 1,
+      "slug": "animal-friendship"
+    },
+    {
+      "level": 1,
+      "slug": "cure-wounds"
+    },
+    {
+      "level": 1,
+      "slug": "detect-magic"
+    },
+    {
+      "level": 1,
+      "slug": "detect-poison-and-disease"
+    },
+    {
+      "level": 1,
+      "slug": "ensnaring-strike"
+    },
+    {
+      "level": 1,
+      "slug": "entangle"
+    },
+    {
+      "level": 1,
+      "slug": "fog-cloud"
+    },
+    {
+      "level": 1,
+      "slug": "goodberry"
+    },
+    {
+      "level": 1,
+      "slug": "hunters-mark"
+    },
+    {
+      "level": 1,
+      "slug": "jump"
+    },
+    {
+      "level": 1,
+      "slug": "longstrider"
+    },
+    {
+      "level": 1,
+      "slug": "speak-with-animals"
+    },
+    {
+      "level": 2,
+      "slug": "aid"
+    },
+    {
+      "level": 2,
+      "slug": "animal-messenger"
+    },
+    {
+      "level": 2,
+      "slug": "barkskin"
+    },
+    {
+      "level": 2,
+      "slug": "darkvision"
+    },
+    {
+      "level": 2,
+      "slug": "enhance-ability"
+    },
+    {
+      "level": 2,
+      "slug": "find-traps"
+    },
+    {
+      "level": 2,
+      "slug": "gust-of-wind"
+    },
+    {
+      "level": 2,
+      "slug": "lesser-restoration"
+    },
+    {
+      "level": 2,
+      "slug": "locate-animals-or-plants"
+    },
+    {
+      "level": 2,
+      "slug": "locate-object"
+    },
+    {
+      "level": 2,
+      "slug": "magic-weapon"
+    },
+    {
+      "level": 2,
+      "slug": "pass-without-trace"
+    },
+    {
+      "level": 2,
+      "slug": "protection-from-poison"
+    },
+    {
+      "level": 2,
+      "slug": "silence"
+    },
+    {
+      "level": 2,
+      "slug": "spike-growth"
+    },
+    {
+      "level": 3,
+      "slug": "conjure-animals"
+    },
+    {
+      "level": 3,
+      "slug": "daylight"
+    },
+    {
+      "level": 3,
+      "slug": "dispel-magic"
+    },
+    {
+      "level": 3,
+      "slug": "meld-into-stone"
+    },
+    {
+      "level": 3,
+      "slug": "nondetection"
+    },
+    {
+      "level": 3,
+      "slug": "plant-growth"
+    },
+    {
+      "level": 3,
+      "slug": "protection-from-energy"
+    },
+    {
+      "level": 3,
+      "slug": "revivify"
+    },
+    {
+      "level": 3,
+      "slug": "speak-with-plants"
+    },
+    {
+      "level": 3,
+      "slug": "water-breathing"
+    },
+    {
+      "level": 3,
+      "slug": "water-walk"
+    },
+    {
+      "level": 3,
+      "slug": "wind-wall"
+    },
+    {
+      "level": 4,
+      "slug": "conjure-woodland-beings"
+    },
+    {
+      "level": 4,
+      "slug": "dominate-beast"
+    },
+    {
+      "level": 4,
+      "slug": "freedom-of-movement"
+    },
+    {
+      "level": 4,
+      "slug": "locate-creature"
+    },
+    {
+      "level": 4,
+      "slug": "stoneskin"
+    },
+    {
+      "level": 5,
+      "slug": "commune-with-nature"
+    },
+    {
+      "level": 5,
+      "slug": "greater-restoration"
+    },
+    {
+      "level": 5,
+      "slug": "tree-stride"
+    }
+  ]
+}

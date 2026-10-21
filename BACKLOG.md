@@ -540,10 +540,11 @@ counts are pinned by `packages/dnd5e-engine/tests/test_capability_matrix.py`.
   Fighter 1 with two) gets every one, `attunement_constraint`, untrained-armor
   penalties (`armor_training` is reported so a host can apply them), and
   magic items' own passive effects (hosts pass them as `active_effects`).
-  Nor which spell list a Magic Initiate spell is on — no corpus spell or class
-  carries spell lists — or that an Acolyte's Magic Initiate uses the Cleric
-  list and a Sage's the Wizard list, which only the background's prose names
-  ("Feat: Magic Initiate (Cleric)") (amended 2026-10-06, C28).
+  Nor which spell list a Magic Initiate spell is on — the corpus ships the
+  class spell lists (`BundledAssetLoader.get_spell_list`, 2026-10-21), but
+  `derive_sheet` does not read them — or that an Acolyte's Magic Initiate uses
+  the Cleric list and a Sage's the Wizard list, which only the background's
+  prose names ("Feat: Magic Initiate (Cleric)") (amended 2026-10-21).
   (`packages/dnd5e-engine/src/dnd5e_engine/build_spec.py::derive_sheet`)
 - **In-combat consumers of several C19-derived sheet fields don't exist yet
   (2026-09-23, C19 scope cut).** `DerivedSheet.stealth_disadvantage`,
@@ -1933,6 +1934,26 @@ pool entries.
   is an area action, so C26a's correction table left them; each needs checking
   against the SRD 5.2 document before it gets a correction row.
   (`packages/dnd5e-srd-data/tools/translators/foundry.py::_MONSTER_ACTION_CORRECTIONS`)
+
+## SRD 5.2.1 spell audit (2026-10-21, spec 02a session A1)
+
+- **Nineteen spell records stay different from the SRD 5.2.1 PDF until the
+  owner approves them (n1ffl3r/tapestria-nat20#3).** Six summons whose attack,
+  damage or save belongs to a summoned actor the corpus does not ship (Arcane
+  Hand, Arcane Sword, Conjure Elemental, Conjure Fey, Faithful Hound, Spiritual
+  Weapon); seven mechanics held only in prose (Fire Shield, Forcecage, Power
+  Word Stun, Prismatic Wall, Teleport, Wall of Stone, Wish); Darkness's and
+  Daylight's Emanation alternative; Eyebite's "Range: Self", which the engine
+  would resolve on the caster; and the Bard, Sorcerer and Wizard lists, where
+  the PDF's chapter tables omit Phantasmal Force and Mind Spike that the spells'
+  headings list. The PDF also gives Flaming Sphere two schools (heading
+  Conjuration, tables Evocation); the corpus follows the heading.
+  (`packages/dnd5e-srd-data/audit/srd_5_2_1_divergences.json`)
+- **The spell audit does not compare what a successful save does.** Tsunami's
+  later-round wall ("must succeed on a Strength saving throw or take 5d10
+  Bludgeoning damage") ships `on_save: half`; the ledger's fields (spec 02a's
+  list) do not include save-for-half, so such records read as verified.
+  (`packages/dnd5e-srd-data/tools/srd_audit/spells.py::corpus_facts`)
 
 ---
 

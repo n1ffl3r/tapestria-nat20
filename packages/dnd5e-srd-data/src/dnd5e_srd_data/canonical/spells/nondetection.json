@@ -114,7 +114,7 @@
   "level": 3,
   "materials": {
     "consumed": true,
-    "cost": 0,
+    "cost": 25,
     "supply": 0,
     "value": "a pinch of diamond dust worth 25+ GP, which the spell consumes"
   },

@@ -167,7 +167,7 @@
   ],
   "casting_time": {
     "condition": "",
-    "unit": "special",
+    "unit": "action",
     "value": 1
   },
   "components": [

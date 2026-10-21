@@ -113,8 +113,8 @@
   "foundry_uuid": "Compendium.dnd5e.spells24.Item.phbsplSequester0",
   "level": 7,
   "materials": {
-    "consumed": false,
-    "cost": 0,
+    "consumed": true,
+    "cost": 5000,
     "supply": 0,
     "value": "gem dust worth 5,000+ GP, which the spell consumes"
   },

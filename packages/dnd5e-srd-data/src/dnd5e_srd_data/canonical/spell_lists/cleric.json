@@ -1,0 +1,449 @@
+{
+  "class_name": "Cleric",
+  "entry_kind": "spell_list",
+  "slug": "cleric",
+  "source": {
+    "document": "SRD 5.2.1",
+    "license_tag": "CC-BY-4.0",
+    "path": "srd/SRD_CC_v5.2.1.pdf",
+    "sha256": "8974902d109d6e63672d7c490bde9ccf052410503d9cfa768237154fbc5e3d87"
+  },
+  "spells": [
+    {
+      "level": 0,
+      "slug": "guidance"
+    },
+    {
+      "level": 0,
+      "slug": "light"
+    },
+    {
+      "level": 0,
+      "slug": "mending"
+    },
+    {
+      "level": 0,
+      "slug": "resistance"
+    },
+    {
+      "level": 0,
+      "slug": "sacred-flame"
+    },
+    {
+      "level": 0,
+      "slug": "spare-the-dying"
+    },
+    {
+      "level": 0,
+      "slug": "thaumaturgy"
+    },
+    {
+      "level": 1,
+      "slug": "bane"
+    },
+    {
+      "level": 1,
+      "slug": "bless"
+    },
+    {
+      "level": 1,
+      "slug": "command"
+    },
+    {
+      "level": 1,
+      "slug": "create-or-destroy-water"
+    },
+    {
+      "level": 1,
+      "slug": "cure-wounds"
+    },
+    {
+      "level": 1,
+      "slug": "detect-evil-and-good"
+    },
+    {
+      "level": 1,
+      "slug": "detect-magic"
+    },
+    {
+      "level": 1,
+      "slug": "detect-poison-and-disease"
+    },
+    {
+      "level": 1,
+      "slug": "guiding-bolt"
+    },
+    {
+      "level": 1,
+      "slug": "healing-word"
+    },
+    {
+      "level": 1,
+      "slug": "inflict-wounds"
+    },
+    {
+      "level": 1,
+      "slug": "protection-from-evil-and-good"
+    },
+    {
+      "level": 1,
+      "slug": "purify-food-and-drink"
+    },
+    {
+      "level": 1,
+      "slug": "sanctuary"
+    },
+    {
+      "level": 1,
+      "slug": "shield-of-faith"
+    },
+    {
+      "level": 2,
+      "slug": "aid"
+    },
+    {
+      "level": 2,
+      "slug": "augury"
+    },
+    {
+      "level": 2,
+      "slug": "blindness-deafness"
+    },
+    {
+      "level": 2,
+      "slug": "calm-emotions"
+    },
+    {
+      "level": 2,
+      "slug": "continual-flame"
+    },
+    {
+      "level": 2,
+      "slug": "enhance-ability"
+    },
+    {
+      "level": 2,
+      "slug": "find-traps"
+    },
+    {
+      "level": 2,
+      "slug": "gentle-repose"
+    },
+    {
+      "level": 2,
+      "slug": "hold-person"
+    },
+    {
+      "level": 2,
+      "slug": "lesser-restoration"
+    },
+    {
+      "level": 2,
+      "slug": "locate-object"
+    },
+    {
+      "level": 2,
+      "slug": "prayer-of-healing"
+    },
+    {
+      "level": 2,
+      "slug": "protection-from-poison"
+    },
+    {
+      "level": 2,
+      "slug": "silence"
+    },
+    {
+      "level": 2,
+      "slug": "spiritual-weapon"
+    },
+    {
+      "level": 2,
+      "slug": "warding-bond"
+    },
+    {
+      "level": 2,
+      "slug": "zone-of-truth"
+    },
+    {
+      "level": 3,
+      "slug": "animate-dead"
+    },
+    {
+      "level": 3,
+      "slug": "beacon-of-hope"
+    },
+    {
+      "level": 3,
+      "slug": "bestow-curse"
+    },
+    {
+      "level": 3,
+      "slug": "clairvoyance"
+    },
+    {
+      "level": 3,
+      "slug": "create-food-and-water"
+    },
+    {
+      "level": 3,
+      "slug": "daylight"
+    },
+    {
+      "level": 3,
+      "slug": "dispel-magic"
+    },
+    {
+      "level": 3,
+      "slug": "glyph-of-warding"
+    },
+    {
+      "level": 3,
+      "slug": "magic-circle"
+    },
+    {
+      "level": 3,
+      "slug": "mass-healing-word"
+    },
+    {
+      "level": 3,
+      "slug": "meld-into-stone"
+    },
+    {
+      "level": 3,
+      "slug": "protection-from-energy"
+    },
+    {
+      "level": 3,
+      "slug": "remove-curse"
+    },
+    {
+      "level": 3,
+      "slug": "revivify"
+    },
+    {
+      "level": 3,
+      "slug": "sending"
+    },
+    {
+      "level": 3,
+      "slug": "speak-with-dead"
+    },
+    {
+      "level": 3,
+      "slug": "spirit-guardians"
+    },
+    {
+      "level": 3,
+      "slug": "tongues"
+    },
+    {
+      "level": 3,
+      "slug": "water-walk"
+    },
+    {
+      "level": 4,
+      "slug": "aura-of-life"
+    },
+    {
+      "level": 4,
+      "slug": "banishment"
+    },
+    {
+      "level": 4,
+      "slug": "control-water"
+    },
+    {
+      "level": 4,
+      "slug": "death-ward"
+    },
+    {
+      "level": 4,
+      "slug": "divination"
+    },
+    {
+      "level": 4,
+      "slug": "freedom-of-movement"
+    },
+    {
+      "level": 4,
+      "slug": "guardian-of-faith"
+    },
+    {
+      "level": 4,
+      "slug": "locate-creature"
+    },
+    {
+      "level": 4,
+      "slug": "stone-shape"
+    },
+    {
+      "level": 5,
+      "slug": "commune"
+    },
+    {
+      "level": 5,
+      "slug": "contagion"
+    },
+    {
+      "level": 5,
+      "slug": "dispel-evil-and-good"
+    },
+    {
+      "level": 5,
+      "slug": "flame-strike"
+    },
+    {
+      "level": 5,
+      "slug": "geas"
+    },
+    {
+      "level": 5,
+      "slug": "greater-restoration"
+    },
+    {
+      "level": 5,
+      "slug": "hallow"
+    },
+    {
+      "level": 5,
+      "slug": "insect-plague"
+    },
+    {
+      "level": 5,
+      "slug": "legend-lore"
+    },
+    {
+      "level": 5,
+      "slug": "mass-cure-wounds"
+    },
+    {
+      "level": 5,
+      "slug": "planar-binding"
+    },
+    {
+      "level": 5,
+      "slug": "raise-dead"
+    },
+    {
+      "level": 5,
+      "slug": "scrying"
+    },
+    {
+      "level": 6,
+      "slug": "blade-barrier"
+    },
+    {
+      "level": 6,
+      "slug": "create-undead"
+    },
+    {
+      "level": 6,
+      "slug": "find-the-path"
+    },
+    {
+      "level": 6,
+      "slug": "forbiddance"
+    },
+    {
+      "level": 6,
+      "slug": "harm"
+    },
+    {
+      "level": 6,
+      "slug": "heal"
+    },
+    {
+      "level": 6,
+      "slug": "heroes-feast"
+    },
+    {
+      "level": 6,
+      "slug": "planar-ally"
+    },
+    {
+      "level": 6,
+      "slug": "sunbeam"
+    },
+    {
+      "level": 6,
+      "slug": "true-seeing"
+    },
+    {
+      "level": 6,
+      "slug": "word-of-recall"
+    },
+    {
+      "level": 7,
+      "slug": "conjure-celestial"
+    },
+    {
+      "level": 7,
+      "slug": "divine-word"
+    },
+    {
+      "level": 7,
+      "slug": "etherealness"
+    },
+    {
+      "level": 7,
+      "slug": "fire-storm"
+    },
+    {
+      "level": 7,
+      "slug": "plane-shift"
+    },
+    {
+      "level": 7,
+      "slug": "regenerate"
+    },
+    {
+      "level": 7,
+      "slug": "resurrection"
+    },
+    {
+      "level": 7,
+      "slug": "symbol"
+    },
+    {
+      "level": 8,
+      "slug": "antimagic-field"
+    },
+    {
+      "level": 8,
+      "slug": "control-weather"
+    },
+    {
+      "level": 8,
+      "slug": "earthquake"
+    },
+    {
+      "level": 8,
+      "slug": "holy-aura"
+    },
+    {
+      "level": 8,
+      "slug": "sunburst"
+    },
+    {
+      "level": 9,
+      "slug": "astral-projection"
+    },
+    {
+      "level": 9,
+      "slug": "gate"
+    },
+    {
+      "level": 9,
+      "slug": "mass-heal"
+    },
+    {
+      "level": 9,
+      "slug": "power-word-heal"
+    },
+    {
+      "level": 9,
+      "slug": "true-resurrection"
+    }
+  ]
+}

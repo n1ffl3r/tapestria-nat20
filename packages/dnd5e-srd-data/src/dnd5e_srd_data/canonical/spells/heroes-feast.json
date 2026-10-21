@@ -227,7 +227,7 @@
   "level": 6,
   "materials": {
     "consumed": true,
-    "cost": 0,
+    "cost": 1000,
     "supply": 0,
     "value": "a gem-encrusted bowl worth 1,000+ GP, which the spell consumes"
   },

@@ -114,7 +114,7 @@
   "level": 2,
   "materials": {
     "consumed": false,
-    "cost": 0,
+    "cost": 50,
     "supply": 0,
     "value": "a pair of platinum rings worth 50+ GP each, which you and the target must wear for the duration"
   },

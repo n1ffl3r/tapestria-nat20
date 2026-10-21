@@ -722,7 +722,7 @@
   "level": 7,
   "materials": {
     "consumed": true,
-    "cost": 0,
+    "cost": 1000,
     "supply": 0,
     "value": "powdered diamond worth 1,000+ GP, which the spell consumes"
   },

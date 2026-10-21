@@ -104,7 +104,7 @@
   "level": 7,
   "materials": {
     "consumed": false,
-    "cost": 0,
+    "cost": 250,
     "supply": 0,
     "value": "a forked, metal rod worth 250+ GP and attuned to a plane of existence"
   },

@@ -122,7 +122,7 @@
   "level": 6,
   "materials": {
     "consumed": false,
-    "cost": 0,
+    "cost": 1500,
     "supply": 0,
     "value": "a gem-encrusted statuette of yourself worth 1,500+ GP"
   },

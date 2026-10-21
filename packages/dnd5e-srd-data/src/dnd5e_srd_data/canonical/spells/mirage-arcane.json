@@ -124,8 +124,8 @@
     ]
   },
   "range": {
-    "special": "within sight",
-    "units": "any",
+    "special": "Sight",
+    "units": "spec",
     "value": null
   },
   "review": {

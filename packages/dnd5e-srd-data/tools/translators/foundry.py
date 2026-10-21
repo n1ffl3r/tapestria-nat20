@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import ast
 import functools
 import json
 import math
@@ -2126,16 +2127,57 @@ _SPELL_RANGE_UNITS_MAP = {
 }
 
 
-def _spell_range(range_doc: dict[str, Any]) -> SpellRange:
+def _base_level_value(raw: Any, level: int) -> int | None:
+    """A Foundry range or duration value at the spell's own level. Foundry writes a value
+    that grows with the slot as a formula ("@item.level * 48 - 72" hours for Animal
+    Messenger, "15 * pow(2, @scaling.increase)" feet for Spare the Dying); the SRD's header
+    states it at the spell's level ("Duration: 24 hours", "Range: 15 feet"), which is the
+    formula with the slot at that level and no cantrip upgrade."""
+    if raw in (None, ""):
+        return None
+    try:
+        return int(raw)
+    except (TypeError, ValueError):
+        pass
+    expression = str(raw).replace("@item.level", str(level)).replace("@scaling.increase", "0")
+    try:
+        value = _eval_formula(ast.parse(expression, mode="eval").body)
+    except (SyntaxError, ValueError):
+        return None
+    return int(value) if value == int(value) else None
+
+
+def _eval_formula(node: ast.expr) -> float:
+    """Integer arithmetic over a parsed formula: literals, ``+ - * /``, unary minus, and
+    ``pow``. No names, no other calls (never ``eval``)."""
+    if isinstance(node, ast.Constant) and isinstance(node.value, int):
+        return node.value
+    if isinstance(node, ast.UnaryOp) and isinstance(node.op, ast.USub):
+        return -_eval_formula(node.operand)
+    if isinstance(node, ast.BinOp):
+        left, right = _eval_formula(node.left), _eval_formula(node.right)
+        if isinstance(node.op, ast.Add):
+            return left + right
+        if isinstance(node.op, ast.Sub):
+            return left - right
+        if isinstance(node.op, ast.Mult):
+            return left * right
+        if isinstance(node.op, ast.Div):
+            return left / right
+    if (
+        isinstance(node, ast.Call)
+        and isinstance(node.func, ast.Name)
+        and node.func.id == "pow"
+        and len(node.args) == 2
+    ):
+        return float(_eval_formula(node.args[0]) ** _eval_formula(node.args[1]))
+    raise ValueError(f"unsupported formula node {type(node).__name__}")
+
+
+def _spell_range(range_doc: dict[str, Any], level: int = 0) -> SpellRange:
     units_raw = str(range_doc.get("units") or "").lower()
     units = _SPELL_RANGE_UNITS_MAP.get(units_raw, SpellRangeUnits.SPECIAL)
-    value_raw = range_doc.get("value")
-    value: int | None = None
-    if value_raw not in (None, ""):
-        try:
-            value = int(value_raw)
-        except (TypeError, ValueError):
-            value = None
+    value = _base_level_value(range_doc.get("value"), level)
     special = range_doc.get("special")
     special_str = str(special).strip() if special not in (None, "") else None
     return SpellRange(units=units, value=value, special=special_str)
@@ -2155,33 +2197,43 @@ _SPELL_DURATION_UNITS_MAP = {
 }
 
 
-def _spell_duration(duration_doc: dict[str, Any]) -> SpellDuration:
+def _spell_duration(duration_doc: dict[str, Any], level: int = 0) -> SpellDuration:
     units_raw = str(duration_doc.get("units") or "").lower()
     units = _SPELL_DURATION_UNITS_MAP.get(units_raw, SpellDurationUnits.SPECIAL)
-    value_raw = duration_doc.get("value")
-    value: int | None = None
-    if value_raw not in (None, ""):
-        try:
-            value = int(value_raw)
-        except (TypeError, ValueError):
-            value = None
-    return SpellDuration(units=units, value=value)
+    return SpellDuration(units=units, value=_base_level_value(duration_doc.get("value"), level))
+
+
+#: A material component's cost, as its SRD 5.2.1 text gives it: "a diamond worth 500+ GP",
+#: "one 150+ GP black onyx stone for each corpse".
+_MATERIAL_COST = re.compile(r"([\d,]+)\+ GP\b")
 
 
 def _spell_materials(materials_doc: dict[str, Any]) -> SpellMaterials:
+    """The material component. The pinned Foundry pack ships ``cost: 0`` for every spell
+    and leaves Sequester's ``consumed`` false, so both are also read from the component's
+    own text, which the SRD 5.2.1 rules make authoritative ("Material (M)": "These
+    materials aren't consumed by the spell unless the spell's description states
+    otherwise"; "If a spell doesn't consume its materials and doesn't specify a cost for
+    them, a spellcaster can use a Component Pouch"). Sequester: "gem dust worth 5,000+ GP,
+    which the spell consumes"."""
+    value = str(materials_doc.get("value") or "")
     cost_raw = materials_doc.get("cost")
     try:
         cost = int(cost_raw) if cost_raw not in (None, "") else 0
     except (TypeError, ValueError):
         cost = 0
+    stated = _MATERIAL_COST.search(value)
+    if cost == 0 and stated is not None:
+        cost = int(stated.group(1).replace(",", ""))
     supply_raw = materials_doc.get("supply")
     try:
         supply = int(supply_raw) if supply_raw not in (None, "") else 0
     except (TypeError, ValueError):
         supply = 0
     return SpellMaterials(
-        value=str(materials_doc.get("value") or ""),
-        consumed=bool(materials_doc.get("consumed") or False),
+        value=value,
+        consumed=bool(materials_doc.get("consumed") or False)
+        or "which the spell consumes" in value,
         cost=max(0, cost),
         supply=max(0, supply),
     )
@@ -2300,6 +2352,162 @@ def _apply_spell_save_cover_overrides(slug: str, activities: list[Activity]) -> 
     return out
 
 
+@dataclass(frozen=True)
+class _SpellCorrection:
+    """One SRD 5.2.1 correction to a translated spell: ``path`` names a field of the
+    spell's JSON form (``"range"``, ``"activities[<_id>].save.ability"``), ``was`` is what
+    the pinned Foundry pack gives, ``value`` is what the SRD text gives, and ``srd`` quotes
+    the sentence it rests on. ``was`` is checked at regen, so a Foundry pin that fixes the
+    field upstream fails loudly instead of leaving a stale correction."""
+
+    path: str
+    was: Any
+    value: Any
+    srd: str
+
+
+#: The spell audit's corrections (``audit/srd_5_2_1_ledger.json``, spec 02a acceptance
+#: criterion 4), keyed by spell slug. The pins live in
+#: ``tests/test_spell_srd_5_2_1_corrections.py``.
+_SPELL_SRD_CORRECTIONS: dict[str, tuple[_SpellCorrection, ...]] = {
+    "forbiddance": (_SpellCorrection("ritual", False, True, "Casting Time: 10 minutes or Ritual"),),
+    "hypnotic-pattern": (
+        _SpellCorrection("concentration", False, True, "Duration: Concentration, up to 1 minute"),
+    ),
+    "resilient-sphere": (
+        _SpellCorrection("concentration", False, True, "Duration: Concentration, up to 1 minute"),
+    ),
+    "raise-dead": (
+        _SpellCorrection(
+            "range",
+            {"units": "self", "value": None, "special": None},
+            {"units": "touch", "value": None, "special": None},
+            "Range: Touch",
+        ),
+    ),
+    "mirage-arcane": (
+        _SpellCorrection(
+            "range",
+            {"units": "any", "value": None, "special": "within sight"},
+            {"units": "spec", "value": None, "special": "Sight"},
+            "Range: Sight",
+        ),
+    ),
+    # Foundry records the second casting time (Enrichment's 8 hours) as "special"; the
+    # header lists the Action first, and the Enrichment activity keeps its own 8 hours.
+    "plant-growth": (
+        _SpellCorrection(
+            "casting_time",
+            {"unit": "special", "value": 1, "condition": ""},
+            {"unit": "action", "value": 1, "condition": ""},
+            "Casting Time: Action (Overgrowth) or 8 hours (Enrichment)",
+        ),
+    ),
+    "phantasmal-killer": (
+        _SpellCorrection(
+            "activities[dnd5eactivity000].save.ability",
+            [],
+            ["wis"],
+            "You tap into the nightmares of a creature you can see within range and create"
+            " an illusion of its deepest fears, visible only to that creature. The target"
+            " makes a Wisdom saving throw.",
+        ),
+    ),
+    "glyph-of-warding": (
+        _SpellCorrection(
+            "activities[dnd5eactivity100].target.template",
+            {
+                "contiguous": False,
+                "count": "",
+                "height": "",
+                "size": "",
+                "stationary": False,
+                "type": "",
+                "units": "",
+                "width": "",
+            },
+            {
+                "contiguous": False,
+                "count": "",
+                "height": "",
+                "size": "20",
+                "stationary": False,
+                "type": "sphere",
+                "units": "ft",
+                "width": "",
+            },
+            "Explosive Rune. When triggered, the glyph erupts with magical energy in a"
+            " 20-foot-radius Sphere centered on the glyph.",
+        ),
+    ),
+    "pass-without-trace": (
+        _SpellCorrection(
+            "activities[dnd5eactivity000].target.template",
+            {
+                "contiguous": False,
+                "count": "",
+                "height": "",
+                "size": "",
+                "stationary": False,
+                "type": "",
+                "units": "ft",
+                "width": "",
+            },
+            {
+                "contiguous": False,
+                "count": "",
+                "height": "",
+                "size": "30",
+                "stationary": False,
+                "type": "radius",
+                "units": "ft",
+                "width": "",
+            },
+            "You radiate a concealing aura in a 30-foot Emanation for the duration.",
+        ),
+    ),
+}
+
+_CORRECTION_STEP = re.compile(r"([a-z_]+)(?:\[([^\]]+)\])?")
+
+
+def _correction_parent(blob: dict[str, Any], path: str) -> tuple[dict[str, Any], str]:
+    """The mapping that holds ``path``'s last key, and that key. ``activities[<_id>]``
+    selects the activity with that ``id``."""
+    steps = path.split(".")
+    node: Any = blob
+    for step in steps[:-1]:
+        match = _CORRECTION_STEP.fullmatch(step)
+        if match is None:
+            raise ValueError(f"bad correction path {path!r}")
+        node = node[match.group(1)]
+        if match.group(2) is not None:
+            node = next(item for item in node if item.get("id") == match.group(2))
+    return node, steps[-1]
+
+
+def spell_srd_corrections(slug: str) -> tuple[_SpellCorrection, ...]:
+    """The SRD 5.2.1 corrections the translator applies to ``slug``."""
+    return _SPELL_SRD_CORRECTIONS.get(slug, ())
+
+
+def _apply_spell_srd_corrections(spell: Spell) -> Spell:
+    """Apply ``_SPELL_SRD_CORRECTIONS``, refusing one whose ``was`` no longer matches."""
+    corrections = spell_srd_corrections(spell.slug)
+    if not corrections:
+        return spell
+    blob = spell.model_dump(mode="json")
+    for correction in corrections:
+        parent, key = _correction_parent(blob, correction.path)
+        if parent[key] != correction.was:
+            raise ValueError(
+                f"{spell.slug}: {correction.path} is {parent[key]!r}, not {correction.was!r};"
+                " the correction is stale"
+            )
+        parent[key] = correction.value
+    return Spell.model_validate(blob)
+
+
 def translate_spell_yaml(
     yaml_path: Path,
     *,
@@ -2322,7 +2530,7 @@ def translate_spell_yaml(
     except (TypeError, ValueError):
         level = 0
     slug = _slug(doc, yaml_path)
-    return Spell(
+    spell = Spell(
         slug=slug,
         name=_name(doc),
         description=_description(doc),
@@ -2332,8 +2540,8 @@ def translate_spell_yaml(
         ritual=ritual,
         concentration=concentration,
         casting_time=_casting_time(system.get("activation") or {}),
-        range=_spell_range(system.get("range") or {}),
-        duration=_spell_duration(system.get("duration") or {}),
+        range=_spell_range(system.get("range") or {}, max(0, level)),
+        duration=_spell_duration(system.get("duration") or {}, max(0, level)),
         materials=_spell_materials(system.get("materials") or {}),
         preparation=_spell_preparation(system.get("preparation") or {}),
         activities=_apply_affects_corrections(
@@ -2347,6 +2555,7 @@ def translate_spell_yaml(
         review=ReviewState(),
         foundry_uuid=_spell_foundry_uuid(yaml_path, doc),
     )
+    return _apply_spell_srd_corrections(spell)
 
 
 # --- advancement (shared by class/subclass/race) ---
