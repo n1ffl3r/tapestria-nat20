@@ -2,6 +2,8 @@ name: Deploy docs
 
 # Builds the MkDocs site and publishes it to GitHub Pages on every push to main.
 # Pages source must be set to "GitHub Actions" in the repo settings.
+# The n1ffl3r/tapestria-nat20 fork publishes nothing: its jobs skip there. The fork is
+# pinned by commit as a git dependency of n1ffl3r/dungeons-and-agents, never released.
 
 on:
   push:
@@ -21,6 +23,7 @@ concurrency:
 
 jobs:
   build:
+    if: github.repository != 'n1ffl3r/tapestria-nat20'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -35,6 +38,7 @@ jobs:
 
   deploy:
     needs: build
+    if: github.repository != 'n1ffl3r/tapestria-nat20'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     environment:

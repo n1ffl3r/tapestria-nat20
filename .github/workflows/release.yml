@@ -7,6 +7,9 @@ name: Release
 # srd-data publishes first and the bridge last, so the engine's
 # `dnd5e-srd-data>=0.7.0` and the bridge's `>=0.7.0` floors on both are
 # resolvable for anyone installing immediately after.
+#
+# The n1ffl3r/tapestria-nat20 fork publishes nothing: its jobs skip there. The fork is
+# pinned by commit as a git dependency of n1ffl3r/dungeons-and-agents, never released.
 
 on:
   release:
@@ -18,6 +21,7 @@ permissions: {}
 jobs:
   publish-srd-data:
     name: publish dnd5e-srd-data
+    if: github.repository != 'n1ffl3r/tapestria-nat20'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     environment:
@@ -37,6 +41,7 @@ jobs:
   publish-engine:
     name: publish dnd5e-engine
     needs: publish-srd-data
+    if: github.repository != 'n1ffl3r/tapestria-nat20'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     environment:
@@ -56,6 +61,7 @@ jobs:
   publish-bridge:
     name: publish nat20-bridge
     needs: publish-engine
+    if: github.repository != 'n1ffl3r/tapestria-nat20'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     environment:
