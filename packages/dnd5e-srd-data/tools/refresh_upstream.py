@@ -46,6 +46,9 @@ def _fetch_pin(name: str, url: str, commit: str) -> None:
 def main() -> int:
     pins = json.loads(PINS_PATH.read_text(encoding="utf-8"))
     for name, meta in pins.items():
+        # Non-git pins (the SRD PDF under srd/) are committed files, not clones.
+        if "commit" not in meta:
+            continue
         _fetch_pin(name, meta["url"], meta["commit"])
     return 0
 

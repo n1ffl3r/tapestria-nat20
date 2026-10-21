@@ -1,48 +1,123 @@
 [
   {
-    "path": "raw_sources/foundry/packs/_source/equipment24/weapons/unarmed-strike.yml",
-    "reason": "unanimous_non_srd",
-    "slug": "unarmed-strike"
+    "path": "raw_sources/foundry/packs/_source/equipment24/consumables/scrolls/spell-scrolls/spell-scroll-1st-level.yml",
+    "reason": "not_in_srd_5_2_1",
+    "slug": "spell-scroll-1st-level"
+  },
+  {
+    "path": "raw_sources/foundry/packs/_source/equipment24/consumables/scrolls/spell-scrolls/spell-scroll-2nd-level.yml",
+    "reason": "not_in_srd_5_2_1",
+    "slug": "spell-scroll-2nd-level"
+  },
+  {
+    "path": "raw_sources/foundry/packs/_source/equipment24/consumables/scrolls/spell-scrolls/spell-scroll-3rd-level.yml",
+    "reason": "not_in_srd_5_2_1",
+    "slug": "spell-scroll-3rd-level"
+  },
+  {
+    "path": "raw_sources/foundry/packs/_source/equipment24/consumables/scrolls/spell-scrolls/spell-scroll-4th-level.yml",
+    "reason": "not_in_srd_5_2_1",
+    "slug": "spell-scroll-4th-level"
+  },
+  {
+    "path": "raw_sources/foundry/packs/_source/equipment24/consumables/scrolls/spell-scrolls/spell-scroll-5th-level.yml",
+    "reason": "not_in_srd_5_2_1",
+    "slug": "spell-scroll-5th-level"
+  },
+  {
+    "path": "raw_sources/foundry/packs/_source/equipment24/consumables/scrolls/spell-scrolls/spell-scroll-6th-level.yml",
+    "reason": "not_in_srd_5_2_1",
+    "slug": "spell-scroll-6th-level"
+  },
+  {
+    "path": "raw_sources/foundry/packs/_source/equipment24/consumables/scrolls/spell-scrolls/spell-scroll-7th-level.yml",
+    "reason": "not_in_srd_5_2_1",
+    "slug": "spell-scroll-7th-level"
+  },
+  {
+    "path": "raw_sources/foundry/packs/_source/equipment24/consumables/scrolls/spell-scrolls/spell-scroll-8th-level.yml",
+    "reason": "not_in_srd_5_2_1",
+    "slug": "spell-scroll-8th-level"
+  },
+  {
+    "path": "raw_sources/foundry/packs/_source/equipment24/consumables/scrolls/spell-scrolls/spell-scroll-9th-level.yml",
+    "reason": "not_in_srd_5_2_1",
+    "slug": "spell-scroll-9th-level"
   },
   {
     "path": "raw_sources/foundry/packs/_source/equipment24/containers/efficient-quiver/long-compartment/_container.yml",
-    "reason": "unanimous_non_srd",
+    "reason": "not_in_srd_5_2_1",
     "slug": "_container"
   },
   {
     "path": "raw_sources/foundry/packs/_source/equipment24/containers/efficient-quiver/midsize-compartment/_container.yml",
-    "reason": "unanimous_non_srd",
+    "reason": "not_in_srd_5_2_1",
     "slug": "_container"
   },
   {
     "path": "raw_sources/foundry/packs/_source/equipment24/containers/efficient-quiver/short-compartment/_container.yml",
-    "reason": "unanimous_non_srd",
+    "reason": "not_in_srd_5_2_1",
     "slug": "_container"
   },
   {
     "path": "raw_sources/foundry/packs/_source/equipment24/containers/handy-haversack/central-pouch/_container.yml",
-    "reason": "unanimous_non_srd",
+    "reason": "not_in_srd_5_2_1",
     "slug": "_container"
   },
   {
     "path": "raw_sources/foundry/packs/_source/equipment24/containers/handy-haversack/left-pouch/_container.yml",
-    "reason": "unanimous_non_srd",
+    "reason": "not_in_srd_5_2_1",
     "slug": "_container"
   },
   {
     "path": "raw_sources/foundry/packs/_source/equipment24/containers/handy-haversack/right-pouch/_container.yml",
-    "reason": "unanimous_non_srd",
+    "reason": "not_in_srd_5_2_1",
     "slug": "_container"
   },
   {
-    "path": "raw_sources/foundry/packs/_source/actors24/beast/giant-centipede.yml",
-    "reason": "unanimous_non_srd",
-    "slug": "giant-centipede"
+    "path": "raw_sources/foundry/packs/_source/equipment24/equipment/bags-of-tricks/gray-bag-of-tricks.yml",
+    "reason": "not_in_srd_5_2_1",
+    "slug": "gray-bag-of-tricks"
   },
   {
-    "path": "raw_sources/foundry/packs/_source/actors24/beast/giant-wasp.yml",
-    "reason": "unanimous_non_srd",
-    "slug": "giant-wasp"
+    "path": "raw_sources/foundry/packs/_source/equipment24/equipment/bags-of-tricks/rust-bag-of-tricks.yml",
+    "reason": "not_in_srd_5_2_1",
+    "slug": "rust-bag-of-tricks"
+  },
+  {
+    "path": "raw_sources/foundry/packs/_source/equipment24/equipment/belts-of-giant-strength/belt-of-giant-strength-cloud.yml",
+    "reason": "not_in_srd_5_2_1",
+    "slug": "belt-of-giant-strength-cloud"
+  },
+  {
+    "path": "raw_sources/foundry/packs/_source/equipment24/equipment/belts-of-giant-strength/belt-of-giant-strength-fire.yml",
+    "reason": "not_in_srd_5_2_1",
+    "slug": "belt-of-giant-strength-fire"
+  },
+  {
+    "path": "raw_sources/foundry/packs/_source/equipment24/equipment/belts-of-giant-strength/belt-of-giant-strength-frost.yml",
+    "reason": "not_in_srd_5_2_1",
+    "slug": "belt-of-giant-strength-frost"
+  },
+  {
+    "path": "raw_sources/foundry/packs/_source/equipment24/equipment/belts-of-giant-strength/belt-of-giant-strength-stone.yml",
+    "reason": "not_in_srd_5_2_1",
+    "slug": "belt-of-giant-strength-stone"
+  },
+  {
+    "path": "raw_sources/foundry/packs/_source/equipment24/equipment/rings/air-ring-of-elemental-command.yml",
+    "reason": "not_in_srd_5_2_1",
+    "slug": "air-ring-of-elemental-command"
+  },
+  {
+    "path": "raw_sources/foundry/packs/_source/equipment24/equipment/rings/earth-ring-of-elemental-command.yml",
+    "reason": "not_in_srd_5_2_1",
+    "slug": "earth-ring-of-elemental-command"
+  },
+  {
+    "path": "raw_sources/foundry/packs/_source/equipment24/equipment/rings/fire-ring-of-elemental-command.yml",
+    "reason": "not_in_srd_5_2_1",
+    "slug": "fire-ring-of-elemental-command"
   },
   {
     "path": "raw_sources/foundry/packs/_source/actors24/companions/otherworldly-steeds/otherworldly-steed.yml",
@@ -51,127 +126,127 @@
   },
   {
     "path": "raw_sources/foundry/packs/_source/actors24/conjurations/arcane-eye.yml",
-    "reason": "translator_error:ValueError:'custom' is not a valid CreatureType",
+    "reason": "not_in_srd_5_2_1",
     "slug": "arcane-eye"
   },
   {
     "path": "raw_sources/foundry/packs/_source/actors24/conjurations/arcane-hand.yml",
-    "reason": "translator_error:ValueError:'custom' is not a valid CreatureType",
+    "reason": "not_in_srd_5_2_1",
     "slug": "arcane-hand"
   },
   {
     "path": "raw_sources/foundry/packs/_source/actors24/conjurations/arcane-sword.yml",
-    "reason": "translator_error:ValueError:'custom' is not a valid CreatureType",
+    "reason": "not_in_srd_5_2_1",
     "slug": "arcane-sword"
   },
   {
     "path": "raw_sources/foundry/packs/_source/actors24/conjurations/conjured-animals.yml",
-    "reason": "translator_error:ValueError:'custom' is not a valid CreatureType",
+    "reason": "not_in_srd_5_2_1",
     "slug": "conjured-animals"
   },
   {
     "path": "raw_sources/foundry/packs/_source/actors24/conjurations/conjured-elementals/conjured-air-elemental.yml",
-    "reason": "translator_error:ValueError:'custom' is not a valid CreatureType",
+    "reason": "not_in_srd_5_2_1",
     "slug": "conjured-air-elemental"
   },
   {
     "path": "raw_sources/foundry/packs/_source/actors24/conjurations/conjured-elementals/conjured-earth-elemental.yml",
-    "reason": "translator_error:ValueError:'custom' is not a valid CreatureType",
+    "reason": "not_in_srd_5_2_1",
     "slug": "conjured-earth-elemental"
   },
   {
     "path": "raw_sources/foundry/packs/_source/actors24/conjurations/conjured-elementals/conjured-fire-elemental.yml",
-    "reason": "translator_error:ValueError:'custom' is not a valid CreatureType",
+    "reason": "not_in_srd_5_2_1",
     "slug": "conjured-fire-elemental"
   },
   {
     "path": "raw_sources/foundry/packs/_source/actors24/conjurations/conjured-elementals/conjured-water-elemental.yml",
-    "reason": "translator_error:ValueError:'custom' is not a valid CreatureType",
+    "reason": "not_in_srd_5_2_1",
     "slug": "conjured-water-elemental"
   },
   {
     "path": "raw_sources/foundry/packs/_source/actors24/conjurations/conjured-fey.yml",
-    "reason": "translator_error:ValueError:'custom' is not a valid CreatureType",
+    "reason": "not_in_srd_5_2_1",
     "slug": "conjured-fey"
   },
   {
     "path": "raw_sources/foundry/packs/_source/actors24/conjurations/dancing-light-medium.yml",
-    "reason": "translator_error:ValueError:'custom' is not a valid CreatureType",
+    "reason": "not_in_srd_5_2_1",
     "slug": "dancing-light-medium"
   },
   {
     "path": "raw_sources/foundry/packs/_source/actors24/conjurations/dancing-light-tiny.yml",
-    "reason": "translator_error:ValueError:'custom' is not a valid CreatureType",
+    "reason": "not_in_srd_5_2_1",
     "slug": "dancing-light-tiny"
   },
   {
     "path": "raw_sources/foundry/packs/_source/actors24/conjurations/duplicate.yml",
-    "reason": "translator_error:ValidationError:6 validation errors for AbilityScores\nstr\n  Input should be greater than 0 [type=greater_than, input_value=0, input_type=int]\n    For further information visit https://errors.pydantic.dev/2.13/v/greater_than\ndex\n  Input should be greater than 0 [type=greater_than, input_value=0, input_type=int]\n    For further information visit https://errors.pydantic.dev/2.13/v/greater_than\ncon\n  Input should be greater than 0 [type=greater_than, input_value=0, input_type=int]\n    For further information visit https://errors.pydantic.dev/2.13/v/greater_than\nint\n  Input should be greater than 0 [type=greater_than, input_value=0, input_type=int]\n    For further information visit https://errors.pydantic.dev/2.13/v/greater_than\nwis\n  Input should be greater than 0 [type=greater_than, input_value=0, input_type=int]\n    For further information visit https://errors.pydantic.dev/2.13/v/greater_than\ncha\n  Input should be greater than 0 [type=greater_than, input_value=0, input_type=int]\n    For further information visit https://errors.pydantic.dev/2.13/v/greater_than",
+    "reason": "not_in_srd_5_2_1",
     "slug": "duplicate"
   },
   {
     "path": "raw_sources/foundry/packs/_source/actors24/conjurations/faithful-hound.yml",
-    "reason": "translator_error:ValueError:'custom' is not a valid CreatureType",
+    "reason": "not_in_srd_5_2_1",
     "slug": "faithful-hound"
   },
   {
     "path": "raw_sources/foundry/packs/_source/actors24/conjurations/flaming-sphere.yml",
-    "reason": "translator_error:ValidationError:6 validation errors for AbilityScores\nstr\n  Input should be greater than 0 [type=greater_than, input_value=0, input_type=int]\n    For further information visit https://errors.pydantic.dev/2.13/v/greater_than\ndex\n  Input should be greater than 0 [type=greater_than, input_value=0, input_type=int]\n    For further information visit https://errors.pydantic.dev/2.13/v/greater_than\ncon\n  Input should be greater than 0 [type=greater_than, input_value=0, input_type=int]\n    For further information visit https://errors.pydantic.dev/2.13/v/greater_than\nint\n  Input should be greater than 0 [type=greater_than, input_value=0, input_type=int]\n    For further information visit https://errors.pydantic.dev/2.13/v/greater_than\nwis\n  Input should be greater than 0 [type=greater_than, input_value=0, input_type=int]\n    For further information visit https://errors.pydantic.dev/2.13/v/greater_than\ncha\n  Input should be greater than 0 [type=greater_than, input_value=0, input_type=int]\n    For further information visit https://errors.pydantic.dev/2.13/v/greater_than",
+    "reason": "not_in_srd_5_2_1",
     "slug": "flaming-sphere"
   },
   {
     "path": "raw_sources/foundry/packs/_source/actors24/conjurations/floating-disk.yml",
-    "reason": "translator_error:ValueError:'custom' is not a valid CreatureType",
+    "reason": "not_in_srd_5_2_1",
     "slug": "floating-disk"
   },
   {
     "path": "raw_sources/foundry/packs/_source/actors24/conjurations/guardian-of-faith.yml",
-    "reason": "translator_error:ValueError:'custom' is not a valid CreatureType",
+    "reason": "not_in_srd_5_2_1",
     "slug": "guardian-of-faith"
   },
   {
     "path": "raw_sources/foundry/packs/_source/actors24/conjurations/illusory-creature.yml",
-    "reason": "translator_error:ValueError:'custom' is not a valid CreatureType",
+    "reason": "not_in_srd_5_2_1",
     "slug": "illusory-creature"
   },
   {
     "path": "raw_sources/foundry/packs/_source/actors24/conjurations/illusory-object.yml",
-    "reason": "translator_error:ValueError:'custom' is not a valid CreatureType",
+    "reason": "not_in_srd_5_2_1",
     "slug": "illusory-object"
   },
   {
     "path": "raw_sources/foundry/packs/_source/actors24/conjurations/illusory-phenomenon.yml",
-    "reason": "translator_error:ValueError:'custom' is not a valid CreatureType",
+    "reason": "not_in_srd_5_2_1",
     "slug": "illusory-phenomenon"
   },
   {
     "path": "raw_sources/foundry/packs/_source/actors24/conjurations/invisible-sensor.yml",
-    "reason": "translator_error:ValueError:'custom' is not a valid CreatureType",
+    "reason": "not_in_srd_5_2_1",
     "slug": "invisible-sensor"
   },
   {
     "path": "raw_sources/foundry/packs/_source/actors24/conjurations/light.yml",
-    "reason": "translator_error:ValueError:'custom' is not a valid CreatureType",
+    "reason": "not_in_srd_5_2_1",
     "slug": "light"
   },
   {
     "path": "raw_sources/foundry/packs/_source/actors24/conjurations/mage-hand.yml",
-    "reason": "translator_error:ValueError:'custom' is not a valid CreatureType",
+    "reason": "not_in_srd_5_2_1",
     "slug": "mage-hand"
   },
   {
     "path": "raw_sources/foundry/packs/_source/actors24/conjurations/secret-chest.yml",
-    "reason": "translator_error:ValueError:'custom' is not a valid CreatureType",
+    "reason": "not_in_srd_5_2_1",
     "slug": "secret-chest"
   },
   {
     "path": "raw_sources/foundry/packs/_source/actors24/conjurations/spiritual-weapon.yml",
-    "reason": "translator_error:ValueError:'custom' is not a valid CreatureType",
+    "reason": "not_in_srd_5_2_1",
     "slug": "spiritual-weapon"
   },
   {
     "path": "raw_sources/foundry/packs/_source/actors24/conjurations/unseen-servant.yml",
-    "reason": "translator_error:ValueError:'custom' is not a valid CreatureType",
+    "reason": "not_in_srd_5_2_1",
     "slug": "unseen-servant"
   },
   {
@@ -181,43 +256,38 @@
   },
   {
     "path": "raw_sources/foundry/packs/_source/actors24/magic-items/carpet-of-flying-3-by-5-ft.yml",
-    "reason": "translator_error:ValueError:'custom' is not a valid CreatureType",
+    "reason": "not_in_srd_5_2_1",
     "slug": "carpet-of-flying-3-by-5-ft"
   },
   {
     "path": "raw_sources/foundry/packs/_source/actors24/magic-items/carpet-of-flying-4-by-6-ft.yml",
-    "reason": "translator_error:ValueError:'custom' is not a valid CreatureType",
+    "reason": "not_in_srd_5_2_1",
     "slug": "carpet-of-flying-4-by-6-ft"
   },
   {
     "path": "raw_sources/foundry/packs/_source/actors24/magic-items/carpet-of-flying-5-by-7-ft.yml",
-    "reason": "translator_error:ValueError:'custom' is not a valid CreatureType",
+    "reason": "not_in_srd_5_2_1",
     "slug": "carpet-of-flying-5-by-7-ft"
   },
   {
     "path": "raw_sources/foundry/packs/_source/actors24/magic-items/carpet-of-flying-6-by-9-ft.yml",
-    "reason": "translator_error:ValueError:'custom' is not a valid CreatureType",
+    "reason": "not_in_srd_5_2_1",
     "slug": "carpet-of-flying-6-by-9-ft"
   },
   {
     "path": "raw_sources/foundry/packs/_source/actors24/magic-items/dancing-sword.yml",
-    "reason": "translator_error:ValueError:'custom' is not a valid CreatureType",
+    "reason": "not_in_srd_5_2_1",
     "slug": "dancing-sword"
   },
   {
     "path": "raw_sources/foundry/packs/_source/actors24/magic-items/floating-whip.yml",
-    "reason": "translator_error:ValueError:'custom' is not a valid CreatureType",
+    "reason": "not_in_srd_5_2_1",
     "slug": "floating-whip"
   },
   {
     "path": "raw_sources/foundry/packs/_source/actors24/magic-items/illusory-creature.yml",
-    "reason": "translator_error:ValueError:'custom' is not a valid CreatureType",
+    "reason": "not_in_srd_5_2_1",
     "slug": "illusory-creature"
-  },
-  {
-    "path": "raw_sources/foundry/packs/_source/actors24/monstrosity/werewolf.yml",
-    "reason": "translator_error:ValueError:'(lycanthrope)' is not a valid CreatureType",
-    "slug": "werewolf"
   },
   {
     "path": "raw_sources/foundry/packs/_source/actors24/premades/level-1/akra.yml",
@@ -461,17 +531,17 @@
   },
   {
     "path": "raw_sources/foundry/packs/_source/actors24/summons/giant-insects/giant-centipede.yml",
-    "reason": "unanimous_non_srd",
+    "reason": "summon_form_shadowed_by:raw_sources/foundry/packs/_source/actors24/beast/giant-centipede.yml",
     "slug": "giant-centipede"
   },
   {
     "path": "raw_sources/foundry/packs/_source/actors24/summons/giant-insects/giant-spider.yml",
-    "reason": "unanimous_non_srd",
+    "reason": "summon_form_shadowed_by:raw_sources/foundry/packs/_source/actors24/beast/giant-spider.yml",
     "slug": "giant-spider"
   },
   {
     "path": "raw_sources/foundry/packs/_source/actors24/summons/giant-insects/giant-wasp.yml",
-    "reason": "unanimous_non_srd",
+    "reason": "summon_form_shadowed_by:raw_sources/foundry/packs/_source/actors24/beast/giant-wasp.yml",
     "slug": "giant-wasp"
   },
   {
@@ -510,9 +580,9 @@
     "slug": "warship"
   },
   {
-    "path": "raw_sources/foundry/packs/_source/spells24/1st-level/ice-knife.yml",
-    "reason": "unanimous_non_srd",
-    "slug": "ice-knife"
+    "path": "raw_sources/foundry/packs/_source/spells24/2nd-level/arcane-vigor.yml",
+    "reason": "not_in_srd_5_2_1",
+    "slug": "arcane-vigor"
   },
   {
     "path": "raw_sources/foundry/packs/_source/spells24/supplemental-items/magical-berries.yml",

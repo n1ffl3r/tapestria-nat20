@@ -1689,7 +1689,7 @@ re-discovered.
 ## Blocked
 
 - **Lair actions are blocked on translator support** (2026-09-03, C18).
-  All 341 bundled monsters ship `lair_actions == []` (schema field exists,
+  All 343 bundled monsters ship `lair_actions == []` (schema field exists,
   the translator never populates it from a Foundry source), so there is
   nothing for the engine to spend. The initiative-20 pseudo-turn a lair
   action needs (a scene-owned action outside any creature's own turn) is
@@ -1777,7 +1777,7 @@ layer over the engine — see `docs/bridge.md`. Gaps found while shipping it:
 
 ## Shipped prose quality (2026-08-22)
 
-- **All 341 monsters ship `description: ""`.** A host has nothing to render for
+- **All 343 monsters ship `description: ""`.** A host has nothing to render for
   any creature in the corpus. The translator populates per-action descriptions
   but never the top-level one.
   (`packages/dnd5e-srd-data/tools/translators/`)

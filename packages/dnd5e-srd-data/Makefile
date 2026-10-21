@@ -1,4 +1,4 @@
-.PHONY: install test check check-provenance check-regen-clean refresh-upstream regen
+.PHONY: install test check check-provenance check-regen-clean refresh-upstream regen srd-index
 
 install:
 	uv pip install -e ".[dev]"
@@ -39,3 +39,8 @@ refresh-upstream:
 # explicitly here.
 regen:
 	PYTHONPATH=. uv run python tools/regen.py
+
+# Maintainer-only: rebuild srd/index.json from the pinned official SRD 5.2.1 PDF and check
+# every alias in srd/aliases.json against it. Run before `make regen` after changing either.
+srd-index:
+	uv run python tools/srd_index.py

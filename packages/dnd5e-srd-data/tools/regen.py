@@ -40,7 +40,6 @@ from tools.translators.foundry import (
 )
 from tools.translators.srd_gate import (
     GateDecision,
-    SrdSourceVerdict,
     gate_decision,
 )
 
@@ -92,34 +91,16 @@ _KNOWN_UNRESOLVABLE_GRANTS: dict[str, str] = {
 }
 
 
-def _gate_for_yaml(yaml_path: Path) -> GateDecision:
-    """Three-source SRD agreement. In Phase 7a PR 1 we approximate this as
-    Foundry-only: the real Foundry pack tags SRD content via
-    ``system.source.license == 'CC-BY-4.0'`` AND
-    ``system.source.rules in ('2014', '2024')`` (CC-BY-4.0 covers both the 5.1
-    and the active 5.2 / 2024 SRD releases). 2024 is the active edition; 2014 is
-    still admitted for back-compat. The minimal fixture uses the legacy
-    ``flags.srd: true`` marker, so we accept either signal.
-
-    open5e + five_e_bits cross-checks layer in PR 2 or as a follow-up.
-    """
+def _gate_for_yaml(yaml_path: Path, corpus_category: str) -> GateDecision:
+    """The SRD gate for one Foundry document: its ``name``, checked against the official SRD
+    5.2.1 PDF's index (``tools/translators/srd_gate.py``). Foundry's own license tag no
+    longer decides: it marked Arcane Vigor CC-BY-4.0 and left Ice Knife, Giant Centipede,
+    and Giant Wasp out."""
     import yaml
 
     doc = yaml.safe_load(yaml_path.read_text(encoding="utf-8"))
-    flags_srd = bool(doc.get("flags", {}).get("srd"))
-    source = (doc.get("system") or {}).get("source") or {}
-    license_srd = (source.get("license") or "") == "CC-BY-4.0" and (source.get("rules") or "") in (
-        "2014",
-        "2024",
-    )
-    foundry_srd = flags_srd or license_srd
-    return gate_decision(
-        SrdSourceVerdict(
-            foundry_srd=foundry_srd,
-            open5e_srd=foundry_srd,  # PR 1 approximation
-            five_e_bits_srd=foundry_srd,
-        )
-    )
+    name = str((doc or {}).get("name") or "")
+    return gate_decision(name, corpus_category)
 
 
 def _run_category(
@@ -135,6 +116,8 @@ def _run_category(
     excluded: list[dict] = []
     accepted = 0
     quarantined = 0
+    # Foundry path of each slug written so far in this run, to keep stat blocks over summon forms.
+    written: dict[str, Path] = {}
     # Real packs nest by subtype (items/weapon/longsword.yml AND
     # items/weapon/martial-melee/... in 2024 layout). Walk recursively.
     yaml_paths = sorted(src.rglob("*.yml")) if src.is_dir() else []
@@ -172,7 +155,26 @@ def _run_category(
                 }
             )
             continue
-        decision = _gate_for_yaml(yaml_path)
+        decision = _gate_for_yaml(yaml_path, canonical_subdir)
+        # A spell's summon form can share a stat block's slug and name: the Giant Insect
+        # spell's actors24/summons/giant-insects/giant-wasp.yml against actors24/beast/
+        # giant-wasp.yml. Both are SRD names; the stat block is the record to keep.
+        shadowed = written.get(yaml_path.stem)
+        if (
+            decision.is_srd
+            and shadowed is not None
+            and "summons" in yaml_path.parts
+            and "summons" not in shadowed.parts
+        ):
+            quarantined += 1
+            excluded.append(
+                {
+                    "slug": yaml_path.stem,
+                    "path": str(yaml_path.relative_to(ROOT)),
+                    "reason": f"summon_form_shadowed_by:{shadowed.relative_to(ROOT)}",
+                }
+            )
+            continue
         if not decision.is_srd:
             quarantined += 1
             excluded.append(
@@ -214,6 +216,7 @@ def _run_category(
             )
             continue
         write_canonical_with_overrides(entity, dst)
+        written[yaml_path.stem] = yaml_path
         accepted += 1
     return accepted, quarantined, excluded
 
@@ -407,7 +410,7 @@ def main() -> int:
     actor_paths = [
         p
         for p in sorted((FOUNDRY_PACKS / "actors24").rglob("*.yml"))
-        if p.name != "_folder.yml" and _gate_for_yaml(p).is_srd
+        if p.name != "_folder.yml" and _gate_for_yaml(p, "monsters").is_srd
     ]
     # Traits mirror the shipped monster corpus; SRD-gated summon/companion
     # templates are excluded (their abilities return with C21).

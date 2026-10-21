@@ -1816,6 +1816,22 @@ def translate_monster_traits(
     return [by_slug[slug] for slug in sorted(by_slug)]
 
 
+# SRD 5.2.1 creature types where the pinned Foundry data holds something else, quoted from
+# the stat block's type line. Foundry's werewolf has ``type.value: (lycanthrope)``, which
+# dropped the stat block on a translator error. A correction applies only while Foundry's
+# value is not a creature type, so a fixed pin makes it inert.
+_CREATURE_TYPE_CORRECTIONS: dict[str, CreatureType] = {
+    # "Medium or Small Monstrosity (Lycanthrope), Chaotic Evil"
+    "werewolf": CreatureType.MONSTROSITY,
+}
+
+
+def _creature_type(slug: str, raw: str) -> CreatureType:
+    if raw not in {member.value for member in CreatureType} and slug in _CREATURE_TYPE_CORRECTIONS:
+        return _CREATURE_TYPE_CORRECTIONS[slug]
+    return CreatureType(raw)
+
+
 def translate_monster_yaml(
     yaml_path: Path,
     *,
@@ -1830,7 +1846,7 @@ def translate_monster_yaml(
     abilities = system.get("abilities", {})
 
     creature_type_raw = (details.get("type", {}).get("value") or "humanoid").lower()
-    creature_type = CreatureType(creature_type_raw)
+    creature_type = _creature_type(yaml_path.stem, creature_type_raw)
     creature_size = _SIZE_MAP.get(traits.get("size") or "med", CreatureSize.MEDIUM)
 
     ability_scores = AbilityScores(

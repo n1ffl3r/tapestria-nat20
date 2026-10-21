@@ -17,6 +17,7 @@ dev = [
     "mypy>=1.10",
     "ruff>=0.5",
     "bandit>=1.8.0",
+    "pypdf>=6.0",
 ]
 
 [build-system]
@@ -33,7 +34,7 @@ packages = ["src/dnd5e_srd_data"]
 # lives under the declared package root.
 
 [tool.hatch.build.targets.sdist]
-include = ["src/**", "tools/**", "tests/**", "README.md", "NOTICE", "Makefile"]
+include = ["src/**", "tools/**", "tests/**", "srd/*.json", "README.md", "NOTICE", "Makefile"]
 
 [tool.ruff]
 line-length = 100
