@@ -342,7 +342,8 @@ class GridScene(BaseModel):
     sight (SRD 5.2 §Areas of Effect); ``cover_cells`` grant half / three-
     quarters / total cover (SRD 5.2 §Cover); ``difficult_terrain_cells``
     double the movement cost of entering them (SRD 5.2 §Difficult Terrain).
-    See ``docs/dev/spatial-geometry.md`` for the full geometry design note.
+    ``elevation_cells`` give each cell's surface height (SRD 5.2.1 Climbing,
+    Falling). See ``docs/dev/spatial-geometry.md`` for the full geometry design note.
     """
 
     model_config = ConfigDict(extra="forbid")
@@ -373,6 +374,14 @@ class GridScene(BaseModel):
     # "heavy" hides whatever stands in the cell from every sense but
     # blindsight/truesight. Consumed by ``GridTopology.can_see``.
     obscurement_cells: dict[str, Obscurement] = Field(default_factory=dict)
+    # SRD 5.2.1 "Climbing" and "Falling [Hazard]": the height, in feet, of
+    # the surface a creature stands on in each cell. ``elevation_cells`` tags
+    # cells whose height differs from ``default_elevation``. A step between
+    # cells of different height is a climb (``GridTopology.edge_distance``);
+    # forced movement off a higher cell into a lower one is a fall. An empty
+    # map reproduces the flat grid exactly.
+    elevation_cells: dict[str, int] = Field(default_factory=dict)
+    default_elevation: int = 0
     # C18 §Monster action economy — SRD 5.2 stat-block trait "Sunlight
     # Sensitivity" (bundled ``canonical/traits/sunlight-sensitivity.json``):
     # "While in sunlight, the monster has Disadvantage on ability checks and

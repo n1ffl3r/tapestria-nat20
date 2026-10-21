@@ -88,6 +88,7 @@ from dnd5e_engine.activities.actor_stats import (
     save_modifier,
     skill_ability,
 )
+from dnd5e_engine.activities.apply import apply_damage
 from dnd5e_engine.activities.attack import (
     attacker_advantage_flags,
     sneak_attack_dice,
@@ -167,6 +168,7 @@ from dnd5e_engine.events import (
     ConditionApplied,
     ConditionRemoved,
     ConditionType,
+    CreatureFell,
     DamageApplied,
     DashTaken,
     Death,
@@ -1806,6 +1808,158 @@ def push_combatant(live: _LiveCombat, target_id: str, origin_cell: str, distance
             forced=True,
         ),
     )
+    # ``push_path`` stops on the first lower cell: the push carried the
+    # creature over an edge.
+    _resolve_fall(live, target_id, path[-2] if len(path) > 1 else target_cell, path[-1])
+
+
+#: SRD 5.2.1 Feather Fall, offered to a creature that can see a fall.
+_FEATHER_FALL: Final = "feather-fall"
+
+#: SRD 5.2.1 Feather Fall: "A falling creature's rate of descent slows to 60
+#: feet per round until the spell ends", and its "Duration: 1 minute" is ten
+#: rounds. A fall this long or shorter lands before the spell ends.
+_FEATHER_FALL_DESCENT_FT: Final = 600
+
+
+def _climbs_freely(combatant: Combatant) -> bool:
+    """Whether ``combatant`` climbs without the extra cost: SRD 5.2.1
+    "Climbing": "You ignore this extra cost if you have a Climb Speed and use
+    it to climb". A Fly Speed flies up or down the height instead."""
+    modes = combatant.movement_modes
+    return bool(modes.climb) or bool(modes.fly)
+
+
+def _stays_aloft(live: _LiveCombat, combatant: Combatant) -> bool:
+    """Whether a flier carried over an edge stays in the air instead of
+    falling. SRD 5.2.1 "Fly Speed": "While you have a Fly Speed, you can stay
+    aloft until you land, fall, or die"; "Flying": "you fall if you have the
+    Incapacitated or Prone condition or your Fly Speed is reduced to 0. You
+    can stay aloft in those circumstances if you can hover." Its Fly Speed
+    takes the same reductions as its Speed (SRD 5.2.1 "Speed": "any special
+    speed you have increases or decreases by an equal amount")."""
+    modes = combatant.movement_modes
+    if not modes.fly:
+        return False
+    if modes.hover:
+        return True
+    names = _condition_names(combatant)
+    if is_condition_active(Condition.INCAPACITATED, names) or is_condition_active(
+        Condition.PRONE, names
+    ):
+        return False
+    fly = project_speed(modes.fly, names, exhaustion_level_of(combatant.conditions))
+    if live.slow_marks.get(combatant.entity_id):
+        fly -= 10
+    return fly > 0
+
+
+def _resolve_fall(live: _LiveCombat, faller_id: str, from_cell: str, to_cell: str) -> None:
+    """SRD 5.2.1 "Falling [Hazard]": "A creature that falls takes 1d6
+    Bludgeoning damage at the end of the fall for every 10 feet it fell, to a
+    maximum of 20d6. When the creature lands, it has the Prone condition
+    unless it avoids taking any damage from the fall."
+
+    Called when forced movement carries ``faller_id`` from ``from_cell`` into
+    the lower ``to_cell``; a step that does not drop, or a flier that stays
+    aloft (``_stays_aloft``), does nothing. Emits ``CreatureFell``, offers
+    Feather Fall (``_offer_feather_fall``) when the fall would deal damage,
+    then rolls the damage, applies it through the ordinary damage path
+    (resistances, concentration, 0 Hit Points), and lays the creature Prone
+    when it took any. The fall's events are a nested span
+    (``live.nested_event_spans``): the resolution that pushed the creature
+    does not count the fall's damage as its own, so it offers no Hellish
+    Rebuke against the pusher."""
+    drop = live.topology.elevation_ft(from_cell) - live.topology.elevation_ft(to_cell)
+    faller = _find_combatant(live, faller_id)
+    if drop <= 0 or faller is None or _stays_aloft(live, faller):
+        return
+    span_start = len(live.event_log)
+    _emit(live, CreatureFell(target_id=faller_id, zone=to_cell, distance_ft=drop))
+    dice = min(drop // 10, 20)
+    if dice and _offer_feather_fall(live, faller_id, drop):
+        # The spell slows the descent for its duration; past that, the
+        # creature falls the rest of the way.
+        dice = min(max(0, drop - _FEATHER_FALL_DESCENT_FT) // 10, 20)
+    if dice:
+        _apply_fall_damage(live, faller_id, dice)
+    live.nested_event_spans.append((span_start, len(live.event_log)))
+
+
+def _offer_feather_fall(live: _LiveCombat, faller_id: str, drop_ft: int) -> bool:
+    """SRD 5.2.1 Feather Fall: "Casting Time: Reaction, which you take when you
+    or a creature you can see within 60 feet of you falls"; "If a creature
+    lands before the spell ends, the creature takes no damage from the fall".
+
+    Offered in initiative order to each creature that knows Feather Fall, can
+    pay for it, can cast a spell as a Reaction, and is the faller or sees it
+    within the spell's range; the first ``"use"`` casts it at the faller and
+    ends the offer. Returns whether it was cast."""
+    spell = get_lib_loader().get_spell(_FEATHER_FALL)
+    faller = _find_combatant(live, faller_id)
+    if spell is None or faller is None:
+        return False
+    range_ft = int(spell.range.value or 60)
+    for reactor in list(live.initiative):
+        if not _can_cast_reaction(live, reactor) or not _knows_spell(live, reactor, _FEATHER_FALL):
+            continue
+        level = _lowest_payable_level(live, reactor, spell)
+        if level is None:
+            continue
+        if reactor.entity_id != faller_id and not _sees_within(live, reactor, faller_id, range_ft):
+            continue
+        prompt = ReactionPrompt(
+            reactor_id=reactor.entity_id,
+            reaction_key=_FEATHER_FALL,
+            trigger=f"{faller_id} falls {drop_ft} feet",
+            triggering_actor_id=faller_id,
+        )
+        if _decide_reaction(live, prompt) == "pass":
+            continue
+        _cast_reaction_spell(live, reactor, spell, level, [faller], reaction_name=_FEATHER_FALL)
+        return True
+    return False
+
+
+def _apply_fall_damage(live: _LiveCombat, faller_id: str, dice: int) -> None:
+    """Roll ``dice`` d6 Bludgeoning damage for a fall and apply it to
+    ``faller_id`` through ``apply_damage`` (its resistances and immunities
+    apply; ``source_id`` ``"hazard:falling"``), then the Prone condition when
+    it took any damage and is still up."""
+    faller = _find_combatant(live, faller_id)
+    if faller is None:  # pragma: no cover - _resolve_fall found it
+        return
+    payload = _build_hydration_payload(live, caster=faller)
+    actx = build_activity_context(
+        faller,
+        [faller],
+        rng=live.rng,
+        event_emitter=lambda ev: _emit(live, ev),
+        slot_level=None,
+        base_spell_level=None,
+        spellcasting_ability=None,
+        concentration=False,
+        source_passive_effects=[],
+        spell_book={},
+        passive_damage_modifiers=payload["passive_damage_modifiers"],
+        save_modifiers=payload["save_modifiers"],
+        check_modifiers=payload["check_modifiers"],
+        d20_test_penalty=payload["d20_test_penalty"],
+        legendary_resistance_armed=payload["legendary_resistance_armed"],
+        legendary_resistances_remaining_by_entity=payload[
+            "legendary_resistances_remaining_by_entity"
+        ],
+        undead_fortitude_holds=live.undead_fortitude_holds,
+    )
+    pre_event_count = len(live.event_log)
+    rolled = roll_expr(f"{dice}d6", live.rng)
+    dealt = apply_damage(faller, {"bludgeoning": rolled}, actx, source_id="hazard:falling")
+    _sync_legendary_resistance(live, pre_event_count)
+    if dealt <= 0 or _is_down(live, faller_id):
+        return
+    landed = _find_combatant(live, faller_id)
+    if landed is not None and not is_condition_active(Condition.PRONE, _condition_names(landed)):
+        _emit_condition_applied(live, landed, "prone")
 
 
 def _apply_forced_movement_riders(
@@ -1900,17 +2054,21 @@ def _record_savage_attacker_spent(
         _update_combatant(live, caster.entity_id, savage_attacker_spent_this_turn=True)
 
 
-def _path_total_distance(topology: SpatialTopology, path: Sequence[str]) -> int | None:
+def _path_total_distance(
+    topology: SpatialTopology, path: Sequence[str], *, climber: bool = False
+) -> int | None:
     """Sum a shortest-path's edge distances; ``None`` if any step is missing.
 
     ``path`` is the cell sequence ``shortest_path`` returns (``path[0]``
-    is the start). A one-element or empty path costs ``0``.
+    is the start). A one-element or empty path costs ``0``. ``climber``
+    prices each climb for a creature with a Climb or Fly Speed
+    (``_climbs_freely``).
     """
     if len(path) < 2:
         return 0
     total = 0
     for a, b in itertools.pairwise(path):
-        step = topology.edge_distance(a, b)
+        step = topology.edge_distance(a, b, climber=climber)
         if step is None:
             return None
         total += step
@@ -1949,6 +2107,7 @@ def _plan_flee_route(
     *,
     enemy_cells: Collection[str],
     occupied_cells: Collection[str],
+    climber: bool = False,
 ) -> list[str] | None:
     """The route a fleeing monster standing on ``start`` walks to get as far
     from its threats as ``budget_ft`` allows (``route[0]`` is ``start``), or
@@ -1968,7 +2127,7 @@ def _plan_flee_route(
     def nearest_threat_ft(cell: str) -> int:
         return min(grid.distance_ft(cell, threat) or 0 for threat in threat_cells)
 
-    reached = grid.reachable_cells(start, budget_ft, avoid=enemy_cells)
+    reached = grid.reachable_cells(start, budget_ft, avoid=enemy_cells, climber=climber)
     occupied = set(occupied_cells)
     baseline = nearest_threat_ft(start)
     candidates = [
@@ -1997,7 +2156,7 @@ def _take_walk_step(live: _LiveCombat, mover_id: str, next_cell: str) -> bool:
     from_cell = live.actor_zone.get(mover_id)
     if mover is None or from_cell is None:
         return False
-    step_distance = live.topology.edge_distance(from_cell, next_cell)
+    step_distance = live.topology.edge_distance(from_cell, next_cell, climber=_climbs_freely(mover))
     if step_distance is None or mover.movement_remaining < step_distance:
         return False
     if _fire_opportunity_attacks_on_step(
@@ -2052,6 +2211,7 @@ def _execute_flee_retreat(
         monster.movement_remaining,
         enemy_cells=_occupied_cells(live, exclude=_allied_ids(live, monster.entity_id)),
         occupied_cells=_occupied_cells(live, exclude=(monster.entity_id,)),
+        climber=_climbs_freely(monster),
     )
     if route is not None:
         _walk_path(live, monster.entity_id, route)
@@ -2110,7 +2270,10 @@ def _monster_target_distance_ft(
     if monster_zone is None or target_zone is None:
         return None
     path = live.topology.shortest_path(monster_zone, target_zone)
-    return _path_total_distance(live.topology, path)
+    monster = _find_combatant(live, monster_id)
+    return _path_total_distance(
+        live.topology, path, climber=monster is not None and _climbs_freely(monster)
+    )
 
 
 def _pc_attack_out_of_range(live: _LiveCombat, actor_id: str, intent: PlayerIntent) -> bool:
@@ -7656,6 +7819,9 @@ def _build_foe_combatants(
                     # template with no cast-bearing actions (unchanged
                     # ``Combatant`` default).
                     "spellcasting_ability": monster.spellcasting_ability,
+                    # SRD 5.2.1 "Climbing" and "Flying": the special speeds
+                    # a climb is priced with and a fall is checked against.
+                    "movement_modes": _monster_movement_modes(monster),
                 }
                 legendary_actions_max = _legendary_action_uses_max(monster)
                 if legendary_actions_max:
@@ -9299,7 +9465,8 @@ def _handle_move(live: _LiveCombat, current: Combatant, intent: PlayerIntent) ->
         return
     # "To enter a square, you must have enough movement left to pay for
     # entering" — the whole route is priced up front so a rejection is atomic.
-    total_cost = _path_total_distance(live.topology, path)
+    climber = _climbs_freely(current)
+    total_cost = _path_total_distance(live.topology, path, climber=climber)
     if total_cost is None or current.movement_remaining < total_cost:
         _emit(live, MoveFailed(actor_id=actor_id, reason="insufficient_movement"))
         return
@@ -9315,7 +9482,7 @@ def _handle_move(live: _LiveCombat, current: Combatant, intent: PlayerIntent) ->
     # attack lands between the two events.
     run_start, run_ft, position = start_zone, 0, start_zone
     for next_cell in path[1:]:
-        step_distance = live.topology.edge_distance(position, next_cell)
+        step_distance = live.topology.edge_distance(position, next_cell, climber=climber)
         if step_distance is None:  # pragma: no cover - route is legal by construction
             break
         if run_ft and _opportunity_attackers(
@@ -10189,6 +10356,17 @@ def _monster_senses(monster: Monster) -> CombatantSenses:
     )
 
 
+def _monster_movement_modes(form: Monster) -> CombatantMovementModes:
+    """The stat block's special speeds, and whether it can hover."""
+    return CombatantMovementModes(
+        climb=form.movement.climb,
+        swim=form.movement.swim,
+        fly=form.movement.fly,
+        burrow=form.movement.burrow,
+        hover=form.movement.hover,
+    )
+
+
 def _physical_stat_fields(form: Monster) -> dict[str, Any]:
     """AC, STR / DEX / CON, Speed and movement modes, senses, damage and
     condition traits, trait mechanics, and a 5-ft reach (the corpus carries no
@@ -10200,12 +10378,7 @@ def _physical_stat_fields(form: Monster) -> dict[str, Any]:
         "dexterity": scores.dex,
         "constitution": scores.con,
         "base_speed": form.movement.walk or 0,
-        "movement_modes": CombatantMovementModes(
-            climb=form.movement.climb,
-            swim=form.movement.swim,
-            fly=form.movement.fly,
-            burrow=form.movement.burrow,
-        ),
+        "movement_modes": _monster_movement_modes(form),
         "senses": _monster_senses(form),
         "melee_reach_ft": 5,
         "damage_resistances": list(form.damage_resistances),
@@ -13735,7 +13908,7 @@ async def _advance_monster_turn(
             # Plan the path and walk it greedily within budget.
             path = live.topology.shortest_path(attacker_zone, target_zone)
             dashed_budget = _monster_dash_movement_budget(
-                _path_total_distance(live.topology, path),
+                _path_total_distance(live.topology, path, climber=_climbs_freely(current)),
                 current.movement_remaining,
                 # SRD 5.2 Dash adds the creature's EFFECTIVE Speed: a Speed-0
                 # monster (Grappled / Restrained / …) "can't increase" it, so
