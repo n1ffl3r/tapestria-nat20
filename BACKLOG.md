@@ -606,9 +606,10 @@ counts are pinned by `packages/dnd5e-engine/tests/test_capability_matrix.py`.
   character to 0 Hit Points" has nothing to read but the target's Hit Points
   and the attacker's damage expression.
   (`packages/dnd5e-engine/src/dnd5e_engine/reactions.py::ReactionPrompt`)
-- **No monster is offered a reaction spell (2026-10-21, spec 02a B2).** Shield
-  is offered to a creature that knows it through `spells_known` or a slotless
-  cast, which only characters carry; a stat block's reaction (the Mage's
+- **No monster is offered a reaction spell (2026-10-21, spec 02a B2).** Shield,
+  Counterspell and Hellish Rebuke are offered to a creature that knows them
+  through `spells_known` or a slotless cast, which only characters carry; a
+  stat block's reaction (the Mage's
   "Protective Magic (3/Day). The mage casts Counterspell or Shield in response
   to the spell's trigger") is never offered.
   (`packages/dnd5e-engine/src/dnd5e_engine/orchestrator.py::_offer_shield`)
@@ -1394,11 +1395,18 @@ zone + apply logic:
   neither the cooldown nor interruption tracking exists — a host wanting
   either must gate its OWN call to these resolvers.
   (`packages/dnd5e-engine/src/dnd5e_engine/rest.py`)
-- **Absorb Elements has no reaction path**; Hellish Rebuke is only a
-  `last_damaged_by` target validator, not a trigger. (See "Reactions are not
-  data-driven" above.) Spec 02a's next step offers Hellish Rebuke, Counterspell
-  and opportunity attacks through `ReactionPolicy`, as Shield is (2026-10-21);
-  Feather Fall has no trigger while falling is not modelled.
+- **Absorb Elements has no reaction path.** (See "Reactions are not
+  data-driven" above.)
+- **Feather Fall has no trigger (2026-10-21, spec 02a B2).** SRD 5.2.1 Feather
+  Fall: "Reaction, which you take when you or a creature you can see within 60
+  feet of you falls". The engine models no falling ("Not modelled by design"),
+  so nothing ever offers it.
+  (`packages/dnd5e-engine/src/dnd5e_engine/reactions.py::ReactionKey`)
+- **A reaction spell cannot be countered (2026-10-21, spec 02a B2).** SRD
+  5.2.1 Counterspell answers "a creature ... casting a spell", which includes a
+  Shield or Hellish Rebuke cast as a Reaction, but Counterspell is offered only
+  at a character's on-turn cast and a monster's stat-block cast.
+  (`packages/dnd5e-engine/src/dnd5e_engine/orchestrator.py::_counterspell_cast`)
 - **Four concentration spells raise after spending their slot (2026-09-26,
   pre-existing).** Delayed Blast Fireball and Tsunami read `@item.uses.value`,
   Spider Climb reads `@attributes.movement.walk`, and Phantasmal Killer's save

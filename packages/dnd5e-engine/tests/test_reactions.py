@@ -40,10 +40,13 @@ from dnd5e_engine.combat_state import (
 )
 from dnd5e_engine.events import (
     AttackRolled,
+    CastFailed,
     DamageApplied,
+    Death,
     EffectApplied,
     EffectExpired,
     ReactionTriggered,
+    SaveRolled,
     SpellCast,
 )
 from dnd5e_engine.reactions import ReactionChoice, ReactionPrompt
@@ -489,3 +492,296 @@ def test_the_shield_effect_is_the_spells_own() -> None:
     assert applied.effect.target_id == WIZARD
     assert applied.effect.origin.endswith(WIZARD)
     assert FOE not in step.state.concentration
+
+
+# ── criterion 11: Counterspell, Hellish Rebuke, opportunity attacks ─────────
+
+
+def _warlock(**fields: Any) -> PartyMemberSpec:
+    """A level 5 warlock who knows Hellish Rebuke and Counterspell."""
+    base: dict[str, Any] = {
+        "entity_id": WIZARD,
+        "name": "Warlock",
+        "initiative": 20,
+        "hp_current": 30,
+        "hp_max": 30,
+        "ac": 12,
+        "charisma": 16,
+        "zone_id": cell_id(0, 0),
+        "spell_slots": {1: 2, 3: 2},
+        "spells_known": ["hellish-rebuke", "counterspell"],
+        "class_slug": "warlock",
+        "character_level": 5,
+    }
+    return PartyMemberSpec(**(base | fields))
+
+
+def _monster(slug: str, **fields: Any) -> EncounterMemberSpec:
+    base: dict[str, Any] = {
+        "entity_id": FOE,
+        "entity_type": "Monster",
+        "name": "Foe",
+        "initiative": 1,
+        "hp_current": 40,
+        "hp_max": 40,
+        "ac": 12,
+        "attack_bonus": 4,
+        "damage_dice": "1d6+2",
+        "zone_id": cell_id(1, 0),
+        "monster_template_slug": slug,
+    }
+    return EncounterMemberSpec(**(base | fields))
+
+
+def _monsters_turn(
+    party: list[PartyMemberSpec], encounter: list[EncounterMemberSpec], width: int = 10
+) -> CombatState:
+    """The monster's turn, every character having passed its own."""
+    state = asyncio.run(
+        begin_combat(
+            session_id="reactions-b2",
+            party=party,
+            encounter=encounter,
+            grid_scene=GridScene(width=width, height=10),
+            seed=1,
+        )
+    ).state
+    for member in party:
+        state = asyncio.run(
+            resolve_intent(
+                state, actor_id=member.entity_id, intent=PlayerIntent(intent_type="pass"), seed=1
+            )
+        )
+        state = state.state
+    return state
+
+
+def _only(key: str, answer: str) -> Any:
+    """A policy that answers ``answer`` for ``key`` and passes everything else."""
+    return lambda prompt: answer if prompt.reaction_key == key else "pass"
+
+
+def _mage(**fields: Any) -> EncounterMemberSpec:
+    """The SRD Mage, 25 feet from the warlock: on its turn it casts Fireball."""
+    return _monster("mage", **({"hp_current": 81, "hp_max": 81, "zone_id": cell_id(5, 0)} | fields))
+
+
+def test_counterspell_is_offered_when_a_creature_casts_within_60_feet() -> None:
+    """SRD 5.2.1 Counterspell: "Reaction, which you take when you see a
+    creature within 60 feet of yourself casting a spell with Verbal, Somatic,
+    or Material components"."""
+    state = _monsters_turn([_warlock()], [_mage()])
+    step = _turn(state, 1, reactions=_only("counterspell", "suspend"))
+    assert step.suspension is not None
+    assert step.suspension.prompt == ReactionPrompt(
+        reactor_id=WIZARD,
+        reaction_key="counterspell",
+        trigger="cre:1 casts Fireball within 60 feet of pc:1",
+        triggering_actor_id=FOE,
+    )
+    # Nothing of the Fireball has happened yet.
+    assert not _of(step, SpellCast)
+    assert not _of(step, DamageApplied)
+
+
+def test_counterspell_used_dissipates_the_spell() -> None:
+    """ "On a failed save, the spell dissipates with no effect, and the action
+    ... used to cast it is wasted": no Fireball, the Mage's daily use is spent,
+    and the warlock pays a level 3 slot."""
+    state = _monsters_turn([_warlock()], [_mage()])
+    paused = _turn(state, 1, reactions=_only("counterspell", "suspend")).suspension
+    assert paused is not None
+    step = _resume(state, paused, "use", seed=3)
+    assert [e.reaction_name for e in _of(step, ReactionTriggered)] == ["counterspell"]
+    [save] = _of(step, SaveRolled)
+    assert (save.target_id, save.ability, save.succeeded) == (FOE, "con", False)
+    assert [(e.actor_id, e.reason) for e in _of(step, CastFailed)] == [(FOE, "countered")]
+    assert [e.spell_id for e in _of(step, SpellCast)] == ["counterspell"]
+    assert not _of(step, DamageApplied)
+    assert step.state.spell_slots[WIZARD] == {1: 2, 3: 1}
+    daily = step.state.monster_action_uses[FOE]["spellcasting"].uses_remaining
+    assert daily[f"spellcasting:{_FIREBALL}"] == 1
+
+
+def test_counterspell_passed_lets_the_spell_resolve() -> None:
+    state = _monsters_turn([_warlock()], [_mage()])
+    paused = _turn(state, 1, reactions=_only("counterspell", "suspend")).suspension
+    assert paused is not None
+    step = _resume(state, paused, "pass", seed=3)
+    assert [e.spell_id for e in _of(step, SpellCast)] == ["fireball"]
+    assert [e.target_id for e in _of(step, DamageApplied)] == [WIZARD]
+    assert step.state.spell_slots[WIZARD] == {1: 2, 3: 2}
+
+
+def test_counterspell_beyond_60_feet_is_not_offered() -> None:
+    """The Mage 65 feet away is out of Counterspell's reach; its Fireball
+    (range 150 feet) still lands."""
+    state = _monsters_turn([_warlock()], [_mage(zone_id=cell_id(13, 0))], width=20)
+    step = _turn(state, 1, reactions=_only("counterspell", "suspend"))
+    assert step.suspension is None
+    assert [e.spell_id for e in _of(step, SpellCast)] == ["fireball"]
+
+
+def test_counterspell_against_a_characters_cast_keeps_its_slot() -> None:
+    """ "If that spell was cast with a spell slot, the slot isn't expended":
+    a character's countered Magic Missile keeps its level 1 slot."""
+    caster = PartyMemberSpec(
+        entity_id="pc:2",
+        name="Caster",
+        initiative=25,
+        hp_current=20,
+        hp_max=20,
+        spells_known=["magic-missile"],
+        spell_slots={1: 2},
+        zone_id=cell_id(2, 0),
+    )
+    state = asyncio.run(
+        begin_combat(
+            session_id="reactions-cs",
+            party=[caster, _warlock()],
+            encounter=[_monster("goblin-warrior", zone_id=cell_id(4, 0))],
+            grid_scene=GridScene(width=10, height=10),
+            seed=1,
+        )
+    ).state
+    missile = PlayerIntent(
+        intent_type="cast_spell", spell_id="magic-missile", slot_level=1, target_id=FOE
+    )
+    paused = asyncio.run(
+        resolve_intent(
+            state,
+            actor_id="pc:2",
+            intent=missile,
+            seed=2,
+            reactions=_only("counterspell", "suspend"),
+        )
+    ).suspension
+    assert paused is not None
+    assert paused.prompt.triggering_actor_id == "pc:2"
+    # Resume seed 4: the caster fails its Constitution save (seed 5 passes it).
+    step = _resume(state, paused, "use", seed=4)
+    assert [(e.actor_id, e.reason) for e in _of(step, CastFailed)] == [("pc:2", "countered")]
+    assert step.state.spell_slots["pc:2"] == {1: 2}
+    assert step.state.spell_slots[WIZARD] == {1: 2, 3: 1}
+    assert not [e for e in _of(step, DamageApplied) if e.target_id == FOE]
+    saved = _resume(state, paused, "use", seed=5)
+    assert [e.spell_id for e in _of(saved, SpellCast)] == ["counterspell", "magic-missile"]
+    assert saved.state.spell_slots["pc:2"] == {1: 1}
+
+
+def test_hellish_rebuke_is_offered_after_taking_damage() -> None:
+    """SRD 5.2.1 Hellish Rebuke: "Reaction, which you take in response to
+    taking damage from a creature that you can see within 60 feet of
+    yourself"; "The creature that damaged you ... makes a Dexterity saving
+    throw, taking 2d10 Fire damage on a failed save or half as much damage on
+    a successful one"."""
+    state = _monsters_turn([_warlock()], [_monster("goblin-warrior")])
+    step = _turn(state, _HIT, reactions=_only("hellish-rebuke", "suspend"))
+    assert step.suspension is not None
+    prompt = step.suspension.prompt
+    assert (prompt.reaction_key, prompt.triggering_actor_id) == ("hellish-rebuke", FOE)
+    assert prompt.trigger.startswith("cre:1 deals ")
+    assert [e.target_id for e in _of(step, DamageApplied)] == [WIZARD]  # the trigger itself
+
+    used = _resume(state, step.suspension, "use", seed=3)
+    assert [e.reaction_name for e in _of(used, ReactionTriggered)] == ["hellish-rebuke"]
+    [save] = _of(used, SaveRolled)
+    assert (save.target_id, save.ability) == (FOE, "dex")
+    fire = [e for e in _of(used, DamageApplied) if e.target_id == FOE]
+    assert fire
+    assert fire[0].damage_type == "fire"
+    assert used.state.spell_slots[WIZARD] == {1: 1, 3: 2}
+
+
+def test_an_attack_that_deals_no_damage_offers_no_rebuke() -> None:
+    asked: list[ReactionPrompt] = []
+
+    def policy(prompt: ReactionPrompt) -> str:
+        asked.append(prompt)
+        return "use"
+
+    state = _monsters_turn([_warlock()], [_monster("goblin-warrior")])
+    step = _turn(state, _MISS, reactions=policy)
+    assert not _of(step, DamageApplied)
+    assert asked == []
+
+
+def test_a_rebuke_that_drops_the_attacker_ends_its_multiattack() -> None:
+    """A Reaction "takes place immediately after its trigger": the bandit
+    captain's first hit is rebuked, the rebuke kills it, and its second attack
+    never comes. Passing lets both attacks roll."""
+    captain = _monster("bandit-captain", hp_current=1, hp_max=1)
+    state = _monsters_turn([_warlock()], [captain])
+    rebuked = _turn(state, 3, reactions=_only("hellish-rebuke", "use"))
+    assert len(_of(rebuked, AttackRolled)) == 1
+    assert [e.target_id for e in _of(rebuked, Death)] == [FOE]
+    passed = _turn(state, 3, reactions=_only("hellish-rebuke", "pass"))
+    assert len(_of(passed, AttackRolled)) == 2
+    assert not _of(passed, Death)
+
+
+def _walk_past() -> CombatState:
+    """The goblin starts beside the warlock and walks off to the weaker
+    character, leaving the warlock's reach."""
+    weak = PartyMemberSpec(
+        entity_id="pc:2",
+        name="Weak",
+        initiative=19,
+        hp_current=3,
+        hp_max=30,
+        zone_id=cell_id(6, 1),
+    )
+    return _monsters_turn(
+        [_warlock(zone_id=cell_id(1, 1)), weak],
+        [_monster("goblin-warrior", zone_id=cell_id(2, 1))],
+    )
+
+
+def test_a_characters_opportunity_attack_goes_through_the_policy() -> None:
+    """SRD 5.2.1 "Opportunity Attacks": "You can make an Opportunity Attack when
+    a creature that you can see leaves your reach"; contract 03: player
+    characters follow their doctrine."""
+    state = _walk_past()
+    step = _turn(state, 2, reactions=_only("opportunity-attack", "suspend"))
+    assert step.suspension is not None
+    assert step.suspension.prompt == ReactionPrompt(
+        reactor_id=WIZARD,
+        reaction_key="opportunity-attack",
+        trigger="cre:1 leaves the reach of pc:1",
+        triggering_actor_id=FOE,
+    )
+    used = _resume(state, step.suspension, "use", seed=5)
+    assert [e.attacker_id for e in _of(used, AttackRolled) if e.is_opportunity_attack] == [WIZARD]
+    passed = _resume(state, step.suspension, "pass", seed=5)
+    assert not [e for e in _of(passed, AttackRolled) if e.is_opportunity_attack]
+
+
+def test_the_default_policy_takes_the_opportunity_attack() -> None:
+    """As in 0.7.0, an opportunity attack needs no arming."""
+    step = _turn(_walk_past(), 2)
+    assert [e.attacker_id for e in _of(step, AttackRolled) if e.is_opportunity_attack] == [WIZARD]
+
+
+def test_a_monsters_opportunity_attack_never_asks() -> None:
+    """Contract 03: monsters and NPCs "decide by their stat block behavior and
+    directive. No pause." The warlock walks away from the goblin, which
+    attacks without any prompt."""
+    state = _monsters_turn(
+        [_warlock(zone_id=cell_id(1, 1))], [_monster("goblin-warrior", zone_id=cell_id(2, 1))]
+    )
+    state = state.at_turn(2, WIZARD)
+    step = asyncio.run(
+        resolve_intent(
+            state,
+            actor_id=WIZARD,
+            intent=PlayerIntent(intent_type="move", target_zone_id=cell_id(1, 5)),
+            seed=1,
+            reactions=_suspend,
+        )
+    )
+    assert step.suspension is None
+    assert [e.attacker_id for e in _of(step, AttackRolled) if e.is_opportunity_attack] == [FOE]
+
+
+# The mage's Fireball activity in the corpus (``mage.json``).
+_FIREBALL = "OMMdgcswZDwcu4P9"

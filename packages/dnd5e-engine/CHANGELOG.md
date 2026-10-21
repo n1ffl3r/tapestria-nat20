@@ -8,9 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 Spec 02a (the fork's work order for its host), session B1: the combat as
-serializable state, and a seed on every call that rolls. Session B2, first
-part: a resolution that pauses for a reaction, and Shield taken as a Reaction
-after an attack roll that would hit.
+serializable state, and a seed on every call that rolls. Session B2: a resolution that pauses for a reaction, and Shield, Counterspell,
+Hellish Rebuke and opportunity attacks taken as Reactions at their SRD triggers.
 
 ### Added
 
@@ -65,6 +64,21 @@ after an attack roll that would hit.
   A readied Shield, or any spell readied on `"hit_by_attack"`, now fires only
   when the attack hits, where it fired before the roll, on a hit or a miss.
   Three tests that pinned the firing on a miss now make the attack hit.
+- **Counterspell is offered as a Reaction at any cast it can see.** SRD 5.2.1:
+  "Reaction, which you take when you see a creature within 60 feet of yourself
+  casting a spell with Verbal, Somatic, or Material components". It is offered,
+  through the policy, to every creature that knows it (or readied it), can pay
+  for it and sees the caster within 60 feet, against a character's cast and now
+  a monster's stat-block cast too (a countered monster spell spends its daily
+  use). A failed attempt leaves the cast to the next creature.
+- **Hellish Rebuke is a Reaction to taking damage.** SRD 5.2.1: "Reaction,
+  which you take in response to taking damage from a creature that you can see
+  within 60 feet of yourself". It is offered after each damaging attack or
+  spell activity and cast at the attacker; a rebuke that drops a monster ends
+  its Multiattack. The 0.7.0 own-turn cast at `last_damaged_by` still works.
+- **A character's opportunity attack goes through the policy**
+  (`reaction_key="opportunity-attack"`), which the default policy uses; a
+  monster's is always taken.
 - **Set order no longer reaches output.** A seeded effect's statuses, an
   applied effect's conditions and the XP award's survivors are taken in a fixed
   order, so the same combat serializes the same way in every process.

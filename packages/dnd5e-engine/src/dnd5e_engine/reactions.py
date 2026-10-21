@@ -34,8 +34,9 @@ __all__ = [
     "default_reaction_policy",
 ]
 
-#: The reactions the engine offers at their SRD triggers, by SRD key.
-ReactionKey = Literal["shield"]
+#: The reactions the engine offers at their SRD triggers, by SRD key: three
+#: reaction spells and the Opportunity Attack every creature has.
+ReactionKey = Literal["shield", "counterspell", "hellish-rebuke", "opportunity-attack"]
 
 #: A player's decision on one prompt.
 ReactionDecision = Literal["use", "pass"]
@@ -71,9 +72,10 @@ ReactionPolicy = Callable[[ReactionPrompt], PolicyAnswer]
 
 
 def default_reaction_policy(prompt: ReactionPrompt) -> PolicyAnswer:
-    """The 0.7.0 behaviour: a reaction the creature readied is used, any other
-    is passed. Never suspends."""
-    return "use" if prompt.readied else "pass"
+    """The 0.7.0 behaviour: an Opportunity Attack, which needed no arming, and
+    a reaction the creature readied are used; any other is passed. Never
+    suspends."""
+    return "use" if prompt.readied or prompt.reaction_key == "opportunity-attack" else "pass"
 
 
 class ReactionChoice(BaseModel):

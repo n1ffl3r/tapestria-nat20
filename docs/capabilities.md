@@ -92,7 +92,7 @@ Create Food and Water*) are out of scope for a combat engine by nature.
 | Spell slots, upcasting, at-will/innate casting | ⚠️ Partial — per-class/multiclass/Pact tables derived engine-side (`derive_spell_slots`, `derive_multiclass_slots`, `derive_pact_slots`); rests restore slots; Pact Magic is a second pool; upcasting scales dice AND target count (`target.affects.count`); attack-kind repeat instances still not scaled |
 | Spell attack rolls & save DCs (incl. flat overrides) | ✅ Resolved |
 | Concentration | ✅ full lifecycle (C13, C21: every concentration spell concentrates, including one that applies no effect of its own) |
-| Counterspell, Shield, Hellish Rebuke, Magic Missile interactions | ⚠️ Partial | Implemented, but as named special cases rather than data-driven rules; slot-gated and range-gated at drain time |
+| Counterspell, Shield, Hellish Rebuke, Magic Missile interactions | ⚠️ Partial | Each is offered at its SRD trigger through the reaction policy (spec 02a), slot-gated and range-gated; but as named special cases rather than data-driven rules, and only to characters (BACKLOG.md) |
 | Ritual casting | ⚠️ Partial | Out-of-combat via `resolve_ritual_cast`; in-combat rejected |
 | Material components / component pouches | ⚠️ Partial | Metadata on `SpellCast`, not enforced; `material_cost_gp` carries the SRD 5.2.1 cost ("worth 500+ GP"), which the pinned Foundry pack left at 0 |
 | Dispel Magic | ❌ Not modelled | Inert (no mechanical activity) |
@@ -140,14 +140,18 @@ A reaction is offered at its SRD trigger, inside the resolution that reaches
 it. The stateless calls take a `ReactionPolicy` that answers each offer with
 `"use"`, `"pass"` or `"suspend"`; a suspended call returns a plain-JSON
 continuation, and `resume` finishes it with the player's decision
-([Reactions](concepts/reactions.md)). Without a policy, a reaction the creature
-pre-armed with a `"ready"` intent is used and any other is passed, as in 0.7.0.
+([Reactions](concepts/reactions.md)). Without a policy, an opportunity attack
+and a reaction the creature pre-armed with a `"ready"` intent are used and any
+other is passed, as in 0.7.0. Monsters and NPCs are never asked: they take
+their opportunity attacks and are offered no reaction spell.
 
 | Reaction | Status |
 |---|---|
-| Opportunity attack | ✅ Resolved — needs no arming: every walk that leaves an enemy's reach draws it, whoever drives the mover (a `move` intent, the monster AI's closing walk or its flee); Disengage suppresses it from either side, and a summon makes none (BACKLOG.md) |
+| Opportunity attack | ✅ Resolved — needs no arming: every walk that leaves an enemy's reach draws it, whoever drives the mover (a `move` intent, the monster AI's closing walk or its flee); Disengage suppresses it from either side, and a summon makes none (BACKLOG.md). A character's is offered through the reaction policy (used by default); a monster's is always taken (spec 02a) |
 | Shield (incl. vs. Magic Missile) | ✅ Resolved: offered as a Reaction after an attack roll that would hit, and on being targeted by Magic Missile, to a creature that knows Shield (or readied it), can pay for it, and has its Reaction; "+5 bonus to AC, including against the triggering attack" decides the roll again. A save action (a Breath Weapon) offers nothing (C26b). No `ready` intent or Action is needed (spec 02a) |
-| Counterspell | ✅ Resolved — slot-gated at the readied level and 60 ft range/LoS-gated at drain time (an ineligible reactor's armed reaction is skipped, not popped) |
+| Counterspell | ✅ Resolved: offered as a Reaction, in initiative order, to every creature that knows it (or readied it), can pay for it and sees a character or a monster cast a spell with Verbal, Somatic or Material components within 60 feet; a failed attempt leaves the cast to the next creature, and a countered spell keeps its slot (a monster's daily use is spent). Readied: slot-gated at the readied level and 60 ft range/LoS-gated at drain time (an ineligible reactor's armed reaction is skipped, not popped). A reaction spell cannot itself be countered (BACKLOG.md) |
+| Hellish Rebuke | ✅ Resolved: offered as a Reaction after an attack or spell deals damage to a creature that knows it, can pay for it, and sees the attacker within 60 feet; cast at the attacker (Dexterity save, 2d10 Fire, half on a success). A rebuke that drops a Multiattacker ends its remaining attacks (spec 02a) |
+| Feather Fall | ❌ Not modelled: no falling, so no trigger (see "Environment & exploration") |
 | Readied spell cast | ✅ Resolved — a readied leveled spell (e.g. Shield) needs an unexpended slot at its readied level; an ineligible reactor's armed reaction is skipped, not popped |
 | Arbitrary SRD "Ready an action with a custom trigger" | ❌ Not modelled |
 

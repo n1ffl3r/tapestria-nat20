@@ -863,6 +863,16 @@ _PROBES: dict[str, tuple[Any, str]] = {
         ),
         "✅",
     ),
+    # Spec 02a: Hellish Rebuke is offered after damage, at the attacker.
+    "| Hellish Rebuke |": (
+        lambda: "def _offer_damage_reactions(" in _src("orchestrator.py"),
+        "✅",
+    ),
+    # Falling is not modelled, so Feather Fall has no trigger.
+    "| Feather Fall |": (
+        lambda: "fall" not in _src("reactions.py").split("ReactionKey = ")[1].split("\n")[0],
+        "❌",
+    ),
     # A readied reaction fires only on one of the engine's named triggers.
     "Ready an action with a custom trigger": (
         lambda: (

@@ -2853,7 +2853,19 @@ def _resolve_monster_cast(
     movement-closing gambit (the caller never reads the turn's parts for
     range on this path, so a cast always resolves from the monster's current
     position).
+
+    A creature that sees the cast may counter it first (SRD 5.2.1
+    Counterspell, ``_counterspell_cast``): "the spell dissipates with no
+    effect, and the action ... used to cast it is wasted", so its per-day use
+    is spent.
     """
+    if _counterspell_cast(live, current, spell):
+        _emit(
+            live,
+            CastFailed(actor_id=current.entity_id, spell_id=spell.slug, reason="countered"),
+        )
+        _spend_monster_cast_use(live, current, action, activity)
+        return
     target_list = [chosen_target]
     cover_origin: str | None = None
     slot_level = activity.spell.level if activity.spell.level is not None else spell.level
@@ -2881,8 +2893,10 @@ def _resolve_monster_cast(
         spell_book=_build_cast_spell_book(spell.activities),
         **_monster_context_kwargs(live, current, target_list, payload, origin_cell=cover_origin),
     )
+    damage_since = len(live.event_log)
     for child_activity in spell.activities:
         resolve_activity(child_activity, actx)
+    _offer_damage_reactions(live, current.entity_id, damage_since)
 
     # SRD 5.2 §Actions in Combat — Help; §Weapon Mastery — Vex / Sap: a
     # monster cast whose resolved spell includes an ``AttackActivity``
@@ -2898,20 +2912,26 @@ def _resolve_monster_cast(
     if any(isinstance(a, AttackActivity) for a in spell.activities):
         _consume_attack_roll_grants(live, current, target_list, pre_event_count)
 
-    # SRD §Innate/Prepared Spellcasting "N/Day" — spend the chosen
-    # activity's per-day use. A ``None`` lookup (no tracked entry — an
-    # at-will spell) is a no-op; guarded rather than asserted since
-    # ``_monster_cast_candidate`` already filtered to a use-bearing or
-    # unlimited activity, but this stays defensive against a future caller.
-    entry = live.monster_action_uses_by_entity.get(current.entity_id, {}).get(action.slug)
-    key = f"{action.slug}:{activity.id}"
-    if entry is not None and key in entry.uses_remaining:
-        entry.uses_remaining[key] = max(0, entry.uses_remaining[key] - 1)
+    _spend_monster_cast_use(live, current, action, activity)
 
     # The PC path's fold; ``concentration_max_rounds`` stays on the default
     # here — the same recorded follow-up as the mundane monster-attack site.
     _fold_resolution_outcome(live, current, spell=spell, actx=actx, pre_event_count=pre_event_count)
     _sync_legendary_resistance(live, pre_event_count)
+
+
+def _spend_monster_cast_use(
+    live: _LiveCombat, current: Combatant, action: MonsterAction, activity: CastActivity
+) -> None:
+    """SRD §Innate/Prepared Spellcasting "N/Day" — spend the chosen
+    activity's per-day use. A ``None`` lookup (no tracked entry — an
+    at-will spell) is a no-op; guarded rather than asserted since
+    ``_monster_cast_candidate`` already filtered to a use-bearing or
+    unlimited activity, but this stays defensive against a future caller."""
+    entry = live.monster_action_uses_by_entity.get(current.entity_id, {}).get(action.slug)
+    key = f"{action.slug}:{activity.id}"
+    if entry is not None and key in entry.uses_remaining:
+        entry.uses_remaining[key] = max(0, entry.uses_remaining[key] - 1)
 
 
 def _eligible_legendary_actor(live: _LiveCombat, actor_id: str | None) -> Combatant:
@@ -3050,7 +3070,12 @@ def _resolve_monster_attack_activities(
     for activity in activities:
         # Monster attacks carry their damage on the AttackActivity itself,
         # not a separate Weapon (unlike the PC weapon path).
+        damage_since = len(live.event_log)
         resolve_activity(activity, actx, weapon=None)
+        # A reaction to this attack's damage (Hellish Rebuke) comes before the
+        # next attack, which a monster it drops never makes.
+        if _offer_damage_reactions(live, actor.entity_id, damage_since):
+            break
     # SRD 5.2 §Actions in Combat — Help; §Weapon Mastery — Vex / Sap:
     # one-use pops, shared with the C18 monster-cast
     # attack-roll branch via ``_consume_attack_roll_grants``. A monster
@@ -9787,6 +9812,7 @@ def _resolve_construct_attack(
         active_effects=tuple(live.active_effects.get(owner.entity_id, [])),
         **(_monster_context_kwargs(live, owner, target_list, payload) | geometry),
     )
+    damage_since = len(live.event_log)
     resolve_activity(
         construct_attack_activity(
             spec,
@@ -9796,6 +9822,7 @@ def _resolve_construct_attack(
         ),
         actx,
     )
+    _offer_damage_reactions(live, owner.entity_id, damage_since)
     _consume_attack_roll_grants(live, owner, target_list, pre_event_count)
 
 
@@ -11854,21 +11881,40 @@ def _pop_pending_reaction(
 def _resolve_readied_spell_cast(
     live: _LiveCombat, reactor: Combatant, popped: _PendingReaction
 ) -> None:
-    """Auto-fire a pre-armed reaction spell (Shield) as a full self-cast.
+    """Auto-fire a pre-armed reaction spell (Shield) as a full self-cast:
+    ``_cast_reaction_spell`` against the reactor itself."""
+    spell = get_lib_loader().get_spell(popped.spell_id or "")
+    if spell is None:
+        return
+    slot_level = popped.slot_level if popped.slot_level is not None else spell.level
+    _cast_reaction_spell(
+        live, reactor, spell, slot_level, [reactor], reaction_name=popped.spell_id or ""
+    )
+
+
+def _cast_reaction_spell(
+    live: _LiveCombat,
+    reactor: Combatant,
+    spell: Spell,
+    slot_level: int,
+    targets: list[Combatant],
+    *,
+    reaction_name: str,
+) -> None:
+    """Cast ``spell`` as ``reactor``'s Reaction against ``targets``.
 
     Consumes the reactor's Reaction and pays for the spell (``_pay_for_cast``:
     its slotless cast, else a slot), emits ``ReactionTriggered``,
-    then resolves the spell's own activities against the reactor as sole
-    target through the SAME typed resolver every on-turn cast uses — no
-    bespoke Shield-only mechanics. Any ``EffectApplied`` this produces on the
+    then resolves the spell's own activities against ``targets`` (the reactor
+    itself for Shield, the attacker for Hellish Rebuke) through the SAME typed
+    resolver every on-turn cast uses: no bespoke per-spell mechanics. Its
+    events are recorded in ``live.nested_event_spans``, so a resolution it
+    interrupts does not claim them. Any ``EffectApplied`` this produces on the
     reactor with a round-scoped duration is registered for the off-turn
     expiry fix (``reaction_effects_pending_expiry`` — see
     ``docs/dev/reaction-queue.md``), since the reactor is by construction NOT
     the active turn-actor when a reaction fires.
     """
-    spell = get_lib_loader().get_spell(popped.spell_id or "")
-    if spell is None:
-        return
     span_start = len(live.event_log)
 
     for idx, c in enumerate(live.initiative):
@@ -11876,7 +11922,6 @@ def _resolve_readied_spell_cast(
             live.initiative[idx] = c.model_copy(update={"reaction_available": False})
             break
 
-    slot_level = popped.slot_level if popped.slot_level is not None else spell.level
     if spell.level > 0:
         _pay_for_cast(live, reactor, spell, slot_level)
     # ``_emit_spell_cast`` normalises ``slot_level`` to ``None`` for a
@@ -11887,7 +11932,7 @@ def _resolve_readied_spell_cast(
         live,
         ReactionTriggered(
             actor_id=reactor.entity_id,
-            reaction_name=popped.spell_id or "",
+            reaction_name=reaction_name,
             trigger_event_uuid="",
         ),
     )
@@ -11897,7 +11942,7 @@ def _resolve_readied_spell_cast(
     payload = _build_hydration_payload(live, caster=reactor)
     actx = build_activity_context(
         reactor,
-        [reactor],
+        targets,
         rng=live.rng,
         event_emitter=lambda ev: _emit(live, ev),
         slot_level=slot_level,
@@ -11917,7 +11962,7 @@ def _resolve_readied_spell_cast(
         # path only resolves cast SaveActivity/DamageActivity from a Spell
         # (Shield's own reaction cast), never an AttackActivity with a
         # fetched Weapon, so the proficiency gate never applies here.
-        target_distance_ft=_target_distance_map(live, reactor.entity_id, [reactor]),
+        target_distance_ft=_target_distance_map(live, reactor.entity_id, targets),
         attacker_grappler_id=_condition_source_entity(live, reactor, "grappled"),
         legendary_resistance_armed=payload["legendary_resistance_armed"],
         legendary_resistances_remaining_by_entity=payload[
@@ -12029,6 +12074,56 @@ def _decide_reaction(live: _LiveCombat, prompt: ReactionPrompt) -> ReactionDecis
     return answer
 
 
+def _can_react(live: _LiveCombat, reactor: Combatant) -> bool:
+    """Whether ``reactor`` can take a Reaction now: alive above 0 Hit Points,
+    its Reaction unspent (SRD 5.2.1 "Reaction": "Once you take a Reaction, you
+    can't take another one until the start of your next turn"), and not
+    Incapacitated ("can't take any action, Bonus Action, or Reaction")."""
+    return (
+        reactor.is_alive
+        and reactor.hp_current > 0
+        and reactor.reaction_available
+        and not conditions_block_actions(_condition_names(reactor))
+    )
+
+
+def _can_cast_reaction(live: _LiveCombat, reactor: Combatant) -> bool:
+    """``_can_react``, and able to cast a spell: not shape-shifted (SRD 5.2.1
+    Wild Shape and Polymorph: it "can't cast spells")."""
+    return _can_react(live, reactor) and reactor.entity_id not in live.transforms
+
+
+def _knows_spell(live: _LiveCombat, caster: Combatant, slug: str) -> bool:
+    """Whether ``caster`` can cast ``slug``: one of its ``spells_known``, or
+    its slotless cast."""
+    return slug in live.spells_known_by_entity.get(caster.entity_id, ()) or slug in (
+        caster.slotless_casts
+    )
+
+
+def _lowest_payable_level(live: _LiveCombat, caster: Combatant, spell: Spell) -> int | None:
+    """The lowest level ``caster`` can cast ``spell`` at (its slotless cast,
+    else a slot), or ``None``."""
+    return next(
+        (level for level in range(spell.level, 10) if _cast_payable(live, caster, spell, level)),
+        None,
+    )
+
+
+def _sees_within(live: _LiveCombat, viewer: Combatant, target_id: str, range_ft: int) -> bool:
+    """Whether ``viewer`` can see the creature ``target_id`` within
+    ``range_ft``, with line of sight: the "you can see within 60 feet" of a
+    reaction spell's trigger."""
+    target = _find_combatant(live, target_id)
+    viewer_zone = live.actor_zone.get(viewer.entity_id)
+    target_zone = live.actor_zone.get(target_id)
+    if target is None or viewer_zone is None or target_zone is None:
+        return False
+    return _in_range_with_los(live.topology, viewer_zone, target_zone, range_ft) and (
+        _combatant_can_see(live, viewer, target)
+    )
+
+
 def _shield_slot_level(
     live: _LiveCombat, reactor: Combatant, readied: _PendingReaction | None
 ) -> int | None:
@@ -12041,10 +12136,64 @@ def _shield_slot_level(
     if readied is not None:
         level = readied.slot_level if readied.slot_level is not None else spell.level
         return level if _cast_payable(live, reactor, spell, level) else None
-    return next(
-        (level for level in range(spell.level, 10) if _cast_payable(live, reactor, spell, level)),
-        None,
-    )
+    return _lowest_payable_level(live, reactor, spell)
+
+
+#: SRD 5.2.1 Hellish Rebuke, offered to a creature that takes damage.
+_HELLISH_REBUKE: Final = "hellish-rebuke"
+
+
+def _offer_damage_reactions(live: _LiveCombat, damager_id: str, since: int) -> bool:
+    """SRD 5.2.1 Hellish Rebuke: "Casting Time: Reaction, which you take in
+    response to taking damage from a creature that you can see within 60 feet
+    of yourself"; "The creature that damaged you ... makes a Dexterity saving
+    throw". Called after an activity of ``damager_id`` resolves: each creature
+    it damaged (in the order the damage landed) that knows Hellish Rebuke, can
+    pay for it, can cast a spell as a Reaction, and sees ``damager_id`` within
+    60 feet is offered it, and on ``"use"`` casts it at the damager. Damage a
+    reaction dealt inside this window (``_resolution_events``) offers nothing.
+
+    Returns True when the damager is down (dead or at 0 Hit Points), so the
+    caller makes none of the attacks it has left."""
+    rebuke = get_lib_loader().get_spell(_HELLISH_REBUKE)
+    if rebuke is None:
+        return False
+    damage: dict[str, int] = {}
+    for ev in _resolution_events(live, since):
+        if isinstance(ev, DamageApplied) and ev.amount > 0 and ev.target_id != damager_id:
+            damage[ev.target_id] = damage.get(ev.target_id, 0) + ev.amount
+    range_ft = int(rebuke.range.value or 60)
+    for target_id, amount in damage.items():
+        if _is_down(live, damager_id):
+            return True
+        reactor = _find_combatant(live, target_id)
+        if reactor is None or not _can_cast_reaction(live, reactor):
+            continue
+        if not _knows_spell(live, reactor, _HELLISH_REBUKE):
+            continue
+        level = _lowest_payable_level(live, reactor, rebuke)
+        if level is None or not _sees_within(live, reactor, damager_id, range_ft):
+            continue
+        prompt = ReactionPrompt(
+            reactor_id=target_id,
+            reaction_key=_HELLISH_REBUKE,
+            trigger=f"{damager_id} deals {amount} damage to {target_id}",
+            triggering_actor_id=damager_id,
+        )
+        if _decide_reaction(live, prompt) == "pass":
+            continue
+        damager = _find_combatant(live, damager_id)
+        if damager is None:  # pragma: no cover - _is_down checked it above
+            return True
+        _cast_reaction_spell(live, reactor, rebuke, level, [damager], reaction_name=_HELLISH_REBUKE)
+    return _is_down(live, damager_id)
+
+
+def _is_down(live: _LiveCombat, entity_id: str) -> bool:
+    """Whether ``entity_id`` left the fight: gone from the initiative order,
+    dead, or at 0 Hit Points."""
+    combatant = _find_combatant(live, entity_id)
+    return combatant is None or entity_id in live.dead_ids or combatant.hp_current <= 0
 
 
 def _offer_shield(
@@ -12067,11 +12216,11 @@ def _offer_shield(
     your next turn"). On ``"use"`` it casts Shield as its Reaction and returns
     True."""
     reactor = _find_combatant(live, reactor_id)
-    if reactor is None or reactor_id == triggering_actor_id:
-        return False
-    if not reactor.is_alive or reactor.hp_current <= 0 or not reactor.reaction_available:
-        return False
-    if conditions_block_actions(_condition_names(reactor)) or reactor_id in live.transforms:
+    if (
+        reactor is None
+        or reactor_id == triggering_actor_id
+        or not _can_cast_reaction(live, reactor)
+    ):
         return False
     readied = next(
         (
@@ -12081,10 +12230,7 @@ def _offer_shield(
         ),
         None,
     )
-    knows = _SHIELD in live.spells_known_by_entity.get(reactor_id, ()) or _SHIELD in (
-        reactor.slotless_casts
-    )
-    if readied is None and not knows:
+    if readied is None and not _knows_spell(live, reactor, _SHIELD):
         return False
     level = _shield_slot_level(live, reactor, readied)
     if level is None:
@@ -12157,34 +12303,113 @@ def _hit_hook(live: _LiveCombat, attacker_id: str) -> Callable[[Combatant, int, 
     return hook
 
 
+_COUNTERSPELL: Final = "counterspell"
+
+
 def _drain_counterspell_reaction(
     live: _LiveCombat, current: Combatant, actor_id: str, intent: PlayerIntent
 ) -> bool:
-    """SRD 5.2 Counterspell — pop a pending ``"cast_spell"``-trigger reaction
-    (if any) and resolve it against ``current`` (the interrupted caster) via
-    Counterspell's OWN canonical ``save``-kind activity, through the
-    existing, unmodified ``activities/save.py`` resolver.
+    """SRD 5.2.1 Counterspell, against a PC's on-turn cast: offer it
+    (``_counterspell_cast``), then release any other spell readied on
+    ``"cast_spell"`` (the 0.7.0 queue, ``_release_readied_counter``).
 
     Returns ``True`` iff the triggering cast was countered (``CastFailed``
     emitted + the turn already advanced) — the caller must return
     immediately, BEFORE ``_consume_spell_slot`` ever runs for the triggering
-    spell (this is what preserves the interrupted caster's slot — see
-    ``docs/dev/reaction-queue.md``, "Slot-consumption redesign"). ``False``
-    means no reaction fired OR the save succeeded; either way the triggering
-    cast proceeds exactly as if this function had never been called.
-
-    Gates: the reactor must be able to pay for Counterspell at the readied
-    level (``_cast_payable``) and be within its own ``range.value`` with
-    line of sight — an ineligible reactor's armed reaction is skipped, not
-    consumed.
+    spell: "If that spell was cast with a spell slot, the slot isn't
+    expended" (see ``docs/dev/reaction-queue.md``, "Slot-consumption
+    redesign"). ``False`` means nothing countered it, and the cast proceeds
+    exactly as if this function had never been called.
     """
     if intent.intent_type != "cast_spell" or not intent.spell_id:
         return False
+    spell = get_lib_loader().get_spell(intent.spell_id)
+    if not _counterspell_cast(live, current, spell) and not _release_readied_counter(live, current):
+        return False
+    _spend_countered_slotless_cast(live, current, intent)
+    _emit(
+        live,
+        CastFailed(
+            actor_id=actor_id,
+            spell_id=intent.spell_id or "",
+            reason="countered",
+        ),
+    )
+    _end_turn_and_advance(live, actor_id)
+    return True
 
-    caster_zone = live.actor_zone.get(actor_id)
+
+def _counterspell_cast(live: _LiveCombat, caster: Combatant, spell: Spell | None) -> bool:
+    """SRD 5.2.1 Counterspell: "Casting Time: Reaction, which you take when you
+    see a creature within 60 feet of yourself casting a spell with Verbal,
+    Somatic, or Material components". Offer it, in initiative order, to every
+    other creature that can take it: it knows Counterspell (or readied it on
+    ``"cast_spell"``), can pay for it, can cast a spell as a Reaction
+    (``_can_cast_reaction``), and sees ``caster`` within the spell's 60 feet.
+    Each ``"use"`` resolves one attempt; a failed attempt (the caster's
+    Constitution save succeeds) leaves the cast to the next creature. Returns
+    True when an attempt counters it."""
+    counterspell = get_lib_loader().get_spell(_COUNTERSPELL)
+    if spell is None or not spell.components or counterspell is None:
+        return False
+    range_ft = int(counterspell.range.value or 60)
+    for reactor in list(live.initiative):
+        if reactor.entity_id == caster.entity_id or not _can_cast_reaction(live, reactor):
+            continue
+        readied = next(
+            (
+                pr
+                for pr in live.pending_reactions
+                if pr.owner_id == reactor.entity_id
+                and pr.trigger == "cast_spell"
+                and (pr.spell_id or _COUNTERSPELL) == _COUNTERSPELL
+            ),
+            None,
+        )
+        if readied is None and not _knows_spell(live, reactor, _COUNTERSPELL):
+            continue
+        level: int | None
+        if readied is not None and readied.slot_level is not None:
+            level = readied.slot_level
+            if not _cast_payable(live, reactor, counterspell, level):
+                continue
+        else:
+            level = _lowest_payable_level(live, reactor, counterspell)
+        if level is None or not _sees_within(live, reactor, caster.entity_id, range_ft):
+            continue
+        prompt = ReactionPrompt(
+            reactor_id=reactor.entity_id,
+            reaction_key=_COUNTERSPELL,
+            trigger=(
+                f"{caster.entity_id} casts {spell.name} within {range_ft} feet of "
+                f"{reactor.entity_id}"
+            )[:300],
+            triggering_actor_id=caster.entity_id,
+            readied=readied is not None,
+        )
+        if _decide_reaction(live, prompt) == "pass":
+            continue
+        if readied is not None:
+            live.pending_reactions.remove(readied)
+        if _resolve_counterspell(
+            live, reactor, counterspell, level, caster, reaction_name=_COUNTERSPELL
+        ):
+            return True
+    return False
+
+
+def _release_readied_counter(live: _LiveCombat, caster: Combatant) -> bool:
+    """The 0.7.0 queue: a spell other than Counterspell readied on
+    ``"cast_spell"`` fires as the cast begins, resolving its save against the
+    caster as Counterspell's does. Slot-gated at the readied level and 60 ft
+    range/LoS-gated (an ineligible reactor's armed reaction is skipped, not
+    popped). Returns True when it countered the cast."""
+    caster_zone = live.actor_zone.get(caster.entity_id)
 
     def _eligible(reactor: Combatant, pending: _PendingReaction) -> bool:
-        spell = get_lib_loader().get_spell(pending.spell_id or "counterspell")
+        if (pending.spell_id or _COUNTERSPELL) == _COUNTERSPELL:
+            return False
+        spell = get_lib_loader().get_spell(pending.spell_id or "")
         if spell is None:
             return False
         level = pending.slot_level if pending.slot_level is not None else spell.level
@@ -12197,54 +12422,61 @@ def _drain_counterspell_reaction(
         return _in_range_with_los(live.topology, reactor_zone, caster_zone, int(range_ft))
 
     popped = _pop_pending_reaction(
-        live, "cast_spell", triggering_actor_id=actor_id, eligible=_eligible
+        live, "cast_spell", triggering_actor_id=caster.entity_id, eligible=_eligible
     )
     if popped is None:
         return False
     reactor = _find_combatant(live, popped.owner_id)
-    if reactor is None:
+    spell = get_lib_loader().get_spell(popped.spell_id or "")
+    if reactor is None or spell is None:  # pragma: no cover - checked by _eligible
         return False
-    # The spell lookup here duplicates ``_eligible``'s (identical
-    # ``pending.spell_id or "counterspell"`` / ``popped.spell_id or
-    # "counterspell"`` expression): ``_eligible`` runs once per CANDIDATE
-    # during the scan inside ``_pop_pending_reaction`` — the armed entry is
-    # not known yet, so its spell can't be pre-fetched — and this second
-    # lookup is against ``popped``, the one entry the scan actually selected.
-    counterspell = get_lib_loader().get_spell(popped.spell_id or "counterspell")
-    if counterspell is None:
-        return False
+    level = popped.slot_level if popped.slot_level is not None else spell.level
+    return _resolve_counterspell(
+        live, reactor, spell, level, caster, reaction_name=popped.spell_id or ""
+    )
+
+
+def _resolve_counterspell(
+    live: _LiveCombat,
+    reactor: Combatant,
+    counterspell: Spell,
+    level: int,
+    caster: Combatant,
+    *,
+    reaction_name: str,
+) -> bool:
+    """Cast ``counterspell`` as ``reactor``'s Reaction at ``caster``: "The
+    creature makes a Constitution saving throw. On a failed save, the spell
+    dissipates with no effect". Its own canonical ``save``-kind activity runs
+    through the existing ``activities/save.py`` resolver. Counterspell is paid
+    for (a slot, or its slotless cast) whether or not it succeeds; only the
+    INTERRUPTED spell's slot is preserved, by the caller. Returns True when the
+    save failed."""
     save_activity = next((a for a in counterspell.activities if isinstance(a, SaveActivity)), None)
     if save_activity is None:
         return False
-
-    # Counterspell is paid for (a slot, or its slotless cast) whether or not
-    # it succeeds — only the INTERRUPTED spell's slot is preserved, below.
-    for idx, c in enumerate(live.initiative):
-        if c.entity_id == reactor.entity_id:
-            live.initiative[idx] = c.model_copy(update={"reaction_available": False})
-            break
-    cs_level = popped.slot_level if popped.slot_level is not None else counterspell.level
+    span_start = len(live.event_log)
+    _update_combatant(live, reactor.entity_id, reaction_available=False)
     if counterspell.level > 0:
-        _pay_for_cast(live, reactor, counterspell, cs_level)
-
+        _pay_for_cast(live, reactor, counterspell, level)
     _emit(
         live,
         ReactionTriggered(
             actor_id=reactor.entity_id,
-            reaction_name=popped.spell_id or "counterspell",
+            reaction_name=reaction_name,
             trigger_event_uuid="",
         ),
     )
-    _emit_spell_cast(live, reactor.entity_id, counterspell, cs_level)
+    _emit_spell_cast(live, reactor.entity_id, counterspell, level)
 
     reactor_spellcasting_ability = _spellcasting_ability_for(reactor, counterspell.slug)
     payload = _build_hydration_payload(live, caster=reactor)
     actx = build_activity_context(
         reactor,
-        [current],
+        [caster],
         rng=live.rng,
         event_emitter=lambda ev: _emit(live, ev),
-        slot_level=cs_level,
+        slot_level=level,
         base_spell_level=counterspell.level,
         spellcasting_ability=reactor_spellcasting_ability,
         concentration=False,
@@ -12257,7 +12489,7 @@ def _drain_counterspell_reaction(
         save_modifiers=payload["save_modifiers"],
         check_modifiers=payload["check_modifiers"],
         d20_test_penalty=payload["d20_test_penalty"],
-        target_distance_ft=_target_distance_map(live, reactor.entity_id, [current]),
+        target_distance_ft=_target_distance_map(live, reactor.entity_id, [caster]),
         # C15: is_proficient_attack left on default (True) — Counterspell
         # resolves a SaveActivity, never an AttackActivity with a fetched
         # Weapon, so the proficiency gate never applies here.
@@ -12274,23 +12506,11 @@ def _drain_counterspell_reaction(
     save_events = [
         ev
         for ev in live.event_log[pre_event_count:]
-        if isinstance(ev, SaveRolled) and ev.target_id == current.entity_id
+        if isinstance(ev, SaveRolled) and ev.target_id == caster.entity_id
     ]
     succeeded = save_events[-1].succeeded if save_events else True
-    if succeeded:
-        return False
-
-    _spend_countered_slotless_cast(live, current, intent)
-    _emit(
-        live,
-        CastFailed(
-            actor_id=actor_id,
-            spell_id=intent.spell_id or "",
-            reason="countered",
-        ),
-    )
-    _end_turn_and_advance(live, actor_id)
-    return True
+    live.nested_event_spans.append((span_start, len(live.event_log)))
+    return not succeeded
 
 
 async def _dispatch_turn_nonending_intent(
@@ -12930,7 +13150,10 @@ async def _submit_player_intent(live: _LiveCombat, actor_id: str, intent: Player
             ),
         )
         for activity in activities:
+            damage_since = len(live.event_log)
             resolve_activity(activity, actx, weapon=fetched_weapon)
+            if _offer_damage_reactions(live, current.entity_id, damage_since):
+                break
 
         # SRD 5.2 Bardic Inspiration — a die rolled this resolution is spent.
         _expend_granted_die(live, current, actx)
@@ -13126,6 +13349,11 @@ def _fire_opportunity_attacks_on_step(
     Returns ``True`` when the walk must stop here (``_walk_must_stop``) or an
     attack pushed the mover off ``from_cell``. The reactors after that one
     attack nothing: the mover never leaves their reach.
+
+    SRD 5.2.1 "Opportunity Attacks": "You can make an Opportunity Attack when
+    a creature that you can see leaves your reach". A character is offered it
+    through the call's reaction policy (``reaction_key="opportunity-attack"``,
+    used by default, as in 0.7.0); one that passes keeps its Reaction.
     """
     for reactor_id in _opportunity_attackers(
         live, mover_id=mover_id, from_cell=from_cell, to_cell=to_cell
@@ -13135,6 +13363,22 @@ def _fire_opportunity_attacks_on_step(
         reactor = _find_combatant(live, reactor_id)
         mover = _find_combatant(live, mover_id)
         if reactor is None or mover is None:
+            continue
+        # A character's player decides (contract 03: player characters follow
+        # their doctrine); a monster or NPC decides by its stat block, and
+        # always takes the attack.
+        if reactor.entity_type == "Character" and (
+            _decide_reaction(
+                live,
+                ReactionPrompt(
+                    reactor_id=reactor_id,
+                    reaction_key="opportunity-attack",
+                    trigger=f"{mover_id} leaves the reach of {reactor_id}",
+                    triggering_actor_id=mover_id,
+                ),
+            )
+            == "pass"
+        ):
             continue
         _emit(
             live,
@@ -13298,8 +13542,10 @@ def _resolve_opportunity_attack(live: _LiveCombat, reactor: Combatant, mover: Co
         is_opportunity_attack=True,
         **kwargs,
     )
+    damage_since = len(live.event_log)
     for activity in attack.activities:
         resolve_activity(activity, actx, weapon=weapon)
+    _offer_damage_reactions(live, reactor.entity_id, damage_since)
     _consume_attack_roll_grants(live, reactor, targets, pre_event_count)
     _fold_mastery_procs(live, reactor.entity_id, actx)
     _break_hide(live, reactor.entity_id)
