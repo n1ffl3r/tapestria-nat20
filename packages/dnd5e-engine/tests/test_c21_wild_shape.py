@@ -196,11 +196,13 @@ def test_the_beast_shapes_table_matches_the_features_corpus_profiles() -> None:
     ]
 
 
-def test_the_beast_shapes_rows_admit_41_48_and_70_corpus_beasts() -> None:
-    """The corpus has 92 Beasts; Giant Insect is never a form. The sweep below
-    is only as good as ``_legal``, so this pins what it admits."""
+def test_the_beast_shapes_rows_admit_42_49_and_72_corpus_beasts() -> None:
+    """The corpus has 94 Beasts; Giant Insect is never a form. The sweep below
+    is only as good as ``_legal``, so this pins what it admits. The SRD 5.2.1
+    corpus added Giant Centipede (CR 1/4, no Fly Speed: a form from level 2)
+    and Giant Wasp (CR 1/2, Fly Speed: a form from level 8)."""
     counts = {level: sum(_legal(_form(slug), level) for slug in _BEASTS) for level in _ROWS}
-    assert (len(_BEASTS), counts) == (92, {2: 41, 4: 48, 8: 70})
+    assert (len(_BEASTS), counts) == (94, {2: 42, 4: 49, 8: 72})
 
 
 @pytest.mark.parametrize("level", sorted(_ROWS))

@@ -7,7 +7,8 @@ name: SRD Provenance
 # committed canonical/ tree byte-for-byte from the pinned upstream sources.
 #
 # Path filters cover the direct behavioral inputs (translator/schema/canonical,
-# PINS, the srd-data Makefile + pyproject, and this workflow). The workspace
+# PINS, the SRD gate's srd/ index and aliases, the srd-data Makefile +
+# pyproject, and this workflow). The workspace
 # uv.lock is intentionally NOT a trigger — it churns on every unrelated dep
 # bump across the workspace and would defeat the gating that keeps this heavy
 # job off unrelated PRs. Use workflow_dispatch to run the gate manually if a
@@ -21,6 +22,7 @@ on:
       - "packages/dnd5e-srd-data/src/dnd5e_srd_data/schema/**"
       - "packages/dnd5e-srd-data/src/dnd5e_srd_data/canonical/**"
       - "packages/dnd5e-srd-data/raw_sources/PINS.json"
+      - "packages/dnd5e-srd-data/srd/**"
       - "packages/dnd5e-srd-data/Makefile"
       - "packages/dnd5e-srd-data/pyproject.toml"
       - ".github/workflows/provenance.yml"
@@ -30,6 +32,7 @@ on:
       - "packages/dnd5e-srd-data/src/dnd5e_srd_data/schema/**"
       - "packages/dnd5e-srd-data/src/dnd5e_srd_data/canonical/**"
       - "packages/dnd5e-srd-data/raw_sources/PINS.json"
+      - "packages/dnd5e-srd-data/srd/**"
       - "packages/dnd5e-srd-data/Makefile"
       - "packages/dnd5e-srd-data/pyproject.toml"
       - ".github/workflows/provenance.yml"

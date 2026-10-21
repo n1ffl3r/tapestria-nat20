@@ -7,6 +7,39 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+The official SRD 5.2.1 PDF now decides what is SRD content (spec 02a of the
+dungeons-and-agents fork, workstream A).
+
+### Added
+
+- **`srd/SRD_CC_v5.2.1.pdf`**, the official SRD 5.2.1, pinned by SHA-256 in
+  `raw_sources/PINS.json`.
+- **`srd/index.json`**, built from the PDF by `tools/srd_index.py`
+  (`make srd-index`): every SRD record by category with its page.
+- **`srd/aliases.json`**: 115 corpus records that are variants (an Ioun Stone
+  type, a Mysterious Deck card) or helpers (the Folding Boat's activation) of a
+  record the index lists, each with an evidence phrase the index tool finds on
+  the parent's pages.
+- **Ice Knife**, **Giant Centipede**, **Giant Wasp**, and **Werewolf**, which
+  SRD 5.2.1 contains and the old gate dropped.
+
+### Changed
+
+- **The SRD gate** (`tools/translators/srd_gate.py`) admits a Foundry document
+  when the PDF index lists its name, or an alias ties it to a listed record.
+  It used Foundry's `system.source.license` tag before (the open5e and 5e-bits
+  verdicts were copies of Foundry's), which admitted Arcane Vigor and left
+  Ice Knife, Giant Centipede, and Giant Wasp out.
+- **Regen keeps a stat block over a same-slug summon form**: the Giant Insect
+  spell's `summons/giant-insects/*` forms no longer overwrite the Giant
+  Centipede, Giant Spider, and Giant Wasp beasts.
+- **Werewolf's creature type** is corrected to Monstrosity: Foundry's
+  `type.value: (lycanthrope)` made the translator drop the stat block.
+
+### Removed
+
+- **Arcane Vigor**, which SRD 5.2.1 does not contain.
+
 ## [0.7.0]
 
 Lockstep release with `dnd5e-engine` 0.7.0 and `nat20-bridge` 0.7.0.

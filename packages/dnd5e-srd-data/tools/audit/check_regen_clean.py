@@ -36,13 +36,17 @@ def _input_paths() -> list[Path]:
     being absent here as a stale-cache hole), tools/audit/cross_check.py
     (regen.py imports it for validation), tools/regen.py itself, and every
     .py under src/dnd5e_srd_data/schema/ (Pydantic models drive
-    canonical-JSON shape). Anything else under tools/audit/ is read-only
-    audit reporting that doesn't affect canonical/."""
+    canonical-JSON shape), and the SRD gate's srd/index.json and
+    srd/aliases.json (they decide which records are admitted). Anything else
+    under tools/audit/ is read-only audit reporting that doesn't affect
+    canonical/."""
     schema_dir = ROOT / "src" / "dnd5e_srd_data" / "schema"
     translators_dir = ROOT / "tools" / "translators"
     return [
         ROOT / "tools" / "regen.py",
         ROOT / "tools" / "audit" / "cross_check.py",
+        ROOT / "srd" / "index.json",
+        ROOT / "srd" / "aliases.json",
         *sorted(translators_dir.rglob("*.py")),
         *sorted(schema_dir.rglob("*.py")),
     ]

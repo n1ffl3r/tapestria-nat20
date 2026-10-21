@@ -14,5 +14,12 @@
     "commit": "5a9ee6da1900276c582445aea6ccdac31c2f685d",
     "pinned_date": "2026-05-30",
     "url": "https://github.com/open5e/open5e-api"
+  },
+  "srd_pdf": {
+    "path": "srd/SRD_CC_v5.2.1.pdf",
+    "pinned_date": "2026-10-21",
+    "sha256": "8974902d109d6e63672d7c490bde9ccf052410503d9cfa768237154fbc5e3d87",
+    "url": "https://www.dndbeyond.com/srd",
+    "version": "5.2.1"
   }
 }

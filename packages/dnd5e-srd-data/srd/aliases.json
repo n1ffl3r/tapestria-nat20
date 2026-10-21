@@ -1,0 +1,1040 @@
+{
+ "description": "Corpus records that are variants or helpers of an SRD 5.2.1 record the index lists. The index tool checks that each parent exists and that its evidence phrase appears on the parent's pages.",
+ "aliases": [
+  {
+   "name": "Blessed Warrior",
+   "corpus_category": "features",
+   "of": "Fighting Style: Blessed Warrior",
+   "of_category": "class_feature_options",
+   "kind": "variant",
+   "evidence": "Blessed Warrior",
+   "reason": "The Paladin's Fighting Style option, which Foundry records under its own name."
+  },
+  {
+   "name": "Druidic Warrior",
+   "corpus_category": "features",
+   "of": "Fighting Style: Druidic Warrior",
+   "of_category": "class_feature_options",
+   "kind": "variant",
+   "evidence": "Druidic Warrior",
+   "reason": "The Ranger's Fighting Style option, which Foundry records under its own name."
+  },
+  {
+   "name": "Elven Lineage, Drow",
+   "corpus_category": "features",
+   "of": "Elven Lineage",
+   "of_category": "species_traits",
+   "kind": "variant",
+   "evidence": "Drow",
+   "reason": "The Drow option of the SRD's Elven Lineage trait."
+  },
+  {
+   "name": "Elven Lineage, High Elf",
+   "corpus_category": "features",
+   "of": "Elven Lineage",
+   "of_category": "species_traits",
+   "kind": "variant",
+   "evidence": "High Elf",
+   "reason": "The High Elf option of the SRD's Elven Lineage trait."
+  },
+  {
+   "name": "Elven Lineage, Wood Elf",
+   "corpus_category": "features",
+   "of": "Elven Lineage",
+   "of_category": "species_traits",
+   "kind": "variant",
+   "evidence": "Wood Elf",
+   "reason": "The Wood Elf option of the SRD's Elven Lineage trait."
+  },
+  {
+   "name": "Fiendish Legacy, Abyssal",
+   "corpus_category": "features",
+   "of": "Fiendish Legacy",
+   "of_category": "species_traits",
+   "kind": "variant",
+   "evidence": "Abyssal",
+   "reason": "The Abyssal option of the SRD's Fiendish Legacy trait."
+  },
+  {
+   "name": "Fiendish Legacy, Chthonic",
+   "corpus_category": "features",
+   "of": "Fiendish Legacy",
+   "of_category": "species_traits",
+   "kind": "variant",
+   "evidence": "Chthonic",
+   "reason": "The Chthonic option of the SRD's Fiendish Legacy trait."
+  },
+  {
+   "name": "Fiendish Legacy, Infernal",
+   "corpus_category": "features",
+   "of": "Fiendish Legacy",
+   "of_category": "species_traits",
+   "kind": "variant",
+   "evidence": "Infernal",
+   "reason": "The Infernal option of the SRD's Fiendish Legacy trait."
+  },
+  {
+   "name": "Gnomish Lineage, Forest",
+   "corpus_category": "features",
+   "of": "Gnomish Lineage",
+   "of_category": "species_traits",
+   "kind": "variant",
+   "evidence": "Forest Gnome",
+   "reason": "The Forest Gnome option of the SRD's Gnomish Lineage trait."
+  },
+  {
+   "name": "Gnomish Lineage, Rock",
+   "corpus_category": "features",
+   "of": "Gnomish Lineage",
+   "of_category": "species_traits",
+   "kind": "variant",
+   "evidence": "Rock Gnome",
+   "reason": "The Rock Gnome option of the SRD's Gnomish Lineage trait."
+  },
+  {
+   "name": "Improved Brutal Strike (2)",
+   "corpus_category": "features",
+   "of": "Improved Brutal Strike",
+   "of_category": "class_features",
+   "kind": "helper",
+   "evidence": "Level 17: Improved Brutal Strike",
+   "reason": "Foundry's record for the level 17 Improved Brutal Strike, a second feature of the same name."
+  },
+  {
+   "name": "Activate Folding Boat",
+   "corpus_category": "items",
+   "of": "Folding Boat",
+   "of_category": "magic_items",
+   "kind": "helper",
+   "evidence": "Command Word",
+   "reason": "Foundry's activation record for the Folding Boat's command words."
+  },
+  {
+   "name": "Ammunition (Varies)",
+   "corpus_category": "items",
+   "of": "Ammunition",
+   "of_category": "equipment",
+   "kind": "variant",
+   "evidence": "Ammunition (Varies)",
+   "reason": "The SRD's Ammunition (Varies) gear entry."
+  },
+  {
+   "name": "Arcane Focus (Varies)",
+   "corpus_category": "items",
+   "of": "Arcane Focus",
+   "of_category": "equipment",
+   "kind": "variant",
+   "evidence": "Arcane Focus (Varies)",
+   "reason": "The SRD's Arcane Focus (Varies) gear entry."
+  },
+  {
+   "name": "Balance",
+   "corpus_category": "items",
+   "of": "Mysterious Deck",
+   "of_category": "magic_items",
+   "kind": "variant",
+   "evidence": "Balance.",
+   "reason": "A card of the SRD's Mysterious Deck (the Deck of Many Things in earlier SRDs)."
+  },
+  {
+   "name": "Belt of Giant Strength (hill)",
+   "corpus_category": "items",
+   "of": "Belt of Giant Strength",
+   "of_category": "magic_items",
+   "kind": "variant",
+   "evidence": "(hill)",
+   "reason": "A row of the SRD's Belt of Giant Strength table."
+  },
+  {
+   "name": "Belt of Giant Strength (storm)",
+   "corpus_category": "items",
+   "of": "Belt of Giant Strength",
+   "of_category": "magic_items",
+   "kind": "variant",
+   "evidence": "(storm)",
+   "reason": "A row of the SRD's Belt of Giant Strength table."
+  },
+  {
+   "name": "Brass Horn of Valhalla",
+   "corpus_category": "items",
+   "of": "Horn of Valhalla",
+   "of_category": "magic_items",
+   "kind": "variant",
+   "evidence": "Brass",
+   "reason": "One of the horn's metals in the SRD's Horn of Valhalla table."
+  },
+  {
+   "name": "Bronze Griffon",
+   "corpus_category": "items",
+   "of": "Figurine of Wondrous Power",
+   "of_category": "magic_items",
+   "kind": "variant",
+   "evidence": "Bronze Griffon",
+   "reason": "One of the figurines the SRD lists under Figurine of Wondrous Power."
+  },
+  {
+   "name": "Bronze Horn of Valhalla",
+   "corpus_category": "items",
+   "of": "Horn of Valhalla",
+   "of_category": "magic_items",
+   "kind": "variant",
+   "evidence": "Bronze",
+   "reason": "One of the horn's metals in the SRD's Horn of Valhalla table."
+  },
+  {
+   "name": "Clawed Gauntlet",
+   "corpus_category": "items",
+   "of": "Demon Armor",
+   "of_category": "magic_items",
+   "kind": "helper",
+   "evidence": "clawed gauntlets",
+   "reason": "Foundry's attack record for Demon Armor's clawed gauntlets."
+  },
+  {
+   "name": "Comet",
+   "corpus_category": "items",
+   "of": "Mysterious Deck",
+   "of_category": "magic_items",
+   "kind": "variant",
+   "evidence": "Comet.",
+   "reason": "A card of the SRD's Mysterious Deck (the Deck of Many Things in earlier SRDs)."
+  },
+  {
+   "name": "Donjon",
+   "corpus_category": "items",
+   "of": "Mysterious Deck",
+   "of_category": "magic_items",
+   "kind": "variant",
+   "evidence": "Donjon.",
+   "reason": "A card of the SRD's Mysterious Deck (the Deck of Many Things in earlier SRDs)."
+  },
+  {
+   "name": "Druidic Focus (Varies)",
+   "corpus_category": "items",
+   "of": "Druidic Focus",
+   "of_category": "equipment",
+   "kind": "variant",
+   "evidence": "Druidic Focus (Varies)",
+   "reason": "The SRD's Druidic Focus (Varies) gear entry."
+  },
+  {
+   "name": "Ebony Fly",
+   "corpus_category": "items",
+   "of": "Figurine of Wondrous Power",
+   "of_category": "magic_items",
+   "kind": "variant",
+   "evidence": "Ebony Fly",
+   "reason": "One of the figurines the SRD lists under Figurine of Wondrous Power."
+  },
+  {
+   "name": "Elemental Gem (Blue Sapphire)",
+   "corpus_category": "items",
+   "of": "Elemental Gem",
+   "of_category": "magic_items",
+   "kind": "variant",
+   "evidence": "Blue sapphire",
+   "reason": "A gem from the SRD's Elemental Gem table."
+  },
+  {
+   "name": "Elemental Gem (Emerald)",
+   "corpus_category": "items",
+   "of": "Elemental Gem",
+   "of_category": "magic_items",
+   "kind": "variant",
+   "evidence": "Emerald",
+   "reason": "A gem from the SRD's Elemental Gem table."
+  },
+  {
+   "name": "Elemental Gem (Red Corundum)",
+   "corpus_category": "items",
+   "of": "Elemental Gem",
+   "of_category": "magic_items",
+   "kind": "variant",
+   "evidence": "Red corundum",
+   "reason": "A gem from the SRD's Elemental Gem table."
+  },
+  {
+   "name": "Elemental Gem (Yellow Diamond)",
+   "corpus_category": "items",
+   "of": "Elemental Gem",
+   "of_category": "magic_items",
+   "kind": "variant",
+   "evidence": "Yellow diamond",
+   "reason": "A gem from the SRD's Elemental Gem table."
+  },
+  {
+   "name": "Euryale",
+   "corpus_category": "items",
+   "of": "Mysterious Deck",
+   "of_category": "magic_items",
+   "kind": "variant",
+   "evidence": "Euryale.",
+   "reason": "A card of the SRD's Mysterious Deck (the Deck of Many Things in earlier SRDs)."
+  },
+  {
+   "name": "Fates",
+   "corpus_category": "items",
+   "of": "Mysterious Deck",
+   "of_category": "magic_items",
+   "kind": "variant",
+   "evidence": "Fates.",
+   "reason": "A card of the SRD's Mysterious Deck (the Deck of Many Things in earlier SRDs)."
+  },
+  {
+   "name": "Feather Token (Anchor)",
+   "corpus_category": "items",
+   "of": "Feather Token",
+   "of_category": "magic_items",
+   "kind": "variant",
+   "evidence": "Anchor (",
+   "reason": "One of the Feather Token types the SRD lists."
+  },
+  {
+   "name": "Feather Token (Bird)",
+   "corpus_category": "items",
+   "of": "Feather Token",
+   "of_category": "magic_items",
+   "kind": "variant",
+   "evidence": "Bird (",
+   "reason": "One of the Feather Token types the SRD lists."
+  },
+  {
+   "name": "Feather Token (Fan)",
+   "corpus_category": "items",
+   "of": "Feather Token",
+   "of_category": "magic_items",
+   "kind": "variant",
+   "evidence": "Fan (",
+   "reason": "One of the Feather Token types the SRD lists."
+  },
+  {
+   "name": "Feather Token (Swan Boat)",
+   "corpus_category": "items",
+   "of": "Feather Token",
+   "of_category": "magic_items",
+   "kind": "variant",
+   "evidence": "Swan Boat (",
+   "reason": "One of the Feather Token types the SRD lists."
+  },
+  {
+   "name": "Feather Token (Tree)",
+   "corpus_category": "items",
+   "of": "Feather Token",
+   "of_category": "magic_items",
+   "kind": "variant",
+   "evidence": "Tree (",
+   "reason": "One of the Feather Token types the SRD lists."
+  },
+  {
+   "name": "Feather Token (Whip)",
+   "corpus_category": "items",
+   "of": "Feather Token",
+   "of_category": "magic_items",
+   "kind": "variant",
+   "evidence": "Whip (",
+   "reason": "One of the Feather Token types the SRD lists."
+  },
+  {
+   "name": "Flames",
+   "corpus_category": "items",
+   "of": "Mysterious Deck",
+   "of_category": "magic_items",
+   "kind": "variant",
+   "evidence": "Flames.",
+   "reason": "A card of the SRD's Mysterious Deck (the Deck of Many Things in earlier SRDs)."
+  },
+  {
+   "name": "Fool",
+   "corpus_category": "items",
+   "of": "Mysterious Deck",
+   "of_category": "magic_items",
+   "kind": "variant",
+   "evidence": "Fool.",
+   "reason": "A card of the SRD's Mysterious Deck (the Deck of Many Things in earlier SRDs)."
+  },
+  {
+   "name": "Gem",
+   "corpus_category": "items",
+   "of": "Mysterious Deck",
+   "of_category": "magic_items",
+   "kind": "variant",
+   "evidence": "Gem.",
+   "reason": "A card of the SRD's Mysterious Deck (the Deck of Many Things in earlier SRDs)."
+  },
+  {
+   "name": "Golden Lions",
+   "corpus_category": "items",
+   "of": "Figurine of Wondrous Power",
+   "of_category": "magic_items",
+   "kind": "variant",
+   "evidence": "Golden Lions",
+   "reason": "One of the figurines the SRD lists under Figurine of Wondrous Power."
+  },
+  {
+   "name": "Holy Symbol (Varies)",
+   "corpus_category": "items",
+   "of": "Holy Symbol",
+   "of_category": "equipment",
+   "kind": "variant",
+   "evidence": "Holy Symbol (Varies)",
+   "reason": "The SRD's Holy Symbol (Varies) gear entry."
+  },
+  {
+   "name": "Ioun Stone of Absorption",
+   "corpus_category": "items",
+   "of": "Ioun Stone",
+   "of_category": "magic_items",
+   "kind": "variant",
+   "evidence": "Absorption (",
+   "reason": "One of the Ioun Stone types the SRD lists."
+  },
+  {
+   "name": "Ioun Stone of Agility",
+   "corpus_category": "items",
+   "of": "Ioun Stone",
+   "of_category": "magic_items",
+   "kind": "variant",
+   "evidence": "Agility (",
+   "reason": "One of the Ioun Stone types the SRD lists."
+  },
+  {
+   "name": "Ioun Stone of Awareness",
+   "corpus_category": "items",
+   "of": "Ioun Stone",
+   "of_category": "magic_items",
+   "kind": "variant",
+   "evidence": "Awareness (",
+   "reason": "One of the Ioun Stone types the SRD lists."
+  },
+  {
+   "name": "Ioun Stone of Fortitude",
+   "corpus_category": "items",
+   "of": "Ioun Stone",
+   "of_category": "magic_items",
+   "kind": "variant",
+   "evidence": "Fortitude (",
+   "reason": "One of the Ioun Stone types the SRD lists."
+  },
+  {
+   "name": "Ioun Stone of Greater Absorption",
+   "corpus_category": "items",
+   "of": "Ioun Stone",
+   "of_category": "magic_items",
+   "kind": "variant",
+   "evidence": "Greater Absorption (",
+   "reason": "One of the Ioun Stone types the SRD lists."
+  },
+  {
+   "name": "Ioun Stone of Insight",
+   "corpus_category": "items",
+   "of": "Ioun Stone",
+   "of_category": "magic_items",
+   "kind": "variant",
+   "evidence": "Insight (",
+   "reason": "One of the Ioun Stone types the SRD lists."
+  },
+  {
+   "name": "Ioun Stone of Intellect",
+   "corpus_category": "items",
+   "of": "Ioun Stone",
+   "of_category": "magic_items",
+   "kind": "variant",
+   "evidence": "Intellect (",
+   "reason": "One of the Ioun Stone types the SRD lists."
+  },
+  {
+   "name": "Ioun Stone of Leadership",
+   "corpus_category": "items",
+   "of": "Ioun Stone",
+   "of_category": "magic_items",
+   "kind": "variant",
+   "evidence": "Leadership (",
+   "reason": "One of the Ioun Stone types the SRD lists."
+  },
+  {
+   "name": "Ioun Stone of Mastery",
+   "corpus_category": "items",
+   "of": "Ioun Stone",
+   "of_category": "magic_items",
+   "kind": "variant",
+   "evidence": "Mastery (",
+   "reason": "One of the Ioun Stone types the SRD lists."
+  },
+  {
+   "name": "Ioun Stone of Protection",
+   "corpus_category": "items",
+   "of": "Ioun Stone",
+   "of_category": "magic_items",
+   "kind": "variant",
+   "evidence": "Protection (",
+   "reason": "One of the Ioun Stone types the SRD lists."
+  },
+  {
+   "name": "Ioun Stone of Regeneration",
+   "corpus_category": "items",
+   "of": "Ioun Stone",
+   "of_category": "magic_items",
+   "kind": "variant",
+   "evidence": "Regeneration (",
+   "reason": "One of the Ioun Stone types the SRD lists."
+  },
+  {
+   "name": "Ioun Stone of Reserve",
+   "corpus_category": "items",
+   "of": "Ioun Stone",
+   "of_category": "magic_items",
+   "kind": "variant",
+   "evidence": "Reserve (",
+   "reason": "One of the Ioun Stone types the SRD lists."
+  },
+  {
+   "name": "Ioun Stone of Strength",
+   "corpus_category": "items",
+   "of": "Ioun Stone",
+   "of_category": "magic_items",
+   "kind": "variant",
+   "evidence": "Strength (",
+   "reason": "One of the Ioun Stone types the SRD lists."
+  },
+  {
+   "name": "Ioun Stone of Sustenance",
+   "corpus_category": "items",
+   "of": "Ioun Stone",
+   "of_category": "magic_items",
+   "kind": "variant",
+   "evidence": "Sustenance (",
+   "reason": "One of the Ioun Stone types the SRD lists."
+  },
+  {
+   "name": "Iron Horn of Valhalla",
+   "corpus_category": "items",
+   "of": "Horn of Valhalla",
+   "of_category": "magic_items",
+   "kind": "variant",
+   "evidence": "Iron",
+   "reason": "One of the horn's metals in the SRD's Horn of Valhalla table."
+  },
+  {
+   "name": "Ivory Goats",
+   "corpus_category": "items",
+   "of": "Figurine of Wondrous Power",
+   "of_category": "magic_items",
+   "kind": "variant",
+   "evidence": "Ivory Goats",
+   "reason": "One of the figurines the SRD lists under Figurine of Wondrous Power."
+  },
+  {
+   "name": "Jester",
+   "corpus_category": "items",
+   "of": "Mysterious Deck",
+   "of_category": "magic_items",
+   "kind": "variant",
+   "evidence": "Jester.",
+   "reason": "A card of the SRD's Mysterious Deck (the Deck of Many Things in earlier SRDs)."
+  },
+  {
+   "name": "Key",
+   "corpus_category": "items",
+   "of": "Mysterious Deck",
+   "of_category": "magic_items",
+   "kind": "variant",
+   "evidence": "Key.",
+   "reason": "A card of the SRD's Mysterious Deck (the Deck of Many Things in earlier SRDs)."
+  },
+  {
+   "name": "Knight",
+   "corpus_category": "items",
+   "of": "Mysterious Deck",
+   "of_category": "magic_items",
+   "kind": "variant",
+   "evidence": "Knight.",
+   "reason": "A card of the SRD's Mysterious Deck (the Deck of Many Things in earlier SRDs)."
+  },
+  {
+   "name": "Marble Elephant",
+   "corpus_category": "items",
+   "of": "Figurine of Wondrous Power",
+   "of_category": "magic_items",
+   "kind": "variant",
+   "evidence": "Marble Elephant",
+   "reason": "One of the figurines the SRD lists under Figurine of Wondrous Power."
+  },
+  {
+   "name": "Moon",
+   "corpus_category": "items",
+   "of": "Mysterious Deck",
+   "of_category": "magic_items",
+   "kind": "variant",
+   "evidence": "Moon.",
+   "reason": "A card of the SRD's Mysterious Deck (the Deck of Many Things in earlier SRDs)."
+  },
+  {
+   "name": "Obsidian Steed",
+   "corpus_category": "items",
+   "of": "Figurine of Wondrous Power",
+   "of_category": "magic_items",
+   "kind": "variant",
+   "evidence": "Obsidian Steed",
+   "reason": "One of the figurines the SRD lists under Figurine of Wondrous Power."
+  },
+  {
+   "name": "Onyx Dog",
+   "corpus_category": "items",
+   "of": "Figurine of Wondrous Power",
+   "of_category": "magic_items",
+   "kind": "variant",
+   "evidence": "Onyx Dog",
+   "reason": "One of the figurines the SRD lists under Figurine of Wondrous Power."
+  },
+  {
+   "name": "Potion of Giant Strength (Cloud)",
+   "corpus_category": "items",
+   "of": "Potion of Giant Strength",
+   "of_category": "magic_items",
+   "kind": "variant",
+   "evidence": "(cloud)",
+   "reason": "A row of the SRD's Potion of Giant Strength table."
+  },
+  {
+   "name": "Potion of Giant Strength (Fire)",
+   "corpus_category": "items",
+   "of": "Potion of Giant Strength",
+   "of_category": "magic_items",
+   "kind": "variant",
+   "evidence": "(fire)",
+   "reason": "A row of the SRD's Potion of Giant Strength table."
+  },
+  {
+   "name": "Potion of Giant Strength (Frost)",
+   "corpus_category": "items",
+   "of": "Potion of Giant Strength",
+   "of_category": "magic_items",
+   "kind": "variant",
+   "evidence": "(frost or stone)",
+   "reason": "A row of the SRD's Potion of Giant Strength table."
+  },
+  {
+   "name": "Potion of Giant Strength (Hill)",
+   "corpus_category": "items",
+   "of": "Potion of Giant Strength",
+   "of_category": "magic_items",
+   "kind": "variant",
+   "evidence": "(hill)",
+   "reason": "A row of the SRD's Potion of Giant Strength table."
+  },
+  {
+   "name": "Potion of Giant Strength (Stone)",
+   "corpus_category": "items",
+   "of": "Potion of Giant Strength",
+   "of_category": "magic_items",
+   "kind": "variant",
+   "evidence": "(frost or stone)",
+   "reason": "A row of the SRD's Potion of Giant Strength table."
+  },
+  {
+   "name": "Potion of Giant Strength (Storm)",
+   "corpus_category": "items",
+   "of": "Potion of Giant Strength",
+   "of_category": "magic_items",
+   "kind": "variant",
+   "evidence": "(storm)",
+   "reason": "A row of the SRD's Potion of Giant Strength table."
+  },
+  {
+   "name": "Potion of Healing (Greater)",
+   "corpus_category": "items",
+   "of": "Potions of Healing",
+   "of_category": "magic_items",
+   "kind": "variant",
+   "evidence": "(greater)",
+   "reason": "A row of the SRD's Potions of Healing table."
+  },
+  {
+   "name": "Potion of Healing (Superior)",
+   "corpus_category": "items",
+   "of": "Potions of Healing",
+   "of_category": "magic_items",
+   "kind": "variant",
+   "evidence": "(superior)",
+   "reason": "A row of the SRD's Potions of Healing table."
+  },
+  {
+   "name": "Potion of Healing (Supreme)",
+   "corpus_category": "items",
+   "of": "Potions of Healing",
+   "of_category": "magic_items",
+   "kind": "variant",
+   "evidence": "(supreme)",
+   "reason": "A row of the SRD's Potions of Healing table."
+  },
+  {
+   "name": "Puzzle",
+   "corpus_category": "items",
+   "of": "Mysterious Deck",
+   "of_category": "magic_items",
+   "kind": "variant",
+   "evidence": "Puzzle.",
+   "reason": "A card of the SRD's Mysterious Deck (the Deck of Many Things in earlier SRDs)."
+  },
+  {
+   "name": "Ring",
+   "corpus_category": "items",
+   "of": "Ring of Resistance",
+   "of_category": "magic_items",
+   "kind": "helper",
+   "evidence": "Ring of Resistance",
+   "reason": "Foundry's base ring record for the Ring of Resistance variants."
+  },
+  {
+   "name": "Rogue",
+   "corpus_category": "items",
+   "of": "Mysterious Deck",
+   "of_category": "magic_items",
+   "kind": "variant",
+   "evidence": "Rogue.",
+   "reason": "A card of the SRD's Mysterious Deck (the Deck of Many Things in earlier SRDs)."
+  },
+  {
+   "name": "Ruin",
+   "corpus_category": "items",
+   "of": "Mysterious Deck",
+   "of_category": "magic_items",
+   "kind": "variant",
+   "evidence": "Ruin.",
+   "reason": "A card of the SRD's Mysterious Deck (the Deck of Many Things in earlier SRDs)."
+  },
+  {
+   "name": "Sage",
+   "corpus_category": "items",
+   "of": "Mysterious Deck",
+   "of_category": "magic_items",
+   "kind": "variant",
+   "evidence": "Sage.",
+   "reason": "A card of the SRD's Mysterious Deck (the Deck of Many Things in earlier SRDs)."
+  },
+  {
+   "name": "Scroll",
+   "corpus_category": "items",
+   "of": "Spell Scroll",
+   "of_category": "magic_items",
+   "kind": "helper",
+   "evidence": "Spell Scroll",
+   "reason": "Foundry's base scroll record for Spell Scrolls."
+  },
+  {
+   "name": "Serpentine Owl",
+   "corpus_category": "items",
+   "of": "Figurine of Wondrous Power",
+   "of_category": "magic_items",
+   "kind": "variant",
+   "evidence": "Serpentine Owl",
+   "reason": "One of the figurines the SRD lists under Figurine of Wondrous Power."
+  },
+  {
+   "name": "Silver Horn of Valhalla",
+   "corpus_category": "items",
+   "of": "Horn of Valhalla",
+   "of_category": "magic_items",
+   "kind": "variant",
+   "evidence": "Silver",
+   "reason": "One of the horn's metals in the SRD's Horn of Valhalla table."
+  },
+  {
+   "name": "Silver Raven",
+   "corpus_category": "items",
+   "of": "Figurine of Wondrous Power",
+   "of_category": "magic_items",
+   "kind": "variant",
+   "evidence": "Silver Raven",
+   "reason": "One of the figurines the SRD lists under Figurine of Wondrous Power."
+  },
+  {
+   "name": "Skull",
+   "corpus_category": "items",
+   "of": "Mysterious Deck",
+   "of_category": "magic_items",
+   "kind": "variant",
+   "evidence": "Skull.",
+   "reason": "A card of the SRD's Mysterious Deck (the Deck of Many Things in earlier SRDs)."
+  },
+  {
+   "name": "Spell Scroll, Cantrip",
+   "corpus_category": "items",
+   "of": "Spell Scroll",
+   "of_category": "equipment",
+   "kind": "variant",
+   "evidence": "Spell Scroll (Cantrip)",
+   "reason": "A row of the SRD's adventuring gear table."
+  },
+  {
+   "name": "Spell Scroll, Level 1",
+   "corpus_category": "items",
+   "of": "Spell Scroll",
+   "of_category": "equipment",
+   "kind": "variant",
+   "evidence": "Spell Scroll (Level 1)",
+   "reason": "A row of the SRD's adventuring gear table."
+  },
+  {
+   "name": "Star",
+   "corpus_category": "items",
+   "of": "Mysterious Deck",
+   "of_category": "magic_items",
+   "kind": "variant",
+   "evidence": "Star.",
+   "reason": "A card of the SRD's Mysterious Deck (the Deck of Many Things in earlier SRDs)."
+  },
+  {
+   "name": "Sun",
+   "corpus_category": "items",
+   "of": "Mysterious Deck",
+   "of_category": "magic_items",
+   "kind": "variant",
+   "evidence": "Sun.",
+   "reason": "A card of the SRD's Mysterious Deck (the Deck of Many Things in earlier SRDs)."
+  },
+  {
+   "name": "Talons",
+   "corpus_category": "items",
+   "of": "Mysterious Deck",
+   "of_category": "magic_items",
+   "kind": "variant",
+   "evidence": "Talons.",
+   "reason": "A card of the SRD's Mysterious Deck (the Deck of Many Things in earlier SRDs)."
+  },
+  {
+   "name": "Tan Bag of Tricks",
+   "corpus_category": "items",
+   "of": "Bag of Tricks",
+   "of_category": "magic_items",
+   "kind": "variant",
+   "evidence": "Tan Bag of Tricks",
+   "reason": "One of the bag colors in the SRD's Bag of Tricks."
+  },
+  {
+   "name": "Throne",
+   "corpus_category": "items",
+   "of": "Mysterious Deck",
+   "of_category": "magic_items",
+   "kind": "variant",
+   "evidence": "Throne.",
+   "reason": "A card of the SRD's Mysterious Deck (the Deck of Many Things in earlier SRDs)."
+  },
+  {
+   "name": "Unarmed Strike",
+   "corpus_category": "items",
+   "of": "Unarmed Strike",
+   "of_category": "text",
+   "kind": "helper",
+   "evidence": "Unarmed Strike",
+   "reason": "Foundry's attack record for the SRD's Unarmed Strike."
+  },
+  {
+   "name": "Void",
+   "corpus_category": "items",
+   "of": "Mysterious Deck",
+   "of_category": "magic_items",
+   "kind": "variant",
+   "evidence": "Void.",
+   "reason": "A card of the SRD's Mysterious Deck (the Deck of Many Things in earlier SRDs)."
+  },
+  {
+   "name": "Water (Pint)",
+   "corpus_category": "items",
+   "of": "Waterskin",
+   "of_category": "equipment",
+   "kind": "helper",
+   "evidence": "pints",
+   "reason": "Foundry's contents record for the Waterskin, which holds pints of water."
+  },
+  {
+   "name": "Water Ring of Elemental Command",
+   "corpus_category": "items",
+   "of": "Ring of Elemental Command",
+   "of_category": "magic_items",
+   "kind": "variant",
+   "evidence": "Water. You know Aquan",
+   "reason": "The water ring of the SRD's Ring of Elemental Command."
+  },
+  {
+   "name": "Water, fresh (Pint)",
+   "corpus_category": "items",
+   "of": "Decanter of Endless Water",
+   "of_category": "magic_items",
+   "kind": "helper",
+   "evidence": "fresh water",
+   "reason": "Foundry's output record for the Decanter of Endless Water."
+  },
+  {
+   "name": "Water, salt (Pint)",
+   "corpus_category": "items",
+   "of": "Decanter of Endless Water",
+   "of_category": "magic_items",
+   "kind": "helper",
+   "evidence": "salt water",
+   "reason": "Foundry's output record for the Decanter of Endless Water."
+  },
+  {
+   "name": "Celestial Steed",
+   "corpus_category": "monsters",
+   "of": "Otherworldly Steed",
+   "of_category": "stat_blocks",
+   "kind": "variant",
+   "evidence": "Celestial",
+   "reason": "One creature type of the SRD's Otherworldly Steed stat block (Find Steed)."
+  },
+  {
+   "name": "Fey Steed",
+   "corpus_category": "monsters",
+   "of": "Otherworldly Steed",
+   "of_category": "stat_blocks",
+   "kind": "variant",
+   "evidence": "Fey",
+   "reason": "One creature type of the SRD's Otherworldly Steed stat block (Find Steed)."
+  },
+  {
+   "name": "Fiend Steed",
+   "corpus_category": "monsters",
+   "of": "Otherworldly Steed",
+   "of_category": "stat_blocks",
+   "kind": "variant",
+   "evidence": "Fiend",
+   "reason": "One creature type of the SRD's Otherworldly Steed stat block (Find Steed)."
+  },
+  {
+   "name": "Goat of Traveling",
+   "corpus_category": "monsters",
+   "of": "Figurine of Wondrous Power",
+   "of_category": "magic_items",
+   "kind": "helper",
+   "evidence": "Goat of Traveling",
+   "reason": "The creature the Ivory Goats figurine becomes."
+  },
+  {
+   "name": "Huge Animated Object",
+   "corpus_category": "monsters",
+   "of": "Animated Object",
+   "of_category": "stat_blocks",
+   "kind": "variant",
+   "evidence": "Huge or Smaller",
+   "reason": "One size of the SRD's Animated Object stat block (Animate Objects)."
+  },
+  {
+   "name": "Large Animated Object",
+   "corpus_category": "monsters",
+   "of": "Animated Object",
+   "of_category": "stat_blocks",
+   "kind": "variant",
+   "evidence": "Huge or Smaller",
+   "reason": "One size of the SRD's Animated Object stat block (Animate Objects)."
+  },
+  {
+   "name": "Medium Animated Object",
+   "corpus_category": "monsters",
+   "of": "Animated Object",
+   "of_category": "stat_blocks",
+   "kind": "variant",
+   "evidence": "Huge or Smaller",
+   "reason": "One size of the SRD's Animated Object stat block (Animate Objects)."
+  },
+  {
+   "name": "Phantom Steed",
+   "corpus_category": "monsters",
+   "of": "Phantom Steed",
+   "of_category": "spells",
+   "kind": "helper",
+   "evidence": "Phantom Steed",
+   "reason": "The creature the Phantom Steed spell creates."
+  },
+  {
+   "name": "Small Animated Object",
+   "corpus_category": "monsters",
+   "of": "Animated Object",
+   "of_category": "stat_blocks",
+   "kind": "variant",
+   "evidence": "Huge or Smaller",
+   "reason": "One size of the SRD's Animated Object stat block (Animate Objects)."
+  },
+  {
+   "name": "Tiny Animated Object",
+   "corpus_category": "monsters",
+   "of": "Animated Object",
+   "of_category": "stat_blocks",
+   "kind": "variant",
+   "evidence": "Huge or Smaller",
+   "reason": "One size of the SRD's Animated Object stat block (Animate Objects)."
+  },
+  {
+   "name": "Elf, Drow",
+   "corpus_category": "species",
+   "of": "Elf",
+   "of_category": "species",
+   "kind": "variant",
+   "evidence": "Drow",
+   "reason": "A lineage of the SRD's Elf, which Foundry models as its own species record."
+  },
+  {
+   "name": "Elf, High",
+   "corpus_category": "species",
+   "of": "Elf",
+   "of_category": "species",
+   "kind": "variant",
+   "evidence": "High Elf",
+   "reason": "A lineage of the SRD's Elf, which Foundry models as its own species record."
+  },
+  {
+   "name": "Elf, Wood",
+   "corpus_category": "species",
+   "of": "Elf",
+   "of_category": "species",
+   "kind": "variant",
+   "evidence": "Wood Elf",
+   "reason": "A lineage of the SRD's Elf, which Foundry models as its own species record."
+  },
+  {
+   "name": "Gnome, Forest",
+   "corpus_category": "species",
+   "of": "Gnome",
+   "of_category": "species",
+   "kind": "variant",
+   "evidence": "Forest Gnome",
+   "reason": "A lineage of the SRD's Gnome, which Foundry models as its own species record."
+  },
+  {
+   "name": "Gnome, Rock",
+   "corpus_category": "species",
+   "of": "Gnome",
+   "of_category": "species",
+   "kind": "variant",
+   "evidence": "Rock Gnome",
+   "reason": "A lineage of the SRD's Gnome, which Foundry models as its own species record."
+  },
+  {
+   "name": "Tiefling, Abyssal",
+   "corpus_category": "species",
+   "of": "Tiefling",
+   "of_category": "species",
+   "kind": "variant",
+   "evidence": "Abyssal",
+   "reason": "A legacy of the SRD's Tiefling, which Foundry models as its own species record."
+  },
+  {
+   "name": "Tiefling, Chthonic",
+   "corpus_category": "species",
+   "of": "Tiefling",
+   "of_category": "species",
+   "kind": "variant",
+   "evidence": "Chthonic",
+   "reason": "A legacy of the SRD's Tiefling, which Foundry models as its own species record."
+  },
+  {
+   "name": "Tiefling, Infernal",
+   "corpus_category": "species",
+   "of": "Tiefling",
+   "of_category": "species",
+   "kind": "variant",
+   "evidence": "Infernal",
+   "reason": "A legacy of the SRD's Tiefling, which Foundry models as its own species record."
+  }
+ ]
+}

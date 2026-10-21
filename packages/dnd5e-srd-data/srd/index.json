@@ -1,0 +1,8297 @@
+{
+ "categories": {
+  "backgrounds": [
+   {
+    "name": "Acolyte",
+    "page": 83
+   },
+   {
+    "name": "Criminal",
+    "page": 83
+   },
+   {
+    "name": "Sage",
+    "page": 83
+   },
+   {
+    "name": "Soldier",
+    "page": 83
+   }
+  ],
+  "class_feature_options": [
+   {
+    "name": "Agonizing Blast",
+    "page": 72
+   },
+   {
+    "name": "Archdruid: Evergreen Wild Shape",
+    "page": 43
+   },
+   {
+    "name": "Archdruid: Longevity",
+    "page": 43
+   },
+   {
+    "name": "Archdruid: Nature Magician",
+    "page": 43
+   },
+   {
+    "name": "Armor of Shadows",
+    "page": 72
+   },
+   {
+    "name": "Ascendant Step",
+    "page": 72
+   },
+   {
+    "name": "Bardic Inspiration: At Higher Levels",
+    "page": 32
+   },
+   {
+    "name": "Bardic Inspiration: Number of Uses",
+    "page": 32
+   },
+   {
+    "name": "Bardic Inspiration: Using Bardic Inspiration",
+    "page": 31
+   },
+   {
+    "name": "Blessed Strikes: Divine Strike",
+    "page": 38
+   },
+   {
+    "name": "Blessed Strikes: Potent Spellcasting",
+    "page": 38
+   },
+   {
+    "name": "Brutal Strike: Forceful Blow",
+    "page": 29
+   },
+   {
+    "name": "Brutal Strike: Hamstring Blow",
+    "page": 30
+   },
+   {
+    "name": "Careful Spell",
+    "page": 66
+   },
+   {
+    "name": "Channel Divinity: Divine Sense",
+    "page": 55
+   },
+   {
+    "name": "Channel Divinity: Divine Spark",
+    "page": 37
+   },
+   {
+    "name": "Channel Divinity: Turn Undead",
+    "page": 37
+   },
+   {
+    "name": "Cunning Strike: Poison",
+    "page": 63
+   },
+   {
+    "name": "Cunning Strike: Trip",
+    "page": 63
+   },
+   {
+    "name": "Cunning Strike: Withdraw",
+    "page": 63
+   },
+   {
+    "name": "Defensive Tactics: Escape the Horde",
+    "page": 61
+   },
+   {
+    "name": "Defensive Tactics: Multiattack Defense",
+    "page": 61
+   },
+   {
+    "name": "Deft Explorer: Expertise",
+    "page": 59
+   },
+   {
+    "name": "Deft Explorer: Languages",
+    "page": 59
+   },
+   {
+    "name": "Devil's Sight",
+    "page": 72
+   },
+   {
+    "name": "Devious Strikes: Daze",
+    "page": 63
+   },
+   {
+    "name": "Devious Strikes: Knock Out",
+    "page": 63
+   },
+   {
+    "name": "Devious Strikes: Obscure",
+    "page": 63
+   },
+   {
+    "name": "Devouring Blade",
+    "page": 72
+   },
+   {
+    "name": "Distant Spell",
+    "page": 67
+   },
+   {
+    "name": "Divine Order: Protector",
+    "page": 37
+   },
+   {
+    "name": "Divine Order: Thaumaturge",
+    "page": 37
+   },
+   {
+    "name": "Eldritch Invocations: Prerequisites",
+    "page": 70
+   },
+   {
+    "name": "Eldritch Invocations: Replacing and Gaining Invocations",
+    "page": 70
+   },
+   {
+    "name": "Eldritch Master: Cantrips and Rituals",
+    "page": 74
+   },
+   {
+    "name": "Eldritch Master: Quick Attack",
+    "page": 73
+   },
+   {
+    "name": "Eldritch Master: Repeatable",
+    "page": 72
+   },
+   {
+    "name": "Eldritch Master: Resistance",
+    "page": 73
+   },
+   {
+    "name": "Eldritch Master: Spellcasting Focus",
+    "page": 74
+   },
+   {
+    "name": "Eldritch Master: Your Save DC",
+    "page": 73
+   },
+   {
+    "name": "Eldritch Mind",
+    "page": 72
+   },
+   {
+    "name": "Eldritch Smite",
+    "page": 72
+   },
+   {
+    "name": "Eldritch Spear",
+    "page": 73
+   },
+   {
+    "name": "Elemental Fury: Potent Spellcasting",
+    "page": 43
+   },
+   {
+    "name": "Elemental Fury: Primal Strike",
+    "page": 43
+   },
+   {
+    "name": "Empowered Spell",
+    "page": 67
+   },
+   {
+    "name": "Extended Spell",
+    "page": 67
+   },
+   {
+    "name": "Fast Hands: Sleight of Hand",
+    "page": 64
+   },
+   {
+    "name": "Fast Hands: Use an Object",
+    "page": 64
+   },
+   {
+    "name": "Fiendish Vigor",
+    "page": 73
+   },
+   {
+    "name": "Fighting Style: Blessed Warrior",
+    "page": 54
+   },
+   {
+    "name": "Fighting Style: Druidic Warrior",
+    "page": 59
+   },
+   {
+    "name": "Font of Magic: Creating Spell Slots",
+    "page": 66
+   },
+   {
+    "name": "Gaze of Two Minds",
+    "page": 73
+   },
+   {
+    "name": "Gift of the Depths",
+    "page": 73
+   },
+   {
+    "name": "Gift of the Protectors",
+    "page": 73
+   },
+   {
+    "name": "Heightened Focus: Flurry of Blows",
+    "page": 51
+   },
+   {
+    "name": "Heightened Focus: Patient Defense",
+    "page": 52
+   },
+   {
+    "name": "Heightened Focus: Step of the Wind",
+    "page": 52
+   },
+   {
+    "name": "Heightened Spell",
+    "page": 67
+   },
+   {
+    "name": "Holy Nimbus: Holy Ward",
+    "page": 57
+   },
+   {
+    "name": "Holy Nimbus: Radiant Damage",
+    "page": 57
+   },
+   {
+    "name": "Holy Nimbus: Sunlight",
+    "page": 57
+   },
+   {
+    "name": "Hunter's Prey: Colossus Slayer",
+    "page": 61
+   },
+   {
+    "name": "Hunter's Prey: Horde Breaker",
+    "page": 61
+   },
+   {
+    "name": "Improved Blessed Strikes: Divine Strike",
+    "page": 38
+   },
+   {
+    "name": "Improved Blessed Strikes: Potent Spellcasting",
+    "page": 38
+   },
+   {
+    "name": "Improved Brutal Strike: Staggering Blow",
+    "page": 30
+   },
+   {
+    "name": "Improved Brutal Strike: Sundering Blow",
+    "page": 30
+   },
+   {
+    "name": "Improved Elemental Fury: Potent Spellcasting",
+    "page": 43
+   },
+   {
+    "name": "Improved Elemental Fury: Primal Strike",
+    "page": 43
+   },
+   {
+    "name": "Investment of the Chain Master",
+    "page": 73
+   },
+   {
+    "name": "Lessons of the First Ones",
+    "page": 73
+   },
+   {
+    "name": "Lifedrinker",
+    "page": 73
+   },
+   {
+    "name": "Martial Arts: Bonus Unarmed Strike",
+    "page": 50
+   },
+   {
+    "name": "Martial Arts: Dexterous Attacks",
+    "page": 50
+   },
+   {
+    "name": "Martial Arts: Martial Arts Die",
+    "page": 50
+   },
+   {
+    "name": "Mask of Many Faces",
+    "page": 73
+   },
+   {
+    "name": "Master of Myriad Forms",
+    "page": 73
+   },
+   {
+    "name": "Misty Visions",
+    "page": 74
+   },
+   {
+    "name": "Monk's Focus: Flurry of Blows",
+    "page": 50
+   },
+   {
+    "name": "Monk's Focus: Patient Defense",
+    "page": 50
+   },
+   {
+    "name": "Monk's Focus: Step of the Wind",
+    "page": 51
+   },
+   {
+    "name": "One with Shadows",
+    "page": 74
+   },
+   {
+    "name": "Open Hand Technique: Addle",
+    "page": 52
+   },
+   {
+    "name": "Open Hand Technique: Push",
+    "page": 52
+   },
+   {
+    "name": "Open Hand Technique: Topple",
+    "page": 52
+   },
+   {
+    "name": "Otherworldly Leap",
+    "page": 74
+   },
+   {
+    "name": "Pact Magic: Cantrips",
+    "page": 71
+   },
+   {
+    "name": "Pact Magic: Changing Your Prepared Spells",
+    "page": 72
+   },
+   {
+    "name": "Pact Magic: Spell Slots",
+    "page": 71
+   },
+   {
+    "name": "Pact Magic: Spellcasting Ability",
+    "page": 72
+   },
+   {
+    "name": "Pact Magic: Spellcasting Focus",
+    "page": 72
+   },
+   {
+    "name": "Pact of the Blade",
+    "page": 74
+   },
+   {
+    "name": "Pact of the Chain",
+    "page": 74
+   },
+   {
+    "name": "Pact of the Tome",
+    "page": 74
+   },
+   {
+    "name": "Primal Order: Magician",
+    "page": 42
+   },
+   {
+    "name": "Primal Order: Warden",
+    "page": 42
+   },
+   {
+    "name": "Quickened Spell",
+    "page": 67
+   },
+   {
+    "name": "Rage: Damage Resistance",
+    "page": 29
+   },
+   {
+    "name": "Rage: Duration",
+    "page": 29
+   },
+   {
+    "name": "Rage: Rage Damage",
+    "page": 29
+   },
+   {
+    "name": "Rage: Strength Advantage",
+    "page": 29
+   },
+   {
+    "name": "Repelling Blast",
+    "page": 74
+   },
+   {
+    "name": "Second-Story Work: Climber",
+    "page": 64
+   },
+   {
+    "name": "Second-Story Work: Jumper",
+    "page": 64
+   },
+   {
+    "name": "Seeking Spell",
+    "page": 67
+   },
+   {
+    "name": "Spellcasting: Cantrips",
+    "page": 32
+   },
+   {
+    "name": "Spellcasting: Changing Your Prepared Spells",
+    "page": 32
+   },
+   {
+    "name": "Spellcasting: Copying the Book",
+    "page": 78
+   },
+   {
+    "name": "Spellcasting: Spell Slots",
+    "page": 32
+   },
+   {
+    "name": "Spellcasting: Spellbook",
+    "page": 78
+   },
+   {
+    "name": "Spellcasting: Spellcasting Ability",
+    "page": 32
+   },
+   {
+    "name": "Spellcasting: Spellcasting Focus",
+    "page": 32
+   },
+   {
+    "name": "Subtle Spell",
+    "page": 67
+   },
+   {
+    "name": "Supreme Sneak: Stealth Attack",
+    "page": 64
+   },
+   {
+    "name": "Survivor: Defy Death",
+    "page": 49
+   },
+   {
+    "name": "Survivor: Heroic Rally",
+    "page": 49
+   },
+   {
+    "name": "Thirsting Blade",
+    "page": 74
+   },
+   {
+    "name": "Tireless: Decrease Exhaustion",
+    "page": 59
+   },
+   {
+    "name": "Tireless: Temporary Hit Points",
+    "page": 59
+   },
+   {
+    "name": "Transmuted Spell",
+    "page": 67
+   },
+   {
+    "name": "Twinned Spell",
+    "page": 67
+   },
+   {
+    "name": "Use Magic Device: Attunement",
+    "page": 64
+   },
+   {
+    "name": "Use Magic Device: Charges",
+    "page": 64
+   },
+   {
+    "name": "Use Magic Device: Scrolls",
+    "page": 64
+   },
+   {
+    "name": "Visions of Distant Realms",
+    "page": 74
+   },
+   {
+    "name": "Whispers of the Grave",
+    "page": 74
+   },
+   {
+    "name": "Wild Shape: Known Forms",
+    "page": 42
+   },
+   {
+    "name": "Wild Shape: Number of Uses",
+    "page": 42
+   },
+   {
+    "name": "Witch Sight",
+    "page": 74
+   }
+  ],
+  "class_features": [
+   {
+    "name": "Ability Score Improvement",
+    "page": 29
+   },
+   {
+    "name": "Abjure Foes",
+    "page": 55
+   },
+   {
+    "name": "Acrobatic Movement",
+    "page": 51
+   },
+   {
+    "name": "Action Surge",
+    "page": 48
+   },
+   {
+    "name": "Additional Fighting Style",
+    "page": 49
+   },
+   {
+    "name": "Arcane Apotheosis",
+    "page": 66
+   },
+   {
+    "name": "Arcane Recovery",
+    "page": 78
+   },
+   {
+    "name": "Archdruid",
+    "page": 43
+   },
+   {
+    "name": "Aura Expansion",
+    "page": 55
+   },
+   {
+    "name": "Aura of Courage",
+    "page": 55
+   },
+   {
+    "name": "Aura of Devotion",
+    "page": 56
+   },
+   {
+    "name": "Aura of Protection",
+    "page": 55
+   },
+   {
+    "name": "Barbarian Subclass",
+    "page": 29
+   },
+   {
+    "name": "Bard Subclass",
+    "page": 32
+   },
+   {
+    "name": "Bardic Inspiration",
+    "page": 31
+   },
+   {
+    "name": "Beast Spells",
+    "page": 43
+   },
+   {
+    "name": "Blessed Healer",
+    "page": 40
+   },
+   {
+    "name": "Blessed Strikes",
+    "page": 38
+   },
+   {
+    "name": "Body and Mind",
+    "page": 52
+   },
+   {
+    "name": "Bonus Proficiencies",
+    "page": 35
+   },
+   {
+    "name": "Brutal Strike",
+    "page": 29
+   },
+   {
+    "name": "Channel Divinity",
+    "page": 37
+   },
+   {
+    "name": "Circle of the Land Spells",
+    "page": 46
+   },
+   {
+    "name": "Cleric Subclass",
+    "page": 37
+   },
+   {
+    "name": "Contact Patron",
+    "page": 72
+   },
+   {
+    "name": "Countercharm",
+    "page": 33
+   },
+   {
+    "name": "Cunning Action",
+    "page": 62
+   },
+   {
+    "name": "Cunning Strike",
+    "page": 63
+   },
+   {
+    "name": "Cutting Words",
+    "page": 35
+   },
+   {
+    "name": "Danger Sense",
+    "page": 29
+   },
+   {
+    "name": "Dark One's Blessing",
+    "page": 76
+   },
+   {
+    "name": "Dark One's Own Luck",
+    "page": 76
+   },
+   {
+    "name": "Defensive Tactics",
+    "page": 61
+   },
+   {
+    "name": "Deflect Attacks",
+    "page": 51
+   },
+   {
+    "name": "Deflect Energy",
+    "page": 52
+   },
+   {
+    "name": "Deft Explorer",
+    "page": 59
+   },
+   {
+    "name": "Devious Strikes",
+    "page": 63
+   },
+   {
+    "name": "Disciple of Life",
+    "page": 40
+   },
+   {
+    "name": "Disciplined Survivor",
+    "page": 52
+   },
+   {
+    "name": "Divine Intervention",
+    "page": 38
+   },
+   {
+    "name": "Divine Order",
+    "page": 37
+   },
+   {
+    "name": "Draconic Resilience",
+    "page": 69
+   },
+   {
+    "name": "Draconic Spells",
+    "page": 70
+   },
+   {
+    "name": "Dragon Companion",
+    "page": 70
+   },
+   {
+    "name": "Dragon Wings",
+    "page": 70
+   },
+   {
+    "name": "Druid Subclass",
+    "page": 43
+   },
+   {
+    "name": "Druidic",
+    "page": 42
+   },
+   {
+    "name": "Eldritch Invocations",
+    "page": 70
+   },
+   {
+    "name": "Eldritch Master",
+    "page": 72
+   },
+   {
+    "name": "Elemental Affinity",
+    "page": 70
+   },
+   {
+    "name": "Elemental Fury",
+    "page": 43
+   },
+   {
+    "name": "Elusive",
+    "page": 63
+   },
+   {
+    "name": "Empowered Evocation",
+    "page": 82
+   },
+   {
+    "name": "Empowered Strikes",
+    "page": 51
+   },
+   {
+    "name": "Epic Boon",
+    "page": 30
+   },
+   {
+    "name": "Evasion",
+    "page": 51
+   },
+   {
+    "name": "Evocation Savant",
+    "page": 82
+   },
+   {
+    "name": "Expertise",
+    "page": 32
+   },
+   {
+    "name": "Extra Attack",
+    "page": 29
+   },
+   {
+    "name": "Faithful Steed",
+    "page": 55
+   },
+   {
+    "name": "Fast Hands",
+    "page": 64
+   },
+   {
+    "name": "Fast Movement",
+    "page": 29
+   },
+   {
+    "name": "Favored Enemy",
+    "page": 58
+   },
+   {
+    "name": "Feral Instinct",
+    "page": 29
+   },
+   {
+    "name": "Feral Senses",
+    "page": 59
+   },
+   {
+    "name": "Fiend Spells",
+    "page": 76
+   },
+   {
+    "name": "Fiendish Resilience",
+    "page": 76
+   },
+   {
+    "name": "Fighter Subclass",
+    "page": 48
+   },
+   {
+    "name": "Fighting Style",
+    "page": 47
+   },
+   {
+    "name": "Fleet Step",
+    "page": 52
+   },
+   {
+    "name": "Foe Slayer",
+    "page": 59
+   },
+   {
+    "name": "Font of Inspiration",
+    "page": 32
+   },
+   {
+    "name": "Font of Magic",
+    "page": 66
+   },
+   {
+    "name": "Frenzy",
+    "page": 30
+   },
+   {
+    "name": "Greater Divine Intervention",
+    "page": 38
+   },
+   {
+    "name": "Heightened Focus",
+    "page": 51
+   },
+   {
+    "name": "Heroic Warrior",
+    "page": 49
+   },
+   {
+    "name": "Holy Nimbus",
+    "page": 57
+   },
+   {
+    "name": "Hunter's Lore",
+    "page": 61
+   },
+   {
+    "name": "Hunter's Prey",
+    "page": 61
+   },
+   {
+    "name": "Hurl Through Hell",
+    "page": 76
+   },
+   {
+    "name": "Improved Blessed Strikes",
+    "page": 38
+   },
+   {
+    "name": "Improved Brutal Strike",
+    "page": 30
+   },
+   {
+    "name": "Improved Critical",
+    "page": 49
+   },
+   {
+    "name": "Improved Cunning Strike",
+    "page": 63
+   },
+   {
+    "name": "Improved Elemental Fury",
+    "page": 43
+   },
+   {
+    "name": "Indomitable",
+    "page": 48
+   },
+   {
+    "name": "Indomitable Might",
+    "page": 30
+   },
+   {
+    "name": "Innate Sorcery",
+    "page": 65
+   },
+   {
+    "name": "Instinctive Pounce",
+    "page": 29
+   },
+   {
+    "name": "Intimidating Presence",
+    "page": 30
+   },
+   {
+    "name": "Jack of All Trades",
+    "page": 32
+   },
+   {
+    "name": "Land's Aid",
+    "page": 46
+   },
+   {
+    "name": "Lay On Hands",
+    "page": 53
+   },
+   {
+    "name": "Life Domain Spells",
+    "page": 40
+   },
+   {
+    "name": "Magical Cunning",
+    "page": 72
+   },
+   {
+    "name": "Magical Discoveries",
+    "page": 35
+   },
+   {
+    "name": "Magical Secrets",
+    "page": 33
+   },
+   {
+    "name": "Martial Arts",
+    "page": 50
+   },
+   {
+    "name": "Memorize Spell",
+    "page": 79
+   },
+   {
+    "name": "Metamagic",
+    "page": 66
+   },
+   {
+    "name": "Mindless Rage",
+    "page": 30
+   },
+   {
+    "name": "Monk Subclass",
+    "page": 51
+   },
+   {
+    "name": "Monk's Focus",
+    "page": 50
+   },
+   {
+    "name": "Mystic Arcanum",
+    "page": 72
+   },
+   {
+    "name": "Natural Recovery",
+    "page": 46
+   },
+   {
+    "name": "Nature's Sanctuary",
+    "page": 46
+   },
+   {
+    "name": "Nature's Veil",
+    "page": 59
+   },
+   {
+    "name": "Nature's Ward",
+    "page": 46
+   },
+   {
+    "name": "Oath of Devotion Spells",
+    "page": 56
+   },
+   {
+    "name": "Open Hand Technique",
+    "page": 52
+   },
+   {
+    "name": "Overchannel",
+    "page": 82
+   },
+   {
+    "name": "Pact Magic",
+    "page": 71
+   },
+   {
+    "name": "Paladin Subclass",
+    "page": 55
+   },
+   {
+    "name": "Paladin's Smite",
+    "page": 54
+   },
+   {
+    "name": "Peerless Skill",
+    "page": 35
+   },
+   {
+    "name": "Perfect Focus",
+    "page": 52
+   },
+   {
+    "name": "Persistent Rage",
+    "page": 30
+   },
+   {
+    "name": "Potent Cantrip",
+    "page": 82
+   },
+   {
+    "name": "Precise Hunter",
+    "page": 59
+   },
+   {
+    "name": "Preserve Life",
+    "page": 40
+   },
+   {
+    "name": "Primal Champion",
+    "page": 30
+   },
+   {
+    "name": "Primal Knowledge",
+    "page": 29
+   },
+   {
+    "name": "Primal Order",
+    "page": 42
+   },
+   {
+    "name": "Quivering Palm",
+    "page": 52
+   },
+   {
+    "name": "Radiant Strikes",
+    "page": 55
+   },
+   {
+    "name": "Rage",
+    "page": 28
+   },
+   {
+    "name": "Ranger Subclass",
+    "page": 59
+   },
+   {
+    "name": "Reckless Attack",
+    "page": 29
+   },
+   {
+    "name": "Relentless Hunter",
+    "page": 59
+   },
+   {
+    "name": "Relentless Rage",
+    "page": 30
+   },
+   {
+    "name": "Reliable Talent",
+    "page": 63
+   },
+   {
+    "name": "Remarkable Athlete",
+    "page": 49
+   },
+   {
+    "name": "Restoring Touch",
+    "page": 55
+   },
+   {
+    "name": "Retaliation",
+    "page": 30
+   },
+   {
+    "name": "Ritual Adept",
+    "page": 78
+   },
+   {
+    "name": "Rogue Subclass",
+    "page": 62
+   },
+   {
+    "name": "Roving",
+    "page": 59
+   },
+   {
+    "name": "Sacred Weapon",
+    "page": 56
+   },
+   {
+    "name": "Scholar",
+    "page": 78
+   },
+   {
+    "name": "Sculpt Spells",
+    "page": 82
+   },
+   {
+    "name": "Sear Undead",
+    "page": 37
+   },
+   {
+    "name": "Second Wind",
+    "page": 48
+   },
+   {
+    "name": "Second-Story Work",
+    "page": 64
+   },
+   {
+    "name": "Self-Restoration",
+    "page": 52
+   },
+   {
+    "name": "Signature Spells",
+    "page": 79
+   },
+   {
+    "name": "Slippery Mind",
+    "page": 63
+   },
+   {
+    "name": "Slow Fall",
+    "page": 51
+   },
+   {
+    "name": "Smite of Protection",
+    "page": 57
+   },
+   {
+    "name": "Sneak Attack",
+    "page": 61
+   },
+   {
+    "name": "Sorcerer Subclass",
+    "page": 66
+   },
+   {
+    "name": "Sorcerous Restoration",
+    "page": 66
+   },
+   {
+    "name": "Sorcery Incarnate",
+    "page": 66
+   },
+   {
+    "name": "Spell Mastery",
+    "page": 79
+   },
+   {
+    "name": "Spellcasting",
+    "page": 32
+   },
+   {
+    "name": "Steady Aim",
+    "page": 62
+   },
+   {
+    "name": "Stroke of Luck",
+    "page": 63
+   },
+   {
+    "name": "Studied Attacks",
+    "page": 48
+   },
+   {
+    "name": "Stunning Strike",
+    "page": 51
+   },
+   {
+    "name": "Superior Critical",
+    "page": 49
+   },
+   {
+    "name": "Superior Defense",
+    "page": 52
+   },
+   {
+    "name": "Superior Hunter's Defense",
+    "page": 61
+   },
+   {
+    "name": "Superior Hunter's Prey",
+    "page": 61
+   },
+   {
+    "name": "Superior Inspiration",
+    "page": 33
+   },
+   {
+    "name": "Supreme Healing",
+    "page": 40
+   },
+   {
+    "name": "Supreme Sneak",
+    "page": 64
+   },
+   {
+    "name": "Survivor",
+    "page": 49
+   },
+   {
+    "name": "Tactical Master",
+    "page": 48
+   },
+   {
+    "name": "Tactical Mind",
+    "page": 48
+   },
+   {
+    "name": "Tactical Shift",
+    "page": 48
+   },
+   {
+    "name": "Thief's Reflexes",
+    "page": 64
+   },
+   {
+    "name": "Thieves' Cant",
+    "page": 62
+   },
+   {
+    "name": "Three Extra Attacks",
+    "page": 48
+   },
+   {
+    "name": "Tireless",
+    "page": 59
+   },
+   {
+    "name": "Two Extra Attacks",
+    "page": 48
+   },
+   {
+    "name": "Unarmored Defense",
+    "page": 29
+   },
+   {
+    "name": "Unarmored Movement",
+    "page": 51
+   },
+   {
+    "name": "Uncanny Dodge",
+    "page": 63
+   },
+   {
+    "name": "Uncanny Metabolism",
+    "page": 51
+   },
+   {
+    "name": "Use Magic Device",
+    "page": 64
+   },
+   {
+    "name": "Warlock Subclass",
+    "page": 72
+   },
+   {
+    "name": "Weapon Mastery",
+    "page": 29
+   },
+   {
+    "name": "Wholeness of Body",
+    "page": 52
+   },
+   {
+    "name": "Wild Companion",
+    "page": 43
+   },
+   {
+    "name": "Wild Resurgence",
+    "page": 43
+   },
+   {
+    "name": "Wild Shape",
+    "page": 42
+   },
+   {
+    "name": "Wizard Subclass",
+    "page": 78
+   },
+   {
+    "name": "Words of Creation",
+    "page": 33
+   }
+  ],
+  "classes": [
+   {
+    "name": "Barbarian",
+    "page": 28
+   },
+   {
+    "name": "Bard",
+    "page": 31
+   },
+   {
+    "name": "Cleric",
+    "page": 36
+   },
+   {
+    "name": "Druid",
+    "page": 41
+   },
+   {
+    "name": "Fighter",
+    "page": 47
+   },
+   {
+    "name": "Monk",
+    "page": 49
+   },
+   {
+    "name": "Paladin",
+    "page": 53
+   },
+   {
+    "name": "Ranger",
+    "page": 57
+   },
+   {
+    "name": "Rogue",
+    "page": 61
+   },
+   {
+    "name": "Sorcerer",
+    "page": 64
+   },
+   {
+    "name": "Warlock",
+    "page": 70
+   },
+   {
+    "name": "Wizard",
+    "page": 77
+   }
+  ],
+  "conditions": [
+   {
+    "name": "Blinded",
+    "page": 177
+   },
+   {
+    "name": "Charmed",
+    "page": 178
+   },
+   {
+    "name": "Deafened",
+    "page": 181
+   },
+   {
+    "name": "Exhaustion",
+    "page": 181
+   },
+   {
+    "name": "Frightened",
+    "page": 182
+   },
+   {
+    "name": "Grappled",
+    "page": 182
+   },
+   {
+    "name": "Incapacitated",
+    "page": 184
+   },
+   {
+    "name": "Invisible",
+    "page": 184
+   },
+   {
+    "name": "Paralyzed",
+    "page": 186
+   },
+   {
+    "name": "Petrified",
+    "page": 186
+   },
+   {
+    "name": "Poisoned",
+    "page": 186
+   },
+   {
+    "name": "Prone",
+    "page": 186
+   },
+   {
+    "name": "Restrained",
+    "page": 187
+   },
+   {
+    "name": "Stunned",
+    "page": 189
+   },
+   {
+    "name": "Unconscious",
+    "page": 191
+   }
+  ],
+  "equipment": [
+   {
+    "name": "A creature that falls takes",
+    "page": 182
+   },
+   {
+    "name": "Acid",
+    "page": 94
+   },
+   {
+    "name": "Airship",
+    "page": 101
+   },
+   {
+    "name": "Alchemist's Fire",
+    "page": 94
+   },
+   {
+    "name": "Alchemist's Supplies",
+    "page": 93
+   },
+   {
+    "name": "Ammunition",
+    "page": 94
+   },
+   {
+    "name": "Amulet",
+    "page": 97
+   },
+   {
+    "name": "Antitoxin",
+    "page": 95
+   },
+   {
+    "name": "Arcane Focus",
+    "page": 96
+   },
+   {
+    "name": "Arrows",
+    "page": 96
+   },
+   {
+    "name": "Assassin's Blood",
+    "page": 197
+   },
+   {
+    "name": "Backpack",
+    "page": 95
+   },
+   {
+    "name": "Bagpipes",
+    "page": 94
+   },
+   {
+    "name": "Ball Bearings",
+    "page": 95
+   },
+   {
+    "name": "Barrel",
+    "page": 95
+   },
+   {
+    "name": "Basket",
+    "page": 95
+   },
+   {
+    "name": "Battleaxe",
+    "page": 91
+   },
+   {
+    "name": "Bedroll",
+    "page": 95
+   },
+   {
+    "name": "Bell",
+    "page": 95
+   },
+   {
+    "name": "Blanket",
+    "page": 95
+   },
+   {
+    "name": "Block and Tackle",
+    "page": 95
+   },
+   {
+    "name": "Blowgun",
+    "page": 91
+   },
+   {
+    "name": "Bolts",
+    "page": 96
+   },
+   {
+    "name": "Book",
+    "page": 95
+   },
+   {
+    "name": "Bottle, Glass",
+    "page": 95
+   },
+   {
+    "name": "Breastplate",
+    "page": 92
+   },
+   {
+    "name": "Brewer's Supplies",
+    "page": 93
+   },
+   {
+    "name": "Bucket",
+    "page": 95
+   },
+   {
+    "name": "Bullets, Firearm",
+    "page": 96
+   },
+   {
+    "name": "Bullets, Sling",
+    "page": 96
+   },
+   {
+    "name": "Burglar's Pack",
+    "page": 95
+   },
+   {
+    "name": "Burnt Othur Fumes",
+    "page": 197
+   },
+   {
+    "name": "Calligrapher's Supplies",
+    "page": 93
+   },
+   {
+    "name": "Caltrops",
+    "page": 95
+   },
+   {
+    "name": "Camel",
+    "page": 100
+   },
+   {
+    "name": "Candle",
+    "page": 95
+   },
+   {
+    "name": "Carpenter's Tools",
+    "page": 93
+   },
+   {
+    "name": "Carriage",
+    "page": 100
+   },
+   {
+    "name": "Cart",
+    "page": 100
+   },
+   {
+    "name": "Cartographer's Tools",
+    "page": 93
+   },
+   {
+    "name": "Case, Crossbow Bolt",
+    "page": 95
+   },
+   {
+    "name": "Case, Map or Scroll",
+    "page": 95
+   },
+   {
+    "name": "Chain",
+    "page": 95
+   },
+   {
+    "name": "Chain Mail",
+    "page": 92
+   },
+   {
+    "name": "Chain Shirt",
+    "page": 92
+   },
+   {
+    "name": "Chariot",
+    "page": 100
+   },
+   {
+    "name": "Chest",
+    "page": 95
+   },
+   {
+    "name": "Climber's Kit",
+    "page": 95
+   },
+   {
+    "name": "Clothes, Fine",
+    "page": 95
+   },
+   {
+    "name": "Clothes, Traveler's",
+    "page": 95
+   },
+   {
+    "name": "Club",
+    "page": 91
+   },
+   {
+    "name": "Cobbler's Tools",
+    "page": 93
+   },
+   {
+    "name": "Component Pouch",
+    "page": 95
+   },
+   {
+    "name": "Cook's Utensils",
+    "page": 93
+   },
+   {
+    "name": "Costume",
+    "page": 95
+   },
+   {
+    "name": "Crawler Mucus",
+    "page": 197
+   },
+   {
+    "name": "Crowbar",
+    "page": 95
+   },
+   {
+    "name": "Crystal",
+    "page": 96
+   },
+   {
+    "name": "Dagger",
+    "page": 91
+   },
+   {
+    "name": "Dart",
+    "page": 91
+   },
+   {
+    "name": "Dice",
+    "page": 94
+   },
+   {
+    "name": "Diplomat's Pack",
+    "page": 95
+   },
+   {
+    "name": "Disguise Kit",
+    "page": 94
+   },
+   {
+    "name": "Dragonchess",
+    "page": 94
+   },
+   {
+    "name": "Druidic Focus",
+    "page": 97
+   },
+   {
+    "name": "Drum",
+    "page": 94
+   },
+   {
+    "name": "Dulcimer",
+    "page": 94
+   },
+   {
+    "name": "Dungeoneer's Pack",
+    "page": 95
+   },
+   {
+    "name": "Elephant",
+    "page": 100
+   },
+   {
+    "name": "Emblem",
+    "page": 97
+   },
+   {
+    "name": "Entertainer's Pack",
+    "page": 95
+   },
+   {
+    "name": "Essence of Ether",
+    "page": 197
+   },
+   {
+    "name": "Exotic",
+    "page": 100
+   },
+   {
+    "name": "Explorer's Pack",
+    "page": 95
+   },
+   {
+    "name": "Feed per day",
+    "page": 100
+   },
+   {
+    "name": "Flail",
+    "page": 91
+   },
+   {
+    "name": "Flask",
+    "page": 95
+   },
+   {
+    "name": "Flute",
+    "page": 94
+   },
+   {
+    "name": "Forgery Kit",
+    "page": 94
+   },
+   {
+    "name": "Gaming Set",
+    "page": 94
+   },
+   {
+    "name": "Glaive",
+    "page": 91
+   },
+   {
+    "name": "Glassblower's Tools",
+    "page": 93
+   },
+   {
+    "name": "Grappling Hook",
+    "page": 95
+   },
+   {
+    "name": "Greataxe",
+    "page": 91
+   },
+   {
+    "name": "Greatclub",
+    "page": 91
+   },
+   {
+    "name": "Greatsword",
+    "page": 91
+   },
+   {
+    "name": "Halberd",
+    "page": 91
+   },
+   {
+    "name": "Half Plate Armor",
+    "page": 92
+   },
+   {
+    "name": "Hand Crossbow",
+    "page": 91
+   },
+   {
+    "name": "Handaxe",
+    "page": 91
+   },
+   {
+    "name": "Healer's Kit",
+    "page": 95
+   },
+   {
+    "name": "Heavy Crossbow",
+    "page": 91
+   },
+   {
+    "name": "Herbalism Kit",
+    "page": 94
+   },
+   {
+    "name": "Hide Armor",
+    "page": 92
+   },
+   {
+    "name": "Holy Symbol",
+    "page": 97
+   },
+   {
+    "name": "Holy Water",
+    "page": 95
+   },
+   {
+    "name": "Horn",
+    "page": 94
+   },
+   {
+    "name": "Horse, Draft",
+    "page": 100
+   },
+   {
+    "name": "Horse, Riding",
+    "page": 100
+   },
+   {
+    "name": "Hunting Trap",
+    "page": 95
+   },
+   {
+    "name": "Ink",
+    "page": 95
+   },
+   {
+    "name": "Ink Pen",
+    "page": 95
+   },
+   {
+    "name": "Javelin",
+    "page": 91
+   },
+   {
+    "name": "Jeweler's Tools",
+    "page": 93
+   },
+   {
+    "name": "Jug",
+    "page": 95
+   },
+   {
+    "name": "Ladder",
+    "page": 95
+   },
+   {
+    "name": "Lamp",
+    "page": 95
+   },
+   {
+    "name": "Lance",
+    "page": 91
+   },
+   {
+    "name": "Lantern, Bullseye",
+    "page": 95
+   },
+   {
+    "name": "Lantern, Hooded",
+    "page": 95
+   },
+   {
+    "name": "Leather Armor",
+    "page": 92
+   },
+   {
+    "name": "Leatherworker's Tools",
+    "page": 93
+   },
+   {
+    "name": "Light Crossbow",
+    "page": 91
+   },
+   {
+    "name": "Light Hammer",
+    "page": 91
+   },
+   {
+    "name": "Lock",
+    "page": 95
+   },
+   {
+    "name": "Longbow",
+    "page": 91
+   },
+   {
+    "name": "Longsword",
+    "page": 91
+   },
+   {
+    "name": "Lute",
+    "page": 94
+   },
+   {
+    "name": "Lyre",
+    "page": 94
+   },
+   {
+    "name": "Mace",
+    "page": 91
+   },
+   {
+    "name": "Magnifying Glass",
+    "page": 95
+   },
+   {
+    "name": "Malice",
+    "page": 197
+   },
+   {
+    "name": "Manacles",
+    "page": 95
+   },
+   {
+    "name": "Map",
+    "page": 95
+   },
+   {
+    "name": "Mason's Tools",
+    "page": 93
+   },
+   {
+    "name": "Mastiff",
+    "page": 100
+   },
+   {
+    "name": "Maul",
+    "page": 91
+   },
+   {
+    "name": "Midnight Tears",
+    "page": 197
+   },
+   {
+    "name": "Military",
+    "page": 100
+   },
+   {
+    "name": "Mirror",
+    "page": 95
+   },
+   {
+    "name": "Morningstar",
+    "page": 91
+   },
+   {
+    "name": "Mule",
+    "page": 100
+   },
+   {
+    "name": "Musical Instrument",
+    "page": 94
+   },
+   {
+    "name": "Musket",
+    "page": 91
+   },
+   {
+    "name": "Navigator's Tools",
+    "page": 94
+   },
+   {
+    "name": "Needles",
+    "page": 96
+   },
+   {
+    "name": "Net",
+    "page": 95
+   },
+   {
+    "name": "Oil",
+    "page": 95
+   },
+   {
+    "name": "Oil of Taggit",
+    "page": 198
+   },
+   {
+    "name": "Orb",
+    "page": 96
+   },
+   {
+    "name": "Padded Armor",
+    "page": 92
+   },
+   {
+    "name": "Painter's Supplies",
+    "page": 93
+   },
+   {
+    "name": "Pale Tincture",
+    "page": 198
+   },
+   {
+    "name": "Pan flute",
+    "page": 94
+   },
+   {
+    "name": "Paper",
+    "page": 95
+   },
+   {
+    "name": "Parchment",
+    "page": 95
+   },
+   {
+    "name": "Perfume",
+    "page": 95
+   },
+   {
+    "name": "Pike",
+    "page": 91
+   },
+   {
+    "name": "Pistol",
+    "page": 91
+   },
+   {
+    "name": "Plate Armor",
+    "page": 92
+   },
+   {
+    "name": "Playing cards",
+    "page": 94
+   },
+   {
+    "name": "Poison, Basic",
+    "page": 95
+   },
+   {
+    "name": "Poisoner's Kit",
+    "page": 94
+   },
+   {
+    "name": "Pole",
+    "page": 95
+   },
+   {
+    "name": "Pony",
+    "page": 100
+   },
+   {
+    "name": "Pot, Iron",
+    "page": 95
+   },
+   {
+    "name": "Potion of Healing",
+    "page": 95
+   },
+   {
+    "name": "Potter's Tools",
+    "page": 93
+   },
+   {
+    "name": "Pouch",
+    "page": 95
+   },
+   {
+    "name": "Priest's Pack",
+    "page": 95
+   },
+   {
+    "name": "Purple Worm Poison",
+    "page": 198
+   },
+   {
+    "name": "Push",
+    "page": 91
+   },
+   {
+    "name": "Quarterstaff",
+    "page": 91
+   },
+   {
+    "name": "Quiver",
+    "page": 95
+   },
+   {
+    "name": "Ram, Portable",
+    "page": 95
+   },
+   {
+    "name": "Rapier",
+    "page": 91
+   },
+   {
+    "name": "Rations",
+    "page": 95
+   },
+   {
+    "name": "Reliquary",
+    "page": 97
+   },
+   {
+    "name": "Riding",
+    "page": 100
+   },
+   {
+    "name": "Ring Mail",
+    "page": 92
+   },
+   {
+    "name": "Robe",
+    "page": 95
+   },
+   {
+    "name": "Rod",
+    "page": 96
+   },
+   {
+    "name": "Rope",
+    "page": 95
+   },
+   {
+    "name": "Rowboat",
+    "page": 101
+   },
+   {
+    "name": "Sack",
+    "page": 95
+   },
+   {
+    "name": "Scale Mail",
+    "page": 92
+   },
+   {
+    "name": "Scholar's Pack",
+    "page": 95
+   },
+   {
+    "name": "Scimitar",
+    "page": 91
+   },
+   {
+    "name": "Serpent Venom",
+    "page": 198
+   },
+   {
+    "name": "Shawm",
+    "page": 94
+   },
+   {
+    "name": "Shield",
+    "page": 92
+   },
+   {
+    "name": "Shortbow",
+    "page": 91
+   },
+   {
+    "name": "Shortsword",
+    "page": 91
+   },
+   {
+    "name": "Shovel",
+    "page": 95
+   },
+   {
+    "name": "Sickle",
+    "page": 91
+   },
+   {
+    "name": "Signal Whistle",
+    "page": 95
+   },
+   {
+    "name": "Sled",
+    "page": 100
+   },
+   {
+    "name": "Sling",
+    "page": 91
+   },
+   {
+    "name": "Slow",
+    "page": 91
+   },
+   {
+    "name": "Smith's Tools",
+    "page": 93
+   },
+   {
+    "name": "Spear",
+    "page": 91
+   },
+   {
+    "name": "Spell Scroll",
+    "page": 95
+   },
+   {
+    "name": "Spider's Sting",
+    "page": 198
+   },
+   {
+    "name": "Spikes, Iron",
+    "page": 95
+   },
+   {
+    "name": "Splint Armor",
+    "page": 92
+   },
+   {
+    "name": "Sprig of mistletoe",
+    "page": 97
+   },
+   {
+    "name": "Spyglass",
+    "page": 95
+   },
+   {
+    "name": "Stabling per day",
+    "page": 100
+   },
+   {
+    "name": "Staff",
+    "page": 96
+   },
+   {
+    "name": "Strikes to deal",
+    "page": 218
+   },
+   {
+    "name": "String",
+    "page": 95
+   },
+   {
+    "name": "Studded Leather Armor",
+    "page": 92
+   },
+   {
+    "name": "Tent",
+    "page": 95
+   },
+   {
+    "name": "Thieves' Tools",
+    "page": 94
+   },
+   {
+    "name": "Three-dragon ante",
+    "page": 94
+   },
+   {
+    "name": "Tinderbox",
+    "page": 95
+   },
+   {
+    "name": "Tinker's Tools",
+    "page": 94
+   },
+   {
+    "name": "Torch",
+    "page": 95
+   },
+   {
+    "name": "Torpor",
+    "page": 198
+   },
+   {
+    "name": "Trident",
+    "page": 91
+   },
+   {
+    "name": "Truth Serum",
+    "page": 198
+   },
+   {
+    "name": "Vial",
+    "page": 95
+   },
+   {
+    "name": "Viol",
+    "page": 94
+   },
+   {
+    "name": "Wagon",
+    "page": 100
+   },
+   {
+    "name": "Wand",
+    "page": 96
+   },
+   {
+    "name": "War Pick",
+    "page": 91
+   },
+   {
+    "name": "Warhammer",
+    "page": 91
+   },
+   {
+    "name": "Warhorse",
+    "page": 100
+   },
+   {
+    "name": "Waterskin",
+    "page": 100
+   },
+   {
+    "name": "Weaver's Tools",
+    "page": 94
+   },
+   {
+    "name": "While Restrained, the target takes",
+    "page": 128
+   },
+   {
+    "name": "Whip",
+    "page": 91
+   },
+   {
+    "name": "Woodcarver's Tools",
+    "page": 94
+   },
+   {
+    "name": "Wooden staff",
+    "page": 97
+   },
+   {
+    "name": "Wyvern Poison",
+    "page": 198
+   },
+   {
+    "name": "Yew wand",
+    "page": 97
+   }
+  ],
+  "feats": [
+   {
+    "name": "Ability Score Improvement",
+    "page": 87
+   },
+   {
+    "name": "Alert",
+    "page": 87
+   },
+   {
+    "name": "Archery",
+    "page": 87
+   },
+   {
+    "name": "Boon of Combat Prowess",
+    "page": 88
+   },
+   {
+    "name": "Boon of Dimensional Travel",
+    "page": 88
+   },
+   {
+    "name": "Boon of Fate",
+    "page": 88
+   },
+   {
+    "name": "Boon of Irresistible Offense",
+    "page": 88
+   },
+   {
+    "name": "Boon of Spell Recall",
+    "page": 88
+   },
+   {
+    "name": "Boon of Truesight",
+    "page": 88
+   },
+   {
+    "name": "Boon of the Night Spirit",
+    "page": 88
+   },
+   {
+    "name": "Defense",
+    "page": 88
+   },
+   {
+    "name": "Grappler",
+    "page": 87
+   },
+   {
+    "name": "Great Weapon Fighting",
+    "page": 88
+   },
+   {
+    "name": "Magic Initiate",
+    "page": 87
+   },
+   {
+    "name": "Savage Attacker",
+    "page": 87
+   },
+   {
+    "name": "Skilled",
+    "page": 87
+   },
+   {
+    "name": "Two-Weapon Fighting",
+    "page": 88
+   }
+  ],
+  "magic_items": [
+   {
+    "name": "Adamantine Armor",
+    "page": 209
+   },
+   {
+    "name": "Ammunition of Slaying",
+    "page": 209
+   },
+   {
+    "name": "Ammunition, +1, +2, or +3",
+    "page": 209
+   },
+   {
+    "name": "Amulet of Health",
+    "page": 209
+   },
+   {
+    "name": "Amulet of Proof against Detection and Location",
+    "page": 209
+   },
+   {
+    "name": "Amulet of the Planes",
+    "page": 209
+   },
+   {
+    "name": "Animated Shield",
+    "page": 209
+   },
+   {
+    "name": "Apparatus of the Crab",
+    "page": 210
+   },
+   {
+    "name": "Armor of Invulnerability",
+    "page": 210
+   },
+   {
+    "name": "Armor of Resistance",
+    "page": 210
+   },
+   {
+    "name": "Armor of Vulnerability",
+    "page": 211
+   },
+   {
+    "name": "Armor, +1, +2, or +3",
+    "page": 210
+   },
+   {
+    "name": "Arrow-Catching Shield",
+    "page": 211
+   },
+   {
+    "name": "Bag of Beans",
+    "page": 211
+   },
+   {
+    "name": "Bag of Devouring",
+    "page": 212
+   },
+   {
+    "name": "Bag of Holding",
+    "page": 212
+   },
+   {
+    "name": "Bag of Tricks",
+    "page": 212
+   },
+   {
+    "name": "Bead of Force",
+    "page": 212
+   },
+   {
+    "name": "Bead of Nourishment",
+    "page": 213
+   },
+   {
+    "name": "Belt of Dwarvenkind",
+    "page": 213
+   },
+   {
+    "name": "Belt of Giant Strength",
+    "page": 213
+   },
+   {
+    "name": "Berserker Axe",
+    "page": 213
+   },
+   {
+    "name": "Boots of Elvenkind",
+    "page": 213
+   },
+   {
+    "name": "Boots of Levitation",
+    "page": 213
+   },
+   {
+    "name": "Boots of Speed",
+    "page": 214
+   },
+   {
+    "name": "Boots of Striding and Springing",
+    "page": 214
+   },
+   {
+    "name": "Boots of the Winterlands",
+    "page": 214
+   },
+   {
+    "name": "Bowl of Commanding Water Elementals",
+    "page": 214
+   },
+   {
+    "name": "Bracers of Archery",
+    "page": 214
+   },
+   {
+    "name": "Bracers of Defense",
+    "page": 214
+   },
+   {
+    "name": "Brazier of Commanding Fire Elementals",
+    "page": 214
+   },
+   {
+    "name": "Brooch of Shielding",
+    "page": 214
+   },
+   {
+    "name": "Broom of Flying",
+    "page": 214
+   },
+   {
+    "name": "Candle of Invocation",
+    "page": 214
+   },
+   {
+    "name": "Cape of the Mountebank",
+    "page": 215
+   },
+   {
+    "name": "Carpet of Flying",
+    "page": 215
+   },
+   {
+    "name": "Censer of Controlling Air Elementals",
+    "page": 215
+   },
+   {
+    "name": "Chime of Opening",
+    "page": 215
+   },
+   {
+    "name": "Circlet of Blasting",
+    "page": 215
+   },
+   {
+    "name": "Cloak of Arachnida",
+    "page": 215
+   },
+   {
+    "name": "Cloak of Displacement",
+    "page": 215
+   },
+   {
+    "name": "Cloak of Elvenkind",
+    "page": 215
+   },
+   {
+    "name": "Cloak of Invisibility",
+    "page": 215
+   },
+   {
+    "name": "Cloak of Protection",
+    "page": 216
+   },
+   {
+    "name": "Cloak of the Bat",
+    "page": 216
+   },
+   {
+    "name": "Cloak of the Manta Ray",
+    "page": 216
+   },
+   {
+    "name": "Crystal Ball",
+    "page": 216
+   },
+   {
+    "name": "Crystal Ball of Mind Reading",
+    "page": 216
+   },
+   {
+    "name": "Crystal Ball of Telepathy",
+    "page": 216
+   },
+   {
+    "name": "Crystal Ball of True Seeing",
+    "page": 216
+   },
+   {
+    "name": "Cube of Force",
+    "page": 216
+   },
+   {
+    "name": "Cubic Gate",
+    "page": 216
+   },
+   {
+    "name": "Dagger of Venom",
+    "page": 216
+   },
+   {
+    "name": "Dancing Sword",
+    "page": 217
+   },
+   {
+    "name": "Decanter of Endless Water",
+    "page": 217
+   },
+   {
+    "name": "Deck of Illusions",
+    "page": 217
+   },
+   {
+    "name": "Defender",
+    "page": 218
+   },
+   {
+    "name": "Demon Armor",
+    "page": 218
+   },
+   {
+    "name": "Dimensional Shackles",
+    "page": 218
+   },
+   {
+    "name": "Dragon Orb",
+    "page": 218
+   },
+   {
+    "name": "Dragon Scale Mail",
+    "page": 218
+   },
+   {
+    "name": "Dragon Slayer",
+    "page": 219
+   },
+   {
+    "name": "Dust of Disappearance",
+    "page": 219
+   },
+   {
+    "name": "Dust of Dryness",
+    "page": 219
+   },
+   {
+    "name": "Dust of Sneezing and Choking",
+    "page": 219
+   },
+   {
+    "name": "Dwarven Plate",
+    "page": 219
+   },
+   {
+    "name": "Dwarven Thrower",
+    "page": 219
+   },
+   {
+    "name": "Efficient Quiver",
+    "page": 219
+   },
+   {
+    "name": "Efreeti Bottle",
+    "page": 220
+   },
+   {
+    "name": "Elemental Gem",
+    "page": 220
+   },
+   {
+    "name": "Elixir of Health",
+    "page": 220
+   },
+   {
+    "name": "Elven Chain",
+    "page": 220
+   },
+   {
+    "name": "Energy Bow",
+    "page": 220
+   },
+   {
+    "name": "Eversmoking Bottle",
+    "page": 220
+   },
+   {
+    "name": "Eyes of Charming",
+    "page": 221
+   },
+   {
+    "name": "Eyes of Minute Seeing",
+    "page": 221
+   },
+   {
+    "name": "Eyes of the Eagle",
+    "page": 221
+   },
+   {
+    "name": "Feather Token",
+    "page": 221
+   },
+   {
+    "name": "Figurine of Wondrous Power",
+    "page": 221
+   },
+   {
+    "name": "Flame Tongue",
+    "page": 223
+   },
+   {
+    "name": "Folding Boat",
+    "page": 223
+   },
+   {
+    "name": "Frost Brand",
+    "page": 223
+   },
+   {
+    "name": "Gauntlets of Ogre Power",
+    "page": 223
+   },
+   {
+    "name": "Gem of Brightness",
+    "page": 223
+   },
+   {
+    "name": "Gem of Seeing",
+    "page": 223
+   },
+   {
+    "name": "Giant Slayer",
+    "page": 223
+   },
+   {
+    "name": "Glamoured Studded Leather",
+    "page": 223
+   },
+   {
+    "name": "Gloves of Missile Snaring",
+    "page": 224
+   },
+   {
+    "name": "Gloves of Swimming and Climbing",
+    "page": 224
+   },
+   {
+    "name": "Gloves of Thievery",
+    "page": 224
+   },
+   {
+    "name": "Goggles of Night",
+    "page": 224
+   },
+   {
+    "name": "Hammer of Thunderbolts",
+    "page": 224
+   },
+   {
+    "name": "Handy Haversack",
+    "page": 224
+   },
+   {
+    "name": "Hat of Disguise",
+    "page": 224
+   },
+   {
+    "name": "Hat of Many Spells",
+    "page": 224
+   },
+   {
+    "name": "Headband of Intellect",
+    "page": 225
+   },
+   {
+    "name": "Helm of Brilliance",
+    "page": 225
+   },
+   {
+    "name": "Helm of Comprehending Languages",
+    "page": 226
+   },
+   {
+    "name": "Helm of Telepathy",
+    "page": 226
+   },
+   {
+    "name": "Helm of Teleportation",
+    "page": 226
+   },
+   {
+    "name": "Holy Avenger",
+    "page": 226
+   },
+   {
+    "name": "Horn of Blasting",
+    "page": 226
+   },
+   {
+    "name": "Horn of Valhalla",
+    "page": 226
+   },
+   {
+    "name": "Horseshoes of Speed",
+    "page": 227
+   },
+   {
+    "name": "Horseshoes of a Zephyr",
+    "page": 226
+   },
+   {
+    "name": "Immovable Rod",
+    "page": 227
+   },
+   {
+    "name": "Instant Fortress",
+    "page": 227
+   },
+   {
+    "name": "Ioun Stone",
+    "page": 227
+   },
+   {
+    "name": "Iron Bands",
+    "page": 228
+   },
+   {
+    "name": "Iron Flask",
+    "page": 228
+   },
+   {
+    "name": "Javelin of Lightning",
+    "page": 228
+   },
+   {
+    "name": "Lantern of Revealing",
+    "page": 228
+   },
+   {
+    "name": "Luck Blade",
+    "page": 229
+   },
+   {
+    "name": "Mace of Disruption",
+    "page": 229
+   },
+   {
+    "name": "Mace of Smiting",
+    "page": 229
+   },
+   {
+    "name": "Mace of Terror",
+    "page": 229
+   },
+   {
+    "name": "Mantle of Spell Resistance",
+    "page": 229
+   },
+   {
+    "name": "Manual of Bodily Health",
+    "page": 229
+   },
+   {
+    "name": "Manual of Gainful Exercise",
+    "page": 229
+   },
+   {
+    "name": "Manual of Golems",
+    "page": 229
+   },
+   {
+    "name": "Manual of Quickness of Action",
+    "page": 230
+   },
+   {
+    "name": "Marvelous Pigments",
+    "page": 230
+   },
+   {
+    "name": "Medallion of Thoughts",
+    "page": 230
+   },
+   {
+    "name": "Mirror of Life Trapping",
+    "page": 230
+   },
+   {
+    "name": "Mithral Armor",
+    "page": 231
+   },
+   {
+    "name": "Mysterious Deck",
+    "page": 231
+   },
+   {
+    "name": "Necklace of Adaptation",
+    "page": 232
+   },
+   {
+    "name": "Necklace of Fireballs",
+    "page": 233
+   },
+   {
+    "name": "Necklace of Prayer Beads",
+    "page": 233
+   },
+   {
+    "name": "Nine Lives Stealer",
+    "page": 233
+   },
+   {
+    "name": "Oathbow",
+    "page": 233
+   },
+   {
+    "name": "Oil of Etherealness",
+    "page": 233
+   },
+   {
+    "name": "Oil of Sharpness",
+    "page": 233
+   },
+   {
+    "name": "Oil of Slipperiness",
+    "page": 233
+   },
+   {
+    "name": "Pearl of Power",
+    "page": 234
+   },
+   {
+    "name": "Periapt of Health",
+    "page": 234
+   },
+   {
+    "name": "Periapt of Proof against Poison",
+    "page": 234
+   },
+   {
+    "name": "Periapt of Wound Closure",
+    "page": 234
+   },
+   {
+    "name": "Philter of Love",
+    "page": 234
+   },
+   {
+    "name": "Pipes of Haunting",
+    "page": 234
+   },
+   {
+    "name": "Pipes of the Sewers",
+    "page": 234
+   },
+   {
+    "name": "Plate Armor of Etherealness",
+    "page": 234
+   },
+   {
+    "name": "Portable Hole",
+    "page": 234
+   },
+   {
+    "name": "Potion of Animal Friendship",
+    "page": 235
+   },
+   {
+    "name": "Potion of Clairvoyance",
+    "page": 235
+   },
+   {
+    "name": "Potion of Climbing",
+    "page": 235
+   },
+   {
+    "name": "Potion of Diminution",
+    "page": 235
+   },
+   {
+    "name": "Potion of Flying",
+    "page": 235
+   },
+   {
+    "name": "Potion of Gaseous Form",
+    "page": 235
+   },
+   {
+    "name": "Potion of Giant Strength",
+    "page": 235
+   },
+   {
+    "name": "Potion of Growth",
+    "page": 235
+   },
+   {
+    "name": "Potion of Heroism",
+    "page": 236
+   },
+   {
+    "name": "Potion of Invisibility",
+    "page": 236
+   },
+   {
+    "name": "Potion of Invulnerability",
+    "page": 236
+   },
+   {
+    "name": "Potion of Longevity",
+    "page": 236
+   },
+   {
+    "name": "Potion of Mind Reading",
+    "page": 236
+   },
+   {
+    "name": "Potion of Poison",
+    "page": 236
+   },
+   {
+    "name": "Potion of Resistance",
+    "page": 236
+   },
+   {
+    "name": "Potion of Speed",
+    "page": 236
+   },
+   {
+    "name": "Potion of Vitality",
+    "page": 236
+   },
+   {
+    "name": "Potion of Water Breathing",
+    "page": 236
+   },
+   {
+    "name": "Potions of Healing",
+    "page": 236
+   },
+   {
+    "name": "Quarterstaff of the Acrobat",
+    "page": 237
+   },
+   {
+    "name": "Ring of Animal Influence",
+    "page": 237
+   },
+   {
+    "name": "Ring of Djinni Summoning",
+    "page": 237
+   },
+   {
+    "name": "Ring of Elemental Command",
+    "page": 237
+   },
+   {
+    "name": "Ring of Evasion",
+    "page": 238
+   },
+   {
+    "name": "Ring of Feather Falling",
+    "page": 238
+   },
+   {
+    "name": "Ring of Free Action",
+    "page": 238
+   },
+   {
+    "name": "Ring of Invisibility",
+    "page": 238
+   },
+   {
+    "name": "Ring of Jumping",
+    "page": 238
+   },
+   {
+    "name": "Ring of Mind Shielding",
+    "page": 238
+   },
+   {
+    "name": "Ring of Protection",
+    "page": 238
+   },
+   {
+    "name": "Ring of Regeneration",
+    "page": 238
+   },
+   {
+    "name": "Ring of Resistance",
+    "page": 238
+   },
+   {
+    "name": "Ring of Shooting Stars",
+    "page": 238
+   },
+   {
+    "name": "Ring of Spell Storing",
+    "page": 239
+   },
+   {
+    "name": "Ring of Spell Turning",
+    "page": 239
+   },
+   {
+    "name": "Ring of Swimming",
+    "page": 239
+   },
+   {
+    "name": "Ring of Telekinesis",
+    "page": 239
+   },
+   {
+    "name": "Ring of Three Wishes",
+    "page": 239
+   },
+   {
+    "name": "Ring of Warmth",
+    "page": 239
+   },
+   {
+    "name": "Ring of Water Walking",
+    "page": 239
+   },
+   {
+    "name": "Ring of X-ray Vision",
+    "page": 239
+   },
+   {
+    "name": "Ring of the Ram",
+    "page": 239
+   },
+   {
+    "name": "Robe of Eyes",
+    "page": 240
+   },
+   {
+    "name": "Robe of Scintillating Colors",
+    "page": 240
+   },
+   {
+    "name": "Robe of Stars",
+    "page": 240
+   },
+   {
+    "name": "Robe of Useful Items",
+    "page": 240
+   },
+   {
+    "name": "Robe of the Archmagi",
+    "page": 240
+   },
+   {
+    "name": "Rod of Absorption",
+    "page": 241
+   },
+   {
+    "name": "Rod of Alertness",
+    "page": 241
+   },
+   {
+    "name": "Rod of Lordly Might",
+    "page": 241
+   },
+   {
+    "name": "Rod of Resurrection",
+    "page": 242
+   },
+   {
+    "name": "Rod of Rulership",
+    "page": 242
+   },
+   {
+    "name": "Rod of Security",
+    "page": 242
+   },
+   {
+    "name": "Rope of Climbing",
+    "page": 242
+   },
+   {
+    "name": "Rope of Entanglement",
+    "page": 242
+   },
+   {
+    "name": "Scarab of Protection",
+    "page": 243
+   },
+   {
+    "name": "Scimitar of Speed",
+    "page": 243
+   },
+   {
+    "name": "Sending Stones",
+    "page": 243
+   },
+   {
+    "name": "Sentinel Shield",
+    "page": 243
+   },
+   {
+    "name": "Shield of Missile Attraction",
+    "page": 243
+   },
+   {
+    "name": "Shield of the Cavalier",
+    "page": 243
+   },
+   {
+    "name": "Shield, +1, +2, or +3",
+    "page": 243
+   },
+   {
+    "name": "Slippers of Spider Climbing",
+    "page": 244
+   },
+   {
+    "name": "Sovereign Glue",
+    "page": 244
+   },
+   {
+    "name": "Spell Scroll",
+    "page": 244
+   },
+   {
+    "name": "Spellguard Shield",
+    "page": 244
+   },
+   {
+    "name": "Sphere of Annihilation",
+    "page": 244
+   },
+   {
+    "name": "Staff of Charming",
+    "page": 245
+   },
+   {
+    "name": "Staff of Fire",
+    "page": 245
+   },
+   {
+    "name": "Staff of Frost",
+    "page": 245
+   },
+   {
+    "name": "Staff of Healing",
+    "page": 245
+   },
+   {
+    "name": "Staff of Power",
+    "page": 245
+   },
+   {
+    "name": "Staff of Striking",
+    "page": 246
+   },
+   {
+    "name": "Staff of Swarming Insects",
+    "page": 246
+   },
+   {
+    "name": "Staff of Thunder and Lightning",
+    "page": 247
+   },
+   {
+    "name": "Staff of Withering",
+    "page": 248
+   },
+   {
+    "name": "Staff of the Magi",
+    "page": 246
+   },
+   {
+    "name": "Staff of the Python",
+    "page": 247
+   },
+   {
+    "name": "Staff of the Woodlands",
+    "page": 247
+   },
+   {
+    "name": "Stone of Controlling Earth Elementals",
+    "page": 248
+   },
+   {
+    "name": "Stone of Good Luck (Luckstone)",
+    "page": 248
+   },
+   {
+    "name": "Sun Blade",
+    "page": 248
+   },
+   {
+    "name": "Sword of Life Stealing",
+    "page": 248
+   },
+   {
+    "name": "Sword of Sharpness",
+    "page": 248
+   },
+   {
+    "name": "Sword of Wounding",
+    "page": 248
+   },
+   {
+    "name": "Talisman of Pure Good",
+    "page": 248
+   },
+   {
+    "name": "Talisman of Ultimate Evil",
+    "page": 249
+   },
+   {
+    "name": "Talisman of the Sphere",
+    "page": 249
+   },
+   {
+    "name": "Thunderous Greatclub",
+    "page": 249
+   },
+   {
+    "name": "Tome of Clear Thought",
+    "page": 249
+   },
+   {
+    "name": "Tome of Leadership and Influence",
+    "page": 249
+   },
+   {
+    "name": "Tome of Understanding",
+    "page": 250
+   },
+   {
+    "name": "Trident of Fish Command",
+    "page": 250
+   },
+   {
+    "name": "Universal Solvent",
+    "page": 250
+   },
+   {
+    "name": "Vicious Weapon",
+    "page": 250
+   },
+   {
+    "name": "Vorpal Sword",
+    "page": 250
+   },
+   {
+    "name": "Wand of Binding",
+    "page": 250
+   },
+   {
+    "name": "Wand of Enemy Detection",
+    "page": 250
+   },
+   {
+    "name": "Wand of Fear",
+    "page": 250
+   },
+   {
+    "name": "Wand of Fireballs",
+    "page": 250
+   },
+   {
+    "name": "Wand of Lightning Bolts",
+    "page": 251
+   },
+   {
+    "name": "Wand of Magic Detection",
+    "page": 251
+   },
+   {
+    "name": "Wand of Magic Missiles",
+    "page": 251
+   },
+   {
+    "name": "Wand of Paralysis",
+    "page": 251
+   },
+   {
+    "name": "Wand of Polymorph",
+    "page": 251
+   },
+   {
+    "name": "Wand of Secrets",
+    "page": 251
+   },
+   {
+    "name": "Wand of Web",
+    "page": 251
+   },
+   {
+    "name": "Wand of Wonder",
+    "page": 251
+   },
+   {
+    "name": "Wand of the War Mage, +1, +2, or +3",
+    "page": 251
+   },
+   {
+    "name": "Weapon of Warning",
+    "page": 253
+   },
+   {
+    "name": "Weapon, +1, +2, or +3",
+    "page": 253
+   },
+   {
+    "name": "Well of Many Worlds",
+    "page": 253
+   },
+   {
+    "name": "Wind Fan",
+    "page": 253
+   },
+   {
+    "name": "Winged Boots",
+    "page": 253
+   },
+   {
+    "name": "Wings of Flying",
+    "page": 253
+   }
+  ],
+  "species": [
+   {
+    "name": "Dragonborn",
+    "page": 84
+   },
+   {
+    "name": "Dwarf",
+    "page": 84
+   },
+   {
+    "name": "Elf",
+    "page": 84
+   },
+   {
+    "name": "Gnome",
+    "page": 85
+   },
+   {
+    "name": "Goliath",
+    "page": 85
+   },
+   {
+    "name": "Halfling",
+    "page": 86
+   },
+   {
+    "name": "Human",
+    "page": 86
+   },
+   {
+    "name": "Orc",
+    "page": 86
+   },
+   {
+    "name": "Tiefling",
+    "page": 86
+   }
+  ],
+  "species_traits": [
+   {
+    "name": "Adrenaline Rush",
+    "page": 86
+   },
+   {
+    "name": "Brave",
+    "page": 86
+   },
+   {
+    "name": "Breath Weapon",
+    "page": 84
+   },
+   {
+    "name": "Cloud's Jaunt",
+    "page": 85
+   },
+   {
+    "name": "Damage Resistance",
+    "page": 84
+   },
+   {
+    "name": "Darkvision",
+    "page": 84
+   },
+   {
+    "name": "Draconic Ancestry",
+    "page": 84
+   },
+   {
+    "name": "Draconic Flight",
+    "page": 84
+   },
+   {
+    "name": "Dwarven Resilience",
+    "page": 84
+   },
+   {
+    "name": "Dwarven Toughness",
+    "page": 84
+   },
+   {
+    "name": "Elven Lineage",
+    "page": 84
+   },
+   {
+    "name": "Fey Ancestry",
+    "page": 85
+   },
+   {
+    "name": "Fiendish Legacy",
+    "page": 86
+   },
+   {
+    "name": "Fire's Burn",
+    "page": 85
+   },
+   {
+    "name": "Forest Gnome",
+    "page": 85
+   },
+   {
+    "name": "Frost's Chill",
+    "page": 85
+   },
+   {
+    "name": "Giant Ancestry",
+    "page": 85
+   },
+   {
+    "name": "Gnomish Cunning",
+    "page": 85
+   },
+   {
+    "name": "Gnomish Lineage",
+    "page": 85
+   },
+   {
+    "name": "Halfling Nimbleness",
+    "page": 86
+   },
+   {
+    "name": "Hill's Tumble",
+    "page": 85
+   },
+   {
+    "name": "Keen Senses",
+    "page": 85
+   },
+   {
+    "name": "Large Form",
+    "page": 86
+   },
+   {
+    "name": "Luck",
+    "page": 86
+   },
+   {
+    "name": "Naturally Stealthy",
+    "page": 86
+   },
+   {
+    "name": "Otherworldly Presence",
+    "page": 86
+   },
+   {
+    "name": "Powerful Build",
+    "page": 86
+   },
+   {
+    "name": "Relentless Endurance",
+    "page": 86
+   },
+   {
+    "name": "Resourceful",
+    "page": 86
+   },
+   {
+    "name": "Rock Gnome",
+    "page": 85
+   },
+   {
+    "name": "Skillful",
+    "page": 86
+   },
+   {
+    "name": "Stone's Endurance",
+    "page": 85
+   },
+   {
+    "name": "Stonecunning",
+    "page": 84
+   },
+   {
+    "name": "Storm's Thunder",
+    "page": 86
+   },
+   {
+    "name": "Trance",
+    "page": 85
+   },
+   {
+    "name": "Versatile",
+    "page": 86
+   }
+  ],
+  "spells": [
+   {
+    "classes": [
+     "wizard"
+    ],
+    "level": 2,
+    "name": "Acid Arrow",
+    "page": 107
+   },
+   {
+    "classes": [
+     "sorcerer",
+     "wizard"
+    ],
+    "level": 0,
+    "name": "Acid Splash",
+    "page": 107
+   },
+   {
+    "classes": [
+     "bard",
+     "cleric",
+     "druid",
+     "paladin",
+     "ranger"
+    ],
+    "level": 2,
+    "name": "Aid",
+    "page": 107
+   },
+   {
+    "classes": [
+     "ranger",
+     "wizard"
+    ],
+    "level": 1,
+    "name": "Alarm",
+    "page": 107
+   },
+   {
+    "classes": [
+     "sorcerer",
+     "wizard"
+    ],
+    "level": 2,
+    "name": "Alter Self",
+    "page": 107
+   },
+   {
+    "classes": [
+     "bard",
+     "druid",
+     "ranger"
+    ],
+    "level": 1,
+    "name": "Animal Friendship",
+    "page": 107
+   },
+   {
+    "classes": [
+     "bard",
+     "druid",
+     "ranger"
+    ],
+    "level": 2,
+    "name": "Animal Messenger",
+    "page": 108
+   },
+   {
+    "classes": [
+     "druid"
+    ],
+    "level": 8,
+    "name": "Animal Shapes",
+    "page": 108
+   },
+   {
+    "classes": [
+     "cleric",
+     "wizard"
+    ],
+    "level": 3,
+    "name": "Animate Dead",
+    "page": 108
+   },
+   {
+    "classes": [
+     "bard",
+     "sorcerer",
+     "wizard"
+    ],
+    "level": 5,
+    "name": "Animate Objects",
+    "page": 108
+   },
+   {
+    "classes": [
+     "druid"
+    ],
+    "level": 5,
+    "name": "Antilife Shell",
+    "page": 109
+   },
+   {
+    "classes": [
+     "cleric",
+     "wizard"
+    ],
+    "level": 8,
+    "name": "Antimagic Field",
+    "page": 109
+   },
+   {
+    "classes": [
+     "bard",
+     "druid",
+     "wizard"
+    ],
+    "level": 8,
+    "name": "Antipathy/Sympathy",
+    "page": 109
+   },
+   {
+    "classes": [
+     "wizard"
+    ],
+    "level": 4,
+    "name": "Arcane Eye",
+    "page": 110
+   },
+   {
+    "classes": [
+     "sorcerer",
+     "wizard"
+    ],
+    "level": 5,
+    "name": "Arcane Hand",
+    "page": 110
+   },
+   {
+    "classes": [
+     "wizard"
+    ],
+    "level": 2,
+    "name": "Arcane Lock",
+    "page": 110
+   },
+   {
+    "classes": [
+     "bard",
+     "wizard"
+    ],
+    "level": 7,
+    "name": "Arcane Sword",
+    "page": 110
+   },
+   {
+    "classes": [
+     "wizard"
+    ],
+    "level": 2,
+    "name": "Arcanist's Magic Aura",
+    "page": 110
+   },
+   {
+    "classes": [
+     "cleric",
+     "warlock",
+     "wizard"
+    ],
+    "level": 9,
+    "name": "Astral Projection",
+    "page": 111
+   },
+   {
+    "classes": [
+     "cleric",
+     "druid",
+     "wizard"
+    ],
+    "level": 2,
+    "name": "Augury",
+    "page": 111
+   },
+   {
+    "classes": [
+     "cleric",
+     "paladin"
+    ],
+    "level": 4,
+    "name": "Aura of Life",
+    "page": 111
+   },
+   {
+    "classes": [
+     "bard",
+     "druid"
+    ],
+    "level": 5,
+    "name": "Awaken",
+    "page": 111
+   },
+   {
+    "classes": [
+     "bard",
+     "cleric",
+     "warlock"
+    ],
+    "level": 1,
+    "name": "Bane",
+    "page": 112
+   },
+   {
+    "classes": [
+     "cleric",
+     "paladin",
+     "sorcerer",
+     "warlock",
+     "wizard"
+    ],
+    "level": 4,
+    "name": "Banishment",
+    "page": 112
+   },
+   {
+    "classes": [
+     "druid",
+     "ranger"
+    ],
+    "level": 2,
+    "name": "Barkskin",
+    "page": 112
+   },
+   {
+    "classes": [
+     "cleric"
+    ],
+    "level": 3,
+    "name": "Beacon of Hope",
+    "page": 112
+   },
+   {
+    "classes": [
+     "bard",
+     "druid",
+     "warlock",
+     "wizard"
+    ],
+    "level": 8,
+    "name": "Befuddlement",
+    "page": 112
+   },
+   {
+    "classes": [
+     "bard",
+     "cleric",
+     "wizard"
+    ],
+    "level": 3,
+    "name": "Bestow Curse",
+    "page": 112
+   },
+   {
+    "classes": [
+     "wizard"
+    ],
+    "level": 4,
+    "name": "Black Tentacles",
+    "page": 113
+   },
+   {
+    "classes": [
+     "cleric"
+    ],
+    "level": 6,
+    "name": "Blade Barrier",
+    "page": 113
+   },
+   {
+    "classes": [
+     "cleric",
+     "paladin"
+    ],
+    "level": 1,
+    "name": "Bless",
+    "page": 113
+   },
+   {
+    "classes": [
+     "druid",
+     "sorcerer",
+     "warlock",
+     "wizard"
+    ],
+    "level": 4,
+    "name": "Blight",
+    "page": 113
+   },
+   {
+    "classes": [
+     "bard",
+     "cleric",
+     "sorcerer",
+     "wizard"
+    ],
+    "level": 2,
+    "name": "Blindness/Deafness",
+    "page": 113
+   },
+   {
+    "classes": [
+     "sorcerer",
+     "wizard"
+    ],
+    "level": 3,
+    "name": "Blink",
+    "page": 113
+   },
+   {
+    "classes": [
+     "sorcerer",
+     "wizard"
+    ],
+    "level": 2,
+    "name": "Blur",
+    "page": 114
+   },
+   {
+    "classes": [
+     "sorcerer",
+     "wizard"
+    ],
+    "level": 1,
+    "name": "Burning Hands",
+    "page": 114
+   },
+   {
+    "classes": [
+     "druid"
+    ],
+    "level": 3,
+    "name": "Call Lightning",
+    "page": 114
+   },
+   {
+    "classes": [
+     "bard",
+     "cleric"
+    ],
+    "level": 2,
+    "name": "Calm Emotions",
+    "page": 114
+   },
+   {
+    "classes": [
+     "sorcerer",
+     "wizard"
+    ],
+    "level": 6,
+    "name": "Chain Lightning",
+    "page": 114
+   },
+   {
+    "classes": [
+     "bard",
+     "druid",
+     "sorcerer",
+     "warlock",
+     "wizard"
+    ],
+    "level": 4,
+    "name": "Charm Monster",
+    "page": 114
+   },
+   {
+    "classes": [
+     "bard",
+     "druid",
+     "sorcerer",
+     "warlock",
+     "wizard"
+    ],
+    "level": 1,
+    "name": "Charm Person",
+    "page": 115
+   },
+   {
+    "classes": [
+     "sorcerer",
+     "warlock",
+     "wizard"
+    ],
+    "level": 0,
+    "name": "Chill Touch",
+    "page": 115
+   },
+   {
+    "classes": [
+     "sorcerer",
+     "wizard"
+    ],
+    "level": 1,
+    "name": "Chromatic Orb",
+    "page": 115
+   },
+   {
+    "classes": [
+     "sorcerer",
+     "warlock",
+     "wizard"
+    ],
+    "level": 6,
+    "name": "Circle of Death",
+    "page": 115
+   },
+   {
+    "classes": [
+     "bard",
+     "cleric",
+     "sorcerer",
+     "wizard"
+    ],
+    "level": 3,
+    "name": "Clairvoyance",
+    "page": 115
+   },
+   {
+    "classes": [
+     "wizard"
+    ],
+    "level": 8,
+    "name": "Clone",
+    "page": 115
+   },
+   {
+    "classes": [
+     "sorcerer",
+     "wizard"
+    ],
+    "level": 5,
+    "name": "Cloudkill",
+    "page": 116
+   },
+   {
+    "classes": [
+     "bard",
+     "sorcerer",
+     "wizard"
+    ],
+    "level": 1,
+    "name": "Color Spray",
+    "page": 116
+   },
+   {
+    "classes": [
+     "bard",
+     "cleric",
+     "paladin"
+    ],
+    "level": 1,
+    "name": "Command",
+    "page": 116
+   },
+   {
+    "classes": [
+     "cleric"
+    ],
+    "level": 5,
+    "name": "Commune",
+    "page": 116
+   },
+   {
+    "classes": [
+     "druid",
+     "ranger"
+    ],
+    "level": 5,
+    "name": "Commune with Nature",
+    "page": 116
+   },
+   {
+    "classes": [
+     "bard",
+     "sorcerer",
+     "warlock",
+     "wizard"
+    ],
+    "level": 1,
+    "name": "Comprehend Languages",
+    "page": 117
+   },
+   {
+    "classes": [
+     "bard"
+    ],
+    "level": 4,
+    "name": "Compulsion",
+    "page": 117
+   },
+   {
+    "classes": [
+     "druid",
+     "sorcerer",
+     "wizard"
+    ],
+    "level": 5,
+    "name": "Cone of Cold",
+    "page": 117
+   },
+   {
+    "classes": [
+     "bard",
+     "druid",
+     "sorcerer",
+     "wizard"
+    ],
+    "level": 4,
+    "name": "Confusion",
+    "page": 117
+   },
+   {
+    "classes": [
+     "druid",
+     "ranger"
+    ],
+    "level": 3,
+    "name": "Conjure Animals",
+    "page": 117
+   },
+   {
+    "classes": [
+     "cleric"
+    ],
+    "level": 7,
+    "name": "Conjure Celestial",
+    "page": 118
+   },
+   {
+    "classes": [
+     "druid",
+     "wizard"
+    ],
+    "level": 5,
+    "name": "Conjure Elemental",
+    "page": 118
+   },
+   {
+    "classes": [
+     "druid"
+    ],
+    "level": 6,
+    "name": "Conjure Fey",
+    "page": 118
+   },
+   {
+    "classes": [
+     "druid",
+     "wizard"
+    ],
+    "level": 4,
+    "name": "Conjure Minor Elementals",
+    "page": 118
+   },
+   {
+    "classes": [
+     "druid",
+     "ranger"
+    ],
+    "level": 4,
+    "name": "Conjure Woodland Beings",
+    "page": 118
+   },
+   {
+    "classes": [
+     "warlock",
+     "wizard"
+    ],
+    "level": 5,
+    "name": "Contact Other Plane",
+    "page": 119
+   },
+   {
+    "classes": [
+     "cleric",
+     "druid"
+    ],
+    "level": 5,
+    "name": "Contagion",
+    "page": 119
+   },
+   {
+    "classes": [
+     "wizard"
+    ],
+    "level": 6,
+    "name": "Contingency",
+    "page": 119
+   },
+   {
+    "classes": [
+     "cleric",
+     "druid",
+     "wizard"
+    ],
+    "level": 2,
+    "name": "Continual Flame",
+    "page": 119
+   },
+   {
+    "classes": [
+     "cleric",
+     "druid",
+     "wizard"
+    ],
+    "level": 4,
+    "name": "Control Water",
+    "page": 119
+   },
+   {
+    "classes": [
+     "cleric",
+     "druid",
+     "wizard"
+    ],
+    "level": 8,
+    "name": "Control Weather",
+    "page": 120
+   },
+   {
+    "classes": [
+     "sorcerer",
+     "warlock",
+     "wizard"
+    ],
+    "level": 3,
+    "name": "Counterspell",
+    "page": 120
+   },
+   {
+    "classes": [
+     "cleric",
+     "paladin"
+    ],
+    "level": 3,
+    "name": "Create Food and Water",
+    "page": 120
+   },
+   {
+    "classes": [
+     "cleric",
+     "warlock",
+     "wizard"
+    ],
+    "level": 6,
+    "name": "Create Undead",
+    "page": 121
+   },
+   {
+    "classes": [
+     "cleric",
+     "druid"
+    ],
+    "level": 1,
+    "name": "Create or Destroy Water",
+    "page": 121
+   },
+   {
+    "classes": [
+     "sorcerer",
+     "wizard"
+    ],
+    "level": 5,
+    "name": "Creation",
+    "page": 121
+   },
+   {
+    "classes": [
+     "bard",
+     "cleric",
+     "druid",
+     "paladin",
+     "ranger"
+    ],
+    "level": 1,
+    "name": "Cure Wounds",
+    "page": 121
+   },
+   {
+    "classes": [
+     "bard",
+     "sorcerer",
+     "wizard"
+    ],
+    "level": 0,
+    "name": "Dancing Lights",
+    "page": 121
+   },
+   {
+    "classes": [
+     "sorcerer",
+     "warlock",
+     "wizard"
+    ],
+    "level": 2,
+    "name": "Darkness",
+    "page": 122
+   },
+   {
+    "classes": [
+     "druid",
+     "ranger",
+     "sorcerer",
+     "wizard"
+    ],
+    "level": 2,
+    "name": "Darkvision",
+    "page": 122
+   },
+   {
+    "classes": [
+     "cleric",
+     "druid",
+     "paladin",
+     "ranger",
+     "sorcerer"
+    ],
+    "level": 3,
+    "name": "Daylight",
+    "page": 122
+   },
+   {
+    "classes": [
+     "cleric",
+     "paladin"
+    ],
+    "level": 4,
+    "name": "Death Ward",
+    "page": 122
+   },
+   {
+    "classes": [
+     "sorcerer",
+     "wizard"
+    ],
+    "level": 7,
+    "name": "Delayed Blast Fireball",
+    "page": 122
+   },
+   {
+    "classes": [
+     "sorcerer",
+     "warlock",
+     "wizard"
+    ],
+    "level": 8,
+    "name": "Demiplane",
+    "page": 122
+   },
+   {
+    "classes": [
+     "cleric",
+     "paladin"
+    ],
+    "level": 1,
+    "name": "Detect Evil and Good",
+    "page": 123
+   },
+   {
+    "classes": [
+     "bard",
+     "cleric",
+     "druid",
+     "paladin",
+     "ranger",
+     "sorcerer",
+     "warlock",
+     "wizard"
+    ],
+    "level": 1,
+    "name": "Detect Magic",
+    "page": 123
+   },
+   {
+    "classes": [
+     "cleric",
+     "druid",
+     "paladin",
+     "ranger"
+    ],
+    "level": 1,
+    "name": "Detect Poison and Disease",
+    "page": 123
+   },
+   {
+    "classes": [
+     "bard",
+     "sorcerer",
+     "wizard"
+    ],
+    "level": 2,
+    "name": "Detect Thoughts",
+    "page": 123
+   },
+   {
+    "classes": [
+     "bard",
+     "sorcerer",
+     "warlock",
+     "wizard"
+    ],
+    "level": 4,
+    "name": "Dimension Door",
+    "page": 123
+   },
+   {
+    "classes": [
+     "bard",
+     "sorcerer",
+     "wizard"
+    ],
+    "level": 1,
+    "name": "Disguise Self",
+    "page": 124
+   },
+   {
+    "classes": [
+     "sorcerer",
+     "wizard"
+    ],
+    "level": 6,
+    "name": "Disintegrate",
+    "page": 124
+   },
+   {
+    "classes": [
+     "cleric",
+     "paladin"
+    ],
+    "level": 5,
+    "name": "Dispel Evil and Good",
+    "page": 124
+   },
+   {
+    "classes": [
+     "bard",
+     "cleric",
+     "druid",
+     "paladin",
+     "ranger",
+     "sorcerer",
+     "warlock",
+     "wizard"
+    ],
+    "level": 3,
+    "name": "Dispel Magic",
+    "page": 124
+   },
+   {
+    "classes": [
+     "bard"
+    ],
+    "level": 1,
+    "name": "Dissonant Whispers",
+    "page": 124
+   },
+   {
+    "classes": [
+     "cleric",
+     "druid",
+     "wizard"
+    ],
+    "level": 4,
+    "name": "Divination",
+    "page": 125
+   },
+   {
+    "classes": [
+     "paladin"
+    ],
+    "level": 1,
+    "name": "Divine Favor",
+    "page": 125
+   },
+   {
+    "classes": [
+     "paladin"
+    ],
+    "level": 1,
+    "name": "Divine Smite",
+    "page": 125
+   },
+   {
+    "classes": [
+     "cleric"
+    ],
+    "level": 7,
+    "name": "Divine Word",
+    "page": 125
+   },
+   {
+    "classes": [
+     "druid",
+     "ranger",
+     "sorcerer"
+    ],
+    "level": 4,
+    "name": "Dominate Beast",
+    "page": 125
+   },
+   {
+    "classes": [
+     "bard",
+     "sorcerer",
+     "warlock",
+     "wizard"
+    ],
+    "level": 8,
+    "name": "Dominate Monster",
+    "page": 125
+   },
+   {
+    "classes": [
+     "bard",
+     "sorcerer",
+     "wizard"
+    ],
+    "level": 5,
+    "name": "Dominate Person",
+    "page": 126
+   },
+   {
+    "classes": [
+     "sorcerer",
+     "wizard"
+    ],
+    "level": 2,
+    "name": "Dragon's Breath",
+    "page": 126
+   },
+   {
+    "classes": [
+     "bard",
+     "warlock",
+     "wizard"
+    ],
+    "level": 5,
+    "name": "Dream",
+    "page": 126
+   },
+   {
+    "classes": [
+     "druid"
+    ],
+    "level": 0,
+    "name": "Druidcraft",
+    "page": 126
+   },
+   {
+    "classes": [
+     "cleric",
+     "druid",
+     "sorcerer"
+    ],
+    "level": 8,
+    "name": "Earthquake",
+    "page": 127
+   },
+   {
+    "classes": [
+     "warlock"
+    ],
+    "level": 0,
+    "name": "Eldritch Blast",
+    "page": 127
+   },
+   {
+    "classes": [
+     "druid",
+     "sorcerer",
+     "wizard"
+    ],
+    "level": 0,
+    "name": "Elementalism",
+    "page": 127
+   },
+   {
+    "classes": [
+     "bard",
+     "cleric",
+     "druid",
+     "ranger",
+     "sorcerer",
+     "wizard"
+    ],
+    "level": 2,
+    "name": "Enhance Ability",
+    "page": 127
+   },
+   {
+    "classes": [
+     "bard",
+     "druid",
+     "sorcerer",
+     "wizard"
+    ],
+    "level": 2,
+    "name": "Enlarge/Reduce",
+    "page": 127
+   },
+   {
+    "classes": [
+     "ranger"
+    ],
+    "level": 1,
+    "name": "Ensnaring Strike",
+    "page": 128
+   },
+   {
+    "classes": [
+     "druid",
+     "ranger"
+    ],
+    "level": 1,
+    "name": "Entangle",
+    "page": 128
+   },
+   {
+    "classes": [
+     "bard",
+     "warlock"
+    ],
+    "level": 2,
+    "name": "Enthrall",
+    "page": 128
+   },
+   {
+    "classes": [
+     "bard",
+     "cleric",
+     "sorcerer",
+     "warlock",
+     "wizard"
+    ],
+    "level": 7,
+    "name": "Etherealness",
+    "page": 128
+   },
+   {
+    "classes": [
+     "sorcerer",
+     "warlock",
+     "wizard"
+    ],
+    "level": 1,
+    "name": "Expeditious Retreat",
+    "page": 129
+   },
+   {
+    "classes": [
+     "bard",
+     "sorcerer",
+     "warlock",
+     "wizard"
+    ],
+    "level": 6,
+    "name": "Eyebite",
+    "page": 129
+   },
+   {
+    "classes": [
+     "wizard"
+    ],
+    "level": 4,
+    "name": "Fabricate",
+    "page": 129
+   },
+   {
+    "classes": [
+     "bard",
+     "druid"
+    ],
+    "level": 1,
+    "name": "Faerie Fire",
+    "page": 129
+   },
+   {
+    "classes": [
+     "wizard"
+    ],
+    "level": 4,
+    "name": "Faithful Hound",
+    "page": 129
+   },
+   {
+    "classes": [
+     "sorcerer",
+     "wizard"
+    ],
+    "level": 1,
+    "name": "False Life",
+    "page": 129
+   },
+   {
+    "classes": [
+     "bard",
+     "sorcerer",
+     "warlock",
+     "wizard"
+    ],
+    "level": 3,
+    "name": "Fear",
+    "page": 130
+   },
+   {
+    "classes": [
+     "bard",
+     "sorcerer",
+     "wizard"
+    ],
+    "level": 1,
+    "name": "Feather Fall",
+    "page": 130
+   },
+   {
+    "classes": [
+     "wizard"
+    ],
+    "level": 1,
+    "name": "Find Familiar",
+    "page": 130
+   },
+   {
+    "classes": [
+     "paladin"
+    ],
+    "level": 2,
+    "name": "Find Steed",
+    "page": 130
+   },
+   {
+    "classes": [
+     "cleric",
+     "druid",
+     "ranger"
+    ],
+    "level": 2,
+    "name": "Find Traps",
+    "page": 131
+   },
+   {
+    "classes": [
+     "bard",
+     "cleric",
+     "druid"
+    ],
+    "level": 6,
+    "name": "Find the Path",
+    "page": 131
+   },
+   {
+    "classes": [
+     "sorcerer",
+     "warlock",
+     "wizard"
+    ],
+    "level": 7,
+    "name": "Finger of Death",
+    "page": 131
+   },
+   {
+    "classes": [
+     "sorcerer",
+     "wizard"
+    ],
+    "level": 0,
+    "name": "Fire Bolt",
+    "page": 132
+   },
+   {
+    "classes": [
+     "druid",
+     "sorcerer",
+     "wizard"
+    ],
+    "level": 4,
+    "name": "Fire Shield",
+    "page": 132
+   },
+   {
+    "classes": [
+     "cleric",
+     "druid",
+     "sorcerer"
+    ],
+    "level": 7,
+    "name": "Fire Storm",
+    "page": 132
+   },
+   {
+    "classes": [
+     "sorcerer",
+     "wizard"
+    ],
+    "level": 3,
+    "name": "Fireball",
+    "page": 131
+   },
+   {
+    "classes": [
+     "druid",
+     "sorcerer"
+    ],
+    "level": 2,
+    "name": "Flame Blade",
+    "page": 132
+   },
+   {
+    "classes": [
+     "cleric"
+    ],
+    "level": 5,
+    "name": "Flame Strike",
+    "page": 132
+   },
+   {
+    "classes": [
+     "druid",
+     "sorcerer",
+     "wizard"
+    ],
+    "level": 2,
+    "name": "Flaming Sphere",
+    "page": 132
+   },
+   {
+    "classes": [
+     "druid",
+     "sorcerer",
+     "wizard"
+    ],
+    "level": 6,
+    "name": "Flesh to Stone",
+    "page": 133
+   },
+   {
+    "classes": [
+     "wizard"
+    ],
+    "level": 1,
+    "name": "Floating Disk",
+    "page": 133
+   },
+   {
+    "classes": [
+     "sorcerer",
+     "warlock",
+     "wizard"
+    ],
+    "level": 3,
+    "name": "Fly",
+    "page": 133
+   },
+   {
+    "classes": [
+     "druid",
+     "ranger",
+     "sorcerer",
+     "wizard"
+    ],
+    "level": 1,
+    "name": "Fog Cloud",
+    "page": 133
+   },
+   {
+    "classes": [
+     "cleric"
+    ],
+    "level": 6,
+    "name": "Forbiddance",
+    "page": 133
+   },
+   {
+    "classes": [
+     "bard",
+     "warlock",
+     "wizard"
+    ],
+    "level": 7,
+    "name": "Forcecage",
+    "page": 134
+   },
+   {
+    "classes": [
+     "bard",
+     "druid",
+     "warlock",
+     "wizard"
+    ],
+    "level": 9,
+    "name": "Foresight",
+    "page": 134
+   },
+   {
+    "classes": [
+     "bard",
+     "cleric",
+     "druid",
+     "ranger"
+    ],
+    "level": 4,
+    "name": "Freedom of Movement",
+    "page": 134
+   },
+   {
+    "classes": [
+     "sorcerer",
+     "wizard"
+    ],
+    "level": 6,
+    "name": "Freezing Sphere",
+    "page": 134
+   },
+   {
+    "classes": [
+     "sorcerer",
+     "warlock",
+     "wizard"
+    ],
+    "level": 3,
+    "name": "Gaseous Form",
+    "page": 134
+   },
+   {
+    "classes": [
+     "cleric",
+     "sorcerer",
+     "warlock",
+     "wizard"
+    ],
+    "level": 9,
+    "name": "Gate",
+    "page": 135
+   },
+   {
+    "classes": [
+     "bard",
+     "cleric",
+     "druid",
+     "paladin",
+     "wizard"
+    ],
+    "level": 5,
+    "name": "Geas",
+    "page": 135
+   },
+   {
+    "classes": [
+     "cleric",
+     "paladin",
+     "wizard"
+    ],
+    "level": 2,
+    "name": "Gentle Repose",
+    "page": 135
+   },
+   {
+    "classes": [
+     "druid"
+    ],
+    "level": 4,
+    "name": "Giant Insect",
+    "page": 135
+   },
+   {
+    "classes": [
+     "bard",
+     "warlock"
+    ],
+    "level": 8,
+    "name": "Glibness",
+    "page": 136
+   },
+   {
+    "classes": [
+     "sorcerer",
+     "wizard"
+    ],
+    "level": 6,
+    "name": "Globe of Invulnerability",
+    "page": 136
+   },
+   {
+    "classes": [
+     "bard",
+     "cleric",
+     "wizard"
+    ],
+    "level": 3,
+    "name": "Glyph of Warding",
+    "page": 136
+   },
+   {
+    "classes": [
+     "druid",
+     "ranger"
+    ],
+    "level": 1,
+    "name": "Goodberry",
+    "page": 137
+   },
+   {
+    "classes": [
+     "sorcerer",
+     "wizard"
+    ],
+    "level": 1,
+    "name": "Grease",
+    "page": 137
+   },
+   {
+    "classes": [
+     "bard",
+     "sorcerer",
+     "wizard"
+    ],
+    "level": 4,
+    "name": "Greater Invisibility",
+    "page": 137
+   },
+   {
+    "classes": [
+     "bard",
+     "cleric",
+     "druid",
+     "paladin",
+     "ranger"
+    ],
+    "level": 5,
+    "name": "Greater Restoration",
+    "page": 137
+   },
+   {
+    "classes": [
+     "cleric"
+    ],
+    "level": 4,
+    "name": "Guardian of Faith",
+    "page": 137
+   },
+   {
+    "classes": [
+     "bard",
+     "wizard"
+    ],
+    "level": 6,
+    "name": "Guards and Wards",
+    "page": 137
+   },
+   {
+    "classes": [
+     "cleric",
+     "druid"
+    ],
+    "level": 0,
+    "name": "Guidance",
+    "page": 138
+   },
+   {
+    "classes": [
+     "cleric"
+    ],
+    "level": 1,
+    "name": "Guiding Bolt",
+    "page": 138
+   },
+   {
+    "classes": [
+     "druid",
+     "ranger",
+     "sorcerer",
+     "wizard"
+    ],
+    "level": 2,
+    "name": "Gust of Wind",
+    "page": 138
+   },
+   {
+    "classes": [
+     "cleric"
+    ],
+    "level": 5,
+    "name": "Hallow",
+    "page": 138
+   },
+   {
+    "classes": [
+     "bard",
+     "druid",
+     "warlock",
+     "wizard"
+    ],
+    "level": 4,
+    "name": "Hallucinatory Terrain",
+    "page": 139
+   },
+   {
+    "classes": [
+     "cleric"
+    ],
+    "level": 6,
+    "name": "Harm",
+    "page": 139
+   },
+   {
+    "classes": [
+     "sorcerer",
+     "wizard"
+    ],
+    "level": 3,
+    "name": "Haste",
+    "page": 139
+   },
+   {
+    "classes": [
+     "cleric",
+     "druid"
+    ],
+    "level": 6,
+    "name": "Heal",
+    "page": 139
+   },
+   {
+    "classes": [
+     "bard",
+     "cleric",
+     "druid"
+    ],
+    "level": 1,
+    "name": "Healing Word",
+    "page": 139
+   },
+   {
+    "classes": [
+     "bard",
+     "druid"
+    ],
+    "level": 2,
+    "name": "Heat Metal",
+    "page": 139
+   },
+   {
+    "classes": [
+     "warlock"
+    ],
+    "level": 1,
+    "name": "Hellish Rebuke",
+    "page": 140
+   },
+   {
+    "classes": [
+     "bard",
+     "cleric",
+     "druid"
+    ],
+    "level": 6,
+    "name": "Heroes' Feast",
+    "page": 140
+   },
+   {
+    "classes": [
+     "bard",
+     "paladin"
+    ],
+    "level": 1,
+    "name": "Heroism",
+    "page": 140
+   },
+   {
+    "classes": [
+     "warlock"
+    ],
+    "level": 1,
+    "name": "Hex",
+    "page": 140
+   },
+   {
+    "classes": [
+     "bard",
+     "warlock",
+     "wizard"
+    ],
+    "level": 1,
+    "name": "Hideous Laughter",
+    "page": 140
+   },
+   {
+    "classes": [
+     "bard",
+     "sorcerer",
+     "warlock",
+     "wizard"
+    ],
+    "level": 5,
+    "name": "Hold Monster",
+    "page": 140
+   },
+   {
+    "classes": [
+     "bard",
+     "cleric",
+     "druid",
+     "sorcerer",
+     "warlock",
+     "wizard"
+    ],
+    "level": 2,
+    "name": "Hold Person",
+    "page": 141
+   },
+   {
+    "classes": [
+     "cleric"
+    ],
+    "level": 8,
+    "name": "Holy Aura",
+    "page": 141
+   },
+   {
+    "classes": [
+     "ranger"
+    ],
+    "level": 1,
+    "name": "Hunter's Mark",
+    "page": 141
+   },
+   {
+    "classes": [
+     "bard",
+     "sorcerer",
+     "warlock",
+     "wizard"
+    ],
+    "level": 3,
+    "name": "Hypnotic Pattern",
+    "page": 141
+   },
+   {
+    "classes": [
+     "druid",
+     "sorcerer",
+     "wizard"
+    ],
+    "level": 1,
+    "name": "Ice Knife",
+    "page": 141
+   },
+   {
+    "classes": [
+     "druid",
+     "sorcerer",
+     "wizard"
+    ],
+    "level": 4,
+    "name": "Ice Storm",
+    "page": 141
+   },
+   {
+    "classes": [
+     "bard",
+     "wizard"
+    ],
+    "level": 1,
+    "name": "Identify",
+    "page": 142
+   },
+   {
+    "classes": [
+     "bard",
+     "warlock",
+     "wizard"
+    ],
+    "level": 1,
+    "name": "Illusory Script",
+    "page": 142
+   },
+   {
+    "classes": [
+     "warlock",
+     "wizard"
+    ],
+    "level": 9,
+    "name": "Imprisonment",
+    "page": 142
+   },
+   {
+    "classes": [
+     "druid",
+     "sorcerer",
+     "wizard"
+    ],
+    "level": 8,
+    "name": "Incendiary Cloud",
+    "page": 142
+   },
+   {
+    "classes": [
+     "cleric"
+    ],
+    "level": 1,
+    "name": "Inflict Wounds",
+    "page": 143
+   },
+   {
+    "classes": [
+     "cleric",
+     "druid",
+     "sorcerer"
+    ],
+    "level": 5,
+    "name": "Insect Plague",
+    "page": 143
+   },
+   {
+    "classes": [
+     "wizard"
+    ],
+    "level": 6,
+    "name": "Instant Summons",
+    "page": 143
+   },
+   {
+    "classes": [
+     "bard",
+     "sorcerer",
+     "warlock",
+     "wizard"
+    ],
+    "level": 2,
+    "name": "Invisibility",
+    "page": 143
+   },
+   {
+    "classes": [
+     "bard",
+     "wizard"
+    ],
+    "level": 6,
+    "name": "Irresistible Dance",
+    "page": 143
+   },
+   {
+    "classes": [
+     "druid",
+     "ranger",
+     "sorcerer",
+     "wizard"
+    ],
+    "level": 1,
+    "name": "Jump",
+    "page": 143
+   },
+   {
+    "classes": [
+     "bard",
+     "sorcerer",
+     "wizard"
+    ],
+    "level": 2,
+    "name": "Knock",
+    "page": 143
+   },
+   {
+    "classes": [
+     "bard",
+     "cleric",
+     "wizard"
+    ],
+    "level": 5,
+    "name": "Legend Lore",
+    "page": 144
+   },
+   {
+    "classes": [
+     "bard",
+     "cleric",
+     "druid",
+     "paladin",
+     "ranger"
+    ],
+    "level": 2,
+    "name": "Lesser Restoration",
+    "page": 144
+   },
+   {
+    "classes": [
+     "sorcerer",
+     "wizard"
+    ],
+    "level": 2,
+    "name": "Levitate",
+    "page": 144
+   },
+   {
+    "classes": [
+     "bard",
+     "cleric",
+     "sorcerer",
+     "wizard"
+    ],
+    "level": 0,
+    "name": "Light",
+    "page": 144
+   },
+   {
+    "classes": [
+     "sorcerer",
+     "wizard"
+    ],
+    "level": 3,
+    "name": "Lightning Bolt",
+    "page": 144
+   },
+   {
+    "classes": [
+     "bard",
+     "druid",
+     "ranger"
+    ],
+    "level": 2,
+    "name": "Locate Animals or Plants",
+    "page": 144
+   },
+   {
+    "classes": [
+     "bard",
+     "cleric",
+     "druid",
+     "paladin",
+     "ranger",
+     "wizard"
+    ],
+    "level": 4,
+    "name": "Locate Creature",
+    "page": 145
+   },
+   {
+    "classes": [
+     "bard",
+     "cleric",
+     "druid",
+     "paladin",
+     "ranger",
+     "wizard"
+    ],
+    "level": 2,
+    "name": "Locate Object",
+    "page": 145
+   },
+   {
+    "classes": [
+     "bard",
+     "druid",
+     "ranger",
+     "wizard"
+    ],
+    "level": 1,
+    "name": "Longstrider",
+    "page": 145
+   },
+   {
+    "classes": [
+     "sorcerer",
+     "wizard"
+    ],
+    "level": 1,
+    "name": "Mage Armor",
+    "page": 145
+   },
+   {
+    "classes": [
+     "bard",
+     "sorcerer",
+     "warlock",
+     "wizard"
+    ],
+    "level": 0,
+    "name": "Mage Hand",
+    "page": 145
+   },
+   {
+    "classes": [
+     "cleric",
+     "paladin",
+     "warlock",
+     "wizard"
+    ],
+    "level": 3,
+    "name": "Magic Circle",
+    "page": 145
+   },
+   {
+    "classes": [
+     "wizard"
+    ],
+    "level": 6,
+    "name": "Magic Jar",
+    "page": 146
+   },
+   {
+    "classes": [
+     "sorcerer",
+     "wizard"
+    ],
+    "level": 1,
+    "name": "Magic Missile",
+    "page": 146
+   },
+   {
+    "classes": [
+     "bard",
+     "wizard"
+    ],
+    "level": 2,
+    "name": "Magic Mouth",
+    "page": 146
+   },
+   {
+    "classes": [
+     "paladin",
+     "ranger",
+     "sorcerer",
+     "wizard"
+    ],
+    "level": 2,
+    "name": "Magic Weapon",
+    "page": 146
+   },
+   {
+    "classes": [
+     "bard",
+     "wizard"
+    ],
+    "level": 7,
+    "name": "Magnificent Mansion",
+    "page": 147
+   },
+   {
+    "classes": [
+     "bard",
+     "sorcerer",
+     "warlock",
+     "wizard"
+    ],
+    "level": 3,
+    "name": "Major Image",
+    "page": 147
+   },
+   {
+    "classes": [
+     "bard",
+     "cleric",
+     "druid"
+    ],
+    "level": 5,
+    "name": "Mass Cure Wounds",
+    "page": 147
+   },
+   {
+    "classes": [
+     "cleric"
+    ],
+    "level": 9,
+    "name": "Mass Heal",
+    "page": 147
+   },
+   {
+    "classes": [
+     "bard",
+     "cleric"
+    ],
+    "level": 3,
+    "name": "Mass Healing Word",
+    "page": 148
+   },
+   {
+    "classes": [
+     "bard",
+     "sorcerer",
+     "wizard"
+    ],
+    "level": 6,
+    "name": "Mass Suggestion",
+    "page": 148
+   },
+   {
+    "classes": [
+     "wizard"
+    ],
+    "level": 8,
+    "name": "Maze",
+    "page": 148
+   },
+   {
+    "classes": [
+     "cleric",
+     "druid",
+     "ranger"
+    ],
+    "level": 3,
+    "name": "Meld into Stone",
+    "page": 148
+   },
+   {
+    "classes": [
+     "bard",
+     "cleric",
+     "druid",
+     "sorcerer",
+     "wizard"
+    ],
+    "level": 0,
+    "name": "Mending",
+    "page": 148
+   },
+   {
+    "classes": [
+     "bard",
+     "druid",
+     "sorcerer",
+     "wizard"
+    ],
+    "level": 0,
+    "name": "Message",
+    "page": 148
+   },
+   {
+    "classes": [
+     "sorcerer",
+     "wizard"
+    ],
+    "level": 9,
+    "name": "Meteor Swarm",
+    "page": 149
+   },
+   {
+    "classes": [
+     "bard",
+     "wizard"
+    ],
+    "level": 8,
+    "name": "Mind Blank",
+    "page": 149
+   },
+   {
+    "classes": [
+     "sorcerer",
+     "warlock",
+     "wizard"
+    ],
+    "level": 2,
+    "name": "Mind Spike",
+    "page": 149
+   },
+   {
+    "classes": [
+     "bard",
+     "sorcerer",
+     "warlock",
+     "wizard"
+    ],
+    "level": 0,
+    "name": "Minor Illusion",
+    "page": 149
+   },
+   {
+    "classes": [
+     "bard",
+     "druid",
+     "wizard"
+    ],
+    "level": 7,
+    "name": "Mirage Arcane",
+    "page": 149
+   },
+   {
+    "classes": [
+     "bard",
+     "sorcerer",
+     "warlock",
+     "wizard"
+    ],
+    "level": 2,
+    "name": "Mirror Image",
+    "page": 150
+   },
+   {
+    "classes": [
+     "bard",
+     "warlock",
+     "wizard"
+    ],
+    "level": 5,
+    "name": "Mislead",
+    "page": 150
+   },
+   {
+    "classes": [
+     "sorcerer",
+     "warlock",
+     "wizard"
+    ],
+    "level": 2,
+    "name": "Misty Step",
+    "page": 150
+   },
+   {
+    "classes": [
+     "bard",
+     "wizard"
+    ],
+    "level": 5,
+    "name": "Modify Memory",
+    "page": 150
+   },
+   {
+    "classes": [
+     "druid"
+    ],
+    "level": 2,
+    "name": "Moonbeam",
+    "page": 150
+   },
+   {
+    "classes": [
+     "druid",
+     "sorcerer",
+     "wizard"
+    ],
+    "level": 6,
+    "name": "Move Earth",
+    "page": 151
+   },
+   {
+    "classes": [
+     "bard",
+     "ranger",
+     "wizard"
+    ],
+    "level": 3,
+    "name": "Nondetection",
+    "page": 151
+   },
+   {
+    "classes": [
+     "druid",
+     "ranger"
+    ],
+    "level": 2,
+    "name": "Pass without Trace",
+    "page": 151
+   },
+   {
+    "classes": [
+     "wizard"
+    ],
+    "level": 5,
+    "name": "Passwall",
+    "page": 151
+   },
+   {
+    "classes": [
+     "bard",
+     "sorcerer",
+     "wizard"
+    ],
+    "level": 2,
+    "name": "Phantasmal Force",
+    "page": 151
+   },
+   {
+    "classes": [
+     "bard",
+     "wizard"
+    ],
+    "level": 4,
+    "name": "Phantasmal Killer",
+    "page": 152
+   },
+   {
+    "classes": [
+     "wizard"
+    ],
+    "level": 3,
+    "name": "Phantom Steed",
+    "page": 152
+   },
+   {
+    "classes": [
+     "cleric"
+    ],
+    "level": 6,
+    "name": "Planar Ally",
+    "page": 152
+   },
+   {
+    "classes": [
+     "bard",
+     "cleric",
+     "druid",
+     "warlock",
+     "wizard"
+    ],
+    "level": 5,
+    "name": "Planar Binding",
+    "page": 152
+   },
+   {
+    "classes": [
+     "cleric",
+     "druid",
+     "sorcerer",
+     "warlock",
+     "wizard"
+    ],
+    "level": 7,
+    "name": "Plane Shift",
+    "page": 153
+   },
+   {
+    "classes": [
+     "bard",
+     "druid",
+     "ranger"
+    ],
+    "level": 3,
+    "name": "Plant Growth",
+    "page": 153
+   },
+   {
+    "classes": [
+     "druid",
+     "sorcerer",
+     "warlock",
+     "wizard"
+    ],
+    "level": 0,
+    "name": "Poison Spray",
+    "page": 153
+   },
+   {
+    "classes": [
+     "bard",
+     "druid",
+     "sorcerer",
+     "wizard"
+    ],
+    "level": 4,
+    "name": "Polymorph",
+    "page": 153
+   },
+   {
+    "classes": [
+     "bard",
+     "cleric"
+    ],
+    "level": 9,
+    "name": "Power Word Heal",
+    "page": 154
+   },
+   {
+    "classes": [
+     "bard",
+     "sorcerer",
+     "warlock",
+     "wizard"
+    ],
+    "level": 9,
+    "name": "Power Word Kill",
+    "page": 154
+   },
+   {
+    "classes": [
+     "bard",
+     "sorcerer",
+     "warlock",
+     "wizard"
+    ],
+    "level": 8,
+    "name": "Power Word Stun",
+    "page": 154
+   },
+   {
+    "classes": [
+     "cleric",
+     "paladin"
+    ],
+    "level": 2,
+    "name": "Prayer of Healing",
+    "page": 154
+   },
+   {
+    "classes": [
+     "bard",
+     "sorcerer",
+     "warlock",
+     "wizard"
+    ],
+    "level": 0,
+    "name": "Prestidigitation",
+    "page": 154
+   },
+   {
+    "classes": [
+     "bard",
+     "sorcerer",
+     "wizard"
+    ],
+    "level": 7,
+    "name": "Prismatic Spray",
+    "page": 154
+   },
+   {
+    "classes": [
+     "bard",
+     "wizard"
+    ],
+    "level": 9,
+    "name": "Prismatic Wall",
+    "page": 155
+   },
+   {
+    "classes": [
+     "wizard"
+    ],
+    "level": 4,
+    "name": "Private Sanctum",
+    "page": 156
+   },
+   {
+    "classes": [
+     "druid"
+    ],
+    "level": 0,
+    "name": "Produce Flame",
+    "page": 156
+   },
+   {
+    "classes": [
+     "bard",
+     "wizard"
+    ],
+    "level": 6,
+    "name": "Programmed Illusion",
+    "page": 156
+   },
+   {
+    "classes": [
+     "bard",
+     "wizard"
+    ],
+    "level": 7,
+    "name": "Project Image",
+    "page": 156
+   },
+   {
+    "classes": [
+     "cleric",
+     "druid",
+     "ranger",
+     "sorcerer",
+     "wizard"
+    ],
+    "level": 3,
+    "name": "Protection from Energy",
+    "page": 157
+   },
+   {
+    "classes": [
+     "cleric",
+     "druid",
+     "paladin",
+     "warlock",
+     "wizard"
+    ],
+    "level": 1,
+    "name": "Protection from Evil and Good",
+    "page": 157
+   },
+   {
+    "classes": [
+     "cleric",
+     "druid",
+     "paladin",
+     "ranger"
+    ],
+    "level": 2,
+    "name": "Protection from Poison",
+    "page": 157
+   },
+   {
+    "classes": [
+     "cleric",
+     "druid",
+     "paladin"
+    ],
+    "level": 1,
+    "name": "Purify Food and Drink",
+    "page": 157
+   },
+   {
+    "classes": [
+     "bard",
+     "cleric",
+     "paladin"
+    ],
+    "level": 5,
+    "name": "Raise Dead",
+    "page": 157
+   },
+   {
+    "classes": [
+     "warlock",
+     "wizard"
+    ],
+    "level": 2,
+    "name": "Ray of Enfeeblement",
+    "page": 157
+   },
+   {
+    "classes": [
+     "sorcerer",
+     "wizard"
+    ],
+    "level": 0,
+    "name": "Ray of Frost",
+    "page": 157
+   },
+   {
+    "classes": [
+     "sorcerer",
+     "wizard"
+    ],
+    "level": 1,
+    "name": "Ray of Sickness",
+    "page": 158
+   },
+   {
+    "classes": [
+     "bard",
+     "cleric",
+     "druid"
+    ],
+    "level": 7,
+    "name": "Regenerate",
+    "page": 158
+   },
+   {
+    "classes": [
+     "druid"
+    ],
+    "level": 5,
+    "name": "Reincarnate",
+    "page": 158
+   },
+   {
+    "classes": [
+     "cleric",
+     "paladin",
+     "warlock",
+     "wizard"
+    ],
+    "level": 3,
+    "name": "Remove Curse",
+    "page": 158
+   },
+   {
+    "classes": [
+     "wizard"
+    ],
+    "level": 4,
+    "name": "Resilient Sphere",
+    "page": 158
+   },
+   {
+    "classes": [
+     "cleric",
+     "druid"
+    ],
+    "level": 0,
+    "name": "Resistance",
+    "page": 158
+   },
+   {
+    "classes": [
+     "bard",
+     "cleric"
+    ],
+    "level": 7,
+    "name": "Resurrection",
+    "page": 158
+   },
+   {
+    "classes": [
+     "druid",
+     "sorcerer",
+     "wizard"
+    ],
+    "level": 7,
+    "name": "Reverse Gravity",
+    "page": 159
+   },
+   {
+    "classes": [
+     "cleric",
+     "druid",
+     "paladin",
+     "ranger"
+    ],
+    "level": 3,
+    "name": "Revivify",
+    "page": 159
+   },
+   {
+    "classes": [
+     "wizard"
+    ],
+    "level": 2,
+    "name": "Rope Trick",
+    "page": 159
+   },
+   {
+    "classes": [
+     "cleric"
+    ],
+    "level": 0,
+    "name": "Sacred Flame",
+    "page": 159
+   },
+   {
+    "classes": [
+     "cleric"
+    ],
+    "level": 1,
+    "name": "Sanctuary",
+    "page": 159
+   },
+   {
+    "classes": [
+     "sorcerer",
+     "wizard"
+    ],
+    "level": 2,
+    "name": "Scorching Ray",
+    "page": 159
+   },
+   {
+    "classes": [
+     "bard",
+     "cleric",
+     "druid",
+     "warlock",
+     "wizard"
+    ],
+    "level": 5,
+    "name": "Scrying",
+    "page": 160
+   },
+   {
+    "classes": [
+     "paladin"
+    ],
+    "level": 1,
+    "name": "Searing Smite",
+    "page": 160
+   },
+   {
+    "classes": [
+     "wizard"
+    ],
+    "level": 4,
+    "name": "Secret Chest",
+    "page": 160
+   },
+   {
+    "classes": [
+     "bard",
+     "sorcerer",
+     "wizard"
+    ],
+    "level": 2,
+    "name": "See Invisibility",
+    "page": 160
+   },
+   {
+    "classes": [
+     "bard",
+     "sorcerer",
+     "wizard"
+    ],
+    "level": 5,
+    "name": "Seeming",
+    "page": 160
+   },
+   {
+    "classes": [
+     "bard",
+     "cleric",
+     "wizard"
+    ],
+    "level": 3,
+    "name": "Sending",
+    "page": 161
+   },
+   {
+    "classes": [
+     "wizard"
+    ],
+    "level": 7,
+    "name": "Sequester",
+    "page": 161
+   },
+   {
+    "classes": [
+     "druid",
+     "wizard"
+    ],
+    "level": 9,
+    "name": "Shapechange",
+    "page": 161
+   },
+   {
+    "classes": [
+     "bard",
+     "sorcerer",
+     "wizard"
+    ],
+    "level": 2,
+    "name": "Shatter",
+    "page": 161
+   },
+   {
+    "classes": [
+     "sorcerer",
+     "wizard"
+    ],
+    "level": 1,
+    "name": "Shield",
+    "page": 161
+   },
+   {
+    "classes": [
+     "cleric",
+     "paladin"
+    ],
+    "level": 1,
+    "name": "Shield of Faith",
+    "page": 162
+   },
+   {
+    "classes": [
+     "druid"
+    ],
+    "level": 0,
+    "name": "Shillelagh",
+    "page": 162
+   },
+   {
+    "classes": [
+     "paladin"
+    ],
+    "level": 2,
+    "name": "Shining Smite",
+    "page": 162
+   },
+   {
+    "classes": [
+     "sorcerer",
+     "wizard"
+    ],
+    "level": 0,
+    "name": "Shocking Grasp",
+    "page": 162
+   },
+   {
+    "classes": [
+     "bard",
+     "cleric",
+     "ranger"
+    ],
+    "level": 2,
+    "name": "Silence",
+    "page": 162
+   },
+   {
+    "classes": [
+     "bard",
+     "sorcerer",
+     "wizard"
+    ],
+    "level": 1,
+    "name": "Silent Image",
+    "page": 162
+   },
+   {
+    "classes": [
+     "wizard"
+    ],
+    "level": 7,
+    "name": "Simulacrum",
+    "page": 162
+   },
+   {
+    "classes": [
+     "bard",
+     "sorcerer",
+     "wizard"
+    ],
+    "level": 1,
+    "name": "Sleep",
+    "page": 163
+   },
+   {
+    "classes": [
+     "druid",
+     "sorcerer",
+     "wizard"
+    ],
+    "level": 3,
+    "name": "Sleet Storm",
+    "page": 163
+   },
+   {
+    "classes": [
+     "bard",
+     "sorcerer",
+     "wizard"
+    ],
+    "level": 3,
+    "name": "Slow",
+    "page": 163
+   },
+   {
+    "classes": [
+     "sorcerer"
+    ],
+    "level": 0,
+    "name": "Sorcerous Burst",
+    "page": 163
+   },
+   {
+    "classes": [
+     "cleric",
+     "druid"
+    ],
+    "level": 0,
+    "name": "Spare the Dying",
+    "page": 163
+   },
+   {
+    "classes": [
+     "bard",
+     "druid",
+     "ranger",
+     "warlock"
+    ],
+    "level": 1,
+    "name": "Speak with Animals",
+    "page": 164
+   },
+   {
+    "classes": [
+     "bard",
+     "cleric",
+     "wizard"
+    ],
+    "level": 3,
+    "name": "Speak with Dead",
+    "page": 164
+   },
+   {
+    "classes": [
+     "bard",
+     "druid",
+     "ranger"
+    ],
+    "level": 3,
+    "name": "Speak with Plants",
+    "page": 164
+   },
+   {
+    "classes": [
+     "sorcerer",
+     "warlock",
+     "wizard"
+    ],
+    "level": 2,
+    "name": "Spider Climb",
+    "page": 164
+   },
+   {
+    "classes": [
+     "druid",
+     "ranger"
+    ],
+    "level": 2,
+    "name": "Spike Growth",
+    "page": 164
+   },
+   {
+    "classes": [
+     "cleric"
+    ],
+    "level": 3,
+    "name": "Spirit Guardians",
+    "page": 164
+   },
+   {
+    "classes": [
+     "cleric"
+    ],
+    "level": 2,
+    "name": "Spiritual Weapon",
+    "page": 165
+   },
+   {
+    "classes": [
+     "bard",
+     "druid"
+    ],
+    "level": 0,
+    "name": "Starry Wisp",
+    "page": 165
+   },
+   {
+    "classes": [
+     "bard",
+     "sorcerer",
+     "wizard"
+    ],
+    "level": 3,
+    "name": "Stinking Cloud",
+    "page": 165
+   },
+   {
+    "classes": [
+     "cleric",
+     "druid",
+     "wizard"
+    ],
+    "level": 4,
+    "name": "Stone Shape",
+    "page": 165
+   },
+   {
+    "classes": [
+     "druid",
+     "ranger",
+     "sorcerer",
+     "wizard"
+    ],
+    "level": 4,
+    "name": "Stoneskin",
+    "page": 165
+   },
+   {
+    "classes": [
+     "druid"
+    ],
+    "level": 9,
+    "name": "Storm of Vengeance",
+    "page": 165
+   },
+   {
+    "classes": [
+     "bard",
+     "sorcerer",
+     "warlock",
+     "wizard"
+    ],
+    "level": 2,
+    "name": "Suggestion",
+    "page": 166
+   },
+   {
+    "classes": [
+     "wizard"
+    ],
+    "level": 5,
+    "name": "Summon Dragon",
+    "page": 166
+   },
+   {
+    "classes": [
+     "cleric",
+     "druid",
+     "sorcerer",
+     "wizard"
+    ],
+    "level": 6,
+    "name": "Sunbeam",
+    "page": 166
+   },
+   {
+    "classes": [
+     "cleric",
+     "druid",
+     "sorcerer",
+     "wizard"
+    ],
+    "level": 8,
+    "name": "Sunburst",
+    "page": 167
+   },
+   {
+    "classes": [
+     "bard",
+     "cleric",
+     "druid",
+     "wizard"
+    ],
+    "level": 7,
+    "name": "Symbol",
+    "page": 167
+   },
+   {
+    "classes": [
+     "sorcerer",
+     "wizard"
+    ],
+    "level": 5,
+    "name": "Telekinesis",
+    "page": 167
+   },
+   {
+    "classes": [
+     "bard",
+     "wizard"
+    ],
+    "level": 5,
+    "name": "Telepathic Bond",
+    "page": 168
+   },
+   {
+    "classes": [
+     "bard",
+     "sorcerer",
+     "wizard"
+    ],
+    "level": 7,
+    "name": "Teleport",
+    "page": 168
+   },
+   {
+    "classes": [
+     "bard",
+     "sorcerer",
+     "warlock",
+     "wizard"
+    ],
+    "level": 5,
+    "name": "Teleportation Circle",
+    "page": 168
+   },
+   {
+    "classes": [
+     "cleric"
+    ],
+    "level": 0,
+    "name": "Thaumaturgy",
+    "page": 169
+   },
+   {
+    "classes": [
+     "bard",
+     "druid",
+     "sorcerer",
+     "wizard"
+    ],
+    "level": 1,
+    "name": "Thunderwave",
+    "page": 169
+   },
+   {
+    "classes": [
+     "sorcerer",
+     "wizard"
+    ],
+    "level": 9,
+    "name": "Time Stop",
+    "page": 169
+   },
+   {
+    "classes": [
+     "bard",
+     "wizard"
+    ],
+    "level": 3,
+    "name": "Tiny Hut",
+    "page": 169
+   },
+   {
+    "classes": [
+     "bard",
+     "cleric",
+     "sorcerer",
+     "warlock",
+     "wizard"
+    ],
+    "level": 3,
+    "name": "Tongues",
+    "page": 169
+   },
+   {
+    "classes": [
+     "druid"
+    ],
+    "level": 6,
+    "name": "Transport via Plants",
+    "page": 170
+   },
+   {
+    "classes": [
+     "druid",
+     "ranger"
+    ],
+    "level": 5,
+    "name": "Tree Stride",
+    "page": 170
+   },
+   {
+    "classes": [
+     "bard",
+     "warlock",
+     "wizard"
+    ],
+    "level": 9,
+    "name": "True Polymorph",
+    "page": 170
+   },
+   {
+    "classes": [
+     "cleric",
+     "druid"
+    ],
+    "level": 9,
+    "name": "True Resurrection",
+    "page": 170
+   },
+   {
+    "classes": [
+     "bard",
+     "cleric",
+     "sorcerer",
+     "warlock",
+     "wizard"
+    ],
+    "level": 6,
+    "name": "True Seeing",
+    "page": 171
+   },
+   {
+    "classes": [
+     "bard",
+     "sorcerer",
+     "warlock",
+     "wizard"
+    ],
+    "level": 0,
+    "name": "True Strike",
+    "page": 171
+   },
+   {
+    "classes": [
+     "druid"
+    ],
+    "level": 8,
+    "name": "Tsunami",
+    "page": 171
+   },
+   {
+    "classes": [
+     "bard",
+     "warlock",
+     "wizard"
+    ],
+    "level": 1,
+    "name": "Unseen Servant",
+    "page": 171
+   },
+   {
+    "classes": [
+     "sorcerer",
+     "warlock",
+     "wizard"
+    ],
+    "level": 3,
+    "name": "Vampiric Touch",
+    "page": 171
+   },
+   {
+    "classes": [
+     "bard"
+    ],
+    "level": 0,
+    "name": "Vicious Mockery",
+    "page": 171
+   },
+   {
+    "classes": [
+     "sorcerer",
+     "wizard"
+    ],
+    "level": 4,
+    "name": "Vitriolic Sphere",
+    "page": 172
+   },
+   {
+    "classes": [
+     "druid",
+     "sorcerer",
+     "wizard"
+    ],
+    "level": 4,
+    "name": "Wall of Fire",
+    "page": 172
+   },
+   {
+    "classes": [
+     "wizard"
+    ],
+    "level": 5,
+    "name": "Wall of Force",
+    "page": 172
+   },
+   {
+    "classes": [
+     "wizard"
+    ],
+    "level": 6,
+    "name": "Wall of Ice",
+    "page": 172
+   },
+   {
+    "classes": [
+     "druid",
+     "sorcerer",
+     "wizard"
+    ],
+    "level": 5,
+    "name": "Wall of Stone",
+    "page": 173
+   },
+   {
+    "classes": [
+     "druid"
+    ],
+    "level": 6,
+    "name": "Wall of Thorns",
+    "page": 173
+   },
+   {
+    "classes": [
+     "cleric",
+     "paladin"
+    ],
+    "level": 2,
+    "name": "Warding Bond",
+    "page": 173
+   },
+   {
+    "classes": [
+     "druid",
+     "ranger",
+     "sorcerer",
+     "wizard"
+    ],
+    "level": 3,
+    "name": "Water Breathing",
+    "page": 173
+   },
+   {
+    "classes": [
+     "cleric",
+     "druid",
+     "ranger",
+     "sorcerer"
+    ],
+    "level": 3,
+    "name": "Water Walk",
+    "page": 173
+   },
+   {
+    "classes": [
+     "sorcerer",
+     "wizard"
+    ],
+    "level": 2,
+    "name": "Web",
+    "page": 174
+   },
+   {
+    "classes": [
+     "warlock",
+     "wizard"
+    ],
+    "level": 9,
+    "name": "Weird",
+    "page": 174
+   },
+   {
+    "classes": [
+     "druid"
+    ],
+    "level": 6,
+    "name": "Wind Walk",
+    "page": 174
+   },
+   {
+    "classes": [
+     "druid",
+     "ranger"
+    ],
+    "level": 3,
+    "name": "Wind Wall",
+    "page": 174
+   },
+   {
+    "classes": [
+     "sorcerer",
+     "wizard"
+    ],
+    "level": 9,
+    "name": "Wish",
+    "page": 175
+   },
+   {
+    "classes": [
+     "cleric"
+    ],
+    "level": 6,
+    "name": "Word of Recall",
+    "page": 175
+   },
+   {
+    "classes": [
+     "bard",
+     "cleric",
+     "paladin"
+    ],
+    "level": 2,
+    "name": "Zone of Truth",
+    "page": 175
+   }
+  ],
+  "stat_blocks": [
+   {
+    "name": "Aboleth",
+    "page": 258
+   },
+   {
+    "name": "Adult Black Dragon",
+    "page": 264
+   },
+   {
+    "name": "Adult Blue Dragon",
+    "page": 266
+   },
+   {
+    "name": "Adult Brass Dragon",
+    "page": 268
+   },
+   {
+    "name": "Adult Bronze Dragon",
+    "page": 270
+   },
+   {
+    "name": "Adult Copper Dragon",
+    "page": 276
+   },
+   {
+    "name": "Adult Gold Dragon",
+    "page": 291
+   },
+   {
+    "name": "Adult Green Dragon",
+    "page": 294
+   },
+   {
+    "name": "Adult Red Dragon",
+    "page": 318
+   },
+   {
+    "name": "Adult Silver Dragon",
+    "page": 324
+   },
+   {
+    "name": "Adult White Dragon",
+    "page": 340
+   },
+   {
+    "name": "Air Elemental",
+    "page": 258
+   },
+   {
+    "name": "Allosaurus",
+    "page": 344
+   },
+   {
+    "name": "Ancient Black Dragon",
+    "page": 265
+   },
+   {
+    "name": "Ancient Blue Dragon",
+    "page": 267
+   },
+   {
+    "name": "Ancient Brass Dragon",
+    "page": 269
+   },
+   {
+    "name": "Ancient Bronze Dragon",
+    "page": 271
+   },
+   {
+    "name": "Ancient Copper Dragon",
+    "page": 277
+   },
+   {
+    "name": "Ancient Gold Dragon",
+    "page": 292
+   },
+   {
+    "name": "Ancient Green Dragon",
+    "page": 294
+   },
+   {
+    "name": "Ancient Red Dragon",
+    "page": 319
+   },
+   {
+    "name": "Ancient Silver Dragon",
+    "page": 325
+   },
+   {
+    "name": "Ancient White Dragon",
+    "page": 341
+   },
+   {
+    "name": "Animated Armor",
+    "page": 259
+   },
+   {
+    "name": "Animated Flying Sword",
+    "page": 259
+   },
+   {
+    "name": "Animated Object",
+    "page": 109
+   },
+   {
+    "name": "Animated Rug of Smothering",
+    "page": 259
+   },
+   {
+    "name": "Ankheg",
+    "page": 259
+   },
+   {
+    "name": "Ankylosaurus",
+    "page": 344
+   },
+   {
+    "name": "Ape",
+    "page": 344
+   },
+   {
+    "name": "Archelon",
+    "page": 344
+   },
+   {
+    "name": "Archmage",
+    "page": 305
+   },
+   {
+    "name": "Assassin",
+    "page": 260
+   },
+   {
+    "name": "Avatar of Death",
+    "page": 232
+   },
+   {
+    "name": "Awakened Shrub",
+    "page": 260
+   },
+   {
+    "name": "Awakened Tree",
+    "page": 260
+   },
+   {
+    "name": "Axe Beak",
+    "page": 260
+   },
+   {
+    "name": "Azer Sentinel",
+    "page": 261
+   },
+   {
+    "name": "Baboon",
+    "page": 345
+   },
+   {
+    "name": "Badger",
+    "page": 345
+   },
+   {
+    "name": "Balor",
+    "page": 261
+   },
+   {
+    "name": "Bandit",
+    "page": 261
+   },
+   {
+    "name": "Bandit Captain",
+    "page": 261
+   },
+   {
+    "name": "Barbed Devil",
+    "page": 262
+   },
+   {
+    "name": "Basilisk",
+    "page": 262
+   },
+   {
+    "name": "Bat",
+    "page": 345
+   },
+   {
+    "name": "Bearded Devil",
+    "page": 262
+   },
+   {
+    "name": "Behir",
+    "page": 263
+   },
+   {
+    "name": "Berserker",
+    "page": 263
+   },
+   {
+    "name": "Black Bear",
+    "page": 345
+   },
+   {
+    "name": "Black Dragon Wyrmling",
+    "page": 263
+   },
+   {
+    "name": "Black Pudding",
+    "page": 265
+   },
+   {
+    "name": "Blink Dog",
+    "page": 266
+   },
+   {
+    "name": "Blood Hawk",
+    "page": 345
+   },
+   {
+    "name": "Blue Dragon Wyrmling",
+    "page": 266
+   },
+   {
+    "name": "Boar",
+    "page": 346
+   },
+   {
+    "name": "Bone Devil",
+    "page": 267
+   },
+   {
+    "name": "Brass Dragon Wyrmling",
+    "page": 268
+   },
+   {
+    "name": "Bronze Dragon Wyrmling",
+    "page": 269
+   },
+   {
+    "name": "Brown Bear",
+    "page": 346
+   },
+   {
+    "name": "Bugbear Stalker",
+    "page": 271
+   },
+   {
+    "name": "Bugbear Warrior",
+    "page": 272
+   },
+   {
+    "name": "Bulette",
+    "page": 272
+   },
+   {
+    "name": "Camel",
+    "page": 346
+   },
+   {
+    "name": "Cat",
+    "page": 346
+   },
+   {
+    "name": "Centaur Trooper",
+    "page": 272
+   },
+   {
+    "name": "Chain Devil",
+    "page": 272
+   },
+   {
+    "name": "Chimera",
+    "page": 273
+   },
+   {
+    "name": "Chuul",
+    "page": 273
+   },
+   {
+    "name": "Clay Golem",
+    "page": 274
+   },
+   {
+    "name": "Cloaker",
+    "page": 274
+   },
+   {
+    "name": "Cloud Giant",
+    "page": 275
+   },
+   {
+    "name": "Cockatrice",
+    "page": 275
+   },
+   {
+    "name": "Commoner",
+    "page": 275
+   },
+   {
+    "name": "Constrictor Snake",
+    "page": 346
+   },
+   {
+    "name": "Copper Dragon Wyrmling",
+    "page": 275
+   },
+   {
+    "name": "Couatl",
+    "page": 277
+   },
+   {
+    "name": "Crab",
+    "page": 347
+   },
+   {
+    "name": "Crocodile",
+    "page": 347
+   },
+   {
+    "name": "Cultist",
+    "page": 278
+   },
+   {
+    "name": "Cultist Fanatic",
+    "page": 278
+   },
+   {
+    "name": "Darkmantle",
+    "page": 278
+   },
+   {
+    "name": "Death Dog",
+    "page": 279
+   },
+   {
+    "name": "Deer",
+    "page": 347
+   },
+   {
+    "name": "Deva",
+    "page": 279
+   },
+   {
+    "name": "Dire Wolf",
+    "page": 347
+   },
+   {
+    "name": "Djinni",
+    "page": 280
+   },
+   {
+    "name": "Doppelganger",
+    "page": 280
+   },
+   {
+    "name": "Draconic Spirit",
+    "page": 166
+   },
+   {
+    "name": "Draft Horse",
+    "page": 347
+   },
+   {
+    "name": "Dragon Turtle",
+    "page": 281
+   },
+   {
+    "name": "Dretch",
+    "page": 281
+   },
+   {
+    "name": "Drider",
+    "page": 281
+   },
+   {
+    "name": "Druid",
+    "page": 282
+   },
+   {
+    "name": "Dryad",
+    "page": 282
+   },
+   {
+    "name": "Dust Mephit",
+    "page": 307
+   },
+   {
+    "name": "Eagle",
+    "page": 348
+   },
+   {
+    "name": "Earth Elemental",
+    "page": 282
+   },
+   {
+    "name": "Efreeti",
+    "page": 283
+   },
+   {
+    "name": "Elephant",
+    "page": 348
+   },
+   {
+    "name": "Elk",
+    "page": 348
+   },
+   {
+    "name": "Erinyes",
+    "page": 283
+   },
+   {
+    "name": "Ettercap",
+    "page": 284
+   },
+   {
+    "name": "Ettin",
+    "page": 284
+   },
+   {
+    "name": "Fire Elemental",
+    "page": 284
+   },
+   {
+    "name": "Fire Giant",
+    "page": 285
+   },
+   {
+    "name": "Flesh Golem",
+    "page": 285
+   },
+   {
+    "name": "Flying Snake",
+    "page": 348
+   },
+   {
+    "name": "Frog",
+    "page": 348
+   },
+   {
+    "name": "Frost Giant",
+    "page": 285
+   },
+   {
+    "name": "Gargoyle",
+    "page": 286
+   },
+   {
+    "name": "Gelatinous Cube",
+    "page": 286
+   },
+   {
+    "name": "Ghast",
+    "page": 287
+   },
+   {
+    "name": "Ghost",
+    "page": 287
+   },
+   {
+    "name": "Ghoul",
+    "page": 288
+   },
+   {
+    "name": "Giant Ape",
+    "page": 349
+   },
+   {
+    "name": "Giant Badger",
+    "page": 349
+   },
+   {
+    "name": "Giant Bat",
+    "page": 349
+   },
+   {
+    "name": "Giant Boar",
+    "page": 349
+   },
+   {
+    "name": "Giant Centipede",
+    "page": 349
+   },
+   {
+    "name": "Giant Constrictor Snake",
+    "page": 350
+   },
+   {
+    "name": "Giant Crab",
+    "page": 350
+   },
+   {
+    "name": "Giant Crocodile",
+    "page": 350
+   },
+   {
+    "name": "Giant Eagle",
+    "page": 350
+   },
+   {
+    "name": "Giant Elk",
+    "page": 351
+   },
+   {
+    "name": "Giant Fire Beetle",
+    "page": 351
+   },
+   {
+    "name": "Giant Fly",
+    "page": 222
+   },
+   {
+    "name": "Giant Frog",
+    "page": 351
+   },
+   {
+    "name": "Giant Goat",
+    "page": 351
+   },
+   {
+    "name": "Giant Hyena",
+    "page": 352
+   },
+   {
+    "name": "Giant Insect",
+    "page": 136
+   },
+   {
+    "name": "Giant Lizard",
+    "page": 352
+   },
+   {
+    "name": "Giant Octopus",
+    "page": 352
+   },
+   {
+    "name": "Giant Owl",
+    "page": 352
+   },
+   {
+    "name": "Giant Rat",
+    "page": 353
+   },
+   {
+    "name": "Giant Scorpion",
+    "page": 353
+   },
+   {
+    "name": "Giant Seahorse",
+    "page": 353
+   },
+   {
+    "name": "Giant Shark",
+    "page": 353
+   },
+   {
+    "name": "Giant Spider",
+    "page": 353
+   },
+   {
+    "name": "Giant Toad",
+    "page": 354
+   },
+   {
+    "name": "Giant Venomous Snake",
+    "page": 354
+   },
+   {
+    "name": "Giant Vulture",
+    "page": 354
+   },
+   {
+    "name": "Giant Wasp",
+    "page": 354
+   },
+   {
+    "name": "Giant Weasel",
+    "page": 355
+   },
+   {
+    "name": "Giant Wolf Spider",
+    "page": 355
+   },
+   {
+    "name": "Gibbering Mouther",
+    "page": 288
+   },
+   {
+    "name": "Glabrezu",
+    "page": 289
+   },
+   {
+    "name": "Gladiator",
+    "page": 289
+   },
+   {
+    "name": "Gnoll Warrior",
+    "page": 289
+   },
+   {
+    "name": "Goat",
+    "page": 355
+   },
+   {
+    "name": "Goblin Boss",
+    "page": 290
+   },
+   {
+    "name": "Goblin Minion",
+    "page": 290
+   },
+   {
+    "name": "Goblin Warrior",
+    "page": 290
+   },
+   {
+    "name": "Gold Dragon Wyrmling",
+    "page": 290
+   },
+   {
+    "name": "Gorgon",
+    "page": 292
+   },
+   {
+    "name": "Gray Ooze",
+    "page": 293
+   },
+   {
+    "name": "Green Dragon Wyrmling",
+    "page": 293
+   },
+   {
+    "name": "Green Hag",
+    "page": 295
+   },
+   {
+    "name": "Grick",
+    "page": 295
+   },
+   {
+    "name": "Griffon",
+    "page": 295
+   },
+   {
+    "name": "Grimlock",
+    "page": 296
+   },
+   {
+    "name": "Guard",
+    "page": 296
+   },
+   {
+    "name": "Guard Captain",
+    "page": 296
+   },
+   {
+    "name": "Guardian Naga",
+    "page": 296
+   },
+   {
+    "name": "Half-Dragon",
+    "page": 297
+   },
+   {
+    "name": "Harpy",
+    "page": 297
+   },
+   {
+    "name": "Hawk",
+    "page": 355
+   },
+   {
+    "name": "Hell Hound",
+    "page": 297
+   },
+   {
+    "name": "Hezrou",
+    "page": 298
+   },
+   {
+    "name": "Hill Giant",
+    "page": 298
+   },
+   {
+    "name": "Hippogriff",
+    "page": 298
+   },
+   {
+    "name": "Hippopotamus",
+    "page": 355
+   },
+   {
+    "name": "Hobgoblin Captain",
+    "page": 299
+   },
+   {
+    "name": "Hobgoblin Warrior",
+    "page": 298
+   },
+   {
+    "name": "Homunculus",
+    "page": 299
+   },
+   {
+    "name": "Horned Devil",
+    "page": 299
+   },
+   {
+    "name": "Hunter Shark",
+    "page": 356
+   },
+   {
+    "name": "Hydra",
+    "page": 300
+   },
+   {
+    "name": "Hyena",
+    "page": 356
+   },
+   {
+    "name": "Ice Devil",
+    "page": 300
+   },
+   {
+    "name": "Ice Mephit",
+    "page": 307
+   },
+   {
+    "name": "Imp",
+    "page": 300
+   },
+   {
+    "name": "Incubus",
+    "page": 301
+   },
+   {
+    "name": "Invisible Stalker",
+    "page": 301
+   },
+   {
+    "name": "Iron Golem",
+    "page": 302
+   },
+   {
+    "name": "Jackal",
+    "page": 356
+   },
+   {
+    "name": "Killer Whale",
+    "page": 356
+   },
+   {
+    "name": "Knight",
+    "page": 302
+   },
+   {
+    "name": "Kobold Warrior",
+    "page": 302
+   },
+   {
+    "name": "Kraken",
+    "page": 303
+   },
+   {
+    "name": "Lamia",
+    "page": 303
+   },
+   {
+    "name": "Lemure",
+    "page": 304
+   },
+   {
+    "name": "Lich",
+    "page": 304
+   },
+   {
+    "name": "Lion",
+    "page": 356
+   },
+   {
+    "name": "Lizard",
+    "page": 357
+   },
+   {
+    "name": "Mage",
+    "page": 305
+   },
+   {
+    "name": "Magma Mephit",
+    "page": 307
+   },
+   {
+    "name": "Magmin",
+    "page": 305
+   },
+   {
+    "name": "Mammoth",
+    "page": 357
+   },
+   {
+    "name": "Manticore",
+    "page": 306
+   },
+   {
+    "name": "Marilith",
+    "page": 306
+   },
+   {
+    "name": "Mastiff",
+    "page": 357
+   },
+   {
+    "name": "Medusa",
+    "page": 306
+   },
+   {
+    "name": "Merfolk Skirmisher",
+    "page": 308
+   },
+   {
+    "name": "Merrow",
+    "page": 308
+   },
+   {
+    "name": "Mimic",
+    "page": 308
+   },
+   {
+    "name": "Minotaur Skeleton",
+    "page": 326
+   },
+   {
+    "name": "Minotaur of Baphomet",
+    "page": 309
+   },
+   {
+    "name": "Mule",
+    "page": 357
+   },
+   {
+    "name": "Mummy",
+    "page": 309
+   },
+   {
+    "name": "Mummy Lord",
+    "page": 309
+   },
+   {
+    "name": "Nalfeshnee",
+    "page": 310
+   },
+   {
+    "name": "Night Hag",
+    "page": 311
+   },
+   {
+    "name": "Nightmare",
+    "page": 311
+   },
+   {
+    "name": "Noble",
+    "page": 312
+   },
+   {
+    "name": "Ochre Jelly",
+    "page": 312
+   },
+   {
+    "name": "Octopus",
+    "page": 357
+   },
+   {
+    "name": "Ogre",
+    "page": 312
+   },
+   {
+    "name": "Ogre Zombie",
+    "page": 344
+   },
+   {
+    "name": "Oni",
+    "page": 312
+   },
+   {
+    "name": "Otherworldly Steed",
+    "page": 131
+   },
+   {
+    "name": "Otyugh",
+    "page": 313
+   },
+   {
+    "name": "Owl",
+    "page": 358
+   },
+   {
+    "name": "Owlbear",
+    "page": 313
+   },
+   {
+    "name": "Panther",
+    "page": 358
+   },
+   {
+    "name": "Pegasus",
+    "page": 313
+   },
+   {
+    "name": "Phase Spider",
+    "page": 313
+   },
+   {
+    "name": "Piranha",
+    "page": 358
+   },
+   {
+    "name": "Pirate",
+    "page": 314
+   },
+   {
+    "name": "Pirate Captain",
+    "page": 314
+   },
+   {
+    "name": "Pit Fiend",
+    "page": 314
+   },
+   {
+    "name": "Planetar",
+    "page": 315
+   },
+   {
+    "name": "Plesiosaurus",
+    "page": 358
+   },
+   {
+    "name": "Polar Bear",
+    "page": 359
+   },
+   {
+    "name": "Pony",
+    "page": 359
+   },
+   {
+    "name": "Priest",
+    "page": 316
+   },
+   {
+    "name": "Priest Acolyte",
+    "page": 316
+   },
+   {
+    "name": "Pseudodragon",
+    "page": 316
+   },
+   {
+    "name": "Pteranodon",
+    "page": 359
+   },
+   {
+    "name": "Purple Worm",
+    "page": 316
+   },
+   {
+    "name": "Quasit",
+    "page": 317
+   },
+   {
+    "name": "Rakshasa",
+    "page": 317
+   },
+   {
+    "name": "Rat",
+    "page": 359
+   },
+   {
+    "name": "Raven",
+    "page": 359
+   },
+   {
+    "name": "Red Dragon Wyrmling",
+    "page": 318
+   },
+   {
+    "name": "Reef Shark",
+    "page": 360
+   },
+   {
+    "name": "Remorhaz",
+    "page": 319
+   },
+   {
+    "name": "Rhinoceros",
+    "page": 360
+   },
+   {
+    "name": "Riding Horse",
+    "page": 360
+   },
+   {
+    "name": "Roc",
+    "page": 320
+   },
+   {
+    "name": "Roper",
+    "page": 320
+   },
+   {
+    "name": "Rust Monster",
+    "page": 320
+   },
+   {
+    "name": "Saber-Toothed Tiger",
+    "page": 360
+   },
+   {
+    "name": "Sahuagin Warrior",
+    "page": 321
+   },
+   {
+    "name": "Salamander",
+    "page": 321
+   },
+   {
+    "name": "Satyr",
+    "page": 321
+   },
+   {
+    "name": "Scorpion",
+    "page": 360
+   },
+   {
+    "name": "Scout",
+    "page": 322
+   },
+   {
+    "name": "Sea Hag",
+    "page": 322
+   },
+   {
+    "name": "Seahorse",
+    "page": 361
+   },
+   {
+    "name": "Shadow",
+    "page": 322
+   },
+   {
+    "name": "Shambling Mound",
+    "page": 323
+   },
+   {
+    "name": "Shield Guardian",
+    "page": 323
+   },
+   {
+    "name": "Shrieker Fungus",
+    "page": 286
+   },
+   {
+    "name": "Silver Dragon Wyrmling",
+    "page": 324
+   },
+   {
+    "name": "Skeleton",
+    "page": 325
+   },
+   {
+    "name": "Solar",
+    "page": 326
+   },
+   {
+    "name": "Specter",
+    "page": 327
+   },
+   {
+    "name": "Sphinx of Lore",
+    "page": 327
+   },
+   {
+    "name": "Sphinx of Valor",
+    "page": 328
+   },
+   {
+    "name": "Sphinx of Wonder",
+    "page": 327
+   },
+   {
+    "name": "Spider",
+    "page": 361
+   },
+   {
+    "name": "Spirit Naga",
+    "page": 329
+   },
+   {
+    "name": "Sprite",
+    "page": 329
+   },
+   {
+    "name": "Spy",
+    "page": 329
+   },
+   {
+    "name": "Steam Mephit",
+    "page": 308
+   },
+   {
+    "name": "Stirge",
+    "page": 329
+   },
+   {
+    "name": "Stone Giant",
+    "page": 330
+   },
+   {
+    "name": "Stone Golem",
+    "page": 330
+   },
+   {
+    "name": "Storm Giant",
+    "page": 330
+   },
+   {
+    "name": "Succubus",
+    "page": 331
+   },
+   {
+    "name": "Swarm of Bats",
+    "page": 361
+   },
+   {
+    "name": "Swarm of Crawling Claws",
+    "page": 278
+   },
+   {
+    "name": "Swarm of Insects",
+    "page": 361
+   },
+   {
+    "name": "Swarm of Piranhas",
+    "page": 362
+   },
+   {
+    "name": "Swarm of Rats",
+    "page": 362
+   },
+   {
+    "name": "Swarm of Ravens",
+    "page": 362
+   },
+   {
+    "name": "Swarm of Venomous Snakes",
+    "page": 362
+   },
+   {
+    "name": "Tarrasque",
+    "page": 331
+   },
+   {
+    "name": "Tiger",
+    "page": 363
+   },
+   {
+    "name": "Tough",
+    "page": 332
+   },
+   {
+    "name": "Tough Boss",
+    "page": 332
+   },
+   {
+    "name": "Treant",
+    "page": 333
+   },
+   {
+    "name": "Triceratops",
+    "page": 363
+   },
+   {
+    "name": "Troll",
+    "page": 333
+   },
+   {
+    "name": "Troll Limb",
+    "page": 333
+   },
+   {
+    "name": "Tyrannosaurus Rex",
+    "page": 363
+   },
+   {
+    "name": "Unicorn",
+    "page": 334
+   },
+   {
+    "name": "Vampire",
+    "page": 335
+   },
+   {
+    "name": "Vampire Familiar",
+    "page": 334
+   },
+   {
+    "name": "Vampire Spawn",
+    "page": 334
+   },
+   {
+    "name": "Venomous Snake",
+    "page": 363
+   },
+   {
+    "name": "Violet Fungus",
+    "page": 286
+   },
+   {
+    "name": "Vrock",
+    "page": 336
+   },
+   {
+    "name": "Vulture",
+    "page": 363
+   },
+   {
+    "name": "Warhorse",
+    "page": 364
+   },
+   {
+    "name": "Warhorse Skeleton",
+    "page": 326
+   },
+   {
+    "name": "Warrior Infantry",
+    "page": 336
+   },
+   {
+    "name": "Warrior Veteran",
+    "page": 337
+   },
+   {
+    "name": "Water Elemental",
+    "page": 337
+   },
+   {
+    "name": "Weasel",
+    "page": 364
+   },
+   {
+    "name": "Werebear",
+    "page": 337
+   },
+   {
+    "name": "Wereboar",
+    "page": 338
+   },
+   {
+    "name": "Wererat",
+    "page": 338
+   },
+   {
+    "name": "Weretiger",
+    "page": 339
+   },
+   {
+    "name": "Werewolf",
+    "page": 339
+   },
+   {
+    "name": "White Dragon Wyrmling",
+    "page": 339
+   },
+   {
+    "name": "Wight",
+    "page": 341
+   },
+   {
+    "name": "Will-o'-Wisp",
+    "page": 341
+   },
+   {
+    "name": "Winter Wolf",
+    "page": 342
+   },
+   {
+    "name": "Wolf",
+    "page": 364
+   },
+   {
+    "name": "Worg",
+    "page": 342
+   },
+   {
+    "name": "Wraith",
+    "page": 342
+   },
+   {
+    "name": "Wyvern",
+    "page": 343
+   },
+   {
+    "name": "Xorn",
+    "page": 343
+   },
+   {
+    "name": "Young Black Dragon",
+    "page": 264
+   },
+   {
+    "name": "Young Blue Dragon",
+    "page": 266
+   },
+   {
+    "name": "Young Brass Dragon",
+    "page": 268
+   },
+   {
+    "name": "Young Bronze Dragon",
+    "page": 270
+   },
+   {
+    "name": "Young Copper Dragon",
+    "page": 276
+   },
+   {
+    "name": "Young Gold Dragon",
+    "page": 291
+   },
+   {
+    "name": "Young Green Dragon",
+    "page": 293
+   },
+   {
+    "name": "Young Red Dragon",
+    "page": 318
+   },
+   {
+    "name": "Young Silver Dragon",
+    "page": 324
+   },
+   {
+    "name": "Young White Dragon",
+    "page": 340
+   },
+   {
+    "name": "Zombie",
+    "page": 343
+   }
+  ],
+  "subclasses": [
+   {
+    "name": "Champion",
+    "page": 49
+   },
+   {
+    "name": "Circle of the Land",
+    "page": 46
+   },
+   {
+    "name": "College of Lore",
+    "page": 35
+   },
+   {
+    "name": "Draconic Sorcery",
+    "page": 69
+   },
+   {
+    "name": "Evoker",
+    "page": 82
+   },
+   {
+    "name": "Fiend Patron",
+    "page": 76
+   },
+   {
+    "name": "Hunter",
+    "page": 61
+   },
+   {
+    "name": "Life Domain",
+    "page": 40
+   },
+   {
+    "name": "Oath of Devotion",
+    "page": 56
+   },
+   {
+    "name": "Path of the Berserker",
+    "page": 30
+   },
+   {
+    "name": "Thief",
+    "page": 64
+   },
+   {
+    "name": "Warrior of the Open Hand",
+    "page": 52
+   }
+  ],
+  "traps": [
+   {
+    "name": "Collapsing Roof",
+    "page": 199
+   },
+   {
+    "name": "Falling Net",
+    "page": 199
+   },
+   {
+    "name": "Fire-Casting Statue",
+    "page": 199
+   },
+   {
+    "name": "Hidden Pit",
+    "page": 200
+   },
+   {
+    "name": "Poisoned Darts",
+    "page": 200
+   },
+   {
+    "name": "Poisoned Needle",
+    "page": 200
+   },
+   {
+    "name": "Rolling Stone",
+    "page": 201
+   },
+   {
+    "name": "Spiked Pit",
+    "page": 201
+   }
+  ]
+ },
+ "source": {
+  "path": "srd/SRD_CC_v5.2.1.pdf",
+  "sha256": "8974902d109d6e63672d7c490bde9ccf052410503d9cfa768237154fbc5e3d87",
+  "version": "5.2.1"
+ }
+}
