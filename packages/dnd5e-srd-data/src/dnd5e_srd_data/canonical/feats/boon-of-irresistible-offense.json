@@ -4,7 +4,13 @@
   "description": "You gain the following benefits.\n\nAbility Score Increase. Increase your Strength or Dexterity score by 1, to a maximum of 30.\n\nOvercome Defenses. The Bludgeoning, Piercing, and Slashing damage you deal always ignores Resistance.\n\nOverwhelming Strike. When you roll a 20 on the d20 for an attack roll, you can deal extra damage to the target equal to the ability score increased by this feat. The extra damage's type is the same as the attack's type.\n\nFoundry Note\n\nThis feat's effects are not automated. The additional damage can be added in the Situational Bonus field of the damage's dialog roll box.",
   "entry_kind": "feat",
   "name": "Boon of Irresistible Offense",
-  "prerequisites": [],
+  "prerequisites": [
+    {
+      "feats": [],
+      "level": 19,
+      "requirement": ""
+    }
+  ],
   "provenance": {
     "ingest_date": "2026-05-30",
     "ingest_version": "foundry-translator-v1",

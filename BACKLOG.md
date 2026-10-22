@@ -2080,6 +2080,26 @@ pool entries.
   only for being an SRD option.
   (`packages/dnd5e-srd-data/tools/srd_audit/classes.py::pdf_facts`)
 
+## SRD 5.2.1 origins audit (2026-10-22, spec 02a session A3)
+
+- **Three shared monster traits differ from their stat blocks until the owner
+  approves them (n1ffl3r/tapestria-nat20#18).** Standing Leap's text (20 and 10
+  feet) is not the Frog's (10 and 5); Stench carries a Success clause and "(other
+  than a monster)" the Hezrou lacks; Water Susceptibility ends with a "Foundry
+  Note". The traits are de-duplicated across monsters, so one text cannot suit
+  every monster that has one.
+  (`packages/dnd5e-srd-data/audit/srd_5_2_1_divergences.json`)
+- **The origins audit reads conditions and lineages by hand.** Each condition's
+  effects and each lineage's Darkvision, Speed, resistances and spells are
+  hand readings with quotes, because the SRD prints them as prose and a table;
+  they are checked against the PDF when the ledger is built, not parsed.
+  (`packages/dnd5e-srd-data/tools/srd_audit/origins.py::CONDITION_READINGS`)
+- **What an origin record does is not compared.** A condition's effects are compared
+  by kind (Petrified's "Turned to Inanimate Substance" has none); a feat's benefits,
+  a species trait's uses and damage, a background's equipment items and Magic
+  Initiate spell list, and a monster trait's wording (only its numbers) are not.
+  (`packages/dnd5e-srd-data/tools/srd_audit/origins.py`)
+
 ---
 
 # Test & fidelity

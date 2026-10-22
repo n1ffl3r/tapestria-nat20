@@ -97,7 +97,13 @@
   "description": "You gain the following benefits.\n\nAbility Score Increase. Increase one ability score of your choice by 1, to a maximum of 30.\n\nImprove Fate. When you or another creature within 60 feet of you succeeds on or fails a D20 Test, you can roll 2d4 and apply the total rolled as a bonus or penalty to the d20 roll. Once you use this benefit, you can't use it again until you roll Initiative or finish a Short or Long Rest.",
   "entry_kind": "feat",
   "name": "Boon of Fate",
-  "prerequisites": [],
+  "prerequisites": [
+    {
+      "feats": [],
+      "level": 19,
+      "requirement": ""
+    }
+  ],
   "provenance": {
     "ingest_date": "2026-05-30",
     "ingest_version": "foundry-translator-v1",

@@ -4969,6 +4969,52 @@ def _feat_prerequisites(system: dict[str, Any]) -> list[FeatPrerequisite]:
     ]
 
 
+#: The origins audit's corrections (``audit/srd_5_2_1_ledger.json``, spec 02a acceptance
+#: criterion 4), keyed by feat slug. Each quotes the SRD 5.2.1 feat header it rests on; the
+#: pins live in ``tests/test_feat_srd_5_2_1_corrections.py``.
+_FEAT_SRD_CORRECTIONS: dict[str, tuple[_SrdCorrection, ...]] = {
+    "boon-of-fate": (
+        _SrdCorrection(
+            "prerequisites",
+            [],
+            [{"feats": [], "level": 19, "requirement": ""}],
+            "Epic Boon Feat (Prerequisite: Level 19+)",
+        ),
+    ),
+    "boon-of-irresistible-offense": (
+        _SrdCorrection(
+            "prerequisites",
+            [],
+            [{"feats": [], "level": 19, "requirement": ""}],
+            "Epic Boon Feat (Prerequisite: Level 19+)",
+        ),
+    ),
+    "boon-of-spell-recall": (
+        _SrdCorrection(
+            "prerequisites[0].requirement",
+            "",
+            "Spellcasting Feature",
+            "Epic Boon Feat (Prerequisite: Level 19+, Spellcasting Feature)",
+        ),
+    ),
+}
+
+
+def feat_srd_corrections(slug: str) -> tuple[_SrdCorrection, ...]:
+    """The SRD 5.2.1 corrections the translator applies to feat ``slug``."""
+    return _FEAT_SRD_CORRECTIONS.get(slug, ())
+
+
+def _apply_feat_srd_corrections(feat: Feat) -> Feat:
+    """Apply ``_FEAT_SRD_CORRECTIONS``."""
+    corrections = feat_srd_corrections(feat.slug)
+    if not corrections or not _SRD_RULES["enabled"]:
+        return feat
+    blob = feat.model_dump(mode="json")
+    _apply_srd_corrections(feat.slug, blob, corrections)
+    return Feat.model_validate(blob)
+
+
 def translate_feat_yaml(
     yaml_path: Path,
     *,
@@ -4977,16 +5023,18 @@ def translate_feat_yaml(
 ) -> Feat:
     doc = _load_yaml(yaml_path)
     system = doc.get("system") or {}
-    return Feat(
-        slug=_slug(doc, yaml_path),
-        name=_name(doc),
-        description=_description(doc),
-        category=_feat_category(system),
-        prerequisites=_feat_prerequisites(system),
-        repeatable=bool((system.get("prerequisites") or {}).get("repeatable")),
-        activities=_translate_activities(system),
-        provenance=_provenance(yaml_path, ingest_date, ingest_version),
-        review=ReviewState(),
+    return _apply_feat_srd_corrections(
+        Feat(
+            slug=_slug(doc, yaml_path),
+            name=_name(doc),
+            description=_description(doc),
+            category=_feat_category(system),
+            prerequisites=_feat_prerequisites(system),
+            repeatable=bool((system.get("prerequisites") or {}).get("repeatable")),
+            activities=_translate_activities(system),
+            provenance=_provenance(yaml_path, ingest_date, ingest_version),
+            review=ReviewState(),
+        )
     )
 
 
