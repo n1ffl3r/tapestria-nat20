@@ -346,5 +346,16 @@
    "reason": "Foundry's output record for the Decanter of Endless Water; the SRD has no item of that name.",
    "srd_page": 217
   }
- }
+ },
+ "classes": {
+  "monk": {
+   "fields": [
+    "feature_levels.Self-Restoration"
+   ],
+   "issue": "https://github.com/n1ffl3r/tapestria-nat20/issues/16",
+   "reason": "The SRD lists Self-Restoration at Monk level 10. The pinned Foundry pack grants it but ships no document for it, so regen skips the grant and the corpus has no such feature."
+  }
+ },
+ "subclasses": {},
+ "class_features": {}
 }

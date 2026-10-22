@@ -24,15 +24,17 @@ import copy
 import json
 import re
 import sys
-from collections.abc import Mapping
+from collections.abc import Iterable, Mapping
 from datetime import date
 from pathlib import Path
 from typing import Any
 
 import yaml
 
-from tools.srd_audit import items, pdf_text, spell_lists, spells, stat_blocks
+from tools.srd_audit import classes, items, pdf_text, spell_lists, spells, stat_blocks
+from tools.srd_audit.spells import Facts
 from tools.translators.foundry import (
+    class_srd_corrections,
     item_srd_corrections,
     monster_srd_corrections,
     spell_srd_corrections,
@@ -49,7 +51,15 @@ DIVERGENCES_PATH = ROOT / "audit" / "srd_5_2_1_divergences.json"
 INDEX_PATH = ROOT / "srd" / "index.json"
 CANONICAL = ROOT / "src" / "dnd5e_srd_data" / "canonical"
 FOUNDRY = ROOT / "raw_sources" / "foundry"
-AUDITED_CATEGORIES = ("items", "monsters", "spell_lists", "spells")
+AUDITED_CATEGORIES = (
+    "class_features",
+    "classes",
+    "items",
+    "monsters",
+    "spell_lists",
+    "spells",
+    "subclasses",
+)
 ALIASES_PATH = ROOT / "srd" / "aliases.json"
 # The pages holding every stat block: the summon forms in the Spells chapter, the
 # figurines and the Avatar of Death in the Magic Items chapter, and the Monsters and
@@ -69,8 +79,19 @@ def load_json(path: Path) -> Any:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
+# A ledger category that is part of a corpus directory: the records a predicate keeps.
+CATEGORY_DIRECTORIES = {"class_features": "features"}
+
+
 def canonical_records(category: str) -> dict[str, dict[str, Any]]:
-    return {path.stem: load_json(path) for path in sorted((CANONICAL / category).glob("*.json"))}
+    directory = CATEGORY_DIRECTORIES.get(category, category)
+    records = {
+        path.stem: load_json(path) for path in sorted((CANONICAL / directory).glob("*.json"))
+    }
+    if category == "class_features":
+        # A species trait is audited with its species.
+        return {s: r for s, r in records.items() if r["feature_type"] != "species_trait"}
+    return records
 
 
 def spell_classes(lists: Mapping[str, Mapping[str, Any]]) -> dict[str, list[str]]:
@@ -587,6 +608,275 @@ def item_entries(
     return entries
 
 
+def _flat(facts: Mapping[str, Any]) -> Facts:
+    """A class's facts with each feature and each scale a field of its own, so a
+    difference names the feature or scale: ``feature_levels.Rage``, ``scale.Rages``."""
+    out: Facts = {}
+    for field, value in facts.items():
+        if field in ("feature_levels", "scale"):
+            out.update({f"{field}.{key}": item for key, item in value.items()})
+        else:
+            out[field] = value
+    return out
+
+
+def _scale_change(before: Any, after: Any) -> tuple[Any, Any]:
+    """The levels where two scales differ, as the change's from and to."""
+    if not isinstance(before, dict) or not isinstance(after, dict):
+        return before, after
+    levels = [level for level in after if before.get(level) != after[level]]
+    return {level: before.get(level) for level in levels}, {level: after[level] for level in levels}
+
+
+def _class_view(record: Mapping[str, Any]) -> dict[str, Any]:
+    """The class as the pinned Foundry pack gives it: each correction reverted."""
+    view = copy.deepcopy(dict(record))
+    for correction in class_srd_corrections(record["slug"]):
+        _set_path(view, correction.path, copy.deepcopy(correction.was))
+    return view
+
+
+def _advancement_title(record: Mapping[str, Any], path: str) -> str:
+    """The title of the advancement entry a correction path names by id."""
+    found = re.match(r"advancement\[([^\]]+)\]", path)
+    if found is None:
+        raise ValueError(f"{record['slug']}: correction path {path!r} names no advancement")
+    return next(a["title"] for a in record["advancement"] if a["id"] == found.group(1))
+
+
+def class_changes(
+    record: Mapping[str, Any],
+    corpus: Mapping[str, Any],
+    features: Mapping[str, Mapping[str, Any]],
+    subclass_levels: list[int],
+) -> list[dict[str, Any]]:
+    """The audited fields a correction changed, each with the SRD text it rests on."""
+    before = _flat(classes.corpus_facts(_class_view(record), features, subclass_levels))
+    after = _flat(corpus)
+    corrections = class_srd_corrections(record["slug"])
+    changes = []
+    for field in sorted(set(before) | set(after)):
+        if before.get(field) == after.get(field):
+            continue
+        quotes = [
+            c.srd for c in corrections if f"scale.{_advancement_title(record, c.path)}" == field
+        ]
+        if not quotes:
+            raise ValueError(f"{record['slug']}: {field} changed with no SRD text to cite")
+        old, new = _scale_change(before.get(field), after.get(field))
+        changes.append({"field": field, "from": old, "to": new, "srd": quotes})
+    return changes
+
+
+def _verify_quotes(slug: str, text: str, quotes: Iterable[str]) -> None:
+    for quote in quotes:
+        if not contains(text, quote):
+            raise ValueError(f"{slug}: quote not in the SRD text: {quote!r}")
+
+
+def _finish(
+    slug: str,
+    entry: dict[str, Any],
+    differences: Mapping[str, Any],
+    divergence: Mapping[str, Any] | None,
+    changes: list[dict[str, Any]],
+) -> dict[str, Any]:
+    """Give an entry its status: a divergence must be recorded, and only a difference can be
+    one."""
+    if differences:
+        if divergence is None or sorted(divergence["fields"]) != sorted(differences):
+            raise ValueError(f"{slug}: unrecorded differences from the SRD: {dict(differences)}")
+        entry["status"] = "divergence"
+        entry["differences"] = dict(differences)
+        entry["divergence"] = dict(divergence)
+    elif divergence is not None:
+        raise ValueError(f"{slug}: recorded as a divergence but matches the SRD")
+    else:
+        entry["status"] = "corrected" if changes else "verified"
+    if changes:
+        entry["changes"] = changes
+    return entry
+
+
+NOT_COMPARED_SLOTS = (
+    "The corpus holds a spellcasting progression, not slot counts; the slot counts are the"
+    " engine's tables (see BACKLOG.md)."
+)
+
+
+def class_entries(
+    index: Mapping[str, Any], divergences: Mapping[str, Any], with_changes: bool
+) -> dict[str, dict[str, Any]]:
+    """Every corpus class and subclass against its chapter, and every class or subclass
+    feature against the heading that names it."""
+    texts = classes.class_texts()
+    features = canonical_records("class_features")
+    all_features = canonical_records("features")
+    subclass_records = canonical_records("subclasses")
+    class_pages = {c["name"]: c["page"] for c in index["categories"]["classes"]}
+    subclass_pages = {c["name"]: c["page"] for c in index["categories"]["subclasses"]}
+    class_names = {c["identifier"]: c["name"] for c in canonical_records("classes").values()}
+    out: dict[str, dict[str, Any]] = {"classes": {}, "subclasses": {}, "class_features": {}}
+    errors: list[str] = []
+    for slug, record in canonical_records("classes").items():
+        text = texts[record["name"]]
+        levels = sorted(
+            {
+                g["level"]
+                for sub in subclass_records.values()
+                if sub["class_identifier"] == slug
+                for g in sub["granted_features"]
+                if g["ref_type"] == "feature"
+            }
+        )
+        srd = classes.pdf_facts(text)
+        srd.pop("table_features")
+        corpus = classes.corpus_facts(record, all_features, levels)
+        try:
+            readings = {t: list(r.srd) for t, r in classes.SCALE_READINGS.get(slug, {}).items()}
+            _verify_quotes(slug, text.text, (q for qs in readings.values() for q in qs))
+            for correction in class_srd_corrections(slug):
+                _verify_quotes(slug, text.text, [correction.srd])
+            differences = spells.compare(_flat(srd), _flat(corpus))
+            entry: dict[str, Any] = {
+                "name": record["name"],
+                "srd_page": class_pages[record["name"]],
+                "compared": _flat(srd),
+                "not_compared": {"spell_slots": NOT_COMPARED_SLOTS}
+                if srd["progression"] != "none"
+                else {},
+            }
+            if not entry["not_compared"]:
+                del entry["not_compared"]
+            if readings:
+                entry["read_by_hand"] = {f"scale.{t}": q for t, q in sorted(readings.items())}
+            changes = class_changes(record, corpus, all_features, levels) if with_changes else []
+            out["classes"][slug] = _finish(
+                slug, entry, differences, divergences["classes"].get(slug), changes
+            )
+        except ValueError as error:
+            errors.append(str(error))
+    for slug, record in subclass_records.items():
+        owner = class_names[record["class_identifier"]]
+        text = texts[owner]
+        headings = text.subclasses[record["name"]]
+        srd = classes.subclass_facts(headings)
+        corpus = classes.corpus_facts(record, all_features)
+        readings = {t: list(r.srd) for t, r in classes.SCALE_READINGS.get(slug, {}).items()}
+        if readings:
+            srd["scale"] = {
+                t: classes.expand(r.steps) for t, r in classes.SCALE_READINGS[slug].items()
+            }
+        try:
+            _verify_quotes(slug, text.text, (q for qs in readings.values() for q in qs))
+            differences = spells.compare(_flat(srd), _flat(corpus))
+            entry = {
+                "name": record["name"],
+                "srd_page": subclass_pages[record["name"]],
+                "compared": _flat(srd),
+            }
+            if readings:
+                entry["read_by_hand"] = {f"scale.{t}": q for t, q in sorted(readings.items())}
+            changes = class_changes(record, corpus, all_features, []) if with_changes else []
+            out["subclasses"][slug] = _finish(
+                slug, entry, differences, divergences["subclasses"].get(slug), changes
+            )
+        except ValueError as error:
+            errors.append(str(error))
+    out["class_features"] = feature_entries(
+        index, divergences, texts, canonical_records("classes"), subclass_records, features, errors
+    )
+    if errors:
+        raise ValueError("\n".join(errors))
+    return out
+
+
+def feature_entries(
+    index: Mapping[str, Any],
+    divergences: Mapping[str, Any],
+    texts: Mapping[str, classes.ClassText],
+    class_records: Mapping[str, Mapping[str, Any]],
+    subclass_records: Mapping[str, Mapping[str, Any]],
+    features: Mapping[str, Mapping[str, Any]],
+    errors: list[str],
+) -> dict[str, Any]:
+    """Each class or subclass feature against the "Level N: Name" heading that names it, at
+    the level its owner grants it; a feature an owner offers as a choice (a Metamagic option,
+    an Eldritch Invocation) against the index's options."""
+    pages = {
+        classes.canon(f["name"]): f["page"]
+        for category in ("class_features", "class_feature_options")
+        for f in index["categories"][category]
+    }
+    options = {classes.canon(f["name"]) for f in index["categories"]["class_feature_options"]}
+    aliases = {
+        a["name"]: a["of"]
+        for a in load_json(ALIASES_PATH)["aliases"]
+        if a["corpus_category"] == "features" and a["of_category"] == "class_feature_options"
+    }
+    names = {s: f["name"] for s, f in features.items()}
+    owners: dict[str, list[tuple[str, Mapping[str, Any]]]] = {}
+    choices: dict[str, list[tuple[str, Mapping[str, Any]]]] = {}
+    for kind, records in (("class", class_records), ("subclass", subclass_records)):
+        for record in records.values():
+            for g in record["granted_features"]:
+                if g["ref_type"] == "feature":
+                    owners.setdefault(g["slug"], []).append((kind, record))
+            for choice in record["feature_choices"]:
+                for option in choice["pool"]:
+                    if option["ref_type"] == "feature":
+                        choices.setdefault(option["slug"], []).append((kind, record))
+    class_names = {c["identifier"]: c["name"] for c in class_records.values()}
+    entries: dict[str, Any] = {}
+    for slug, feature in features.items():
+        name = classes.canon(feature["name"])
+        try:
+            if slug in owners:
+                kind, owner = owners[slug][0]
+                class_name = class_names[owner.get("class_identifier") or owner["identifier"]]
+                text = texts[class_name]
+                headings = text.subclasses[owner["name"]] if kind == "subclass" else text.headings
+                srd = {"levels": sorted(h.level for h in headings if classes.canon(h.name) == name)}
+                corpus = {
+                    "levels": sorted(
+                        g["level"]
+                        for g in owner["granted_features"]
+                        if g["ref_type"] == "feature" and classes.canon(names[g["slug"]]) == name
+                    )
+                }
+                page = pages[name]
+            elif slug in choices:
+                listed = classes.canon(aliases.get(feature["name"], feature["name"]))
+                srd = {"listed_as_an_option": listed in options}
+                corpus = {"listed_as_an_option": True}
+                page = pages[listed]
+            elif name == "Epic Boon":
+                # Every class's Level 19 feature, which a class's last Ability Score
+                # Improvement grants, and the corpus files once.
+                owner = class_records[feature["source_slug"]]
+                text = texts[owner["name"]]
+                srd = {"levels": sorted(h.level for h in text.headings if h.name == name)}
+                corpus = {
+                    "levels": sorted(
+                        a["level"]
+                        for a in owner["advancement"]
+                        if a["type"] == "AbilityScoreImprovement" and a["level"] == 19
+                    )
+                }
+                page = pages[name]
+            else:
+                errors.append(f"{slug}: no class or subclass grants this feature")
+                continue
+            differences = spells.compare(srd, corpus)
+            entry = {"name": feature["name"], "srd_page": page, "compared": srd}
+            entries[slug] = _finish(
+                slug, entry, differences, divergences["class_features"].get(slug), []
+            )
+        except (ValueError, KeyError) as error:
+            errors.append(f"{slug}: {error!r}")
+    return entries
+
+
 def build(with_changes: bool = True) -> dict[str, Any]:
     """The ledger. ``with_changes`` reads the raw Foundry sources to list what the
     translator changed; without them every matching record reads as verified."""
@@ -642,6 +932,7 @@ def build(with_changes: bool = True) -> dict[str, Any]:
         "source": index["source"],
         "audited_categories": list(AUDITED_CATEGORIES),
         "records": {
+            **class_entries(index, divergences, with_changes),
             "items": item_entries(index, divergences, with_changes),
             "monsters": monster_entries(index, divergences, with_changes),
             "spell_lists": list_records,

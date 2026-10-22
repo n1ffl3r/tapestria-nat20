@@ -603,9 +603,6 @@
         },
         "identifier": "focus",
         "scale": {
-          "1": {
-            "value": 1
-          },
           "10": {
             "value": 10
           },

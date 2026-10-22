@@ -51,6 +51,18 @@ dungeons-and-agents fork, workstream A).
   kind line; a field the SRD does not state is listed as not compared, and so
   is a magic item's price and weight. 546 items: 493 verified, 37 corrected, 16
   divergence (#10: eight traps and eight Foundry helper records).
+- **The class audit** (`tools/srd_audit/classes.py`): each class's Hit Point Die,
+  primary ability, saving throws, spellcasting progression and ability, the
+  level of every feature, the Ability Score Improvement and subclass levels, and
+  every scaling value (Rages, Rage Damage, Sneak Attack, Wild Shape uses) against
+  its Features table and "Level N: Feature" headings; each subclass's features
+  and levels; and each of the 225 class and subclass features against the
+  heading that names it at the level its owner grants it. A scale the table has
+  no column for (Brutal Strike, Divine Strike, Aura Distance) is read by hand
+  with its quoted sentence. 12 classes: 10 verified, 1 corrected, 1 divergence
+  (#16); 12 subclasses and 225 features verified. A test checks the engine's
+  spell slot tables (`derive_spell_slots`, `derive_pact_slots`) against each
+  caster's table.
 
 ### Changed
 
@@ -83,6 +95,10 @@ dungeons-and-agents fork, workstream A).
   Spell Scrolls, +1 Ammunition, Bead of Nourishment, Feather Token, Figurine of
   Wondrous Power, Handy Haversack, Horn of Valhalla) are magic items, the
   Handy Haversack Rare.
+- **Class corrections against SRD 5.2.1** (`_CLASS_SRD_CORRECTIONS`, each quoting
+  its Features table): the Barbarian's Rages rise to 6 at level 17, not 16; a
+  Monk has no Focus Points at level 1. The engine's
+  multiclass scale test expected the Monk's level 1 Focus Point and now expects none.
 - **Spell corrections against SRD 5.2.1** (`_SPELL_SRD_CORRECTIONS` in
   `tools/translators/foundry.py`, each quoting its SRD sentence): Raise Dead
   has Touch range; Mirage Arcane's range is Sight (`spec`); Forbiddance is a
