@@ -4604,6 +4604,97 @@ def _spellcasting(system: dict[str, Any]) -> Spellcasting:
     )
 
 
+#: The class audit's corrections (``audit/srd_5_2_1_ledger.json``, spec 02a acceptance
+#: criterion 4), keyed by class or subclass slug. Each quotes the SRD 5.2.1 text it rests on;
+#: the pins live in ``tests/test_class_srd_5_2_1_corrections.py``.
+_CLASS_SRD_CORRECTIONS: dict[str, tuple[_SrdCorrection, ...]] = {
+    "barbarian": (
+        _SrdCorrection(
+            "advancement[6FTnn7DjW37STeW6].configuration.scale",
+            {
+                "1": {"value": 2},
+                "12": {"value": 5},
+                "16": {"value": 6},
+                "3": {"value": 3},
+                "6": {"value": 4},
+            },
+            {
+                "1": {"value": 2},
+                "12": {"value": 5},
+                "17": {"value": 6},
+                "3": {"value": 3},
+                "6": {"value": 4},
+            },
+            "16 +5 Ability Score Improvement 5 +4 4 17 +6 Improved Brutal Strike 6 +4 4",
+        ),
+    ),
+    "monk": (
+        _SrdCorrection(
+            "advancement[lWLJqkOpz8hzx5Vo].configuration.scale",
+            {
+                "1": {"value": 1},
+                "10": {"value": 10},
+                "11": {"value": 11},
+                "12": {"value": 12},
+                "13": {"value": 13},
+                "14": {"value": 14},
+                "15": {"value": 15},
+                "16": {"value": 16},
+                "17": {"value": 17},
+                "18": {"value": 18},
+                "19": {"value": 19},
+                "2": {"value": 2},
+                "20": {"value": 20},
+                "3": {"value": 3},
+                "4": {"value": 4},
+                "5": {"value": 5},
+                "6": {"value": 6},
+                "7": {"value": 7},
+                "8": {"value": 8},
+                "9": {"value": 9},
+            },
+            {
+                "10": {"value": 10},
+                "11": {"value": 11},
+                "12": {"value": 12},
+                "13": {"value": 13},
+                "14": {"value": 14},
+                "15": {"value": 15},
+                "16": {"value": 16},
+                "17": {"value": 17},
+                "18": {"value": 18},
+                "19": {"value": 19},
+                "2": {"value": 2},
+                "20": {"value": 20},
+                "3": {"value": 3},
+                "4": {"value": 4},
+                "5": {"value": 5},
+                "6": {"value": 6},
+                "7": {"value": 7},
+                "8": {"value": 8},
+                "9": {"value": 9},
+            },
+            "2 +2 Monk's Focus, Unarmored Movement, Uncanny Metabolism 1d6 2 +10 ft.",
+        ),
+    ),
+}
+
+
+def class_srd_corrections(slug: str) -> tuple[_SrdCorrection, ...]:
+    """The SRD 5.2.1 corrections the translator applies to class or subclass ``slug``."""
+    return _CLASS_SRD_CORRECTIONS.get(slug, ())
+
+
+def _apply_class_srd_corrections[ClassT: (Class, Subclass)](record: ClassT) -> ClassT:
+    """Apply ``_CLASS_SRD_CORRECTIONS`` to a class or subclass."""
+    corrections = class_srd_corrections(record.slug)
+    if not corrections or not _SRD_RULES["enabled"]:
+        return record
+    blob = record.model_dump(mode="json")
+    _apply_srd_corrections(record.slug, blob, corrections)
+    return type(record).model_validate(blob)
+
+
 def translate_class_yaml(
     yaml_path: Path,
     *,
@@ -4613,20 +4704,22 @@ def translate_class_yaml(
     doc = _load_yaml(yaml_path)
     system = doc.get("system") or {}
     advancement = _advancement(system)
-    return Class(
-        slug=_slug(doc, yaml_path),
-        name=_name(doc),
-        description=_description(doc),
-        identifier=str(system.get("identifier") or ""),
-        hit_die=_hit_die(system),
-        primary_ability=_primary_ability(system),
-        spellcasting=_spellcasting(system),
-        wealth=str(system.get("wealth") or ""),
-        saving_throws=_class_saving_throws(advancement),
-        subclass_identifiers=_class_subclass_identifiers(advancement),
-        advancement=advancement,
-        provenance=_provenance(yaml_path, ingest_date, ingest_version),
-        review=ReviewState(),
+    return _apply_class_srd_corrections(
+        Class(
+            slug=_slug(doc, yaml_path),
+            name=_name(doc),
+            description=_description(doc),
+            identifier=str(system.get("identifier") or ""),
+            hit_die=_hit_die(system),
+            primary_ability=_primary_ability(system),
+            spellcasting=_spellcasting(system),
+            wealth=str(system.get("wealth") or ""),
+            saving_throws=_class_saving_throws(advancement),
+            subclass_identifiers=_class_subclass_identifiers(advancement),
+            advancement=advancement,
+            provenance=_provenance(yaml_path, ingest_date, ingest_version),
+            review=ReviewState(),
+        )
     )
 
 
@@ -4638,16 +4731,18 @@ def translate_subclass_yaml(
 ) -> Subclass:
     doc = _load_yaml(yaml_path)
     system = doc.get("system") or {}
-    return Subclass(
-        slug=_slug(doc, yaml_path),
-        name=_name(doc),
-        description=_description(doc),
-        identifier=str(system.get("identifier") or ""),
-        class_identifier=str(system.get("classIdentifier") or ""),
-        spellcasting=_spellcasting(system),
-        advancement=_advancement(system),
-        provenance=_provenance(yaml_path, ingest_date, ingest_version),
-        review=ReviewState(),
+    return _apply_class_srd_corrections(
+        Subclass(
+            slug=_slug(doc, yaml_path),
+            name=_name(doc),
+            description=_description(doc),
+            identifier=str(system.get("identifier") or ""),
+            class_identifier=str(system.get("classIdentifier") or ""),
+            spellcasting=_spellcasting(system),
+            advancement=_advancement(system),
+            provenance=_provenance(yaml_path, ingest_date, ingest_version),
+            review=ReviewState(),
+        )
     )
 
 

@@ -1,12 +1,3950 @@
 {
  "audited_categories": [
+  "class_features",
+  "classes",
   "items",
   "monsters",
   "spell_lists",
-  "spells"
+  "spells",
+  "subclasses"
  ],
  "description": "The SRD 5.2.1 rules-text audit (spec 02a, acceptance criterion 4): one entry per audited corpus record, built by tools/srd_audit/ledger.py from the pinned PDF.",
  "records": {
+  "class_features": {
+   "abjure-foes": {
+    "compared": {
+     "levels": [
+      9
+     ]
+    },
+    "name": "Abjure Foes",
+    "srd_page": 55,
+    "status": "verified"
+   },
+   "acrobatic-movement": {
+    "compared": {
+     "levels": [
+      9
+     ]
+    },
+    "name": "Acrobatic Movement",
+    "srd_page": 51,
+    "status": "verified"
+   },
+   "action-surge": {
+    "compared": {
+     "levels": [
+      2
+     ]
+    },
+    "name": "Action Surge",
+    "srd_page": 48,
+    "status": "verified"
+   },
+   "additional-fighting-style": {
+    "compared": {
+     "levels": [
+      7
+     ]
+    },
+    "name": "Additional Fighting Style",
+    "srd_page": 49,
+    "status": "verified"
+   },
+   "agonizing-blast": {
+    "compared": {
+     "listed_as_an_option": true
+    },
+    "name": "Agonizing Blast",
+    "srd_page": 72,
+    "status": "verified"
+   },
+   "arcane-apotheosis": {
+    "compared": {
+     "levels": [
+      20
+     ]
+    },
+    "name": "Arcane Apotheosis",
+    "srd_page": 66,
+    "status": "verified"
+   },
+   "arcane-recovery": {
+    "compared": {
+     "levels": [
+      1
+     ]
+    },
+    "name": "Arcane Recovery",
+    "srd_page": 78,
+    "status": "verified"
+   },
+   "archdruid": {
+    "compared": {
+     "levels": [
+      20
+     ]
+    },
+    "name": "Archdruid",
+    "srd_page": 43,
+    "status": "verified"
+   },
+   "armor-of-shadows": {
+    "compared": {
+     "listed_as_an_option": true
+    },
+    "name": "Armor of Shadows",
+    "srd_page": 72,
+    "status": "verified"
+   },
+   "ascendant-step": {
+    "compared": {
+     "listed_as_an_option": true
+    },
+    "name": "Ascendant Step",
+    "srd_page": 72,
+    "status": "verified"
+   },
+   "aura-expansion": {
+    "compared": {
+     "levels": [
+      18
+     ]
+    },
+    "name": "Aura Expansion",
+    "srd_page": 55,
+    "status": "verified"
+   },
+   "aura-of-courage": {
+    "compared": {
+     "levels": [
+      10
+     ]
+    },
+    "name": "Aura of Courage",
+    "srd_page": 55,
+    "status": "verified"
+   },
+   "aura-of-devotion": {
+    "compared": {
+     "levels": [
+      7
+     ]
+    },
+    "name": "Aura of Devotion",
+    "srd_page": 56,
+    "status": "verified"
+   },
+   "aura-of-protection": {
+    "compared": {
+     "levels": [
+      6
+     ]
+    },
+    "name": "Aura of Protection",
+    "srd_page": 55,
+    "status": "verified"
+   },
+   "bardic-inspiration": {
+    "compared": {
+     "levels": [
+      1
+     ]
+    },
+    "name": "Bardic Inspiration",
+    "srd_page": 31,
+    "status": "verified"
+   },
+   "beast-spells": {
+    "compared": {
+     "levels": [
+      18
+     ]
+    },
+    "name": "Beast Spells",
+    "srd_page": 43,
+    "status": "verified"
+   },
+   "blessed-healer": {
+    "compared": {
+     "levels": [
+      6
+     ]
+    },
+    "name": "Blessed Healer",
+    "srd_page": 40,
+    "status": "verified"
+   },
+   "blessed-strikes": {
+    "compared": {
+     "levels": [
+      7
+     ]
+    },
+    "name": "Blessed Strikes",
+    "srd_page": 38,
+    "status": "verified"
+   },
+   "blessed-strikes-divine-strike": {
+    "compared": {
+     "listed_as_an_option": true
+    },
+    "name": "Blessed Strikes: Divine Strike",
+    "srd_page": 38,
+    "status": "verified"
+   },
+   "blessed-strikes-potent-spellcasting": {
+    "compared": {
+     "listed_as_an_option": true
+    },
+    "name": "Blessed Strikes: Potent Spellcasting",
+    "srd_page": 38,
+    "status": "verified"
+   },
+   "blessed-warrior": {
+    "compared": {
+     "listed_as_an_option": true
+    },
+    "name": "Blessed Warrior",
+    "srd_page": 54,
+    "status": "verified"
+   },
+   "body-and-mind": {
+    "compared": {
+     "levels": [
+      20
+     ]
+    },
+    "name": "Body and Mind",
+    "srd_page": 52,
+    "status": "verified"
+   },
+   "bonus-proficiencies": {
+    "compared": {
+     "levels": [
+      3
+     ]
+    },
+    "name": "Bonus Proficiencies",
+    "srd_page": 35,
+    "status": "verified"
+   },
+   "brutal-strike": {
+    "compared": {
+     "levels": [
+      9
+     ]
+    },
+    "name": "Brutal Strike",
+    "srd_page": 29,
+    "status": "verified"
+   },
+   "careful-spell": {
+    "compared": {
+     "listed_as_an_option": true
+    },
+    "name": "Careful Spell",
+    "srd_page": 66,
+    "status": "verified"
+   },
+   "channel-divinity-cleric": {
+    "compared": {
+     "levels": [
+      2
+     ]
+    },
+    "name": "Channel Divinity",
+    "srd_page": 37,
+    "status": "verified"
+   },
+   "channel-divinity-paladin": {
+    "compared": {
+     "levels": [
+      3
+     ]
+    },
+    "name": "Channel Divinity",
+    "srd_page": 37,
+    "status": "verified"
+   },
+   "circle-of-the-land-spells": {
+    "compared": {
+     "levels": [
+      3
+     ]
+    },
+    "name": "Circle of the Land Spells",
+    "srd_page": 46,
+    "status": "verified"
+   },
+   "contact-patron": {
+    "compared": {
+     "levels": [
+      9
+     ]
+    },
+    "name": "Contact Patron",
+    "srd_page": 72,
+    "status": "verified"
+   },
+   "countercharm": {
+    "compared": {
+     "levels": [
+      7
+     ]
+    },
+    "name": "Countercharm",
+    "srd_page": 33,
+    "status": "verified"
+   },
+   "cunning-action": {
+    "compared": {
+     "levels": [
+      2
+     ]
+    },
+    "name": "Cunning Action",
+    "srd_page": 62,
+    "status": "verified"
+   },
+   "cunning-strike": {
+    "compared": {
+     "levels": [
+      5
+     ]
+    },
+    "name": "Cunning Strike",
+    "srd_page": 63,
+    "status": "verified"
+   },
+   "cutting-words": {
+    "compared": {
+     "levels": [
+      3
+     ]
+    },
+    "name": "Cutting Words",
+    "srd_page": 35,
+    "status": "verified"
+   },
+   "danger-sense": {
+    "compared": {
+     "levels": [
+      2
+     ]
+    },
+    "name": "Danger Sense",
+    "srd_page": 29,
+    "status": "verified"
+   },
+   "dark-ones-blessing": {
+    "compared": {
+     "levels": [
+      3
+     ]
+    },
+    "name": "Dark One's Blessing",
+    "srd_page": 76,
+    "status": "verified"
+   },
+   "dark-ones-own-luck": {
+    "compared": {
+     "levels": [
+      6
+     ]
+    },
+    "name": "Dark One's Own Luck",
+    "srd_page": 76,
+    "status": "verified"
+   },
+   "defensive-tactics": {
+    "compared": {
+     "levels": [
+      7
+     ]
+    },
+    "name": "Defensive Tactics",
+    "srd_page": 61,
+    "status": "verified"
+   },
+   "deflect-attacks": {
+    "compared": {
+     "levels": [
+      3
+     ]
+    },
+    "name": "Deflect Attacks",
+    "srd_page": 51,
+    "status": "verified"
+   },
+   "deflect-energy": {
+    "compared": {
+     "levels": [
+      13
+     ]
+    },
+    "name": "Deflect Energy",
+    "srd_page": 52,
+    "status": "verified"
+   },
+   "deft-explorer": {
+    "compared": {
+     "levels": [
+      2
+     ]
+    },
+    "name": "Deft Explorer",
+    "srd_page": 59,
+    "status": "verified"
+   },
+   "devils-sight": {
+    "compared": {
+     "listed_as_an_option": true
+    },
+    "name": "Devil's Sight",
+    "srd_page": 72,
+    "status": "verified"
+   },
+   "devious-strikes": {
+    "compared": {
+     "levels": [
+      14
+     ]
+    },
+    "name": "Devious Strikes",
+    "srd_page": 63,
+    "status": "verified"
+   },
+   "devouring-blade": {
+    "compared": {
+     "listed_as_an_option": true
+    },
+    "name": "Devouring Blade",
+    "srd_page": 72,
+    "status": "verified"
+   },
+   "disciple-of-life": {
+    "compared": {
+     "levels": [
+      3
+     ]
+    },
+    "name": "Disciple of Life",
+    "srd_page": 40,
+    "status": "verified"
+   },
+   "disciplined-survivor": {
+    "compared": {
+     "levels": [
+      14
+     ]
+    },
+    "name": "Disciplined Survivor",
+    "srd_page": 52,
+    "status": "verified"
+   },
+   "distant-spell": {
+    "compared": {
+     "listed_as_an_option": true
+    },
+    "name": "Distant Spell",
+    "srd_page": 67,
+    "status": "verified"
+   },
+   "divine-intervention": {
+    "compared": {
+     "levels": [
+      10
+     ]
+    },
+    "name": "Divine Intervention",
+    "srd_page": 38,
+    "status": "verified"
+   },
+   "divine-order": {
+    "compared": {
+     "levels": [
+      1
+     ]
+    },
+    "name": "Divine Order",
+    "srd_page": 37,
+    "status": "verified"
+   },
+   "divine-order-protector": {
+    "compared": {
+     "listed_as_an_option": true
+    },
+    "name": "Divine Order: Protector",
+    "srd_page": 37,
+    "status": "verified"
+   },
+   "divine-order-thaumaturge": {
+    "compared": {
+     "listed_as_an_option": true
+    },
+    "name": "Divine Order: Thaumaturge",
+    "srd_page": 37,
+    "status": "verified"
+   },
+   "draconic-resilience": {
+    "compared": {
+     "levels": [
+      3
+     ]
+    },
+    "name": "Draconic Resilience",
+    "srd_page": 69,
+    "status": "verified"
+   },
+   "draconic-spells": {
+    "compared": {
+     "levels": [
+      3
+     ]
+    },
+    "name": "Draconic Spells",
+    "srd_page": 70,
+    "status": "verified"
+   },
+   "dragon-companion": {
+    "compared": {
+     "levels": [
+      18
+     ]
+    },
+    "name": "Dragon Companion",
+    "srd_page": 70,
+    "status": "verified"
+   },
+   "dragon-wings": {
+    "compared": {
+     "levels": [
+      14
+     ]
+    },
+    "name": "Dragon Wings",
+    "srd_page": 70,
+    "status": "verified"
+   },
+   "druidic": {
+    "compared": {
+     "levels": [
+      1
+     ]
+    },
+    "name": "Druidic",
+    "srd_page": 42,
+    "status": "verified"
+   },
+   "druidic-warrior": {
+    "compared": {
+     "listed_as_an_option": true
+    },
+    "name": "Druidic Warrior",
+    "srd_page": 59,
+    "status": "verified"
+   },
+   "eldritch-invocations": {
+    "compared": {
+     "levels": [
+      1
+     ]
+    },
+    "name": "Eldritch Invocations",
+    "srd_page": 70,
+    "status": "verified"
+   },
+   "eldritch-master": {
+    "compared": {
+     "levels": [
+      20
+     ]
+    },
+    "name": "Eldritch Master",
+    "srd_page": 72,
+    "status": "verified"
+   },
+   "eldritch-mind": {
+    "compared": {
+     "listed_as_an_option": true
+    },
+    "name": "Eldritch Mind",
+    "srd_page": 72,
+    "status": "verified"
+   },
+   "eldritch-smite": {
+    "compared": {
+     "listed_as_an_option": true
+    },
+    "name": "Eldritch Smite",
+    "srd_page": 72,
+    "status": "verified"
+   },
+   "eldritch-spear": {
+    "compared": {
+     "listed_as_an_option": true
+    },
+    "name": "Eldritch Spear",
+    "srd_page": 73,
+    "status": "verified"
+   },
+   "elemental-affinity": {
+    "compared": {
+     "levels": [
+      6
+     ]
+    },
+    "name": "Elemental Affinity",
+    "srd_page": 70,
+    "status": "verified"
+   },
+   "elemental-fury": {
+    "compared": {
+     "levels": [
+      7
+     ]
+    },
+    "name": "Elemental Fury",
+    "srd_page": 43,
+    "status": "verified"
+   },
+   "elemental-fury-potent-spellcasting": {
+    "compared": {
+     "listed_as_an_option": true
+    },
+    "name": "Elemental Fury: Potent Spellcasting",
+    "srd_page": 43,
+    "status": "verified"
+   },
+   "elemental-fury-primal-strike": {
+    "compared": {
+     "listed_as_an_option": true
+    },
+    "name": "Elemental Fury: Primal Strike",
+    "srd_page": 43,
+    "status": "verified"
+   },
+   "elusive": {
+    "compared": {
+     "levels": [
+      18
+     ]
+    },
+    "name": "Elusive",
+    "srd_page": 63,
+    "status": "verified"
+   },
+   "empowered-evocation": {
+    "compared": {
+     "levels": [
+      10
+     ]
+    },
+    "name": "Empowered Evocation",
+    "srd_page": 82,
+    "status": "verified"
+   },
+   "empowered-spell": {
+    "compared": {
+     "listed_as_an_option": true
+    },
+    "name": "Empowered Spell",
+    "srd_page": 67,
+    "status": "verified"
+   },
+   "empowered-strikes": {
+    "compared": {
+     "levels": [
+      6
+     ]
+    },
+    "name": "Empowered Strikes",
+    "srd_page": 51,
+    "status": "verified"
+   },
+   "epic-boon": {
+    "compared": {
+     "levels": [
+      19
+     ]
+    },
+    "name": "Epic Boon",
+    "srd_page": 30,
+    "status": "verified"
+   },
+   "evasion": {
+    "compared": {
+     "levels": [
+      7
+     ]
+    },
+    "name": "Evasion",
+    "srd_page": 51,
+    "status": "verified"
+   },
+   "evocation-savant": {
+    "compared": {
+     "levels": [
+      3
+     ]
+    },
+    "name": "Evocation Savant",
+    "srd_page": 82,
+    "status": "verified"
+   },
+   "expertise": {
+    "compared": {
+     "levels": [
+      2
+     ]
+    },
+    "name": "Expertise",
+    "srd_page": 32,
+    "status": "verified"
+   },
+   "extended-spell": {
+    "compared": {
+     "listed_as_an_option": true
+    },
+    "name": "Extended Spell",
+    "srd_page": 67,
+    "status": "verified"
+   },
+   "extra-attack": {
+    "compared": {
+     "levels": [
+      5
+     ]
+    },
+    "name": "Extra Attack",
+    "srd_page": 29,
+    "status": "verified"
+   },
+   "faithful-steed": {
+    "compared": {
+     "levels": [
+      5
+     ]
+    },
+    "name": "Faithful Steed",
+    "srd_page": 55,
+    "status": "verified"
+   },
+   "fast-hands": {
+    "compared": {
+     "levels": [
+      3
+     ]
+    },
+    "name": "Fast Hands",
+    "srd_page": 64,
+    "status": "verified"
+   },
+   "fast-movement": {
+    "compared": {
+     "levels": [
+      5
+     ]
+    },
+    "name": "Fast Movement",
+    "srd_page": 29,
+    "status": "verified"
+   },
+   "favored-enemy": {
+    "compared": {
+     "levels": [
+      1
+     ]
+    },
+    "name": "Favored Enemy",
+    "srd_page": 58,
+    "status": "verified"
+   },
+   "feral-instinct": {
+    "compared": {
+     "levels": [
+      7
+     ]
+    },
+    "name": "Feral Instinct",
+    "srd_page": 29,
+    "status": "verified"
+   },
+   "feral-senses": {
+    "compared": {
+     "levels": [
+      18
+     ]
+    },
+    "name": "Feral Senses",
+    "srd_page": 59,
+    "status": "verified"
+   },
+   "fiend-spells": {
+    "compared": {
+     "levels": [
+      3
+     ]
+    },
+    "name": "Fiend Spells",
+    "srd_page": 76,
+    "status": "verified"
+   },
+   "fiendish-resilience": {
+    "compared": {
+     "levels": [
+      10
+     ]
+    },
+    "name": "Fiendish Resilience",
+    "srd_page": 76,
+    "status": "verified"
+   },
+   "fiendish-vigor": {
+    "compared": {
+     "listed_as_an_option": true
+    },
+    "name": "Fiendish Vigor",
+    "srd_page": 73,
+    "status": "verified"
+   },
+   "fighting-style": {
+    "compared": {
+     "levels": [
+      1
+     ]
+    },
+    "name": "Fighting Style",
+    "srd_page": 47,
+    "status": "verified"
+   },
+   "fleet-step": {
+    "compared": {
+     "levels": [
+      11
+     ]
+    },
+    "name": "Fleet Step",
+    "srd_page": 52,
+    "status": "verified"
+   },
+   "foe-slayer": {
+    "compared": {
+     "levels": [
+      20
+     ]
+    },
+    "name": "Foe Slayer",
+    "srd_page": 59,
+    "status": "verified"
+   },
+   "font-of-inspiration": {
+    "compared": {
+     "levels": [
+      5
+     ]
+    },
+    "name": "Font of Inspiration",
+    "srd_page": 32,
+    "status": "verified"
+   },
+   "font-of-magic": {
+    "compared": {
+     "levels": [
+      2
+     ]
+    },
+    "name": "Font of Magic",
+    "srd_page": 66,
+    "status": "verified"
+   },
+   "frenzy": {
+    "compared": {
+     "levels": [
+      3
+     ]
+    },
+    "name": "Frenzy",
+    "srd_page": 30,
+    "status": "verified"
+   },
+   "gaze-of-two-minds": {
+    "compared": {
+     "listed_as_an_option": true
+    },
+    "name": "Gaze of Two Minds",
+    "srd_page": 73,
+    "status": "verified"
+   },
+   "gift-of-the-depths": {
+    "compared": {
+     "listed_as_an_option": true
+    },
+    "name": "Gift of the Depths",
+    "srd_page": 73,
+    "status": "verified"
+   },
+   "gift-of-the-protectors": {
+    "compared": {
+     "listed_as_an_option": true
+    },
+    "name": "Gift of the Protectors",
+    "srd_page": 73,
+    "status": "verified"
+   },
+   "greater-divine-intervention": {
+    "compared": {
+     "levels": [
+      20
+     ]
+    },
+    "name": "Greater Divine Intervention",
+    "srd_page": 38,
+    "status": "verified"
+   },
+   "heightened-focus": {
+    "compared": {
+     "levels": [
+      10
+     ]
+    },
+    "name": "Heightened Focus",
+    "srd_page": 51,
+    "status": "verified"
+   },
+   "heightened-spell": {
+    "compared": {
+     "listed_as_an_option": true
+    },
+    "name": "Heightened Spell",
+    "srd_page": 67,
+    "status": "verified"
+   },
+   "heroic-warrior": {
+    "compared": {
+     "levels": [
+      10
+     ]
+    },
+    "name": "Heroic Warrior",
+    "srd_page": 49,
+    "status": "verified"
+   },
+   "holy-nimbus": {
+    "compared": {
+     "levels": [
+      20
+     ]
+    },
+    "name": "Holy Nimbus",
+    "srd_page": 57,
+    "status": "verified"
+   },
+   "hunters-lore": {
+    "compared": {
+     "levels": [
+      3
+     ]
+    },
+    "name": "Hunter's Lore",
+    "srd_page": 61,
+    "status": "verified"
+   },
+   "hunters-prey": {
+    "compared": {
+     "levels": [
+      3
+     ]
+    },
+    "name": "Hunter's Prey",
+    "srd_page": 61,
+    "status": "verified"
+   },
+   "hurl-through-hell": {
+    "compared": {
+     "levels": [
+      14
+     ]
+    },
+    "name": "Hurl Through Hell",
+    "srd_page": 76,
+    "status": "verified"
+   },
+   "improved-blessed-strikes": {
+    "compared": {
+     "levels": [
+      14
+     ]
+    },
+    "name": "Improved Blessed Strikes",
+    "srd_page": 38,
+    "status": "verified"
+   },
+   "improved-brutal-strike": {
+    "compared": {
+     "levels": [
+      13,
+      17
+     ]
+    },
+    "name": "Improved Brutal Strike",
+    "srd_page": 30,
+    "status": "verified"
+   },
+   "improved-brutal-strike-2": {
+    "compared": {
+     "levels": [
+      13,
+      17
+     ]
+    },
+    "name": "Improved Brutal Strike (2)",
+    "srd_page": 30,
+    "status": "verified"
+   },
+   "improved-critical": {
+    "compared": {
+     "levels": [
+      3
+     ]
+    },
+    "name": "Improved Critical",
+    "srd_page": 49,
+    "status": "verified"
+   },
+   "improved-cunning-strike": {
+    "compared": {
+     "levels": [
+      11
+     ]
+    },
+    "name": "Improved Cunning Strike",
+    "srd_page": 63,
+    "status": "verified"
+   },
+   "improved-elemental-fury": {
+    "compared": {
+     "levels": [
+      15
+     ]
+    },
+    "name": "Improved Elemental Fury",
+    "srd_page": 43,
+    "status": "verified"
+   },
+   "indomitable": {
+    "compared": {
+     "levels": [
+      9
+     ]
+    },
+    "name": "Indomitable",
+    "srd_page": 48,
+    "status": "verified"
+   },
+   "indomitable-might": {
+    "compared": {
+     "levels": [
+      18
+     ]
+    },
+    "name": "Indomitable Might",
+    "srd_page": 30,
+    "status": "verified"
+   },
+   "innate-sorcery": {
+    "compared": {
+     "levels": [
+      1
+     ]
+    },
+    "name": "Innate Sorcery",
+    "srd_page": 65,
+    "status": "verified"
+   },
+   "instinctive-pounce": {
+    "compared": {
+     "levels": [
+      7
+     ]
+    },
+    "name": "Instinctive Pounce",
+    "srd_page": 29,
+    "status": "verified"
+   },
+   "intimidating-presence": {
+    "compared": {
+     "levels": [
+      14
+     ]
+    },
+    "name": "Intimidating Presence",
+    "srd_page": 30,
+    "status": "verified"
+   },
+   "investment-of-the-chain-master": {
+    "compared": {
+     "listed_as_an_option": true
+    },
+    "name": "Investment of the Chain Master",
+    "srd_page": 73,
+    "status": "verified"
+   },
+   "jack-of-all-trades": {
+    "compared": {
+     "levels": [
+      2
+     ]
+    },
+    "name": "Jack of All Trades",
+    "srd_page": 32,
+    "status": "verified"
+   },
+   "lands-aid": {
+    "compared": {
+     "levels": [
+      3
+     ]
+    },
+    "name": "Land's Aid",
+    "srd_page": 46,
+    "status": "verified"
+   },
+   "lay-on-hands": {
+    "compared": {
+     "levels": [
+      1
+     ]
+    },
+    "name": "Lay on Hands",
+    "srd_page": 53,
+    "status": "verified"
+   },
+   "lessons-of-the-first-ones": {
+    "compared": {
+     "listed_as_an_option": true
+    },
+    "name": "Lessons of the First Ones",
+    "srd_page": 73,
+    "status": "verified"
+   },
+   "life-domain-spells": {
+    "compared": {
+     "levels": [
+      3
+     ]
+    },
+    "name": "Life Domain Spells",
+    "srd_page": 40,
+    "status": "verified"
+   },
+   "lifedrinker": {
+    "compared": {
+     "listed_as_an_option": true
+    },
+    "name": "Lifedrinker",
+    "srd_page": 73,
+    "status": "verified"
+   },
+   "magical-cunning": {
+    "compared": {
+     "levels": [
+      2
+     ]
+    },
+    "name": "Magical Cunning",
+    "srd_page": 72,
+    "status": "verified"
+   },
+   "magical-discoveries": {
+    "compared": {
+     "levels": [
+      6
+     ]
+    },
+    "name": "Magical Discoveries",
+    "srd_page": 35,
+    "status": "verified"
+   },
+   "magical-secrets": {
+    "compared": {
+     "levels": [
+      10
+     ]
+    },
+    "name": "Magical Secrets",
+    "srd_page": 33,
+    "status": "verified"
+   },
+   "martial-arts": {
+    "compared": {
+     "levels": [
+      1
+     ]
+    },
+    "name": "Martial Arts",
+    "srd_page": 50,
+    "status": "verified"
+   },
+   "mask-of-many-faces": {
+    "compared": {
+     "listed_as_an_option": true
+    },
+    "name": "Mask of Many Faces",
+    "srd_page": 73,
+    "status": "verified"
+   },
+   "master-of-myriad-forms": {
+    "compared": {
+     "listed_as_an_option": true
+    },
+    "name": "Master of Myriad Forms",
+    "srd_page": 73,
+    "status": "verified"
+   },
+   "memorize-spell": {
+    "compared": {
+     "levels": [
+      5
+     ]
+    },
+    "name": "Memorize Spell",
+    "srd_page": 79,
+    "status": "verified"
+   },
+   "metamagic": {
+    "compared": {
+     "levels": [
+      2
+     ]
+    },
+    "name": "Metamagic",
+    "srd_page": 66,
+    "status": "verified"
+   },
+   "mindless-rage": {
+    "compared": {
+     "levels": [
+      6
+     ]
+    },
+    "name": "Mindless Rage",
+    "srd_page": 30,
+    "status": "verified"
+   },
+   "misty-visions": {
+    "compared": {
+     "listed_as_an_option": true
+    },
+    "name": "Misty Visions",
+    "srd_page": 74,
+    "status": "verified"
+   },
+   "monks-focus": {
+    "compared": {
+     "levels": [
+      2
+     ]
+    },
+    "name": "Monk's Focus",
+    "srd_page": 50,
+    "status": "verified"
+   },
+   "mystic-arcanum": {
+    "compared": {
+     "levels": [
+      11
+     ]
+    },
+    "name": "Mystic Arcanum",
+    "srd_page": 72,
+    "status": "verified"
+   },
+   "natural-recovery": {
+    "compared": {
+     "levels": [
+      6
+     ]
+    },
+    "name": "Natural Recovery",
+    "srd_page": 46,
+    "status": "verified"
+   },
+   "natures-sanctuary": {
+    "compared": {
+     "levels": [
+      14
+     ]
+    },
+    "name": "Nature's Sanctuary",
+    "srd_page": 46,
+    "status": "verified"
+   },
+   "natures-veil": {
+    "compared": {
+     "levels": [
+      14
+     ]
+    },
+    "name": "Nature's Veil",
+    "srd_page": 59,
+    "status": "verified"
+   },
+   "natures-ward": {
+    "compared": {
+     "levels": [
+      10
+     ]
+    },
+    "name": "Nature's Ward",
+    "srd_page": 46,
+    "status": "verified"
+   },
+   "oath-of-devotion-spells": {
+    "compared": {
+     "levels": [
+      3
+     ]
+    },
+    "name": "Oath of Devotion Spells",
+    "srd_page": 56,
+    "status": "verified"
+   },
+   "one-with-shadows": {
+    "compared": {
+     "listed_as_an_option": true
+    },
+    "name": "One with Shadows",
+    "srd_page": 74,
+    "status": "verified"
+   },
+   "open-hand-technique": {
+    "compared": {
+     "levels": [
+      3
+     ]
+    },
+    "name": "Open Hand Technique",
+    "srd_page": 52,
+    "status": "verified"
+   },
+   "otherworldly-leap": {
+    "compared": {
+     "listed_as_an_option": true
+    },
+    "name": "Otherworldly Leap",
+    "srd_page": 74,
+    "status": "verified"
+   },
+   "overchannel": {
+    "compared": {
+     "levels": [
+      14
+     ]
+    },
+    "name": "Overchannel",
+    "srd_page": 82,
+    "status": "verified"
+   },
+   "pact-magic": {
+    "compared": {
+     "levels": [
+      1
+     ]
+    },
+    "name": "Pact Magic",
+    "srd_page": 71,
+    "status": "verified"
+   },
+   "pact-of-the-blade": {
+    "compared": {
+     "listed_as_an_option": true
+    },
+    "name": "Pact of the Blade",
+    "srd_page": 74,
+    "status": "verified"
+   },
+   "pact-of-the-chain": {
+    "compared": {
+     "listed_as_an_option": true
+    },
+    "name": "Pact of the Chain",
+    "srd_page": 74,
+    "status": "verified"
+   },
+   "pact-of-the-tome": {
+    "compared": {
+     "listed_as_an_option": true
+    },
+    "name": "Pact of the Tome",
+    "srd_page": 74,
+    "status": "verified"
+   },
+   "paladins-smite": {
+    "compared": {
+     "levels": [
+      2
+     ]
+    },
+    "name": "Paladin's Smite",
+    "srd_page": 54,
+    "status": "verified"
+   },
+   "peerless-skill": {
+    "compared": {
+     "levels": [
+      14
+     ]
+    },
+    "name": "Peerless Skill",
+    "srd_page": 35,
+    "status": "verified"
+   },
+   "perfect-focus": {
+    "compared": {
+     "levels": [
+      15
+     ]
+    },
+    "name": "Perfect Focus",
+    "srd_page": 52,
+    "status": "verified"
+   },
+   "persistent-rage": {
+    "compared": {
+     "levels": [
+      15
+     ]
+    },
+    "name": "Persistent Rage",
+    "srd_page": 30,
+    "status": "verified"
+   },
+   "potent-cantrip": {
+    "compared": {
+     "levels": [
+      3
+     ]
+    },
+    "name": "Potent Cantrip",
+    "srd_page": 82,
+    "status": "verified"
+   },
+   "precise-hunter": {
+    "compared": {
+     "levels": [
+      17
+     ]
+    },
+    "name": "Precise Hunter",
+    "srd_page": 59,
+    "status": "verified"
+   },
+   "preserve-life": {
+    "compared": {
+     "levels": [
+      3
+     ]
+    },
+    "name": "Preserve Life",
+    "srd_page": 40,
+    "status": "verified"
+   },
+   "primal-champion": {
+    "compared": {
+     "levels": [
+      20
+     ]
+    },
+    "name": "Primal Champion",
+    "srd_page": 30,
+    "status": "verified"
+   },
+   "primal-knowledge": {
+    "compared": {
+     "levels": [
+      3
+     ]
+    },
+    "name": "Primal Knowledge",
+    "srd_page": 29,
+    "status": "verified"
+   },
+   "primal-order": {
+    "compared": {
+     "levels": [
+      1
+     ]
+    },
+    "name": "Primal Order",
+    "srd_page": 42,
+    "status": "verified"
+   },
+   "primal-order-magician": {
+    "compared": {
+     "listed_as_an_option": true
+    },
+    "name": "Primal Order: Magician",
+    "srd_page": 42,
+    "status": "verified"
+   },
+   "primal-order-warden": {
+    "compared": {
+     "listed_as_an_option": true
+    },
+    "name": "Primal Order: Warden",
+    "srd_page": 42,
+    "status": "verified"
+   },
+   "quickened-spell": {
+    "compared": {
+     "listed_as_an_option": true
+    },
+    "name": "Quickened Spell",
+    "srd_page": 67,
+    "status": "verified"
+   },
+   "quivering-palm": {
+    "compared": {
+     "levels": [
+      17
+     ]
+    },
+    "name": "Quivering Palm",
+    "srd_page": 52,
+    "status": "verified"
+   },
+   "radiant-strikes": {
+    "compared": {
+     "levels": [
+      11
+     ]
+    },
+    "name": "Radiant Strikes",
+    "srd_page": 55,
+    "status": "verified"
+   },
+   "rage": {
+    "compared": {
+     "levels": [
+      1
+     ]
+    },
+    "name": "Rage",
+    "srd_page": 28,
+    "status": "verified"
+   },
+   "reckless-attack": {
+    "compared": {
+     "levels": [
+      2
+     ]
+    },
+    "name": "Reckless Attack",
+    "srd_page": 29,
+    "status": "verified"
+   },
+   "relentless-hunter": {
+    "compared": {
+     "levels": [
+      13
+     ]
+    },
+    "name": "Relentless Hunter",
+    "srd_page": 59,
+    "status": "verified"
+   },
+   "relentless-rage": {
+    "compared": {
+     "levels": [
+      11
+     ]
+    },
+    "name": "Relentless Rage",
+    "srd_page": 30,
+    "status": "verified"
+   },
+   "reliable-talent": {
+    "compared": {
+     "levels": [
+      7
+     ]
+    },
+    "name": "Reliable Talent",
+    "srd_page": 63,
+    "status": "verified"
+   },
+   "remarkable-athlete": {
+    "compared": {
+     "levels": [
+      3
+     ]
+    },
+    "name": "Remarkable Athlete",
+    "srd_page": 49,
+    "status": "verified"
+   },
+   "repelling-blast": {
+    "compared": {
+     "listed_as_an_option": true
+    },
+    "name": "Repelling Blast",
+    "srd_page": 74,
+    "status": "verified"
+   },
+   "restoring-touch": {
+    "compared": {
+     "levels": [
+      14
+     ]
+    },
+    "name": "Restoring Touch",
+    "srd_page": 55,
+    "status": "verified"
+   },
+   "retaliation": {
+    "compared": {
+     "levels": [
+      10
+     ]
+    },
+    "name": "Retaliation",
+    "srd_page": 30,
+    "status": "verified"
+   },
+   "ritual-adept": {
+    "compared": {
+     "levels": [
+      1
+     ]
+    },
+    "name": "Ritual Adept",
+    "srd_page": 78,
+    "status": "verified"
+   },
+   "roving": {
+    "compared": {
+     "levels": [
+      6
+     ]
+    },
+    "name": "Roving",
+    "srd_page": 59,
+    "status": "verified"
+   },
+   "sacred-weapon": {
+    "compared": {
+     "levels": [
+      3
+     ]
+    },
+    "name": "Sacred Weapon",
+    "srd_page": 56,
+    "status": "verified"
+   },
+   "scholar": {
+    "compared": {
+     "levels": [
+      2
+     ]
+    },
+    "name": "Scholar",
+    "srd_page": 78,
+    "status": "verified"
+   },
+   "sculpt-spells": {
+    "compared": {
+     "levels": [
+      6
+     ]
+    },
+    "name": "Sculpt Spells",
+    "srd_page": 82,
+    "status": "verified"
+   },
+   "sear-undead": {
+    "compared": {
+     "levels": [
+      5
+     ]
+    },
+    "name": "Sear Undead",
+    "srd_page": 37,
+    "status": "verified"
+   },
+   "second-story-work": {
+    "compared": {
+     "levels": [
+      3
+     ]
+    },
+    "name": "Second-Story Work",
+    "srd_page": 64,
+    "status": "verified"
+   },
+   "second-wind": {
+    "compared": {
+     "levels": [
+      1
+     ]
+    },
+    "name": "Second Wind",
+    "srd_page": 48,
+    "status": "verified"
+   },
+   "seeking-spell": {
+    "compared": {
+     "listed_as_an_option": true
+    },
+    "name": "Seeking Spell",
+    "srd_page": 67,
+    "status": "verified"
+   },
+   "signature-spells": {
+    "compared": {
+     "levels": [
+      20
+     ]
+    },
+    "name": "Signature Spells",
+    "srd_page": 79,
+    "status": "verified"
+   },
+   "slippery-mind": {
+    "compared": {
+     "levels": [
+      15
+     ]
+    },
+    "name": "Slippery Mind",
+    "srd_page": 63,
+    "status": "verified"
+   },
+   "slow-fall": {
+    "compared": {
+     "levels": [
+      4
+     ]
+    },
+    "name": "Slow Fall",
+    "srd_page": 51,
+    "status": "verified"
+   },
+   "smite-of-protection": {
+    "compared": {
+     "levels": [
+      15
+     ]
+    },
+    "name": "Smite of Protection",
+    "srd_page": 57,
+    "status": "verified"
+   },
+   "sneak-attack": {
+    "compared": {
+     "levels": [
+      1
+     ]
+    },
+    "name": "Sneak Attack",
+    "srd_page": 61,
+    "status": "verified"
+   },
+   "sorcerous-restoration": {
+    "compared": {
+     "levels": [
+      5
+     ]
+    },
+    "name": "Sorcerous Restoration",
+    "srd_page": 66,
+    "status": "verified"
+   },
+   "sorcery-incarnate": {
+    "compared": {
+     "levels": [
+      7
+     ]
+    },
+    "name": "Sorcery Incarnate",
+    "srd_page": 66,
+    "status": "verified"
+   },
+   "spell-mastery": {
+    "compared": {
+     "levels": [
+      18
+     ]
+    },
+    "name": "Spell Mastery",
+    "srd_page": 79,
+    "status": "verified"
+   },
+   "spellcasting": {
+    "compared": {
+     "levels": [
+      1
+     ]
+    },
+    "name": "Spellcasting",
+    "srd_page": 32,
+    "status": "verified"
+   },
+   "steady-aim": {
+    "compared": {
+     "levels": [
+      3
+     ]
+    },
+    "name": "Steady Aim",
+    "srd_page": 62,
+    "status": "verified"
+   },
+   "stroke-of-luck": {
+    "compared": {
+     "levels": [
+      20
+     ]
+    },
+    "name": "Stroke of Luck",
+    "srd_page": 63,
+    "status": "verified"
+   },
+   "studied-attacks": {
+    "compared": {
+     "levels": [
+      13
+     ]
+    },
+    "name": "Studied Attacks",
+    "srd_page": 48,
+    "status": "verified"
+   },
+   "stunning-strike": {
+    "compared": {
+     "levels": [
+      5
+     ]
+    },
+    "name": "Stunning Strike",
+    "srd_page": 51,
+    "status": "verified"
+   },
+   "subtle-spell": {
+    "compared": {
+     "listed_as_an_option": true
+    },
+    "name": "Subtle Spell",
+    "srd_page": 67,
+    "status": "verified"
+   },
+   "superior-critical": {
+    "compared": {
+     "levels": [
+      15
+     ]
+    },
+    "name": "Superior Critical",
+    "srd_page": 49,
+    "status": "verified"
+   },
+   "superior-defense": {
+    "compared": {
+     "levels": [
+      18
+     ]
+    },
+    "name": "Superior Defense",
+    "srd_page": 52,
+    "status": "verified"
+   },
+   "superior-hunters-defense": {
+    "compared": {
+     "levels": [
+      15
+     ]
+    },
+    "name": "Superior Hunter's Defense",
+    "srd_page": 61,
+    "status": "verified"
+   },
+   "superior-hunters-prey": {
+    "compared": {
+     "levels": [
+      11
+     ]
+    },
+    "name": "Superior Hunter's Prey",
+    "srd_page": 61,
+    "status": "verified"
+   },
+   "superior-inspiration": {
+    "compared": {
+     "levels": [
+      18
+     ]
+    },
+    "name": "Superior Inspiration",
+    "srd_page": 33,
+    "status": "verified"
+   },
+   "supreme-healing": {
+    "compared": {
+     "levels": [
+      17
+     ]
+    },
+    "name": "Supreme Healing",
+    "srd_page": 40,
+    "status": "verified"
+   },
+   "supreme-sneak": {
+    "compared": {
+     "levels": [
+      9
+     ]
+    },
+    "name": "Supreme Sneak",
+    "srd_page": 64,
+    "status": "verified"
+   },
+   "survivor": {
+    "compared": {
+     "levels": [
+      18
+     ]
+    },
+    "name": "Survivor",
+    "srd_page": 49,
+    "status": "verified"
+   },
+   "tactical-master": {
+    "compared": {
+     "levels": [
+      9
+     ]
+    },
+    "name": "Tactical Master",
+    "srd_page": 48,
+    "status": "verified"
+   },
+   "tactical-mind": {
+    "compared": {
+     "levels": [
+      2
+     ]
+    },
+    "name": "Tactical Mind",
+    "srd_page": 48,
+    "status": "verified"
+   },
+   "tactical-shift": {
+    "compared": {
+     "levels": [
+      5
+     ]
+    },
+    "name": "Tactical Shift",
+    "srd_page": 48,
+    "status": "verified"
+   },
+   "thiefs-reflexes": {
+    "compared": {
+     "levels": [
+      17
+     ]
+    },
+    "name": "Thief's Reflexes",
+    "srd_page": 64,
+    "status": "verified"
+   },
+   "thieves-cant": {
+    "compared": {
+     "levels": [
+      1
+     ]
+    },
+    "name": "Thieves' Cant",
+    "srd_page": 62,
+    "status": "verified"
+   },
+   "thirsting-blade": {
+    "compared": {
+     "listed_as_an_option": true
+    },
+    "name": "Thirsting Blade",
+    "srd_page": 74,
+    "status": "verified"
+   },
+   "three-extra-attacks": {
+    "compared": {
+     "levels": [
+      20
+     ]
+    },
+    "name": "Three Extra Attacks",
+    "srd_page": 48,
+    "status": "verified"
+   },
+   "tireless": {
+    "compared": {
+     "levels": [
+      10
+     ]
+    },
+    "name": "Tireless",
+    "srd_page": 59,
+    "status": "verified"
+   },
+   "transmuted-spell": {
+    "compared": {
+     "listed_as_an_option": true
+    },
+    "name": "Transmuted Spell",
+    "srd_page": 67,
+    "status": "verified"
+   },
+   "twinned-spell": {
+    "compared": {
+     "listed_as_an_option": true
+    },
+    "name": "Twinned Spell",
+    "srd_page": 67,
+    "status": "verified"
+   },
+   "two-extra-attacks": {
+    "compared": {
+     "levels": [
+      11
+     ]
+    },
+    "name": "Two Extra Attacks",
+    "srd_page": 48,
+    "status": "verified"
+   },
+   "unarmored-defense": {
+    "compared": {
+     "levels": [
+      1
+     ]
+    },
+    "name": "Unarmored Defense",
+    "srd_page": 29,
+    "status": "verified"
+   },
+   "unarmored-defense-monk": {
+    "compared": {
+     "levels": [
+      1
+     ]
+    },
+    "name": "Unarmored Defense",
+    "srd_page": 29,
+    "status": "verified"
+   },
+   "unarmored-movement": {
+    "compared": {
+     "levels": [
+      2
+     ]
+    },
+    "name": "Unarmored Movement",
+    "srd_page": 51,
+    "status": "verified"
+   },
+   "uncanny-dodge": {
+    "compared": {
+     "levels": [
+      5
+     ]
+    },
+    "name": "Uncanny Dodge",
+    "srd_page": 63,
+    "status": "verified"
+   },
+   "uncanny-metabolism": {
+    "compared": {
+     "levels": [
+      2
+     ]
+    },
+    "name": "Uncanny Metabolism",
+    "srd_page": 51,
+    "status": "verified"
+   },
+   "use-magic-device": {
+    "compared": {
+     "levels": [
+      13
+     ]
+    },
+    "name": "Use Magic Device",
+    "srd_page": 64,
+    "status": "verified"
+   },
+   "visions-of-distant-realms": {
+    "compared": {
+     "listed_as_an_option": true
+    },
+    "name": "Visions of Distant Realms",
+    "srd_page": 74,
+    "status": "verified"
+   },
+   "weapon-mastery": {
+    "compared": {
+     "levels": [
+      1
+     ]
+    },
+    "name": "Weapon Mastery",
+    "srd_page": 29,
+    "status": "verified"
+   },
+   "whispers-of-the-grave": {
+    "compared": {
+     "listed_as_an_option": true
+    },
+    "name": "Whispers of the Grave",
+    "srd_page": 74,
+    "status": "verified"
+   },
+   "wholeness-of-body": {
+    "compared": {
+     "levels": [
+      6
+     ]
+    },
+    "name": "Wholeness of Body",
+    "srd_page": 52,
+    "status": "verified"
+   },
+   "wild-companion": {
+    "compared": {
+     "levels": [
+      2
+     ]
+    },
+    "name": "Wild Companion",
+    "srd_page": 43,
+    "status": "verified"
+   },
+   "wild-resurgence": {
+    "compared": {
+     "levels": [
+      5
+     ]
+    },
+    "name": "Wild Resurgence",
+    "srd_page": 43,
+    "status": "verified"
+   },
+   "wild-shape": {
+    "compared": {
+     "levels": [
+      2
+     ]
+    },
+    "name": "Wild Shape",
+    "srd_page": 42,
+    "status": "verified"
+   },
+   "witch-sight": {
+    "compared": {
+     "listed_as_an_option": true
+    },
+    "name": "Witch Sight",
+    "srd_page": 74,
+    "status": "verified"
+   },
+   "words-of-creation": {
+    "compared": {
+     "levels": [
+      20
+     ]
+    },
+    "name": "Words of Creation",
+    "srd_page": 33,
+    "status": "verified"
+   }
+  },
+  "classes": {
+   "barbarian": {
+    "changes": [
+     {
+      "field": "scale.Rages",
+      "from": {
+       "16": 6
+      },
+      "srd": [
+       "16 +5 Ability Score Improvement 5 +4 4 17 +6 Improved Brutal Strike 6 +4 4"
+      ],
+      "to": {
+       "16": 5
+      }
+     }
+    ],
+    "compared": {
+     "asi_levels": [
+      4,
+      8,
+      12,
+      16,
+      19
+     ],
+     "feature_levels.Brutal Strike": [
+      9
+     ],
+     "feature_levels.Danger Sense": [
+      2
+     ],
+     "feature_levels.Extra Attack": [
+      5
+     ],
+     "feature_levels.Fast Movement": [
+      5
+     ],
+     "feature_levels.Feral Instinct": [
+      7
+     ],
+     "feature_levels.Improved Brutal Strike": [
+      13,
+      17
+     ],
+     "feature_levels.Indomitable Might": [
+      18
+     ],
+     "feature_levels.Instinctive Pounce": [
+      7
+     ],
+     "feature_levels.Persistent Rage": [
+      15
+     ],
+     "feature_levels.Primal Champion": [
+      20
+     ],
+     "feature_levels.Primal Knowledge": [
+      3
+     ],
+     "feature_levels.Rage": [
+      1
+     ],
+     "feature_levels.Reckless Attack": [
+      2
+     ],
+     "feature_levels.Relentless Rage": [
+      11
+     ],
+     "feature_levels.Unarmored Defense": [
+      1
+     ],
+     "feature_levels.Weapon Mastery": [
+      1
+     ],
+     "hit_die": "d12",
+     "primary_ability": {
+      "all": false,
+      "value": [
+       "str"
+      ]
+     },
+     "progression": "none",
+     "saving_throws": [
+      "con",
+      "str"
+     ],
+     "scale.Brutal Strike": {
+      "1": null,
+      "10": "d10",
+      "11": "d10",
+      "12": "d10",
+      "13": "d10",
+      "14": "d10",
+      "15": "d10",
+      "16": "d10",
+      "17": "2d10",
+      "18": "2d10",
+      "19": "2d10",
+      "2": null,
+      "20": "2d10",
+      "3": null,
+      "4": null,
+      "5": null,
+      "6": null,
+      "7": null,
+      "8": null,
+      "9": "d10"
+     },
+     "scale.Rage Damage": {
+      "1": 2,
+      "10": 3,
+      "11": 3,
+      "12": 3,
+      "13": 3,
+      "14": 3,
+      "15": 3,
+      "16": 4,
+      "17": 4,
+      "18": 4,
+      "19": 4,
+      "2": 2,
+      "20": 4,
+      "3": 2,
+      "4": 2,
+      "5": 2,
+      "6": 2,
+      "7": 2,
+      "8": 2,
+      "9": 3
+     },
+     "scale.Rages": {
+      "1": 2,
+      "10": 4,
+      "11": 4,
+      "12": 5,
+      "13": 5,
+      "14": 5,
+      "15": 5,
+      "16": 5,
+      "17": 6,
+      "18": 6,
+      "19": 6,
+      "2": 2,
+      "20": 6,
+      "3": 3,
+      "4": 3,
+      "5": 3,
+      "6": 4,
+      "7": 4,
+      "8": 4,
+      "9": 4
+     },
+     "scale.Weapon Masteries Known": {
+      "1": 2,
+      "10": 4,
+      "11": 4,
+      "12": 4,
+      "13": 4,
+      "14": 4,
+      "15": 4,
+      "16": 4,
+      "17": 4,
+      "18": 4,
+      "19": 4,
+      "2": 2,
+      "20": 4,
+      "3": 2,
+      "4": 3,
+      "5": 3,
+      "6": 3,
+      "7": 3,
+      "8": 3,
+      "9": 3
+     },
+     "subclass_feature_levels": [
+      6,
+      10,
+      14
+     ],
+     "subclass_level": 3
+    },
+    "name": "Barbarian",
+    "read_by_hand": {
+     "scale.Brutal Strike": [
+      "Level 9: Brutal Strike",
+      "the target takes an extra 1d10 damage of the same type dealt by the weapon or Unarmed Strike",
+      "Level 17: Improved Brutal Strike The extra damage of your Brutal Strike increases to 2d10."
+     ]
+    },
+    "srd_page": 28,
+    "status": "corrected"
+   },
+   "bard": {
+    "compared": {
+     "asi_levels": [
+      4,
+      8,
+      12,
+      16,
+      19
+     ],
+     "feature_levels.Bardic Inspiration": [
+      1
+     ],
+     "feature_levels.Countercharm": [
+      7
+     ],
+     "feature_levels.Expertise": [
+      2
+     ],
+     "feature_levels.Font of Inspiration": [
+      5
+     ],
+     "feature_levels.Jack of All Trades": [
+      2
+     ],
+     "feature_levels.Magical Secrets": [
+      10
+     ],
+     "feature_levels.Spellcasting": [
+      1
+     ],
+     "feature_levels.Superior Inspiration": [
+      18
+     ],
+     "feature_levels.Words of Creation": [
+      20
+     ],
+     "hit_die": "d8",
+     "primary_ability": {
+      "all": false,
+      "value": [
+       "cha"
+      ]
+     },
+     "progression": "full",
+     "saving_throws": [
+      "cha",
+      "dex"
+     ],
+     "scale.Cantrips Known": {
+      "1": 2,
+      "10": 4,
+      "11": 4,
+      "12": 4,
+      "13": 4,
+      "14": 4,
+      "15": 4,
+      "16": 4,
+      "17": 4,
+      "18": 4,
+      "19": 4,
+      "2": 2,
+      "20": 4,
+      "3": 2,
+      "4": 3,
+      "5": 3,
+      "6": 3,
+      "7": 3,
+      "8": 3,
+      "9": 3
+     },
+     "scale.Inspiration Die": {
+      "1": "d6",
+      "10": "d10",
+      "11": "d10",
+      "12": "d10",
+      "13": "d10",
+      "14": "d10",
+      "15": "d12",
+      "16": "d12",
+      "17": "d12",
+      "18": "d12",
+      "19": "d12",
+      "2": "d6",
+      "20": "d12",
+      "3": "d6",
+      "4": "d6",
+      "5": "d8",
+      "6": "d8",
+      "7": "d8",
+      "8": "d8",
+      "9": "d8"
+     },
+     "scale.Max Prepared Spells": {
+      "1": 4,
+      "10": 15,
+      "11": 16,
+      "12": 16,
+      "13": 17,
+      "14": 17,
+      "15": 18,
+      "16": 18,
+      "17": 19,
+      "18": 20,
+      "19": 21,
+      "2": 5,
+      "20": 22,
+      "3": 6,
+      "4": 7,
+      "5": 9,
+      "6": 10,
+      "7": 11,
+      "8": 12,
+      "9": 14
+     },
+     "spellcasting_ability": "cha",
+     "subclass_feature_levels": [
+      6,
+      14
+     ],
+     "subclass_level": 3
+    },
+    "name": "Bard",
+    "not_compared": {
+     "spell_slots": "The corpus holds a spellcasting progression, not slot counts; the slot counts are the engine's tables (see BACKLOG.md)."
+    },
+    "srd_page": 31,
+    "status": "verified"
+   },
+   "cleric": {
+    "compared": {
+     "asi_levels": [
+      4,
+      8,
+      12,
+      16,
+      19
+     ],
+     "feature_levels.Blessed Strikes": [
+      7
+     ],
+     "feature_levels.Channel Divinity": [
+      2
+     ],
+     "feature_levels.Divine Intervention": [
+      10
+     ],
+     "feature_levels.Divine Order": [
+      1
+     ],
+     "feature_levels.Greater Divine Intervention": [
+      20
+     ],
+     "feature_levels.Improved Blessed Strikes": [
+      14
+     ],
+     "feature_levels.Sear Undead": [
+      5
+     ],
+     "feature_levels.Spellcasting": [
+      1
+     ],
+     "hit_die": "d8",
+     "primary_ability": {
+      "all": false,
+      "value": [
+       "wis"
+      ]
+     },
+     "progression": "full",
+     "saving_throws": [
+      "cha",
+      "wis"
+     ],
+     "scale.Cantrips Known": {
+      "1": 3,
+      "10": 5,
+      "11": 5,
+      "12": 5,
+      "13": 5,
+      "14": 5,
+      "15": 5,
+      "16": 5,
+      "17": 5,
+      "18": 5,
+      "19": 5,
+      "2": 3,
+      "20": 5,
+      "3": 3,
+      "4": 4,
+      "5": 4,
+      "6": 4,
+      "7": 4,
+      "8": 4,
+      "9": 4
+     },
+     "scale.Channel Divinity Uses": {
+      "1": null,
+      "10": 3,
+      "11": 3,
+      "12": 3,
+      "13": 3,
+      "14": 3,
+      "15": 3,
+      "16": 3,
+      "17": 3,
+      "18": 4,
+      "19": 4,
+      "2": 2,
+      "20": 4,
+      "3": 2,
+      "4": 2,
+      "5": 2,
+      "6": 3,
+      "7": 3,
+      "8": 3,
+      "9": 3
+     },
+     "scale.Divine Strike": {
+      "1": null,
+      "10": "d8",
+      "11": "d8",
+      "12": "d8",
+      "13": "d8",
+      "14": "2d8",
+      "15": "2d8",
+      "16": "2d8",
+      "17": "2d8",
+      "18": "2d8",
+      "19": "2d8",
+      "2": null,
+      "20": "2d8",
+      "3": null,
+      "4": null,
+      "5": null,
+      "6": null,
+      "7": "d8",
+      "8": "d8",
+      "9": "d8"
+     },
+     "scale.Max Prepared Spells": {
+      "1": 4,
+      "10": 15,
+      "11": 16,
+      "12": 16,
+      "13": 17,
+      "14": 17,
+      "15": 18,
+      "16": 18,
+      "17": 19,
+      "18": 20,
+      "19": 21,
+      "2": 5,
+      "20": 22,
+      "3": 6,
+      "4": 7,
+      "5": 9,
+      "6": 10,
+      "7": 11,
+      "8": 12,
+      "9": 14
+     },
+     "spellcasting_ability": "wis",
+     "subclass_feature_levels": [
+      6,
+      17
+     ],
+     "subclass_level": 3
+    },
+    "name": "Cleric",
+    "not_compared": {
+     "spell_slots": "The corpus holds a spellcasting progression, not slot counts; the slot counts are the engine's tables (see BACKLOG.md)."
+    },
+    "read_by_hand": {
+     "scale.Divine Strike": [
+      "Level 7: Blessed Strikes",
+      "you can cause the target to take an extra 1d8 Necrotic or Radiant damage (your choice)",
+      "Level 14: Improved Blessed Strikes",
+      "The extra damage of your Divine Strike increases to 2d8."
+     ]
+    },
+    "srd_page": 36,
+    "status": "verified"
+   },
+   "druid": {
+    "compared": {
+     "asi_levels": [
+      4,
+      8,
+      12,
+      16,
+      19
+     ],
+     "feature_levels.Archdruid": [
+      20
+     ],
+     "feature_levels.Beast Spells": [
+      18
+     ],
+     "feature_levels.Druidic": [
+      1
+     ],
+     "feature_levels.Elemental Fury": [
+      7
+     ],
+     "feature_levels.Improved Elemental Fury": [
+      15
+     ],
+     "feature_levels.Primal Order": [
+      1
+     ],
+     "feature_levels.Spellcasting": [
+      1
+     ],
+     "feature_levels.Wild Companion": [
+      2
+     ],
+     "feature_levels.Wild Resurgence": [
+      5
+     ],
+     "feature_levels.Wild Shape": [
+      2
+     ],
+     "hit_die": "d8",
+     "primary_ability": {
+      "all": false,
+      "value": [
+       "wis"
+      ]
+     },
+     "progression": "full",
+     "saving_throws": [
+      "int",
+      "wis"
+     ],
+     "scale.Cantrips Known": {
+      "1": 2,
+      "10": 4,
+      "11": 4,
+      "12": 4,
+      "13": 4,
+      "14": 4,
+      "15": 4,
+      "16": 4,
+      "17": 4,
+      "18": 4,
+      "19": 4,
+      "2": 2,
+      "20": 4,
+      "3": 2,
+      "4": 3,
+      "5": 3,
+      "6": 3,
+      "7": 3,
+      "8": 3,
+      "9": 3
+     },
+     "scale.Elemental Fury": {
+      "1": null,
+      "10": "d8",
+      "11": "d8",
+      "12": "d8",
+      "13": "d8",
+      "14": "d8",
+      "15": "2d8",
+      "16": "2d8",
+      "17": "2d8",
+      "18": "2d8",
+      "19": "2d8",
+      "2": null,
+      "20": "2d8",
+      "3": null,
+      "4": null,
+      "5": null,
+      "6": null,
+      "7": "d8",
+      "8": "d8",
+      "9": "d8"
+     },
+     "scale.Known Forms": {
+      "1": null,
+      "10": 8,
+      "11": 8,
+      "12": 8,
+      "13": 8,
+      "14": 8,
+      "15": 8,
+      "16": 8,
+      "17": 8,
+      "18": 8,
+      "19": 8,
+      "2": 4,
+      "20": 8,
+      "3": 4,
+      "4": 6,
+      "5": 6,
+      "6": 6,
+      "7": 6,
+      "8": 8,
+      "9": 8
+     },
+     "scale.Max Prepared Spells": {
+      "1": 4,
+      "10": 15,
+      "11": 16,
+      "12": 16,
+      "13": 17,
+      "14": 17,
+      "15": 18,
+      "16": 18,
+      "17": 19,
+      "18": 20,
+      "19": 21,
+      "2": 5,
+      "20": 22,
+      "3": 6,
+      "4": 7,
+      "5": 9,
+      "6": 10,
+      "7": 11,
+      "8": 12,
+      "9": 14
+     },
+     "scale.Wild Shape CR": {
+      "1": null,
+      "10": 1,
+      "11": 1,
+      "12": 1,
+      "13": 1,
+      "14": 1,
+      "15": 1,
+      "16": 1,
+      "17": 1,
+      "18": 1,
+      "19": 1,
+      "2": 0.25,
+      "20": 1,
+      "3": 0.25,
+      "4": 0.5,
+      "5": 0.5,
+      "6": 0.5,
+      "7": 0.5,
+      "8": 1,
+      "9": 1
+     },
+     "scale.Wild Shape Uses": {
+      "1": null,
+      "10": 3,
+      "11": 3,
+      "12": 3,
+      "13": 3,
+      "14": 3,
+      "15": 3,
+      "16": 3,
+      "17": 4,
+      "18": 4,
+      "19": 4,
+      "2": 2,
+      "20": 4,
+      "3": 2,
+      "4": 2,
+      "5": 2,
+      "6": 3,
+      "7": 3,
+      "8": 3,
+      "9": 3
+     },
+     "spellcasting_ability": "wis",
+     "subclass_feature_levels": [
+      6,
+      10,
+      14
+     ],
+     "subclass_level": 3
+    },
+    "name": "Druid",
+    "not_compared": {
+     "spell_slots": "The corpus holds a spellcasting progression, not slot counts; the slot counts are the engine's tables (see BACKLOG.md)."
+    },
+    "read_by_hand": {
+     "scale.Elemental Fury": [
+      "Level 7: Elemental Fury",
+      "you can cause the target to take an extra 1d8 Cold, Fire, Lightning, or Thunder damage (choose when you hit)",
+      "Level 15: Improved Elemental Fury",
+      "The extra damage of your Primal Strike increases to 2d8."
+     ],
+     "scale.Known Forms": [
+      "Beast Shapes Druid Level Known Forms Max CR Fly Speed 2 4 1/4 No 4 6 1/2 No 8 8 1 Yes"
+     ],
+     "scale.Wild Shape CR": [
+      "Beast Shapes Druid Level Known Forms Max CR Fly Speed 2 4 1/4 No 4 6 1/2 No 8 8 1 Yes"
+     ]
+    },
+    "srd_page": 41,
+    "status": "verified"
+   },
+   "fighter": {
+    "compared": {
+     "asi_levels": [
+      4,
+      6,
+      8,
+      12,
+      14,
+      16,
+      19
+     ],
+     "feature_levels.Action Surge": [
+      2
+     ],
+     "feature_levels.Extra Attack": [
+      5
+     ],
+     "feature_levels.Fighting Style": [
+      1
+     ],
+     "feature_levels.Indomitable": [
+      9
+     ],
+     "feature_levels.Second Wind": [
+      1
+     ],
+     "feature_levels.Studied Attacks": [
+      13
+     ],
+     "feature_levels.Tactical Master": [
+      9
+     ],
+     "feature_levels.Tactical Mind": [
+      2
+     ],
+     "feature_levels.Tactical Shift": [
+      5
+     ],
+     "feature_levels.Three Extra Attacks": [
+      20
+     ],
+     "feature_levels.Two Extra Attacks": [
+      11
+     ],
+     "feature_levels.Weapon Mastery": [
+      1
+     ],
+     "hit_die": "d10",
+     "primary_ability": {
+      "all": false,
+      "value": [
+       "dex",
+       "str"
+      ]
+     },
+     "progression": "none",
+     "saving_throws": [
+      "con",
+      "str"
+     ],
+     "scale.Action Surge": {
+      "1": null,
+      "10": 1,
+      "11": 1,
+      "12": 1,
+      "13": 1,
+      "14": 1,
+      "15": 1,
+      "16": 1,
+      "17": 2,
+      "18": 2,
+      "19": 2,
+      "2": 1,
+      "20": 2,
+      "3": 1,
+      "4": 1,
+      "5": 1,
+      "6": 1,
+      "7": 1,
+      "8": 1,
+      "9": 1
+     },
+     "scale.Indomitable": {
+      "1": null,
+      "10": 1,
+      "11": 1,
+      "12": 1,
+      "13": 2,
+      "14": 2,
+      "15": 2,
+      "16": 2,
+      "17": 3,
+      "18": 3,
+      "19": 3,
+      "2": null,
+      "20": 3,
+      "3": null,
+      "4": null,
+      "5": null,
+      "6": null,
+      "7": null,
+      "8": null,
+      "9": 1
+     },
+     "scale.Second Wind": {
+      "1": 2,
+      "10": 4,
+      "11": 4,
+      "12": 4,
+      "13": 4,
+      "14": 4,
+      "15": 4,
+      "16": 4,
+      "17": 4,
+      "18": 4,
+      "19": 4,
+      "2": 2,
+      "20": 4,
+      "3": 2,
+      "4": 3,
+      "5": 3,
+      "6": 3,
+      "7": 3,
+      "8": 3,
+      "9": 3
+     },
+     "scale.Weapon Masteries Known": {
+      "1": 3,
+      "10": 5,
+      "11": 5,
+      "12": 5,
+      "13": 5,
+      "14": 5,
+      "15": 5,
+      "16": 6,
+      "17": 6,
+      "18": 6,
+      "19": 6,
+      "2": 3,
+      "20": 6,
+      "3": 3,
+      "4": 4,
+      "5": 4,
+      "6": 4,
+      "7": 4,
+      "8": 4,
+      "9": 4
+     },
+     "subclass_feature_levels": [
+      7,
+      10,
+      15,
+      18
+     ],
+     "subclass_level": 3
+    },
+    "name": "Fighter",
+    "srd_page": 47,
+    "status": "verified"
+   },
+   "monk": {
+    "changes": [
+     {
+      "field": "scale.Focus Points",
+      "from": {
+       "1": 1
+      },
+      "srd": [
+       "2 +2 Monk's Focus, Unarmored Movement, Uncanny Metabolism 1d6 2 +10 ft."
+      ],
+      "to": {
+       "1": null
+      }
+     }
+    ],
+    "compared": {
+     "asi_levels": [
+      4,
+      8,
+      12,
+      16,
+      19
+     ],
+     "feature_levels.Acrobatic Movement": [
+      9
+     ],
+     "feature_levels.Body and Mind": [
+      20
+     ],
+     "feature_levels.Deflect Attacks": [
+      3
+     ],
+     "feature_levels.Deflect Energy": [
+      13
+     ],
+     "feature_levels.Disciplined Survivor": [
+      14
+     ],
+     "feature_levels.Empowered Strikes": [
+      6
+     ],
+     "feature_levels.Evasion": [
+      7
+     ],
+     "feature_levels.Extra Attack": [
+      5
+     ],
+     "feature_levels.Heightened Focus": [
+      10
+     ],
+     "feature_levels.Martial Arts": [
+      1
+     ],
+     "feature_levels.Monk's Focus": [
+      2
+     ],
+     "feature_levels.Perfect Focus": [
+      15
+     ],
+     "feature_levels.Self-Restoration": [
+      10
+     ],
+     "feature_levels.Slow Fall": [
+      4
+     ],
+     "feature_levels.Stunning Strike": [
+      5
+     ],
+     "feature_levels.Superior Defense": [
+      18
+     ],
+     "feature_levels.Unarmored Defense": [
+      1
+     ],
+     "feature_levels.Unarmored Movement": [
+      2
+     ],
+     "feature_levels.Uncanny Metabolism": [
+      2
+     ],
+     "hit_die": "d8",
+     "primary_ability": {
+      "all": true,
+      "value": [
+       "dex",
+       "wis"
+      ]
+     },
+     "progression": "none",
+     "saving_throws": [
+      "dex",
+      "str"
+     ],
+     "scale.Focus Points": {
+      "1": null,
+      "10": 10,
+      "11": 11,
+      "12": 12,
+      "13": 13,
+      "14": 14,
+      "15": 15,
+      "16": 16,
+      "17": 17,
+      "18": 18,
+      "19": 19,
+      "2": 2,
+      "20": 20,
+      "3": 3,
+      "4": 4,
+      "5": 5,
+      "6": 6,
+      "7": 7,
+      "8": 8,
+      "9": 9
+     },
+     "scale.Martial Arts Die": {
+      "1": "d6",
+      "10": "d8",
+      "11": "d10",
+      "12": "d10",
+      "13": "d10",
+      "14": "d10",
+      "15": "d10",
+      "16": "d10",
+      "17": "d12",
+      "18": "d12",
+      "19": "d12",
+      "2": "d6",
+      "20": "d12",
+      "3": "d6",
+      "4": "d6",
+      "5": "d8",
+      "6": "d8",
+      "7": "d8",
+      "8": "d8",
+      "9": "d8"
+     },
+     "scale.Unarmored Movement": {
+      "1": null,
+      "10": 20,
+      "11": 20,
+      "12": 20,
+      "13": 20,
+      "14": 25,
+      "15": 25,
+      "16": 25,
+      "17": 25,
+      "18": 30,
+      "19": 30,
+      "2": 10,
+      "20": 30,
+      "3": 10,
+      "4": 10,
+      "5": 10,
+      "6": 15,
+      "7": 15,
+      "8": 15,
+      "9": 15
+     },
+     "subclass_feature_levels": [
+      6,
+      11,
+      17
+     ],
+     "subclass_level": 3
+    },
+    "differences": {
+     "feature_levels.Self-Restoration": {
+      "corpus": null,
+      "srd": [
+       10
+      ]
+     }
+    },
+    "divergence": {
+     "fields": [
+      "feature_levels.Self-Restoration"
+     ],
+     "issue": "https://github.com/n1ffl3r/tapestria-nat20/issues/16",
+     "reason": "The SRD lists Self-Restoration at Monk level 10. The pinned Foundry pack grants it but ships no document for it, so regen skips the grant and the corpus has no such feature."
+    },
+    "name": "Monk",
+    "srd_page": 49,
+    "status": "divergence"
+   },
+   "paladin": {
+    "compared": {
+     "asi_levels": [
+      4,
+      8,
+      12,
+      16,
+      19
+     ],
+     "feature_levels.Abjure Foes": [
+      9
+     ],
+     "feature_levels.Aura Expansion": [
+      18
+     ],
+     "feature_levels.Aura of Courage": [
+      10
+     ],
+     "feature_levels.Aura of Protection": [
+      6
+     ],
+     "feature_levels.Channel Divinity": [
+      3
+     ],
+     "feature_levels.Extra Attack": [
+      5
+     ],
+     "feature_levels.Faithful Steed": [
+      5
+     ],
+     "feature_levels.Fighting Style": [
+      2
+     ],
+     "feature_levels.Lay on Hands": [
+      1
+     ],
+     "feature_levels.Paladin's Smite": [
+      2
+     ],
+     "feature_levels.Radiant Strikes": [
+      11
+     ],
+     "feature_levels.Restoring Touch": [
+      14
+     ],
+     "feature_levels.Spellcasting": [
+      1
+     ],
+     "feature_levels.Weapon Mastery": [
+      1
+     ],
+     "hit_die": "d10",
+     "primary_ability": {
+      "all": true,
+      "value": [
+       "cha",
+       "str"
+      ]
+     },
+     "progression": "half",
+     "saving_throws": [
+      "cha",
+      "wis"
+     ],
+     "scale.Aura Distance": {
+      "1": null,
+      "10": 10,
+      "11": 10,
+      "12": 10,
+      "13": 10,
+      "14": 10,
+      "15": 10,
+      "16": 10,
+      "17": 10,
+      "18": 30,
+      "19": 30,
+      "2": null,
+      "20": 30,
+      "3": null,
+      "4": null,
+      "5": null,
+      "6": 10,
+      "7": 10,
+      "8": 10,
+      "9": 10
+     },
+     "scale.Channel Divinity Uses": {
+      "1": null,
+      "10": 2,
+      "11": 3,
+      "12": 3,
+      "13": 3,
+      "14": 3,
+      "15": 3,
+      "16": 3,
+      "17": 3,
+      "18": 3,
+      "19": 3,
+      "2": null,
+      "20": 3,
+      "3": 2,
+      "4": 2,
+      "5": 2,
+      "6": 2,
+      "7": 2,
+      "8": 2,
+      "9": 2
+     },
+     "scale.Max Prepared Spells": {
+      "1": 2,
+      "10": 9,
+      "11": 10,
+      "12": 10,
+      "13": 11,
+      "14": 11,
+      "15": 12,
+      "16": 12,
+      "17": 14,
+      "18": 14,
+      "19": 15,
+      "2": 3,
+      "20": 15,
+      "3": 4,
+      "4": 5,
+      "5": 6,
+      "6": 6,
+      "7": 7,
+      "8": 7,
+      "9": 9
+     },
+     "spellcasting_ability": "cha",
+     "subclass_feature_levels": [
+      7,
+      15,
+      20
+     ],
+     "subclass_level": 3
+    },
+    "name": "Paladin",
+    "not_compared": {
+     "spell_slots": "The corpus holds a spellcasting progression, not slot counts; the slot counts are the engine's tables (see BACKLOG.md)."
+    },
+    "read_by_hand": {
+     "scale.Aura Distance": [
+      "Level 6: Aura of Protection You radiate a protective, unseeable aura in a 10-foot Emanation that originates from you.",
+      "Level 18: Aura Expansion Your Aura of Protection is now a 30-foot Emanation."
+     ]
+    },
+    "srd_page": 53,
+    "status": "verified"
+   },
+   "ranger": {
+    "compared": {
+     "asi_levels": [
+      4,
+      8,
+      12,
+      16,
+      19
+     ],
+     "feature_levels.Deft Explorer": [
+      2
+     ],
+     "feature_levels.Expertise": [
+      9
+     ],
+     "feature_levels.Extra Attack": [
+      5
+     ],
+     "feature_levels.Favored Enemy": [
+      1
+     ],
+     "feature_levels.Feral Senses": [
+      18
+     ],
+     "feature_levels.Fighting Style": [
+      2
+     ],
+     "feature_levels.Foe Slayer": [
+      20
+     ],
+     "feature_levels.Nature's Veil": [
+      14
+     ],
+     "feature_levels.Precise Hunter": [
+      17
+     ],
+     "feature_levels.Relentless Hunter": [
+      13
+     ],
+     "feature_levels.Roving": [
+      6
+     ],
+     "feature_levels.Spellcasting": [
+      1
+     ],
+     "feature_levels.Tireless": [
+      10
+     ],
+     "feature_levels.Weapon Mastery": [
+      1
+     ],
+     "hit_die": "d10",
+     "primary_ability": {
+      "all": true,
+      "value": [
+       "dex",
+       "wis"
+      ]
+     },
+     "progression": "half",
+     "saving_throws": [
+      "dex",
+      "str"
+     ],
+     "scale.Favored Enemy": {
+      "1": 2,
+      "10": 4,
+      "11": 4,
+      "12": 4,
+      "13": 5,
+      "14": 5,
+      "15": 5,
+      "16": 5,
+      "17": 6,
+      "18": 6,
+      "19": 6,
+      "2": 2,
+      "20": 6,
+      "3": 2,
+      "4": 2,
+      "5": 3,
+      "6": 3,
+      "7": 3,
+      "8": 3,
+      "9": 4
+     },
+     "scale.Hunter's Mark Damage": {
+      "1": "d6",
+      "10": "d6",
+      "11": "d6",
+      "12": "d6",
+      "13": "d6",
+      "14": "d6",
+      "15": "d6",
+      "16": "d6",
+      "17": "d6",
+      "18": "d6",
+      "19": "d6",
+      "2": "d6",
+      "20": "d10",
+      "3": "d6",
+      "4": "d6",
+      "5": "d6",
+      "6": "d6",
+      "7": "d6",
+      "8": "d6",
+      "9": "d6"
+     },
+     "scale.Max Prepared Spells": {
+      "1": 2,
+      "10": 9,
+      "11": 10,
+      "12": 10,
+      "13": 11,
+      "14": 11,
+      "15": 12,
+      "16": 12,
+      "17": 14,
+      "18": 14,
+      "19": 15,
+      "2": 3,
+      "20": 15,
+      "3": 4,
+      "4": 5,
+      "5": 6,
+      "6": 6,
+      "7": 7,
+      "8": 7,
+      "9": 9
+     },
+     "spellcasting_ability": "wis",
+     "subclass_feature_levels": [
+      7,
+      11,
+      15
+     ],
+     "subclass_level": 3
+    },
+    "name": "Ranger",
+    "not_compared": {
+     "spell_slots": "The corpus holds a spellcasting progression, not slot counts; the slot counts are the engine's tables (see BACKLOG.md)."
+    },
+    "read_by_hand": {
+     "scale.Hunter's Mark Damage": [
+      "Level 20: Foe Slayer The damage die of your Hunter's Mark is a d10 rather than a d6."
+     ]
+    },
+    "srd_page": 57,
+    "status": "verified"
+   },
+   "rogue": {
+    "compared": {
+     "asi_levels": [
+      4,
+      8,
+      10,
+      12,
+      16,
+      19
+     ],
+     "feature_levels.Cunning Action": [
+      2
+     ],
+     "feature_levels.Cunning Strike": [
+      5
+     ],
+     "feature_levels.Devious Strikes": [
+      14
+     ],
+     "feature_levels.Elusive": [
+      18
+     ],
+     "feature_levels.Evasion": [
+      7
+     ],
+     "feature_levels.Expertise": [
+      1
+     ],
+     "feature_levels.Improved Cunning Strike": [
+      11
+     ],
+     "feature_levels.Reliable Talent": [
+      7
+     ],
+     "feature_levels.Slippery Mind": [
+      15
+     ],
+     "feature_levels.Sneak Attack": [
+      1
+     ],
+     "feature_levels.Steady Aim": [
+      3
+     ],
+     "feature_levels.Stroke of Luck": [
+      20
+     ],
+     "feature_levels.Thieves' Cant": [
+      1
+     ],
+     "feature_levels.Uncanny Dodge": [
+      5
+     ],
+     "feature_levels.Weapon Mastery": [
+      1
+     ],
+     "hit_die": "d8",
+     "primary_ability": {
+      "all": false,
+      "value": [
+       "dex"
+      ]
+     },
+     "progression": "none",
+     "saving_throws": [
+      "dex",
+      "int"
+     ],
+     "scale.Sneak Attack": {
+      "1": "d6",
+      "10": "5d6",
+      "11": "6d6",
+      "12": "6d6",
+      "13": "7d6",
+      "14": "7d6",
+      "15": "8d6",
+      "16": "8d6",
+      "17": "9d6",
+      "18": "9d6",
+      "19": "10d6",
+      "2": "d6",
+      "20": "10d6",
+      "3": "2d6",
+      "4": "2d6",
+      "5": "3d6",
+      "6": "3d6",
+      "7": "4d6",
+      "8": "4d6",
+      "9": "5d6"
+     },
+     "subclass_feature_levels": [
+      9,
+      13,
+      17
+     ],
+     "subclass_level": 3
+    },
+    "name": "Rogue",
+    "srd_page": 61,
+    "status": "verified"
+   },
+   "sorcerer": {
+    "compared": {
+     "asi_levels": [
+      4,
+      8,
+      12,
+      16,
+      19
+     ],
+     "feature_levels.Arcane Apotheosis": [
+      20
+     ],
+     "feature_levels.Font of Magic": [
+      2
+     ],
+     "feature_levels.Innate Sorcery": [
+      1
+     ],
+     "feature_levels.Metamagic": [
+      2
+     ],
+     "feature_levels.Sorcerous Restoration": [
+      5
+     ],
+     "feature_levels.Sorcery Incarnate": [
+      7
+     ],
+     "feature_levels.Spellcasting": [
+      1
+     ],
+     "hit_die": "d6",
+     "primary_ability": {
+      "all": false,
+      "value": [
+       "cha"
+      ]
+     },
+     "progression": "full",
+     "saving_throws": [
+      "cha",
+      "con"
+     ],
+     "scale.Cantrips Known": {
+      "1": 4,
+      "10": 6,
+      "11": 6,
+      "12": 6,
+      "13": 6,
+      "14": 6,
+      "15": 6,
+      "16": 6,
+      "17": 6,
+      "18": 6,
+      "19": 6,
+      "2": 4,
+      "20": 6,
+      "3": 4,
+      "4": 5,
+      "5": 5,
+      "6": 5,
+      "7": 5,
+      "8": 5,
+      "9": 5
+     },
+     "scale.Max Prepared Spells": {
+      "1": 2,
+      "10": 15,
+      "11": 16,
+      "12": 16,
+      "13": 17,
+      "14": 17,
+      "15": 18,
+      "16": 18,
+      "17": 19,
+      "18": 20,
+      "19": 21,
+      "2": 4,
+      "20": 22,
+      "3": 6,
+      "4": 7,
+      "5": 9,
+      "6": 10,
+      "7": 11,
+      "8": 12,
+      "9": 14
+     },
+     "scale.Sorcery Points": {
+      "1": null,
+      "10": 10,
+      "11": 11,
+      "12": 12,
+      "13": 13,
+      "14": 14,
+      "15": 15,
+      "16": 16,
+      "17": 17,
+      "18": 18,
+      "19": 19,
+      "2": 2,
+      "20": 20,
+      "3": 3,
+      "4": 4,
+      "5": 5,
+      "6": 6,
+      "7": 7,
+      "8": 8,
+      "9": 9
+     },
+     "spellcasting_ability": "cha",
+     "subclass_feature_levels": [
+      6,
+      14,
+      18
+     ],
+     "subclass_level": 3
+    },
+    "name": "Sorcerer",
+    "not_compared": {
+     "spell_slots": "The corpus holds a spellcasting progression, not slot counts; the slot counts are the engine's tables (see BACKLOG.md)."
+    },
+    "srd_page": 64,
+    "status": "verified"
+   },
+   "warlock": {
+    "compared": {
+     "asi_levels": [
+      4,
+      8,
+      12,
+      16,
+      19
+     ],
+     "feature_levels.Contact Patron": [
+      9
+     ],
+     "feature_levels.Eldritch Invocations": [
+      1
+     ],
+     "feature_levels.Eldritch Master": [
+      20
+     ],
+     "feature_levels.Magical Cunning": [
+      2
+     ],
+     "feature_levels.Mystic Arcanum": [
+      11
+     ],
+     "feature_levels.Pact Magic": [
+      1
+     ],
+     "hit_die": "d8",
+     "primary_ability": {
+      "all": false,
+      "value": [
+       "cha"
+      ]
+     },
+     "progression": "pact",
+     "saving_throws": [
+      "cha",
+      "wis"
+     ],
+     "scale.Cantrips Known": {
+      "1": 2,
+      "10": 4,
+      "11": 4,
+      "12": 4,
+      "13": 4,
+      "14": 4,
+      "15": 4,
+      "16": 4,
+      "17": 4,
+      "18": 4,
+      "19": 4,
+      "2": 2,
+      "20": 4,
+      "3": 2,
+      "4": 3,
+      "5": 3,
+      "6": 3,
+      "7": 3,
+      "8": 3,
+      "9": 3
+     },
+     "scale.Eldritch Invocations Known": {
+      "1": 1,
+      "10": 7,
+      "11": 7,
+      "12": 8,
+      "13": 8,
+      "14": 8,
+      "15": 9,
+      "16": 9,
+      "17": 9,
+      "18": 10,
+      "19": 10,
+      "2": 3,
+      "20": 10,
+      "3": 3,
+      "4": 3,
+      "5": 5,
+      "6": 5,
+      "7": 6,
+      "8": 6,
+      "9": 7
+     },
+     "scale.Max Pact Magic Spells": {
+      "1": 2,
+      "10": 10,
+      "11": 11,
+      "12": 11,
+      "13": 12,
+      "14": 12,
+      "15": 13,
+      "16": 13,
+      "17": 14,
+      "18": 14,
+      "19": 15,
+      "2": 3,
+      "20": 15,
+      "3": 4,
+      "4": 5,
+      "5": 6,
+      "6": 7,
+      "7": 8,
+      "8": 9,
+      "9": 10
+     },
+     "spellcasting_ability": "cha",
+     "subclass_feature_levels": [
+      6,
+      10,
+      14
+     ],
+     "subclass_level": 3
+    },
+    "name": "Warlock",
+    "not_compared": {
+     "spell_slots": "The corpus holds a spellcasting progression, not slot counts; the slot counts are the engine's tables (see BACKLOG.md)."
+    },
+    "srd_page": 70,
+    "status": "verified"
+   },
+   "wizard": {
+    "compared": {
+     "asi_levels": [
+      4,
+      8,
+      12,
+      16,
+      19
+     ],
+     "feature_levels.Arcane Recovery": [
+      1
+     ],
+     "feature_levels.Memorize Spell": [
+      5
+     ],
+     "feature_levels.Ritual Adept": [
+      1
+     ],
+     "feature_levels.Scholar": [
+      2
+     ],
+     "feature_levels.Signature Spells": [
+      20
+     ],
+     "feature_levels.Spell Mastery": [
+      18
+     ],
+     "feature_levels.Spellcasting": [
+      1
+     ],
+     "hit_die": "d6",
+     "primary_ability": {
+      "all": false,
+      "value": [
+       "int"
+      ]
+     },
+     "progression": "full",
+     "saving_throws": [
+      "int",
+      "wis"
+     ],
+     "scale.Cantrips Known": {
+      "1": 3,
+      "10": 5,
+      "11": 5,
+      "12": 5,
+      "13": 5,
+      "14": 5,
+      "15": 5,
+      "16": 5,
+      "17": 5,
+      "18": 5,
+      "19": 5,
+      "2": 3,
+      "20": 5,
+      "3": 3,
+      "4": 4,
+      "5": 4,
+      "6": 4,
+      "7": 4,
+      "8": 4,
+      "9": 4
+     },
+     "scale.Max Prepared Spells": {
+      "1": 4,
+      "10": 15,
+      "11": 16,
+      "12": 16,
+      "13": 17,
+      "14": 18,
+      "15": 19,
+      "16": 21,
+      "17": 22,
+      "18": 23,
+      "19": 24,
+      "2": 5,
+      "20": 25,
+      "3": 6,
+      "4": 7,
+      "5": 9,
+      "6": 10,
+      "7": 11,
+      "8": 12,
+      "9": 14
+     },
+     "spellcasting_ability": "int",
+     "subclass_feature_levels": [
+      6,
+      10,
+      14
+     ],
+     "subclass_level": 3
+    },
+    "name": "Wizard",
+    "not_compared": {
+     "spell_slots": "The corpus holds a spellcasting progression, not slot counts; the slot counts are the engine's tables (see BACKLOG.md)."
+    },
+    "srd_page": 77,
+    "status": "verified"
+   }
+  },
   "items": {
    "1-wand-of-the-war-mage": {
     "compared": {
@@ -56570,6 +60508,294 @@
     },
     "name": "Zone of Truth",
     "srd_page": 175,
+    "status": "verified"
+   }
+  },
+  "subclasses": {
+   "berserker": {
+    "compared": {
+     "feature_levels.Frenzy": [
+      3
+     ],
+     "feature_levels.Intimidating Presence": [
+      14
+     ],
+     "feature_levels.Mindless Rage": [
+      6
+     ],
+     "feature_levels.Retaliation": [
+      10
+     ]
+    },
+    "name": "Path of the Berserker",
+    "srd_page": 30,
+    "status": "verified"
+   },
+   "champion": {
+    "compared": {
+     "feature_levels.Additional Fighting Style": [
+      7
+     ],
+     "feature_levels.Heroic Warrior": [
+      10
+     ],
+     "feature_levels.Improved Critical": [
+      3
+     ],
+     "feature_levels.Remarkable Athlete": [
+      3
+     ],
+     "feature_levels.Superior Critical": [
+      15
+     ],
+     "feature_levels.Survivor": [
+      18
+     ]
+    },
+    "name": "Champion",
+    "srd_page": 49,
+    "status": "verified"
+   },
+   "devotion": {
+    "compared": {
+     "feature_levels.Aura of Devotion": [
+      7
+     ],
+     "feature_levels.Holy Nimbus": [
+      20
+     ],
+     "feature_levels.Oath of Devotion Spells": [
+      3
+     ],
+     "feature_levels.Sacred Weapon": [
+      3
+     ],
+     "feature_levels.Smite of Protection": [
+      15
+     ]
+    },
+    "name": "Oath of Devotion",
+    "srd_page": 56,
+    "status": "verified"
+   },
+   "draconic": {
+    "compared": {
+     "feature_levels.Draconic Resilience": [
+      3
+     ],
+     "feature_levels.Draconic Spells": [
+      3
+     ],
+     "feature_levels.Dragon Companion": [
+      18
+     ],
+     "feature_levels.Dragon Wings": [
+      14
+     ],
+     "feature_levels.Elemental Affinity": [
+      6
+     ]
+    },
+    "name": "Draconic Sorcery",
+    "srd_page": 69,
+    "status": "verified"
+   },
+   "evoker": {
+    "compared": {
+     "feature_levels.Empowered Evocation": [
+      10
+     ],
+     "feature_levels.Evocation Savant": [
+      3
+     ],
+     "feature_levels.Overchannel": [
+      14
+     ],
+     "feature_levels.Potent Cantrip": [
+      3
+     ],
+     "feature_levels.Sculpt Spells": [
+      6
+     ]
+    },
+    "name": "Evoker",
+    "srd_page": 82,
+    "status": "verified"
+   },
+   "fiend": {
+    "compared": {
+     "feature_levels.Dark One's Blessing": [
+      3
+     ],
+     "feature_levels.Dark One's Own Luck": [
+      6
+     ],
+     "feature_levels.Fiend Spells": [
+      3
+     ],
+     "feature_levels.Fiendish Resilience": [
+      10
+     ],
+     "feature_levels.Hurl Through Hell": [
+      14
+     ]
+    },
+    "name": "Fiend Patron",
+    "srd_page": 76,
+    "status": "verified"
+   },
+   "hand": {
+    "compared": {
+     "feature_levels.Fleet Step": [
+      11
+     ],
+     "feature_levels.Open Hand Technique": [
+      3
+     ],
+     "feature_levels.Quivering Palm": [
+      17
+     ],
+     "feature_levels.Wholeness of Body": [
+      6
+     ]
+    },
+    "name": "Warrior of the Open Hand",
+    "srd_page": 52,
+    "status": "verified"
+   },
+   "hunter": {
+    "compared": {
+     "feature_levels.Defensive Tactics": [
+      7
+     ],
+     "feature_levels.Hunter's Lore": [
+      3
+     ],
+     "feature_levels.Hunter's Prey": [
+      3
+     ],
+     "feature_levels.Superior Hunter's Defense": [
+      15
+     ],
+     "feature_levels.Superior Hunter's Prey": [
+      11
+     ]
+    },
+    "name": "Hunter",
+    "srd_page": 61,
+    "status": "verified"
+   },
+   "land": {
+    "compared": {
+     "feature_levels.Circle of the Land Spells": [
+      3
+     ],
+     "feature_levels.Land's Aid": [
+      3
+     ],
+     "feature_levels.Natural Recovery": [
+      6
+     ],
+     "feature_levels.Nature's Sanctuary": [
+      14
+     ],
+     "feature_levels.Nature's Ward": [
+      10
+     ],
+     "scale.Lands Aid Damage": {
+      "1": null,
+      "10": "3d6",
+      "11": "3d6",
+      "12": "3d6",
+      "13": "3d6",
+      "14": "4d6",
+      "15": "4d6",
+      "16": "4d6",
+      "17": "4d6",
+      "18": "4d6",
+      "19": "4d6",
+      "2": null,
+      "20": "4d6",
+      "3": "2d6",
+      "4": "2d6",
+      "5": "2d6",
+      "6": "2d6",
+      "7": "2d6",
+      "8": "2d6",
+      "9": "2d6"
+     }
+    },
+    "name": "Circle of the Land",
+    "read_by_hand": {
+     "scale.Lands Aid Damage": [
+      "taking 2d6 Necrotic damage on a failed save",
+      "The damage and healing increase by 1d6 when you reach Druid levels 10 (3d6) and 14 (4d6)."
+     ]
+    },
+    "srd_page": 46,
+    "status": "verified"
+   },
+   "life": {
+    "compared": {
+     "feature_levels.Blessed Healer": [
+      6
+     ],
+     "feature_levels.Disciple of Life": [
+      3
+     ],
+     "feature_levels.Life Domain Spells": [
+      3
+     ],
+     "feature_levels.Preserve Life": [
+      3
+     ],
+     "feature_levels.Supreme Healing": [
+      17
+     ]
+    },
+    "name": "Life Domain",
+    "srd_page": 40,
+    "status": "verified"
+   },
+   "lore": {
+    "compared": {
+     "feature_levels.Bonus Proficiencies": [
+      3
+     ],
+     "feature_levels.Cutting Words": [
+      3
+     ],
+     "feature_levels.Magical Discoveries": [
+      6
+     ],
+     "feature_levels.Peerless Skill": [
+      14
+     ]
+    },
+    "name": "College of Lore",
+    "srd_page": 35,
+    "status": "verified"
+   },
+   "thief": {
+    "compared": {
+     "feature_levels.Fast Hands": [
+      3
+     ],
+     "feature_levels.Second-Story Work": [
+      3
+     ],
+     "feature_levels.Supreme Sneak": [
+      9
+     ],
+     "feature_levels.Thief's Reflexes": [
+      17
+     ],
+     "feature_levels.Use Magic Device": [
+      13
+     ]
+    },
+    "name": "Thief",
+    "srd_page": 64,
     "status": "verified"
    }
   }

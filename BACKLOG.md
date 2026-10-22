@@ -2059,6 +2059,27 @@ pool entries.
   would make them stale.
   (`packages/dnd5e-srd-data/tools/translators/foundry.py::_pack_subdir`)
 
+## SRD 5.2.1 class audit (2026-10-22, spec 02a session A3)
+
+- **The Monk has no Self-Restoration feature until the owner decides
+  (n1ffl3r/tapestria-nat20#16).** The SRD grants it at level 10; the pinned
+  Foundry pack grants it but ships no document, so regen skips it. The ledger
+  marks the Monk `divergence`.
+  (`packages/dnd5e-srd-data/audit/srd_5_2_1_divergences.json`)
+- **Spell slot counts are the engine's, not the corpus's.** A class record holds
+  a progression (`full`, `half`, `pact`); the counts live in
+  `dnd5e_engine.spellcasting`. `tests/test_srd_class_spell_slots.py` checks them
+  against each caster's Features table, and all eight match.
+  (`packages/dnd5e-srd-data/tests/test_srd_class_spell_slots.py`)
+- **The class audit compares levels and scales, not what a feature does.** A
+  feature is checked for the heading that names it at the level its owner grants
+  it; its damage, save DC, uses and recovery are not. A class's skill choices,
+  weapon and armor training, tool proficiencies and starting equipment, and a
+  subclass's bonus spells, are not compared either, and a feature offered as a
+  choice (a Metamagic option, an Eldritch Invocation, a Fighting Style) is checked
+  only for being an SRD option.
+  (`packages/dnd5e-srd-data/tools/srd_audit/classes.py::pdf_facts`)
+
 ---
 
 # Test & fidelity

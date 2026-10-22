@@ -96,12 +96,13 @@ def test_scale_values_read_each_class_at_its_own_level() -> None:
         loader=LOADER,
         classes={"monk": 1, "fighter": 4},
     )
+    # SRD 5.2.1 Monk Features: Focus Points begin at level 2, so a Monk 1 has none.
+    assert "monk.focus" not in split
     assert (
         split["monk.die"],
-        split["monk.focus"],
         split["fighter.second-wind"],
         split["fighter.action-surge"],
-    ) == ("d6", 1, 3, 1)
+    ) == ("d6", 3, 1)
     single = build_scale_values(
         class_slug="monk", subclass_slug=None, species_slug=None, level=5, loader=LOADER
     )
