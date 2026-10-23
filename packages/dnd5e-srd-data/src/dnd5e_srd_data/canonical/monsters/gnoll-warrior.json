@@ -258,6 +258,17 @@
       "recharge": null,
       "slug": "bone-bow",
       "uses_per_day": null
+    },
+    {
+      "activities": [],
+      "description": "Immediately after dealing damage to a creature that is already Bloodied, the gnoll moves up to half its Speed, and it makes one Rend attack.",
+      "kind": "bonus_action",
+      "legendary_cost": null,
+      "mechanic": null,
+      "name": "Rampage",
+      "recharge": null,
+      "slug": "rampage",
+      "uses_per_day": 1
     }
   ],
   "alignment": "Chaotic Evil",

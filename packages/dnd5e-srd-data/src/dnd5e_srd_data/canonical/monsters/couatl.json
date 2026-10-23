@@ -1263,6 +1263,17 @@
       "recharge": null,
       "slug": "spellcasting",
       "uses_per_day": null
+    },
+    {
+      "activities": [],
+      "description": "The couatl casts Bless, Lesser Restoration, or Sanctuary, requiring no spell components and using the same spellcasting ability as Spellcasting.",
+      "kind": "bonus_action",
+      "legendary_cost": null,
+      "mechanic": null,
+      "name": "Divine Aid",
+      "recharge": null,
+      "slug": "divine-aid",
+      "uses_per_day": 2
     }
   ],
   "alignment": "Lawful Good",

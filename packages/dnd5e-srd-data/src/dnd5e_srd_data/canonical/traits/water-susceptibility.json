@@ -1,5 +1,5 @@
 {
-  "description": "The monster takes 3 (1d6) Cold damage damage for every 5 feet the monster moves in water or for every gallon of water splashed on it.\n\nFoundry Note\n\nScaling is configured to roll the correct number of dice based on the distance traveled through water. 1 is default for 5 feet, 2 is for 10 feet, and so forth.",
+  "description": "The monster takes 3 (1d6) Cold damage for every 5 feet the monster moves in water or for every gallon of water splashed on it.",
   "mechanic": null,
   "name": "Water Susceptibility",
   "provenance": {

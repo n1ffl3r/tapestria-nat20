@@ -1893,7 +1893,9 @@ def translate_monster_traits(
             by_slug[ability.slug] = MonsterTrait(
                 slug=ability.slug,
                 name=ability.name,
-                description=substitute_lookup_labels(ability.description),
+                description=_corrected_trait_description(
+                    ability.slug, substitute_lookup_labels(ability.description)
+                ),
                 mechanic=ability.mechanic,
                 provenance=_provenance(yaml_path, ingest_date, ingest_version),
                 review=ReviewState(),
@@ -2450,6 +2452,68 @@ class _SrdCorrection:
     was: Any
     value: Any
     srd: str
+
+
+#: The shared monster traits whose Foundry text differs from the stat block each was taken from
+#: (``audit/srd_5_2_1_ledger.json``; the owner chose the SRD's text on
+#: n1ffl3r/tapestria-nat20#18). ``value`` is the SRD's wording with "the monster" for the
+#: creature, and ``srd`` quotes the stat block. The pins live in
+#: ``tests/test_monster_trait_srd_5_2_1_corrections.py``.
+_TRAIT_SRD_CORRECTIONS: dict[str, _SrdCorrection] = {
+    "standing-leap": _SrdCorrection(
+        "description",
+        "The monster's Long Jump is up to 20 feet and its High Jump is up to 10 feet with or "
+        "without a running start.",
+        "The monster's Long Jump is up to 10 feet and its High Jump is up to 5 feet with or "
+        "without a running start.",
+        "Long Jump is up to 10 feet and its High Jump is up to 5 feet with or without a running "
+        "start.",
+    ),
+    "stench": _SrdCorrection(
+        "description",
+        "Constitution Saving Throw: DC [[lookup @save.dc.value activity=mJbwhj3beOIB3Jgj]], any "
+        "creature (other than a monster) that starts its turn in a [[lookup "
+        "@target.template.size activity=mJbwhj3beOIB3Jgj]]-foot Emanation originating from the "
+        "monster.\n\nFailure: The target has the &amp;Reference[Poisoned apply=false] condition "
+        "until the start of its next turn.\n\nSuccess: The target is immune to the Stench of all "
+        "monster for 1 hour.",
+        "Constitution Saving Throw: DC [[lookup @save.dc.value activity=mJbwhj3beOIB3Jgj]], any "
+        "creature that starts its turn in a [[lookup @target.template.size "
+        "activity=mJbwhj3beOIB3Jgj]]-foot Emanation originating from the monster.\n\nFailure: "
+        "The target has the &amp;Reference[Poisoned apply=false] condition until the start of "
+        "its next turn.",
+        "Constitution Saving Throw: DC 16, any creature that starts its turn in a 10-foot "
+        "Emanation originating from the hezrou. Failure: The target has the Poisoned condition "
+        "until the start of its next turn.",
+    ),
+    "water-susceptibility": _SrdCorrection(
+        "description",
+        "The monster takes 3 (1d6) Cold damage damage for every 5 feet the monster moves in "
+        "water or for every gallon of water splashed on it.\n\nFoundry Note\n\nScaling is "
+        "configured to roll the correct number of dice based on the distance traveled through "
+        "water. 1 is default for 5 feet, 2 is for 10 feet, and so forth.",
+        "The monster takes 3 (1d6) Cold damage for every 5 feet the monster moves in water or "
+        "for every gallon of water splashed on it.",
+        "takes 3 (1d6) Cold damage for every 5 feet the elemental moves in water or for every "
+        "gallon of water splashed on it.",
+    ),
+}
+
+
+def trait_srd_correction(slug: str) -> _SrdCorrection | None:
+    """The SRD 5.2.1 correction the translator applies to monster trait ``slug``."""
+    return _TRAIT_SRD_CORRECTIONS.get(slug)
+
+
+def _corrected_trait_description(slug: str, description: str) -> str:
+    """``description``, or the SRD's text where ``_TRAIT_SRD_CORRECTIONS`` has one,
+    refusing a correction whose ``was`` no longer matches."""
+    correction = trait_srd_correction(slug)
+    if correction is None or not _SRD_RULES["enabled"]:
+        return description
+    if description != correction.was:
+        raise ValueError(f"{slug}: description is not what the correction replaces; it is stale")
+    return str(correction.value)
 
 
 #: The spell audit's corrections (``audit/srd_5_2_1_ledger.json``, spec 02a acceptance
@@ -3993,13 +4057,75 @@ _ACTION_LIST_BY_KIND = {
 }
 
 
+@dataclass(frozen=True)
+class _SrdAddition:
+    """A stat block entry the pinned Foundry pack does not ship, authored from the SRD
+    5.2.1 text (``srd``, quoted). ``action`` holds the ``MonsterAction`` fields."""
+
+    action: dict[str, Any]
+    srd: str
+
+
+#: Stat block entries the pinned pack lacks, keyed by monster slug (the owner asked for them
+#: on n1ffl3r/tapestria-nat20#7). Each is text only: the spell it casts or the attack it makes
+#: is not an activity, so the engine treats it as narrative.
+_MONSTER_SRD_ADDITIONS: dict[str, tuple[_SrdAddition, ...]] = {
+    "couatl": (
+        _SrdAddition(
+            {
+                "slug": "divine-aid",
+                "name": "Divine Aid",
+                "kind": "bonus_action",
+                "description": (
+                    "The couatl casts Bless, Lesser Restoration, or Sanctuary, requiring no spell"
+                    " components and using the same spellcasting ability as Spellcasting."
+                ),
+                "uses_per_day": 2,
+            },
+            "Divine Aid (2/Day). The couatl casts Bless, Lesser Restoration, or Sanctuary,"
+            " requiring no spell components and using the same spellcasting ability as"
+            " Spellcasting.",
+        ),
+    ),
+    "gnoll-warrior": (
+        _SrdAddition(
+            {
+                "slug": "rampage",
+                "name": "Rampage",
+                "kind": "bonus_action",
+                "description": (
+                    "Immediately after dealing damage to a creature that is already Bloodied, the"
+                    " gnoll moves up to half its Speed, and it makes one Rend attack."
+                ),
+                "uses_per_day": 1,
+            },
+            "Rampage (1/Day). Immediately after dealing damage to a creature that is already"
+            " Bloodied, the gnoll moves up to half its Speed, and it makes one Rend attack.",
+        ),
+    ),
+}
+
+
+def monster_srd_additions(slug: str) -> tuple[_SrdAddition, ...]:
+    """The SRD 5.2.1 stat block entries the translator adds to monster ``slug``."""
+    return _MONSTER_SRD_ADDITIONS.get(slug, ())
+
+
 def _apply_monster_srd_corrections(monster: Monster) -> Monster:
-    """Apply ``_MONSTER_SRD_CORRECTIONS``, then file each action under its kind's list."""
+    """Apply ``_MONSTER_SRD_CORRECTIONS`` and ``_MONSTER_SRD_ADDITIONS``, then file each
+    action under its kind's list."""
     corrections = monster_srd_corrections(monster.slug)
-    if not corrections or not _SRD_RULES["enabled"]:
+    additions = monster_srd_additions(monster.slug)
+    if not (corrections or additions) or not _SRD_RULES["enabled"]:
         return monster
     blob = monster.model_dump(mode="json")
     _apply_srd_corrections(monster.slug, blob, corrections)
+    for addition in additions:
+        if any(a["slug"] == addition.action["slug"] for a in blob["actions"]):
+            raise ValueError(f"{monster.slug}: {addition.action['slug']} is already shipped")
+        blob["actions"].append(
+            MonsterAction.model_validate(addition.action).model_dump(mode="json")
+        )
     lists = ("actions", "special_abilities", "legendary_actions", "lair_actions")
     entries = [entry for field in lists for entry in blob[field]]
     for field in lists:

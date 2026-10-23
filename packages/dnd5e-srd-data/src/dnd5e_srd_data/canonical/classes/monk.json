@@ -778,6 +778,12 @@
       "slug": "heightened-focus"
     },
     {
+      "level": 10,
+      "optional": false,
+      "ref_type": "feature",
+      "slug": "self-restoration"
+    },
+    {
       "level": 13,
       "optional": false,
       "ref_type": "feature",
