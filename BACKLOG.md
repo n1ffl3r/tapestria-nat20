@@ -717,13 +717,11 @@ counts are pinned by `packages/dnd5e-engine/tests/test_capability_matrix.py`.
   illusion's size, not its target area. Only too many names, a repeated name
   and a name not in the combat are refused.
   (`packages/dnd5e-engine/src/dnd5e_engine/orchestrator.py::_area_plan`)
-- **An area's point of origin is a creature's cell, never an empty one
-  (2026-10-04, C26a).** A Sphere or Cylinder centres on the named target's cell
-  (else the caster's), and a Cone, Cube, Line or Emanation starts at the
-  caster's; SRD 5.2's "a point you choose within range" on an empty cell
-  (`target_zone_id`) is not accepted for an area. The monster AI centres a
-  Sphere or Cylinder on a foe it can see, so it never places one on an empty
-  cell between two groups (amended 2026-10-04, C26b). A monster's own ranged
+- **A monster never centres an area on an empty cell (2026-10-04, C26a;
+  amended 2026-10-23, spec 02a B3).** A character's Sphere or Cylinder can
+  centre on a chosen point (`target_zone_id`), but the monster AI centres one
+  on a foe it can see, so it never places one on an empty cell between two
+  groups (C26b). A Cone, Cube, Line or Emanation starts at the caster's cell. A monster's own ranged
   Cube spell inherits the caster-anchor too: see the row below.
   (`packages/dnd5e-engine/src/dnd5e_engine/orchestrator.py::_area_origin`,
   `packages/dnd5e-engine/src/dnd5e_engine/areas.py::best_aim`)
@@ -1427,14 +1425,14 @@ zone + apply logic:
   Shield or Hellish Rebuke cast as a Reaction, but Counterspell is offered only
   at a character's on-turn cast and a monster's stat-block cast.
   (`packages/dnd5e-engine/src/dnd5e_engine/orchestrator.py::_counterspell_cast`)
-- **Four concentration spells raise after spending their slot (2026-09-26,
-  pre-existing).** Delayed Blast Fireball and Tsunami read `@item.uses.value`,
-  Spider Climb reads `@attributes.movement.walk`, and Phantasmal Killer's save
-  names no ability; the formula resolver has no handler for either token and
-  the save resolver refuses an empty ability, so `submit_player_intent` raises
-  `ValueError` once the slot is spent. All four are SRD 5.2 spells ("When you
-  cast a spell, you expend a slot"): the cast should resolve, or be refused
-  before the slot goes.
+- **Two spells raise after spending their slot (2026-09-26, pre-existing;
+  narrowed 2026-10-23, spec 02a B3).** Delayed Blast Fireball and Tsunami read
+  `@item.uses.value` in an activity that belongs to a later turn, and the
+  formula resolver has no handler for it, so `submit_player_intent` raises
+  `ValueError` once the slot is spent. The later-turn activities are the fix
+  (see "A spell's turn-boundary activities resolve at cast time"). Spider Climb
+  and Freedom of Movement now read the target's Speed, and Phantasmal Killer's
+  save names its ability since the spell audit.
   (`packages/dnd5e-engine/src/dnd5e_engine/activities/formula.py::_resolve_token`)
 - **A readied spell always targets its own caster (2026-09-26,
   pre-existing).** SRD 5.2 Ready: "When you Ready a spell, you cast it as

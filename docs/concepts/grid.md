@@ -156,14 +156,17 @@ carries a measured template resolves as an area: a Fireball or a Sleep, a
 Dragonborn's Breath Weapon, the Pipes of Haunting. (An attack roll is never an
 area: it targets one creature.) Nor is a `use_item` that resolves several of
 an item's activities at once because no `activity_id` names one and none is
-charged. The engine places the template at its SRD 5.2 point of origin — the
-named target's cell for a Sphere or Cylinder, else the
-actor's; the actor's own cell for an Emanation, Cone, Cube or Line, whose
+charged. The engine places the template at its SRD 5.2 point of origin: for a
+Sphere or Cylinder, the named target's cell, else the point
+`PlayerIntent.target_zone_id` chooses (SRD 5.2.1 Fireball: "a point you choose
+within range"), else the actor's; the actor's own cell for an Emanation, Cone, Cube or Line, whose
 origin is not part of the area — expands it, and keeps the cells with line of
 effect from that origin ("To block a line, an obstruction must provide Total
 Cover"). Aim a Cone, Cube or Line with `PlayerIntent.direction`; omit it and
 the engine aims actor → named target. An area with neither is refused before
-anything is spent, with `target_invalid`.
+anything is spent, with `target_invalid`. A chosen point off the map, in a
+blocked cell, beyond the spell's range or behind Total Cover is refused the same
+way, with `out_of_range`.
 
 Who in the area is affected follows the activity's `target.affects`:
 

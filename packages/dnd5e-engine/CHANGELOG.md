@@ -64,6 +64,19 @@ Fall.
   "feather-fall"`), to every creature that knows it, can pay for it and is the
   faller or sees it within 60 feet; it prevents the damage and Prone of a fall
   of 600 feet or less.
+- **Mystic Arcanum** (`PartyMemberSpec.mystic_arcanum`). SRD 5.2.1: "You can
+  cast your arcanum spell once without expending a spell slot, and you must
+  finish a Long Rest before you can cast it in this way again", a level 6
+  spell at Warlock level 11, then 7, 8 and 9 at levels 13, 15 and 17. Left
+  empty, each Warlock spell of an unlocked arcanum level in `spells_known` is
+  the arcanum, when it is the only one of its level. It is tallied as a
+  slotless cast (`slotless_cast:<spell>`), so `recover_slotless_casts` restores
+  it on a Long Rest. `start_combat` raises `ValueError` for an arcanum the
+  Warlock can't have.
+- **A Sphere or Cylinder can centre on a chosen point.** SRD 5.2.1 Fireball:
+  "a point you choose within range". With no `target_id`, the area centres on
+  `target_zone_id`; a point off the map, in a blocked cell, beyond the range or
+  behind Total Cover is refused with `out_of_range` before anything is spent.
 - **`make test-roundtrip`** reruns the suite with every handle call rebuilding
   its combat from its `CombatState`; **`make test-hashseed`** (part of `make
   check`) does it under two string-hash seeds and requires identical traces.
@@ -108,6 +121,12 @@ Fall.
   order, so the same combat serializes the same way in every process.
 
 ### Fixed
+
+- **Spider Climb and Freedom of Movement cast.** Their effects read
+  `@attributes.movement.walk`, which raised after the slot was spent. The token
+  now reads the target's Speed (SRD 5.2.1 Spider Climb: "a Climb Speed equal to
+  its Speed"), and a Climb Speed an effect grants prices a climb like the
+  creature's own.
 
 - **A reaction resolved inside another resolution keeps its own effects.** The
   enclosing resolution's concentration and effect bookkeeping skips the
