@@ -40,9 +40,11 @@ from pydantic import (
 
 
 class Provenance(BaseModel, frozen=True):
-    """Where this entry came from. One source per entry; no field-level mixing."""
+    """Where this entry came from. One source per entry; no field-level mixing. ``srd_pdf`` is
+    a record authored from the SRD 5.2.1 PDF where Foundry has none (``tools/translators/
+    authored.py``)."""
 
-    source: Literal["foundry"]
+    source: Literal["foundry", "srd_pdf"]
     source_url: str
     ingest_date: date
     ingest_version: str

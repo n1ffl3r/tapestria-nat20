@@ -45,9 +45,11 @@ from tools.translators.foundry import (
     class_srd_corrections,
     feat_srd_corrections,
     item_srd_corrections,
+    monster_srd_additions,
     monster_srd_corrections,
     spell_srd_corrections,
     srd_rules_disabled,
+    trait_srd_correction,
     translate_armor_yaml,
     translate_generic_item_yaml,
     translate_monster_yaml,
@@ -335,6 +337,14 @@ def monster_changes(
         if before.get(field) == after.get(field):
             continue
         quotes = [c.srd for c in corrections if _corrects(c.path, field, record)]
+        # An entry the translator adds, and the section list that holds it.
+        quotes += [
+            a.srd
+            for a in monster_srd_additions(record["slug"])
+            if field.endswith(f".{a.action['slug']}")
+        ]
+        if not quotes and field in SECTION_FIELDS:
+            quotes = [a.srd for a in monster_srd_additions(record["slug"])]
         if not quotes:
             quote = _entry_quote(text, field)
             if quote is None:
@@ -409,9 +419,11 @@ def monster_entry(
         entry["read_by_hand"] = dict(sorted(read.items()))
     if not_compared:
         entry["not_compared"] = dict(sorted(not_compared.items()))
-    for correction in monster_srd_corrections(slug):
-        if not contains(text.text, correction.srd):
-            raise ValueError(f"{slug}: correction quote not in the SRD text: {correction.srd!r}")
+    quotes = [c.srd for c in monster_srd_corrections(slug)]
+    quotes += [a.srd for a in monster_srd_additions(slug)]
+    for quote in quotes:
+        if not contains(text.text, quote):
+            raise ValueError(f"{slug}: correction quote not in the SRD text: {quote!r}")
     changes = monster_changes(record, text, compared) if with_changes else []
     if differences:
         if divergence is None or sorted(divergence["fields"]) != sorted(differences):
@@ -936,7 +948,7 @@ def origin_entries(
     out["backgrounds"] = _background_entries(index, divergences, errors)
     out["feats"] = _feat_entries(index, divergences, with_changes, errors)
     out["conditions"] = _condition_entries(index, divergences, errors)
-    out["monster_traits"] = _monster_trait_entries(index, divergences, errors)
+    out["monster_traits"] = _monster_trait_entries(index, divergences, errors, with_changes)
     if errors:
         raise ValueError("\n".join(errors))
     return out
@@ -1150,7 +1162,10 @@ def _numbers(text: str) -> set[str]:
 
 
 def _monster_trait_entries(
-    index: Mapping[str, Any], divergences: Mapping[str, Any], errors: list[str]
+    index: Mapping[str, Any],
+    divergences: Mapping[str, Any],
+    errors: list[str],
+    with_changes: bool = True,
 ) -> dict[str, Any]:
     """Each monster trait against the stat block of the monster it was taken from: the
     trait is in the block's Traits, and the numbers its text states are the block's."""
@@ -1196,13 +1211,26 @@ def _monster_trait_entries(
                 "description": "Compared by the numbers it states, not word for word.",
             },
         }
+        correction = trait_srd_correction(slug)
+        changes: list[dict[str, Any]] = []
         try:
+            if correction is not None:
+                _verify_quotes(slug, texts[name].text, [correction.srd])
+                if with_changes:
+                    changes = [
+                        {
+                            "field": "description",
+                            "from": correction.was,
+                            "to": correction.value,
+                            "srd": [correction.srd],
+                        }
+                    ]
             entries[slug] = _finish(
                 slug,
                 entry,
                 spells.compare(srd, corpus),
                 divergences["monster_traits"].get(slug),
-                [],
+                changes,
             )
         except ValueError as error:
             errors.append(str(error))

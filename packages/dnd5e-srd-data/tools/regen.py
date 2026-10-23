@@ -22,6 +22,7 @@ from tools.audit.cross_check import (
     diff_spell_flat_fields,
     diff_subclass_flat_fields,
 )
+from tools.translators.authored import AUTHORED_FEATURES, translate_authored_feature
 from tools.translators.conditions import translate_condition_pages
 from tools.translators.foundry import (
     translate_armor_yaml,
@@ -62,9 +63,6 @@ INGEST_VERSION = "foundry-translator-v1"
 # are present, and those resolve normally. The two unarmed-strike targets are
 # type:weapon (not features); phbmnkUnarmedStr additionally carries no license.
 _KNOWN_UNRESOLVABLE_GRANTS: dict[str, str] = {
-    "Compendium.dnd5e.classes24.Item.phbmnkSelfrestor": (
-        "Monk Self-Restoration: no source doc in SRD packs (non-SRD)"
-    ),
     "Compendium.dnd5e.classes24.Item.phbmnkUnarmedStr": (
         "Monk Unarmed Strike: type:weapon (non-feature) and no CC-BY license"
     ),
@@ -392,6 +390,18 @@ def main() -> int:
     non_srd_excluded.extend(e)
     print(f"  accepted={a}, quarantined={q}")
 
+    # Features authored from the PDF where Foundry ships no document; the grants that name
+    # them resolve like any feature's (see tools/translators/authored.py).
+    print("[regen] authored features …")
+    for authored in AUTHORED_FEATURES:
+        write_canonical_with_overrides(
+            translate_authored_feature(
+                authored, ingest_date=ingest_date, ingest_version=INGEST_VERSION
+            ),
+            CANONICAL / "features",
+        )
+    print(f"  accepted={len(AUTHORED_FEATURES)}")
+
     # SRD 5.2 rules-glossary conditions (C22). One journal doc → 15 entries;
     # the SRD gate is the translator's explicit allowlist (journal pages have
     # no license field — see tools/translators/conditions.py).
@@ -467,6 +477,8 @@ def main() -> int:
     from tools.translators.foundry import build_feature_index
 
     index = build_feature_index(FOUNDRY_PACKS)
+    for authored in AUTHORED_FEATURES:
+        index[authored.uuid] = GrantRef(ref_type="feature", slug=authored.slug, level=0)
     _REF_CANONICAL_DIR = {
         "feature": "features",
         "feat": "feats",

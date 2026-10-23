@@ -315,12 +315,12 @@ def test_status_counts() -> None:
     assert counts["backgrounds"]["verified"] == 4
     assert counts["conditions"]["verified"] == 15
     assert counts["feats"] == {"verified": 14, "corrected": 3, "divergence": 0}
-    assert counts["monster_traits"] == {"verified": 99, "corrected": 0, "divergence": 3}
+    assert counts["monster_traits"] == {"verified": 99, "corrected": 3, "divergence": 0}
     assert counts["monster_traits"]["divergence"] == len(DIVERGENCES["monster_traits"])
     assert sum(counts["classes"].values()) == 12
     assert sum(counts["subclasses"].values()) == 12
-    assert sum(counts["class_features"].values()) == 225
-    assert counts["classes"] == {"verified": 10, "corrected": 1, "divergence": 1}
+    assert sum(counts["class_features"].values()) == 226
+    assert counts["classes"] == {"verified": 10, "corrected": 2, "divergence": 0}
     assert counts["subclasses"]["divergence"] == len(DIVERGENCES["subclasses"])
     assert counts["class_features"]["divergence"] == len(DIVERGENCES["class_features"])
     assert counts["classes"]["divergence"] == len(DIVERGENCES["classes"])

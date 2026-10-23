@@ -42,7 +42,7 @@ dungeons-and-agents fork, workstream A).
   actions in each section, and every action's attack bonus, reach or range,
   saves, damage, area, recharge and uses, compared with its stat block in the
   PDF. The corpus side derives a monster attack's numbers the way the engine
-  does. 344 monsters: 24 verified, 311 corrected, 9 divergence (#7).
+  does. 344 monsters: 24 verified, 313 corrected, 7 divergence (#7).
 - **The item audit** (`tools/srd_audit/items.py`): every magic item's category,
   rarity, attunement and its constraint, and charges, compared with its Magic
   Items chapter kind line and text; every other item's cost and weight, and a
@@ -56,11 +56,11 @@ dungeons-and-agents fork, workstream A).
   level of every feature, the Ability Score Improvement and subclass levels, and
   every scaling value (Rages, Rage Damage, Sneak Attack, Wild Shape uses) against
   its Features table and "Level N: Feature" headings; each subclass's features
-  and levels; and each of the 225 class and subclass features against the
+  and levels; and each of the 226 class and subclass features against the
   heading that names it at the level its owner grants it. A scale the table has
   no column for (Brutal Strike, Divine Strike, Aura Distance) is read by hand
-  with its quoted sentence. 12 classes: 10 verified, 1 corrected, 1 divergence
-  (#16); 12 subclasses and 225 features verified. A test checks the engine's
+  with its quoted sentence. 12 classes: 10 verified, 2 corrected; 12
+  subclasses and 226 features verified. A test checks the engine's
   spell slot tables (`derive_spell_slots`, `derive_pact_slots`) against each
   caster's table.
 - **The origins audit** (`tools/srd_audit/origins.py`): each species' creature
@@ -73,7 +73,7 @@ dungeons-and-agents fork, workstream A).
   conditions and effects, read by hand and quoted; and each of the 102 shared
   monster traits against the stat block it was taken from. 14 species, 36 species
   traits, 4 backgrounds, and 15 conditions verified; 17 feats: 14 verified, 3
-  corrected; 102 monster traits: 99 verified, 3 divergence (#18). With this, every
+  corrected; 102 monster traits: 99 verified, 3 corrected (#18). With this, every
   corpus record has a ledger entry.
 
 ### Changed
@@ -110,6 +110,13 @@ dungeons-and-agents fork, workstream A).
 - **Feat corrections against SRD 5.2.1** (`_FEAT_SRD_CORRECTIONS`, each quoting
   the feat's header): Boon of Fate and Boon of Irresistible Offense need Level
   19+, and Boon of Spell Recall needs a Spellcasting Feature too.
+- **The owner's decisions on the audit's issues**: the Monk's **Self-Restoration**
+  is authored from the SRD text (#16; `tools/translators/authored.py`, a record
+  whose `provenance.source` is the new `srd_pdf`); the shared monster traits
+  **Standing Leap**, **Stench** and **Water Susceptibility** take the SRD's text
+  (#18); and the Couatl's **Divine Aid** and the Gnoll Warrior's **Rampage**,
+  which the pinned pack does not ship, are authored from their stat blocks (#7).
+  The other seven stat block divergences remain.
 - **Class corrections against SRD 5.2.1** (`_CLASS_SRD_CORRECTIONS`, each quoting
   its Features table): the Barbarian's Rages rise to 6 at level 17, not 16; a
   Monk has no Focus Points at level 1. The engine's

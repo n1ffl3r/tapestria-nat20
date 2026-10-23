@@ -2010,14 +2010,16 @@ pool entries.
 
 ## SRD 5.2.1 stat block audit (2026-10-21, spec 02a session A2)
 
-- **Nine stat blocks stay different from the SRD 5.2.1 PDF until the owner
-  approves them (n1ffl3r/tapestria-nat20#7).** A conditional immunity or
-  vulnerability the schema has no field for (Archmage's "Charmed (with Mind
-  Blank)", Rakshasa's Bless-only Piercing vulnerability); two Bonus Actions the
-  pinned Foundry pack does not ship (Couatl's Divine Aid, Gnoll Warrior's
-  Rampage); three Hit Point maximum reductions held only in prose (Death Dog,
-  Mummy, Mummy Lord); and two helpers with no SRD stat block (Goat of
-  Traveling, Phantom Steed).
+- **Seven stat blocks stay different from the SRD 5.2.1 PDF
+  (n1ffl3r/tapestria-nat20#7: "nothing approved, follow up work").** The owner
+  approved none of the nine, so the Couatl's Divine Aid and the Gnoll Warrior's
+  Rampage are authored from the stat blocks (text only, with their uses per
+  day). The other seven need a schema or a design decision, so they stay
+  divergences until that work lands: a conditional immunity or vulnerability the
+  schema has no field for (Archmage's "Charmed (with Mind Blank)", Rakshasa's
+  Bless-only Piercing vulnerability); three Hit Point maximum reductions held
+  only in prose (Death Dog, Mummy, Mummy Lord); and two helpers with no SRD stat
+  block (Goat of Traveling, Phantom Steed).
   (`packages/dnd5e-srd-data/audit/srd_5_2_1_divergences.json`)
 - **A stat block's long range is not in the corpus.** The audit compares an
   attack's reach or normal range; the translator keeps one distance per attack
@@ -2061,11 +2063,14 @@ pool entries.
 
 ## SRD 5.2.1 class audit (2026-10-22, spec 02a session A3)
 
-- **The Monk has no Self-Restoration feature until the owner decides
-  (n1ffl3r/tapestria-nat20#16).** The SRD grants it at level 10; the pinned
-  Foundry pack grants it but ships no document, so regen skips it. The ledger
-  marks the Monk `divergence`.
-  (`packages/dnd5e-srd-data/audit/srd_5_2_1_divergences.json`)
+- **The Monk's Self-Restoration is authored from the PDF
+  (n1ffl3r/tapestria-nat20#16, owner: "author it").** The pinned Foundry pack
+  grants it but ships no document, so `tools/translators/authored.py` writes the
+  record from the SRD text (`provenance.source` is `srd_pdf`) and regen grants it
+  at level 10. It has no activities: the end-of-turn removal of Charmed,
+  Frightened or Poisoned, and Exhaustion from forgoing food and drink, are text
+  only, so the engine does not apply them.
+  (`packages/dnd5e-srd-data/tools/translators/authored.py`)
 - **Spell slot counts are the engine's, not the corpus's.** A class record holds
   a progression (`full`, `half`, `pact`); the counts live in
   `dnd5e_engine.spellcasting`. `tests/test_srd_class_spell_slots.py` checks them
@@ -2082,13 +2087,14 @@ pool entries.
 
 ## SRD 5.2.1 origins audit (2026-10-22, spec 02a session A3)
 
-- **Three shared monster traits differ from their stat blocks until the owner
-  approves them (n1ffl3r/tapestria-nat20#18).** Standing Leap's text (20 and 10
-  feet) is not the Frog's (10 and 5); Stench carries a Success clause and "(other
-  than a monster)" the Hezrou lacks; Water Susceptibility ends with a "Foundry
-  Note". The traits are de-duplicated across monsters, so one text cannot suit
-  every monster that has one.
-  (`packages/dnd5e-srd-data/audit/srd_5_2_1_divergences.json`)
+- **Three shared monster traits take the SRD's text
+  (n1ffl3r/tapestria-nat20#18, owner: "prefer SRD text").** Standing Leap is the
+  Frog's (10 and 5 feet), Stench loses Foundry's Success clause and "(other than
+  a monster)", and Water Susceptibility loses its "Foundry Note". The trait
+  catalog is still one record per slug, so Standing Leap carries the Frog's
+  numbers where the Giant Frog's differ: the monsters' own entries keep their
+  numbers, and nothing reads the catalog's text for a roll.
+  (`packages/dnd5e-srd-data/tools/translators/foundry.py::_TRAIT_SRD_CORRECTIONS`)
 - **The origins audit reads conditions and lineages by hand.** Each condition's
   effects and each lineage's Darkvision, Speed, resistances and spells are
   hand readings with quotes, because the SRD prints them as prose and a table;

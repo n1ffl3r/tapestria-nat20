@@ -1,5 +1,5 @@
 {
-  "description": "The monster's Long Jump is up to 20 feet and its High Jump is up to 10 feet with or without a running start.",
+  "description": "The monster's Long Jump is up to 10 feet and its High Jump is up to 5 feet with or without a running start.",
   "mechanic": null,
   "name": "Standing Leap",
   "provenance": {

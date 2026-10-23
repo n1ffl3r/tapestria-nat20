@@ -1801,6 +1801,16 @@
     "srd_page": 67,
     "status": "verified"
    },
+   "self-restoration": {
+    "compared": {
+     "levels": [
+      10
+     ]
+    },
+    "name": "Self-Restoration",
+    "srd_page": 52,
+    "status": "verified"
+   },
    "signature-spells": {
     "compared": {
      "levels": [
@@ -3280,24 +3290,9 @@
      ],
      "subclass_level": 3
     },
-    "differences": {
-     "feature_levels.Self-Restoration": {
-      "corpus": null,
-      "srd": [
-       10
-      ]
-     }
-    },
-    "divergence": {
-     "fields": [
-      "feature_levels.Self-Restoration"
-     ],
-     "issue": "https://github.com/n1ffl3r/tapestria-nat20/issues/16",
-     "reason": "The SRD lists Self-Restoration at Monk level 10. The pinned Foundry pack grants it but ships no document for it, so regen skips the grant and the corpus has no such feature."
-    },
     "name": "Monk",
     "srd_page": 49,
-    "status": "divergence"
+    "status": "corrected"
    },
    "paladin": {
     "compared": {
@@ -13357,24 +13352,19 @@
     "status": "verified"
    },
    "standing-leap": {
+    "changes": [
+     {
+      "field": "description",
+      "from": "The monster's Long Jump is up to 20 feet and its High Jump is up to 10 feet with or without a running start.",
+      "srd": [
+       "Long Jump is up to 10 feet and its High Jump is up to 5 feet with or without a running start."
+      ],
+      "to": "The monster's Long Jump is up to 10 feet and its High Jump is up to 5 feet with or without a running start."
+     }
+    ],
     "compared": {
      "in_a_stat_block": true,
      "numbers_outside_the_stat_block": []
-    },
-    "differences": {
-     "numbers_outside_the_stat_block": {
-      "corpus": [
-       "20"
-      ],
-      "srd": []
-     }
-    },
-    "divergence": {
-     "fields": [
-      "numbers_outside_the_stat_block"
-     ],
-     "issue": "https://github.com/n1ffl3r/tapestria-nat20/issues/18",
-     "reason": "The shared text says the Long Jump is 20 feet and the High Jump 10 feet; the Frog stat block it was taken from says 10 and 5. One shared text cannot suit every monster with the trait."
     },
     "name": "Standing Leap",
     "not_compared": {
@@ -13382,27 +13372,22 @@
      "mechanic": "A translator tag for the engine, not SRD text."
     },
     "srd_page": 348,
-    "status": "divergence"
+    "status": "corrected"
    },
    "stench": {
+    "changes": [
+     {
+      "field": "description",
+      "from": "Constitution Saving Throw: DC [[lookup @save.dc.value activity=mJbwhj3beOIB3Jgj]], any creature (other than a monster) that starts its turn in a [[lookup @target.template.size activity=mJbwhj3beOIB3Jgj]]-foot Emanation originating from the monster.\n\nFailure: The target has the &amp;Reference[Poisoned apply=false] condition until the start of its next turn.\n\nSuccess: The target is immune to the Stench of all monster for 1 hour.",
+      "srd": [
+       "Constitution Saving Throw: DC 16, any creature that starts its turn in a 10-foot Emanation originating from the hezrou. Failure: The target has the Poisoned condition until the start of its next turn."
+      ],
+      "to": "Constitution Saving Throw: DC [[lookup @save.dc.value activity=mJbwhj3beOIB3Jgj]], any creature that starts its turn in a [[lookup @target.template.size activity=mJbwhj3beOIB3Jgj]]-foot Emanation originating from the monster.\n\nFailure: The target has the &amp;Reference[Poisoned apply=false] condition until the start of its next turn."
+     }
+    ],
     "compared": {
      "in_a_stat_block": true,
      "numbers_outside_the_stat_block": []
-    },
-    "differences": {
-     "numbers_outside_the_stat_block": {
-      "corpus": [
-       "1"
-      ],
-      "srd": []
-     }
-    },
-    "divergence": {
-     "fields": [
-      "numbers_outside_the_stat_block"
-     ],
-     "issue": "https://github.com/n1ffl3r/tapestria-nat20/issues/18",
-     "reason": "Foundry adds '(other than a monster)' and a Success clause (immune to the Stench for 1 hour) that the Hezrou stat block does not have."
     },
     "name": "Stench",
     "not_compared": {
@@ -13410,7 +13395,7 @@
      "mechanic": "A translator tag for the engine, not SRD text."
     },
     "srd_page": 298,
-    "status": "divergence"
+    "status": "corrected"
    },
    "succubus-form": {
     "compared": {
@@ -13647,26 +13632,19 @@
     "status": "verified"
    },
    "water-susceptibility": {
+    "changes": [
+     {
+      "field": "description",
+      "from": "The monster takes 3 (1d6) Cold damage damage for every 5 feet the monster moves in water or for every gallon of water splashed on it.\n\nFoundry Note\n\nScaling is configured to roll the correct number of dice based on the distance traveled through water. 1 is default for 5 feet, 2 is for 10 feet, and so forth.",
+      "srd": [
+       "takes 3 (1d6) Cold damage for every 5 feet the elemental moves in water or for every gallon of water splashed on it."
+      ],
+      "to": "The monster takes 3 (1d6) Cold damage for every 5 feet the monster moves in water or for every gallon of water splashed on it."
+     }
+    ],
     "compared": {
      "in_a_stat_block": true,
      "numbers_outside_the_stat_block": []
-    },
-    "differences": {
-     "numbers_outside_the_stat_block": {
-      "corpus": [
-       "1",
-       "10",
-       "2"
-      ],
-      "srd": []
-     }
-    },
-    "divergence": {
-     "fields": [
-      "numbers_outside_the_stat_block"
-     ],
-     "issue": "https://github.com/n1ffl3r/tapestria-nat20/issues/18",
-     "reason": "The text ends with a Foundry Note about scaling dice, which the Fire Elemental stat block does not have."
     },
     "name": "Water Susceptibility",
     "not_compared": {
@@ -13674,7 +13652,7 @@
      "mechanic": "A translator tag for the engine, not SRD text."
     },
     "srd_page": 284,
-    "status": "divergence"
+    "status": "corrected"
    },
    "web-walker": {
     "compared": {
@@ -21771,6 +21749,26 @@
        ],
        "distance": 5
       }
+     },
+     {
+      "field": "bonus_actions",
+      "from": null,
+      "srd": [
+       "Divine Aid (2/Day). The couatl casts Bless, Lesser Restoration, or Sanctuary, requiring no spell components and using the same spellcasting ability as Spellcasting."
+      ],
+      "to": [
+       "divine-aid"
+      ]
+     },
+     {
+      "field": "bonus_actions.divine-aid",
+      "from": null,
+      "srd": [
+       "Divine Aid (2/Day). The couatl casts Bless, Lesser Restoration, or Sanctuary, requiring no spell components and using the same spellcasting ability as Spellcasting."
+      ],
+      "to": {
+       "uses_per_day": 2
+      }
      }
     ],
     "compared": {
@@ -21851,31 +21849,9 @@
      ],
      "type": "celestial"
     },
-    "differences": {
-     "bonus_actions": {
-      "corpus": null,
-      "srd": [
-       "divine-aid"
-      ]
-     },
-     "bonus_actions.divine-aid": {
-      "corpus": null,
-      "srd": {
-       "uses_per_day": 2
-      }
-     }
-    },
-    "divergence": {
-     "fields": [
-      "bonus_actions",
-      "bonus_actions.divine-aid"
-     ],
-     "issue": "https://github.com/n1ffl3r/tapestria-nat20/issues/7",
-     "reason": "The corpus lacks the Bonus Action 'Divine Aid (2/Day). The couatl casts Bless, Lesser Restoration, or Sanctuary'; the pinned Foundry pack does not ship it."
-    },
     "name": "Couatl",
     "srd_page": 277,
-    "status": "divergence"
+    "status": "corrected"
    },
    "crab": {
     "changes": [
@@ -28884,6 +28860,26 @@
        ],
        "distance": 5
       }
+     },
+     {
+      "field": "bonus_actions",
+      "from": null,
+      "srd": [
+       "Rampage (1/Day). Immediately after dealing damage to a creature that is already Bloodied, the gnoll moves up to half its Speed, and it makes one Rend attack."
+      ],
+      "to": [
+       "rampage"
+      ]
+     },
+     {
+      "field": "bonus_actions.rampage",
+      "from": null,
+      "srd": [
+       "Rampage (1/Day). Immediately after dealing damage to a creature that is already Bloodied, the gnoll moves up to half its Speed, and it makes one Rend attack."
+      ],
+      "to": {
+       "uses_per_day": 1
+      }
      }
     ],
     "compared": {
@@ -28949,31 +28945,9 @@
      },
      "type": "fiend"
     },
-    "differences": {
-     "bonus_actions": {
-      "corpus": null,
-      "srd": [
-       "rampage"
-      ]
-     },
-     "bonus_actions.rampage": {
-      "corpus": null,
-      "srd": {
-       "uses_per_day": 1
-      }
-     }
-    },
-    "divergence": {
-     "fields": [
-      "bonus_actions",
-      "bonus_actions.rampage"
-     ],
-     "issue": "https://github.com/n1ffl3r/tapestria-nat20/issues/7",
-     "reason": "The corpus lacks the Bonus Action 'Rampage (1/Day). Immediately after dealing damage to a creature that is already Bloodied, the gnoll moves up to half its Speed, and it makes one Rend attack.'; the pinned Foundry pack does not ship it."
-    },
     "name": "Gnoll Warrior",
     "srd_page": 289,
-    "status": "divergence"
+    "status": "corrected"
    },
    "goat": {
     "changes": [
