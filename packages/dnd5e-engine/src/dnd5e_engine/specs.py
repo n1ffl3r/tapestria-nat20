@@ -81,6 +81,16 @@ class PartyMemberSpec(BaseModel):
     # slot; each use is tallied in ``custom_counters`` under
     # ``slotless_cast:<spell>``. Empty by default.
     slotless_casts: tuple[str, ...] = ()
+    # SRD 5.2.1 Warlock, Mystic Arcanum: "Choose one level 6 Warlock spell as
+    # this arcanum. You can cast your arcanum spell once without expending a
+    # spell slot, and you must finish a Long Rest before you can cast it in
+    # this way again", with a level 7, 8 and 9 spell at Warlock levels 13, 15
+    # and 17. The arcanum spells, at most one of each level. Empty (the
+    # default) takes them from ``spells_known``: each Warlock spell of levels 6
+    # to 9 there whose level the Warlock has reached, when it is the only one
+    # of its level. Each use is tallied like a slotless cast, under
+    # ``slotless_cast:<spell>``.
+    mystic_arcanum: tuple[str, ...] = ()
     # Custom limited-use counters, carried onto live combat state for the
     # caster. Namespaced key conventions (see dnd5e_engine.rest):
     # ``feature_use:<slug>`` / ``item_use:<slug>`` / ``slotless_cast:<spell>``

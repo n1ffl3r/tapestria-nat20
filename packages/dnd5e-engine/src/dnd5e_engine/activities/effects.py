@@ -19,9 +19,10 @@ here breaks that round-trip.
 from __future__ import annotations
 
 import logging
+import re
 import typing
 from collections.abc import Iterable, Mapping
-from typing import TYPE_CHECKING, Any, get_args
+from typing import TYPE_CHECKING, Any, Final, get_args
 
 from dnd5e_engine.activities.formula import resolve_roll_data
 from dnd5e_engine.events import ConditionApplied, ConditionType, EffectApplied
@@ -107,8 +108,22 @@ def _origin_from_name(name: str, caster_id: str) -> str:
     return f"cast:{_name_slug(name)}:{caster_id}"
 
 
+#: ``@attributes.movement.<mode>`` in an effect's change value: one of the
+#: bearer's Speeds (Spider Climb's "Climb Speed equal to its Speed").
+_MOVEMENT_TOKEN_RE: Final = re.compile(r"@attributes\.movement\.(walk|climb|swim|fly|burrow)\b")
+
+
+def _bearer_speed(bearer: Combatant, mode: str) -> int:
+    """The bearer's Speed of ``mode`` in feet, 0 when it has none."""
+    if mode == "walk":
+        return bearer.base_speed
+    return getattr(bearer.movement_modes, mode) or 0
+
+
 def _passive_change_to_active(
-    ch: PassiveEffectChange, ctx: ActivityResolutionContext | None
+    ch: PassiveEffectChange,
+    ctx: ActivityResolutionContext | None,
+    bearer: Combatant | None = None,
 ) -> ActiveEffectChange:
     """Translate one lib ``PassiveEffectChange`` to an ``ActiveEffectChange``.
 
@@ -123,6 +138,11 @@ def _passive_change_to_active(
     fold reads a real number, not an unresolved token. When ``ctx`` is supplied
     and the value carries an ``@``-token, it is resolved here at apply-time via
     the same pure formula layer the dice/heal paths use.
+
+    ``@attributes.movement.<mode>`` reads the creature the effect lands on
+    (``bearer``), not the caster: SRD 5.2.1 Spider Climb gives the target "a
+    Climb Speed equal to its Speed", and Freedom of Movement a Swim Speed
+    "equal to its Speed".
     """
     mode = _MODE_MAP.get(ch.mode)
     if mode is None:
@@ -135,6 +155,8 @@ def _passive_change_to_active(
         mode = "custom"
     priority = ch.priority if ch.priority is not None else _DEFAULT_CHANGE_PRIORITY
     value = ch.value
+    if bearer is not None and isinstance(value, str):
+        value = _MOVEMENT_TOKEN_RE.sub(lambda m: str(_bearer_speed(bearer, m.group(1))), value)
     if ctx is not None and isinstance(value, str) and "@" in value:
         # Resolve @scale.*/@classes.* (and any other roll-data token) against the
         # caster's pre-resolved carriers. No governing ability is supplied —
@@ -166,6 +188,7 @@ def passive_effect_to_active_effect(
     concentration: bool = False,
     ctx: ActivityResolutionContext | None = None,
     extra_flags: Mapping[str, Any] | None = None,
+    bearer: Combatant | None = None,
 ) -> ActiveEffect:
     """Build the runtime ``ActiveEffect`` the resolver emits for one target.
 
@@ -177,6 +200,7 @@ def passive_effect_to_active_effect(
     ``ctx`` (when supplied) resolves level-scaled roll-data tokens in each
     change value at apply-time (Rage's ``@scale.barbarian.rage-damage`` → the
     concrete ``+2``); absent, change values stay verbatim Foundry strings.
+    ``bearer`` is the creature the effect lands on, which a movement token reads.
     """
     return ActiveEffect(
         id=_effect_id_from_name(pe.name),
@@ -186,7 +210,7 @@ def passive_effect_to_active_effect(
         disabled=pe.disabled,
         transfer=pe.transfer,
         duration=_duration_from_passive(pe.duration),
-        changes=[_passive_change_to_active(ch, ctx) for ch in pe.changes],
+        changes=[_passive_change_to_active(ch, ctx, bearer) for ch in pe.changes],
         statuses=set(pe.statuses),
         flags={**({"concentration": True} if concentration else {}), **(extra_flags or {})},
     )
@@ -254,6 +278,7 @@ def apply_activity_effects(
             concentration=ctx.concentration,
             ctx=ctx,
             extra_flags=extra_flags,
+            bearer=target,
         )
         ctx.event_emitter(EffectApplied(effect=ae))
 

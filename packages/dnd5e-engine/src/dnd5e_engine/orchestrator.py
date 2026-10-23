@@ -1822,12 +1822,27 @@ _FEATHER_FALL: Final = "feather-fall"
 _FEATHER_FALL_DESCENT_FT: Final = 600
 
 
-def _climbs_freely(combatant: Combatant) -> bool:
+#: The effect change keys that grant a Speed a climb can use.
+_CLIMBING_SPEED_KEYS: Final = frozenset(
+    {"system.attributes.movement.climb", "system.attributes.movement.fly"}
+)
+
+
+def _climbs_freely(live: _LiveCombat, combatant: Combatant) -> bool:
     """Whether ``combatant`` climbs without the extra cost: SRD 5.2.1
     "Climbing": "You ignore this extra cost if you have a Climb Speed and use
-    it to climb". A Fly Speed flies up or down the height instead."""
+    it to climb". A Fly Speed flies up or down the height instead. The Speed
+    is its own (``movement_modes``) or one an active effect grants it (SRD
+    5.2.1 Spider Climb: "It also gains a Climb Speed equal to its Speed")."""
     modes = combatant.movement_modes
-    return bool(modes.climb) or bool(modes.fly)
+    if modes.climb or modes.fly:
+        return True
+    return any(
+        change.key in _CLIMBING_SPEED_KEYS and str(change.value).strip() not in ("", "0")
+        for effect in live.active_effects.get(combatant.entity_id, ())
+        if not effect.disabled
+        for change in effect.changes
+    )
 
 
 def _stays_aloft(live: _LiveCombat, combatant: Combatant) -> bool:
@@ -2156,7 +2171,9 @@ def _take_walk_step(live: _LiveCombat, mover_id: str, next_cell: str) -> bool:
     from_cell = live.actor_zone.get(mover_id)
     if mover is None or from_cell is None:
         return False
-    step_distance = live.topology.edge_distance(from_cell, next_cell, climber=_climbs_freely(mover))
+    step_distance = live.topology.edge_distance(
+        from_cell, next_cell, climber=_climbs_freely(live, mover)
+    )
     if step_distance is None or mover.movement_remaining < step_distance:
         return False
     if _fire_opportunity_attacks_on_step(
@@ -2211,7 +2228,7 @@ def _execute_flee_retreat(
         monster.movement_remaining,
         enemy_cells=_occupied_cells(live, exclude=_allied_ids(live, monster.entity_id)),
         occupied_cells=_occupied_cells(live, exclude=(monster.entity_id,)),
-        climber=_climbs_freely(monster),
+        climber=_climbs_freely(live, monster),
     )
     if route is not None:
         _walk_path(live, monster.entity_id, route)
@@ -2272,7 +2289,7 @@ def _monster_target_distance_ft(
     path = live.topology.shortest_path(monster_zone, target_zone)
     monster = _find_combatant(live, monster_id)
     return _path_total_distance(
-        live.topology, path, climber=monster is not None and _climbs_freely(monster)
+        live.topology, path, climber=monster is not None and _climbs_freely(live, monster)
     )
 
 
@@ -6514,13 +6531,54 @@ def _aoe_direction(
 def _area_origin(
     live: _LiveCombat, actor_id: str, intent: PlayerIntent, template: AreaTemplate
 ) -> str:
-    """The area's SRD 5.2 point of origin: the named target's cell for a
-    Sphere or Cylinder (Fireball), else the actor's cell (Burning Hands,
-    Thunderwave, an Emanation)."""
+    """The area's SRD 5.2 point of origin: for a Sphere or Cylinder, the named
+    target's cell, else the cell ``target_zone_id`` chooses (SRD 5.2.1
+    Fireball: "a point you choose within range"); for any other shape, and a
+    Sphere with neither, the actor's cell (Burning Hands, Thunderwave, an
+    Emanation)."""
     actor_cell = live.actor_zone[actor_id]
     if template.anchor == "target" and intent.target_id:
         return live.actor_zone.get(intent.target_id, actor_cell)
+    if template.anchor == "target" and intent.target_zone_id:
+        return intent.target_zone_id
     return actor_cell
+
+
+def _chosen_point_out_of_range(
+    live: _LiveCombat, actor_id: str, intent: PlayerIntent, plan: _AreaPlan
+) -> bool:
+    """Whether the point a Sphere or Cylinder is centred on
+    (``_area_origin``'s ``target_zone_id``) is off the map, in a blocked cell,
+    or beyond the range or out of the sight of the actor. SRD 5.2.1 "Range":
+    "the target of a spell must be within the spell's range"; "Targets": "To
+    target something, you must have a clear path to it, so it can't be behind
+    Total Cover". The range is the spell's for a cast, else the activity's;
+    one the engine can't measure checks the path alone."""
+    template = plan.template
+    if (
+        template is None
+        or not plan.places_template
+        or template.anchor != "target"
+        or intent.target_id is not None
+        or intent.target_zone_id is None
+    ):
+        return False
+    point = intent.target_zone_id
+    actor_cell = live.actor_zone.get(actor_id)
+    if actor_cell is None or not live.topology.is_valid_cell(point):
+        return True
+    range_ft: int | None = None
+    spell = get_lib_loader().get_spell(intent.spell_id) if intent.spell_id else None
+    if intent.intent_type == "cast_spell" and spell is not None:
+        if spell.range.units == SpellRangeUnits.FEET:
+            range_ft = spell.range.value
+    else:
+        activity_range = plan.activity.range
+        if activity_range.units == "ft" and (activity_range.value or "").isdigit():
+            range_ft = int(activity_range.value or 0)
+    if range_ft is None:
+        return not live.topology.has_line_of_sight(actor_cell, point)
+    return not _in_range_with_los(live.topology, actor_cell, point, range_ft)
 
 
 def _area_cover_origin(
@@ -6545,6 +6603,10 @@ def _area_target_failure(
     """``target_invalid`` for an area the intent can't resolve, before anything
     is spent; ``None`` otherwise. One of the ``pre_resolution_gates``.
 
+    - A Sphere or Cylinder centred on a chosen point the actor can't reach
+      (``_chosen_point_out_of_range``): ``out_of_range``, a ``CastFailed`` for
+      a cast and an ``IntentRejectedError`` for an item or feature.
+
     - A Cone, Cube or Line with no aim: no ``direction`` and no other named
       creature (SRD 5.2: it extends "in a direction its creator chooses").
     - ``excluded_target_ids`` naming a creature not in the combat, or sent with
@@ -6565,6 +6627,14 @@ def _area_target_failure(
         stat_block_slug=_current_stat_block_slug(live, actor_id),
     ).activities
     plan = _area_plan(intent, activities)
+    if plan is not None and _chosen_point_out_of_range(live, actor_id, intent, plan):
+        if intent.intent_type == "cast_spell":
+            return CastFailed(
+                actor_id=actor_id, spell_id=intent.spell_id or "", reason="out_of_range"
+            )
+        raise IntentRejectedError(
+            "out_of_range", f"{intent.target_zone_id!r} is not a point {actor_id} can reach"
+        )
     in_combat = {c.entity_id for c in live.initiative}
     invalid = (
         (
@@ -7649,6 +7719,78 @@ def _is_proficient_with_weapon(current: Combatant, weapon: Weapon | None) -> boo
     )
 
 
+#: SRD 5.2.1 Warlock Features table: the Warlock level each Mystic Arcanum
+#: spell level arrives at.
+_MYSTIC_ARCANUM_LEVELS: Final = {6: 11, 7: 13, 8: 15, 9: 17}
+
+
+def _warlock_level(pc: PartyMemberSpec) -> int:
+    """``pc``'s Warlock level: its ``classes`` entry, else its whole level when
+    it is a single-class Warlock."""
+    if pc.classes:
+        return pc.classes.get("warlock", 0)
+    return pc.character_level if pc.class_slug == "warlock" else 0
+
+
+def _warlock_spell_levels(pc: PartyMemberSpec) -> dict[str, int]:
+    """The level of each Warlock spell an arcanum could name, by slug: the
+    corpus's Warlock spell list when the loader has spell lists, else the
+    level of every spell ``pc`` names (a host loader without lists)."""
+    loader = get_lib_loader()
+    get_spell_list = getattr(loader, "get_spell_list", None)
+    spell_list = get_spell_list("warlock") if get_spell_list is not None else None
+    if spell_list is not None:
+        return {entry.slug: entry.level for entry in spell_list.spells}
+    levels: dict[str, int] = {}
+    for slug in (*pc.mystic_arcanum, *pc.spells_known):
+        spell = loader.get_spell(slug)
+        if spell is not None:
+            levels[slug] = spell.level
+    return levels
+
+
+def _mystic_arcanum(pc: PartyMemberSpec) -> tuple[str, ...]:
+    """SRD 5.2.1 Mystic Arcanum: the spells ``pc`` can cast once each without
+    a spell slot, regained on a Long Rest. ``PartyMemberSpec.mystic_arcanum``
+    when set; otherwise each Warlock spell of levels 6 to 9 in
+    ``spells_known`` whose level the Warlock has reached, when it is the only
+    one of its level. Raises ``ValueError`` for an arcanum the Warlock has not
+    reached, a spell off the Warlock list, two of one level, or a
+    ``spells_known`` that leaves the choice open."""
+    warlock_level = _warlock_level(pc)
+    if not pc.mystic_arcanum and warlock_level < _MYSTIC_ARCANUM_LEVELS[6]:
+        return ()
+    levels = _warlock_spell_levels(pc)
+    if pc.mystic_arcanum:
+        by_level: dict[int, list[str]] = {}
+        for slug in pc.mystic_arcanum:
+            level = levels.get(slug)
+            if level not in _MYSTIC_ARCANUM_LEVELS:
+                raise ValueError(
+                    f"start_combat: {pc.entity_id}'s mystic_arcanum {slug!r} is not a "
+                    "level 6 to 9 Warlock spell"
+                )
+            if warlock_level < _MYSTIC_ARCANUM_LEVELS[level]:
+                raise ValueError(
+                    f"start_combat: {pc.entity_id} gains a level {level} arcanum at Warlock "
+                    f"level {_MYSTIC_ARCANUM_LEVELS[level]}, not {warlock_level}"
+                )
+            by_level.setdefault(level, []).append(slug)
+    else:
+        by_level = {}
+        for slug in pc.spells_known:
+            level = levels.get(slug)
+            if level in _MYSTIC_ARCANUM_LEVELS and warlock_level >= _MYSTIC_ARCANUM_LEVELS[level]:
+                by_level.setdefault(level, []).append(slug)
+    for level, slugs in sorted(by_level.items()):
+        if len(slugs) > 1:
+            raise ValueError(
+                f"start_combat: {pc.entity_id} has one level {level} arcanum, not "
+                f"{sorted(slugs)}; name it in mystic_arcanum"
+            )
+    return tuple(slugs[0] for _level, slugs in sorted(by_level.items()))
+
+
 def _build_pc_combatants(
     party: list[PartyMemberSpec],
     combatants: list[Combatant],
@@ -7666,6 +7808,7 @@ def _build_pc_combatants(
     """
     for pc in party:
         worn_armor, shield_equipped = _worn_armor(pc.equipment)
+        arcanum = _mystic_arcanum(pc)
         combatants.append(
             Combatant(
                 entity_id=pc.entity_id,
@@ -7705,7 +7848,7 @@ def _build_pc_combatants(
                 fighting_styles=styles_from_feats(pc.feats, pc.fighting_style),
                 feats=tuple(pc.feats),
                 spell_abilities=dict(pc.spell_abilities),
-                slotless_casts=tuple(pc.slotless_casts),
+                slotless_casts=(*pc.slotless_casts, *arcanum),
                 worn_armor=worn_armor,
                 shield_equipped=shield_equipped,
                 subclass_slug=pc.subclass_slug,
@@ -7731,8 +7874,8 @@ def _build_pc_combatants(
             spell_slots_by_entity[pc.entity_id] = dict(pc.spell_slots)
         if pc.pact_slots:
             pact_slots_by_entity[pc.entity_id] = dict(pc.pact_slots)
-        if pc.spells_known:
-            spells_known_by_entity[pc.entity_id] = list(pc.spells_known)
+        if pc.spells_known or arcanum:
+            spells_known_by_entity[pc.entity_id] = list(dict.fromkeys((*pc.spells_known, *arcanum)))
         if pc.custom_counters:
             custom_counters_by_entity[pc.entity_id] = {
                 k: dict(v) for k, v in pc.custom_counters.items()
@@ -9465,7 +9608,7 @@ def _handle_move(live: _LiveCombat, current: Combatant, intent: PlayerIntent) ->
         return
     # "To enter a square, you must have enough movement left to pay for
     # entering" — the whole route is priced up front so a rejection is atomic.
-    climber = _climbs_freely(current)
+    climber = _climbs_freely(live, current)
     total_cost = _path_total_distance(live.topology, path, climber=climber)
     if total_cost is None or current.movement_remaining < total_cost:
         _emit(live, MoveFailed(actor_id=actor_id, reason="insufficient_movement"))
@@ -13908,7 +14051,7 @@ async def _advance_monster_turn(
             # Plan the path and walk it greedily within budget.
             path = live.topology.shortest_path(attacker_zone, target_zone)
             dashed_budget = _monster_dash_movement_budget(
-                _path_total_distance(live.topology, path, climber=_climbs_freely(current)),
+                _path_total_distance(live.topology, path, climber=_climbs_freely(live, current)),
                 current.movement_remaining,
                 # SRD 5.2 Dash adds the creature's EFFECTIVE Speed: a Speed-0
                 # monster (Grappled / Restrained / …) "can't increase" it, so
