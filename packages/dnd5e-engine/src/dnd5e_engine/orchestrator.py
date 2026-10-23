@@ -118,7 +118,7 @@ from dnd5e_engine.activities.conjuration import (
 from dnd5e_engine.activities.context import ActivityResolutionContext
 from dnd5e_engine.activities.d20 import AdvantageSources, roll_d20_test
 from dnd5e_engine.activities.dice import roll_damage_part, roll_expr
-from dnd5e_engine.activities.effects import is_condition_immune
+from dnd5e_engine.activities.effects import _name_slug, is_condition_immune
 from dnd5e_engine.activities.forced_movement import FORCED_MOVEMENT_RIDERS
 from dnd5e_engine.activities.monster_actions import (
     expand_action_to_activities,
@@ -133,6 +133,7 @@ from dnd5e_engine.activities.passive_stats import (
 )
 from dnd5e_engine.activities.resolver import resolve_activity
 from dnd5e_engine.activities.scale import build_scale_values, feature_owners
+from dnd5e_engine.activities.timing import cast_time_activities
 from dnd5e_engine.areas import (
     AreaAim,
     AreaTemplate,
@@ -193,6 +194,12 @@ from dnd5e_engine.events import (
     Unconscious,
 )
 from dnd5e_engine.lib_loader import get_lib_loader
+from dnd5e_engine.lingering import (
+    SPELL_USES_START,
+    LaterRule,
+    LingeringSpell,
+    rules_for,
+)
 from dnd5e_engine.outcome import (
     CombatOutcome,
     DeathRecord,
@@ -2358,11 +2365,18 @@ def _loading_weapon_already_fired_failure(
 _HARMFUL_ACTIVITY_KINDS: frozenset[str] = frozenset({"attack", "damage", "save"})
 
 
+def _cast_activities(spell: Spell, chosen_id: str | None = None) -> list[Any]:
+    """The activities a cast of ``spell`` resolves (``activities.timing``):
+    not the ones that wait for a later trigger, and one of each set of
+    alternatives, ``chosen_id`` when it names one."""
+    return cast_time_activities(spell.slug, spell.activities, chosen_id)
+
+
 def _spell_is_harmful(spell: Spell) -> bool:
     """SRD 5.2 Charmed's "damaging abilities or magical effects" — a spell with
     any attack / damage / save activity. Heal- and utility-only spells are
     not restricted."""
-    return any(a.kind in _HARMFUL_ACTIVITY_KINDS for a in spell.activities)
+    return any(a.kind in _HARMFUL_ACTIVITY_KINDS for a in _cast_activities(spell))
 
 
 def _charmed_target_violation(
@@ -2733,10 +2747,11 @@ def _monster_cast_candidate(
         if spell.casting_time.unit not in ("action", "bonus", "reaction"):
             continue
         if not any(
-            isinstance(a, (AttackActivity, SaveActivity, DamageActivity)) for a in spell.activities
+            isinstance(a, (AttackActivity, SaveActivity, DamageActivity))
+            for a in _cast_activities(spell)
         ):
             continue
-        if _monster_area_unaimable(live, current, spell.activities, spell):
+        if _monster_area_unaimable(live, current, _cast_activities(spell), spell):
             continue
         return activity, spell
     return None
@@ -3054,7 +3069,7 @@ def _resolve_monster_cast(
     payload = _build_hydration_payload(live, caster=current)
     pre_event_count = len(live.event_log)
     _emit_spell_cast(live, current.entity_id, spell, slot_level)
-    area = _monster_area(spell.activities)
+    area = _monster_area(_cast_activities(spell))
     aim = None if area is None else _monster_aim(live, current, *area, _range_ft(spell.range))
     if area is not None and aim is not None:
         target_list = _place_monster_area(live, current, spell.slug, area[1], aim)
@@ -3064,6 +3079,7 @@ def _resolve_monster_cast(
         target_list,
         rng=live.rng,
         on_would_hit=_hit_hook(live, current.entity_id),
+        on_hit=_on_hit_hook(live, current.entity_id),
         event_emitter=lambda ev: _emit(live, ev),
         slot_level=slot_level,
         base_spell_level=spell.level,
@@ -3074,7 +3090,7 @@ def _resolve_monster_cast(
         **_monster_context_kwargs(live, current, target_list, payload, origin_cell=cover_origin),
     )
     damage_since = len(live.event_log)
-    for child_activity in spell.activities:
+    for child_activity in _cast_activities(spell):
         resolve_activity(child_activity, actx)
     _offer_damage_reactions(live, current.entity_id, damage_since)
 
@@ -3089,7 +3105,7 @@ def _resolve_monster_cast(
     # SHAPE here (rather than relying on that) keeps a save-only cast from
     # even attempting the lookup. No mastery-proc fold either way — a
     # monster cast has no ``Weapon``.
-    if any(isinstance(a, AttackActivity) for a in spell.activities):
+    if any(isinstance(a, AttackActivity) for a in _cast_activities(spell)):
         _consume_attack_roll_grants(live, current, target_list, pre_event_count)
 
     _spend_monster_cast_use(live, current, action, activity)
@@ -3098,6 +3114,14 @@ def _resolve_monster_cast(
     # here — the same recorded follow-up as the mundane monster-attack site.
     _fold_resolution_outcome(live, current, spell=spell, actx=actx, pre_event_count=pre_event_count)
     _sync_legendary_resistance(live, pre_event_count)
+    _record_lingering(
+        live,
+        current,
+        spell,
+        slot_level,
+        pre_event_count,
+        point=cover_origin or live.actor_zone.get(chosen_target.entity_id),
+    )
 
 
 def _spend_monster_cast_use(
@@ -3234,6 +3258,7 @@ def _resolve_monster_attack_activities(
         target_list,
         rng=live.rng,
         on_would_hit=_hit_hook(live, actor.entity_id),
+        on_hit=_on_hit_hook(live, actor.entity_id),
         event_emitter=lambda ev: _emit(live, ev),
         slot_level=None,
         base_spell_level=None,
@@ -3675,6 +3700,9 @@ class _LiveCombat:
     # (``_resolution_events``): the attacker's cast must not claim the
     # target's Shield or readied Fog Cloud as its own effect.
     nested_event_spans: list[tuple[int, int]] = field(default_factory=list)
+    # Casts whose later activities still wait for their triggers
+    # (``dnd5e_engine.lingering``), in cast order.
+    lingering_spells: list[LingeringSpell] = field(default_factory=list)
 
 
 @dataclass(frozen=True)
@@ -4226,6 +4254,9 @@ def _drop_concentration(
         if c.entity_id == caster_id and c.concentration_effect_id is not None:
             live.initiative[idx] = c.model_copy(update={"concentration_effect_id": None})
             break
+    # The spells this concentration kept lingering end with it, firing their
+    # "when the spell ends" activities (Delayed Blast Fireball's explosion).
+    _end_concentration_lingering(live, caster_id)
 
 
 # SRD 5.2 armor categories a creature can wear; a Shield is tracked
@@ -7238,6 +7269,9 @@ def _register_default_turn_hooks(live: _LiveCombat) -> None:
     append here rather than editing the advance path.
     """
     live.lifecycle.register("turn_end", _hook_run_end_of_turn_saves, key="engine:repeat-save")
+    # A lingering spell's end-of-turn activities resolve while its effects are
+    # live and before its concentration can run out on this boundary.
+    live.lifecycle.register("turn_end", _hook_lingering_turn_end, key="engine:lingering-turn-end")
     live.lifecycle.register("turn_end", _hook_tick_durations, key="engine:duration-tick")
     live.lifecycle.register(
         "turn_end", _hook_expire_timed_effects, key="engine:timed-effect-expiry"
@@ -7249,6 +7283,9 @@ def _register_default_turn_hooks(live: _LiveCombat) -> None:
     live.lifecycle.register("turn_end", _hook_rage_extension, key="engine:rage-extension")
     live.lifecycle.register(
         "turn_start", _hook_expire_reaction_effects, key="engine:reaction-effect-expiry"
+    )
+    live.lifecycle.register(
+        "turn_start", _hook_lingering_turn_start, key="engine:lingering-turn-start"
     )
 
 
@@ -10112,6 +10149,7 @@ def _resolve_construct_attack(
         target_list,
         rng=live.rng,
         on_would_hit=_hit_hook(live, owner.entity_id),
+        on_hit=_on_hit_hook(live, owner.entity_id),
         event_emitter=lambda ev: _emit(live, ev),
         slot_level=construct.slot_level,
         base_spell_level=spec.base_level,
@@ -11813,7 +11851,7 @@ def _resolve_intent_activities(
     elif intent.intent_type == "cast_spell" and intent.spell_id:
         cast_spell = get_lib_loader().get_spell(intent.spell_id)
         if cast_spell is not None:
-            activities = list(cast_spell.activities)
+            activities = _cast_activities(cast_spell, intent.activity_id)
             # SRD 5.2 §Spellcasting — the real class->ability mapping
             # (cleric -> wis, wizard -> int, ...), read off the caster's own
             # class doc, unless the spell has its own (Magic Initiate). ``None``
@@ -12287,7 +12325,7 @@ def _cast_reaction_spell(
         undead_fortitude_holds=live.undead_fortitude_holds,
     )
     pre_event_count = len(live.event_log)
-    for activity in spell.activities:
+    for activity in _cast_activities(spell):
         resolve_activity(activity, actx, weapon=None)
 
     # A readied concentration spell concentrates like an on-turn cast.
@@ -12355,6 +12393,392 @@ def _release_readied_spell(
         return False
     _resolve_readied_spell_cast(live, reactor, popped)
     return True
+
+
+# ── Lingering spells: later activities at their triggers (spec 02a B3b) ────
+
+
+def _record_lingering(
+    live: _LiveCombat,
+    caster: Combatant,
+    spell: Spell | None,
+    slot_level: int | None,
+    pre_event_count: int,
+    point: str | None = None,
+) -> None:
+    """Leave a ``LingeringSpell`` for a cast whose spell has later activities
+    the engine fires (``lingering.LATER_RULES``). Called after the cast's
+    resolution is folded, so a concentration the cast replaced has already
+    ended its own lingering spells. The cast's events give its subjects (who
+    was hit, who failed or made the save, who got an effect) and its area's
+    point of origin; ``point`` (the cell the cast chose or named) stands in
+    when no area was placed (Delayed Blast Fireball's bead, Stinking
+    Cloud's cloud).
+
+    A rule whose save ends the spell supersedes the repeat save the cast's
+    effect carries (Weird's Frightened), so the save is rolled once."""
+    if spell is None or not rules_for(spell.slug):
+        return
+    events = _resolution_events(live, pre_event_count)
+    hit = [
+        ev.target_id
+        for ev in events
+        if isinstance(ev, AttackRolled) and ev.attacker_id == caster.entity_id and ev.is_hit
+    ]
+    first_save: dict[str, bool] = {}
+    for ev in events:
+        if isinstance(ev, SaveRolled) and ev.target_id not in first_save:
+            first_save[ev.target_id] = ev.succeeded
+    affected = list(
+        dict.fromkeys(
+            ev.effect.target_id
+            for ev in events
+            if isinstance(ev, EffectApplied) and ev.effect.origin in _spell_origins(spell, caster)
+        )
+    )
+    area = next(
+        (ev for ev in events if isinstance(ev, AreaTargeted) and ev.source_id == spell.slug),
+        None,
+    )
+    kinds = {rule.subjects for rule in rules_for(spell.slug).values()}
+    subjects: list[str] = []
+    if "hit" in kinds:
+        subjects += hit
+    if "failed_save" in kinds:
+        subjects += [t for t, ok in first_save.items() if not ok]
+    if "saved" in kinds:
+        subjects += list(first_save)
+    if "affected" in kinds:
+        subjects += affected
+    cast_area = next(
+        (a for a in _cast_activities(spell) if area_template(a) is not None),
+        area_activity(_cast_activities(spell)),
+    )
+    if any(rule.on_save is not None for rule in rules_for(spell.slug).values()):
+        origins = _spell_origins(spell, caster)
+        for identity in [k for k in live.repeat_save_on_turn_end if k[2] in origins]:
+            live.repeat_save_on_turn_end.pop(identity)
+    lingering = LingeringSpell(
+        id=f"{spell.slug}:{caster.entity_id}:{live.round_number}:{len(live.event_log)}",
+        cast_turn=(live.round_number, caster.entity_id),
+        spell_id=spell.slug,
+        caster_id=caster.entity_id,
+        slot_level=slot_level if spell.level > 0 else None,
+        concentration=spell.concentration,
+        subject_ids=list(dict.fromkeys(subjects)),
+        origin=area.origin if area is not None else point,
+        direction=area.direction if area is not None else None,
+        area_activity_id=getattr(cast_area, "id", None),
+        uses=SPELL_USES_START.get(spell.slug, 0),
+        rounds_remaining=None if spell.concentration else _spell_duration_rounds(spell),
+    )
+    live.lingering_spells.append(lingering)
+
+
+def _spell_duration_rounds(spell: Spell) -> int | None:
+    """A spell's duration in rounds (SRD 5.2.1: "a round represents about 6
+    seconds"), or ``None`` for an instantaneous or untimed one."""
+    duration = spell.duration
+    per_unit = {"round": 1, "minute": 10, "hour": 600}.get(str(duration.units))
+    if per_unit is None or not duration.value:
+        return None
+    return int(duration.value) * per_unit
+
+
+def _spell_origins(spell: Spell, caster: Combatant) -> set[str]:
+    """The origins an effect this caster's cast of ``spell`` lays carries."""
+    return {f"cast:{_name_slug(pe.name)}:{caster.entity_id}" for pe in spell.passive_effects}
+
+
+def _lingering_activity(spell: Spell, activity_id: str) -> Any | None:
+    return next((a for a in spell.activities if a.id == activity_id), None)
+
+
+def _lingering_subjects(
+    live: _LiveCombat, lingering: LingeringSpell, spell: Spell, activity_id: str, rule: LaterRule
+) -> list[Combatant]:
+    """The creatures ``rule`` affects right now (``lingering.Subjects``),
+    living ones only, in initiative order, less those the spell has ended on."""
+    alive = [
+        c
+        for c in live.initiative
+        if c.is_alive
+        and c.entity_id not in live.dead_ids
+        and c.entity_id not in lingering.ended_for
+    ]
+    caster = _find_combatant(live, lingering.caster_id)
+    if rule.subjects in ("hit", "failed_save", "saved", "affected"):
+        chosen = [c for c in alive if c.entity_id in lingering.subject_ids]
+    elif rule.subjects == "bearing":
+        origins = _spell_origins(spell, caster) if caster is not None else set()
+        chosen = [
+            c
+            for c in alive
+            if any(e.origin in origins for e in live.active_effects.get(c.entity_id, ()))
+        ]
+    elif rule.subjects in ("area", "caster_area"):
+        chosen = _lingering_area_creatures(live, lingering, spell, activity_id, rule, alive)
+    else:
+        chosen = []
+    if rule.enemies_only:
+        chosen = [c for c in chosen if _is_enemy(live, lingering.caster_id, c.entity_id)]
+    if rule.max_subjects is not None:
+        chosen = chosen[: rule.max_subjects]
+    return chosen
+
+
+def _lingering_area_creatures(
+    live: _LiveCombat,
+    lingering: LingeringSpell,
+    spell: Spell,
+    activity_id: str,
+    rule: LaterRule,
+    alive: list[Combatant],
+) -> list[Combatant]:
+    """The creatures in the spell's area: the cast's template (or the
+    activity's own, ``area_from="self"``) at the cast's point of origin, or
+    centred on the caster where it stands now (``caster_area``)."""
+    source_id = activity_id if rule.area_from == "self" else lingering.area_activity_id
+    source = _lingering_activity(spell, source_id or "")
+    template = area_template(source) if source is not None else None
+    if rule.subjects == "caster_area":
+        origin = live.actor_zone.get(lingering.caster_id)
+    else:
+        origin = lingering.origin
+    if template is None or origin is None:
+        return []
+    cells = set(area_cells(live.topology, template, origin, lingering.direction))
+    return [c for c in alive if live.actor_zone.get(c.entity_id) in cells]
+
+
+def _fire_lingering(
+    live: _LiveCombat,
+    lingering: LingeringSpell,
+    activity_id: str,
+    rule: LaterRule,
+    *,
+    only: str | None = None,
+    critical: bool = False,
+) -> None:
+    """Resolve one later activity of ``lingering`` at its trigger, against its
+    subjects (``only`` narrows them to one creature: the creature whose turn
+    it is, or the one just hit), with the caster's stats and the cast's slot
+    level. A ``once`` rule affects each subject once. A successful save then
+    ends the spell for that subject, or the whole spell (``rule.on_save``)."""
+    spell = get_lib_loader().get_spell(lingering.spell_id)
+    caster = _find_combatant(live, lingering.caster_id)
+    if spell is None or caster is None:
+        return
+    activity = _lingering_activity(spell, activity_id)
+    if activity is None:
+        return
+    lingering.uses += rule.uses_delta
+    if rule.subjects == "none":
+        return
+    subjects = _lingering_subjects(live, lingering, spell, activity_id, rule)
+    if only is not None:
+        subjects = [c for c in subjects if c.entity_id == only]
+    if rule.once:
+        subjects = [c for c in subjects if f"{activity_id}:{c.entity_id}" not in lingering.fired]
+        lingering.fired += [f"{activity_id}:{c.entity_id}" for c in subjects]
+    if not subjects:
+        return
+    payload = _build_hydration_payload(live, caster=caster)
+    actx = build_activity_context(
+        caster,
+        subjects,
+        rng=live.rng,
+        event_emitter=lambda ev: _emit(live, ev),
+        slot_level=lingering.slot_level,
+        base_spell_level=spell.level,
+        spellcasting_ability=_spellcasting_ability_for(caster, spell.slug),
+        concentration=False,
+        source_passive_effects=list(spell.passive_effects),
+        spell_book={},
+        passive_damage_modifiers=payload["passive_damage_modifiers"],
+        save_modifiers=payload["save_modifiers"],
+        check_modifiers=payload["check_modifiers"],
+        d20_test_penalty=payload["d20_test_penalty"],
+        legendary_resistance_armed=payload["legendary_resistance_armed"],
+        legendary_resistances_remaining_by_entity=payload[
+            "legendary_resistances_remaining_by_entity"
+        ],
+        undead_fortitude_holds=live.undead_fortitude_holds,
+        item_uses_value=lingering.uses,
+    )
+    if critical:
+        actx.variables["in_crit"] = True
+    pre_event_count = len(live.event_log)
+    resolve_activity(activity, actx)
+    _fold_resolution_outcome(live, caster, spell=None, actx=actx, pre_event_count=pre_event_count)
+    _sync_legendary_resistance(live, pre_event_count)
+    if rule.on_save is None:
+        return
+    saved = {
+        ev.target_id
+        for ev in _resolution_events(live, pre_event_count)
+        if isinstance(ev, SaveRolled) and ev.succeeded
+    }
+    for subject in subjects:
+        if subject.entity_id not in saved:
+            continue
+        if rule.on_save == "end_spell":
+            _end_lingering(live, lingering)
+            return
+        _end_lingering_on(live, lingering, spell, subject.entity_id)
+
+
+def _end_lingering_on(
+    live: _LiveCombat, lingering: LingeringSpell, spell: Spell, subject_id: str
+) -> None:
+    """End the spell on one creature: Weird's "On a successful save, the spell
+    ends on that target." Its effects on that creature expire, and the caster's
+    concentration no longer holds them."""
+    lingering.ended_for.append(subject_id)
+    caster = _find_combatant(live, lingering.caster_id)
+    origins = _spell_origins(spell, caster) if caster is not None else set()
+    for effect in list(live.active_effects.get(subject_id, ())):
+        if effect.origin in origins:
+            _emit(
+                live,
+                EffectExpired(
+                    effect_id=effect.id,
+                    target_id=subject_id,
+                    origin=effect.origin,
+                    reason="spell_ended",
+                ),
+            )
+    chain = live.concentration_chain.get(lingering.caster_id)
+    if chain:
+        live.concentration_chain[lingering.caster_id] = [
+            entry for entry in chain if not (entry[0] == subject_id and entry[2] in origins)
+        ]
+
+
+def _end_lingering(live: _LiveCombat, lingering: LingeringSpell) -> None:
+    """End a lingering spell: fire its ``spell_ends`` activities (Delayed
+    Blast Fireball's explosion, Haste's lethargy), then let it go. A
+    concentration spell ends with its concentration (``_drop_concentration``
+    calls this); any other spell's effects expire here."""
+    if lingering not in live.lingering_spells:
+        return
+    live.lingering_spells.remove(lingering)
+    for activity_id, rule in rules_for(lingering.spell_id).items():
+        if rule.trigger == "spell_ends":
+            _fire_lingering(live, lingering, activity_id, rule)
+    if lingering.concentration:
+        _drop_concentration(live, lingering.caster_id, reason="duration")
+        return
+    spell = get_lib_loader().get_spell(lingering.spell_id)
+    if spell is None:  # pragma: no cover - the cast found it
+        return
+    for subject in [c.entity_id for c in live.initiative]:
+        if subject not in lingering.ended_for:
+            _end_lingering_on(live, lingering, spell, subject)
+
+
+def _end_concentration_lingering(live: _LiveCombat, caster_id: str) -> None:
+    """The caster's concentration ended: so does every concentration spell it
+    left lingering, which fires their ``spell_ends`` activities."""
+    for lingering in [
+        s for s in live.lingering_spells if s.caster_id == caster_id and s.concentration
+    ]:
+        _end_lingering(live, lingering)
+
+
+def _lingering_done(lingering: LingeringSpell) -> bool:
+    """A spell without concentration whose every rule is one-time and has
+    fired on every subject: nothing is left for it to do."""
+    rules = rules_for(lingering.spell_id)
+    if lingering.concentration or lingering.rounds_remaining is not None:
+        return False
+    return all(
+        rule.once and all(f"{activity_id}:{s}" in lingering.fired for s in lingering.subject_ids)
+        for activity_id, rule in rules.items()
+    )
+
+
+def _hook_lingering_turn_start(live: _LiveCombat, actor_id: str | None) -> None:
+    """``turn_start`` hook: the caster's start-of-turn activities (Tsunami's
+    wave, Storm of Vengeance's sequence), then the activities that wait for
+    the start of a subject's own turn (Stinking Cloud, Ensnaring Strike)."""
+    if actor_id is None:
+        return
+    for lingering in list(live.lingering_spells):
+        if lingering not in live.lingering_spells:
+            continue
+        rules = rules_for(lingering.spell_id)
+        if lingering.caster_id == actor_id:
+            lingering.caster_turns_started += 1
+            for activity_id, rule in rules.items():
+                if rule.trigger != "caster_turn_start":
+                    continue
+                if rule.steps is not None and lingering.caster_turns_started not in rule.steps:
+                    continue
+                if rule.uses_delta < 0 and lingering.uses + rule.uses_delta <= 0:
+                    # Tsunami: "When the wall reaches 0 feet in height, the
+                    # spell ends."
+                    _end_lingering(live, lingering)
+                    break
+                _fire_lingering(live, lingering, activity_id, rule)
+        for activity_id, rule in rules.items():
+            if rule.trigger == "target_turn_start" and lingering in live.lingering_spells:
+                _fire_lingering(live, lingering, activity_id, rule, only=actor_id)
+
+
+def _hook_lingering_turn_end(live: _LiveCombat, actor_id: str | None) -> None:
+    """``turn_end`` hook: the activities that wait for the end of a subject's
+    own turn (Weird, Acid Arrow, Spirit Guardians), then the caster's
+    end-of-turn activities (Delayed Blast Fireball's growing damage) and a
+    timed spell's duration."""
+    if actor_id is None:
+        return
+    for lingering in list(live.lingering_spells):
+        rules = rules_for(lingering.spell_id)
+        # The turn the spell was cast in is no one's "next turn".
+        cast_turn = tuple(lingering.cast_turn) == (live.round_number, actor_id)
+        for activity_id, rule in rules.items():
+            if (
+                rule.trigger == "target_turn_end"
+                and lingering in live.lingering_spells
+                and not (cast_turn and rule.once)
+            ):
+                _fire_lingering(live, lingering, activity_id, rule, only=actor_id)
+        if lingering.caster_id == actor_id and lingering in live.lingering_spells:
+            for activity_id, rule in rules.items():
+                if rule.trigger == "caster_turn_end":
+                    _fire_lingering(live, lingering, activity_id, rule)
+            if lingering.rounds_remaining is not None:
+                lingering.rounds_remaining -= 1
+                if lingering.rounds_remaining <= 0:
+                    _end_lingering(live, lingering)
+                    continue
+        if lingering in live.lingering_spells and _lingering_done(lingering):
+            live.lingering_spells.remove(lingering)
+
+
+def _on_hit_hook(live: _LiveCombat, attacker_id: str) -> Callable[[Combatant, bool], None]:
+    """``ActivityResolutionContext.on_hit`` for ``attacker_id``'s attacks: the
+    "whenever you hit it with an attack roll" riders of the spells it keeps
+    lingering, against the creature just hit, its dice doubled on a Critical
+    Hit (SRD 5.2.1 "Critical Hits": "roll the attack's damage dice twice")."""
+
+    def on_hit(target: Combatant, critical: bool) -> None:
+        for lingering in list(live.lingering_spells):
+            if lingering.caster_id != attacker_id:
+                continue
+            for activity_id, rule in rules_for(lingering.spell_id).items():
+                if rule.trigger == "on_hit":
+                    _fire_lingering(
+                        live,
+                        lingering,
+                        activity_id,
+                        rule,
+                        only=target.entity_id,
+                        critical=critical,
+                    )
+
+    return on_hit
 
 
 def _decide_reaction(live: _LiveCombat, prompt: ReactionPrompt) -> ReactionDecision:
@@ -13396,6 +13820,7 @@ async def _submit_player_intent(live: _LiveCombat, actor_id: str, intent: Player
             targets,
             rng=live.rng,
             on_would_hit=_hit_hook(live, current.entity_id),
+            on_hit=_on_hit_hook(live, current.entity_id),
             event_emitter=lambda ev: _emit(live, ev),
             slot_level=intent.slot_level,
             base_spell_level=cast_spell.level if cast_spell is not None else None,
@@ -13553,6 +13978,18 @@ async def _submit_player_intent(live: _LiveCombat, actor_id: str, intent: Player
         concentration_max_rounds=_concentration_max_rounds(cast_spell),
     )
     _sync_legendary_resistance(live, pre_event_count)
+    if intent.intent_type == "cast_spell":
+        _record_lingering(
+            live,
+            current,
+            cast_spell,
+            intent.slot_level
+            if intent.slot_level is not None
+            else getattr(cast_spell, "level", None),
+            pre_event_count,
+            point=intent.target_zone_id
+            or (live.actor_zone.get(intent.target_id) if intent.target_id else None),
+        )
 
     # SRD §Hold Person / §Hold Monster — *"At the end of each of its turns,
     # the target repeats the save."* This runs as the ``engine:repeat-save``
@@ -13848,6 +14285,7 @@ def _resolve_opportunity_attack(live: _LiveCombat, reactor: Combatant, mover: Co
         targets,
         rng=live.rng,
         on_would_hit=_hit_hook(live, reactor.entity_id),
+        on_hit=_on_hit_hook(live, reactor.entity_id),
         event_emitter=lambda ev: _emit(live, ev),
         slot_level=None,
         base_spell_level=None,

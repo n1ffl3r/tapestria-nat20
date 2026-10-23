@@ -67,6 +67,8 @@ _TOKEN_MOD: Final = "@mod"
 _TOKEN_SPELL_MOD: Final = "@attributes.spell.mod"
 _TOKEN_SPELL_DC: Final = "@attributes.spell.dc"
 _TOKEN_SCALING: Final = "@scaling"
+# A lingering spell's counter (``ActivityResolutionContext.item_uses_value``).
+_TOKEN_ITEM_USES: Final = "@item.uses.value"
 
 # ``@abilities.<abil>.mod`` — capture the three-letter ability key.
 _ABILITY_MOD_RE: Final = re.compile(r"^@abilities\.([a-z]{3})\.mod$")
@@ -176,6 +178,9 @@ def _resolve_token(token: str, ctx: ActivityResolutionContext, ability: str | No
 
     if token == _TOKEN_SCALING and ctx.scaling_value is not None:
         return ctx.scaling_value
+
+    if token == _TOKEN_ITEM_USES and ctx.item_uses_value is not None:
+        return ctx.item_uses_value
 
     class_levels_match = _CLASS_LEVELS_RE.match(token)
     if class_levels_match is not None:

@@ -77,6 +77,20 @@ Fall.
   "a point you choose within range". With no `target_id`, the area centres on
   `target_zone_id`; a point off the map, in a blocked cell, beyond the range or
   behind Total Cover is refused with `out_of_range` before anything is spent.
+- **Spell activities resolve when the SRD says.**
+  `dnd5e_engine.activities.timing.SPELL_ACTIVITY_TIMINGS` marks every activity
+  of a multi-activity spell that is a cast-time alternative or waits for a
+  later trigger, citing the SRD 5.2.1 sentence
+  (`docs/srd-5.2.1-spell-timing.md`). A cast resolves its cast-time activities
+  and one of each set of alternatives (`PlayerIntent.activity_id`, else the
+  first).
+- **Lingering spells** (`dnd5e_engine.lingering`, `CombatState.lingering_spells`).
+  A cast with a later activity the engine fires leaves a `LingeringSpell` until
+  the spell ends. New `turn_start` and `turn_end` hooks fire its activities at
+  the caster's or a subject's turn boundary, its concentration ending fires
+  its "when the spell ends" activities, and `ActivityResolutionContext.on_hit`
+  fires its on-hit damage, doubled on a Critical Hit. `@item.uses.value` reads
+  its counter. `EffectExpired` gains `reason="spell_ended"`.
 - **`make test-roundtrip`** reruns the suite with every handle call rebuilding
   its combat from its `CombatState`; **`make test-hashseed`** (part of `make
   check`) does it under two string-hash seeds and requires identical traces.
@@ -121,6 +135,14 @@ Fall.
   order, so the same combat serializes the same way in every process.
 
 ### Fixed
+
+- **A spell's later activities no longer resolve at the cast.** Weird's
+  end-of-turn save, Hunter's Mark's and Hex's bonus damage, Vitriolic Sphere's
+  and Acid Arrow's later damage, Delayed Blast Fireball's explosion and
+  Tsunami's wave resolved the moment the spell was cast; Delayed Blast
+  Fireball and Tsunami raised `ValueError` once the slot was spent. A test that
+  pinned Detect Thoughts' save at the cast now expects none (SRD 5.2.1: "As a
+  Magic action on your next turn, you can try to probe deeper").
 
 - **Spider Climb and Freedom of Movement cast.** Their effects read
   `@attributes.movement.walk`, which raised after the slot was spent. The token

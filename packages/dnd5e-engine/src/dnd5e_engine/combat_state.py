@@ -54,6 +54,7 @@ from pydantic import BaseModel, ConfigDict, Field, TypeAdapter
 
 from dnd5e_engine.activities.conjuration import StatBlockMagnitudes, TransformSource
 from dnd5e_engine.events import CombatEvent, TurnStarted
+from dnd5e_engine.lingering import LingeringSpell
 from dnd5e_engine.orchestrator import (
     _REGISTRY,
     CombatHandle,
@@ -283,6 +284,8 @@ class CombatState(_Model):
       ``last_ended_turn``, ``monster_turn_start_done``.
     - **Conjurations.** ``constructs``, ``transforms``, ``summons``,
       ``summon_counts``.
+    - **Lingering spells.** ``lingering_spells``: casts whose later
+      activities still wait for their triggers (``dnd5e_engine.lingering``).
     - **The turn in progress.** ``turn_events``.
     """
 
@@ -345,6 +348,8 @@ class CombatState(_Model):
     summons: dict[str, SummonState] = Field(default_factory=dict)
     summon_counts: dict[str, int] = Field(default_factory=dict)
     departed_actor_id: str | None = None
+
+    lingering_spells: list[LingeringSpell] = Field(default_factory=list)
 
     turn_events: list[CombatEvent] = Field(default_factory=list)
 
@@ -612,6 +617,7 @@ def _state_from_live(live: _LiveCombat) -> CombatState:
             },
             "summon_counts": dict(live.summon_counts),
             "departed_actor_id": live.departed_actor_id,
+            "lingering_spells": [s.model_copy(deep=True) for s in live.lingering_spells],
             # Through JSON, so the state shares no object with the live combat.
             "turn_events": _EVENTS.validate_json(_EVENTS.dump_json(live.event_log[tail:])),
         }
@@ -751,6 +757,7 @@ def _live_from_state(state: CombatState, rng: random.Random) -> _LiveCombat:
             for k, s in state.summons.items()
         },
         summon_counts=dict(state.summon_counts),
+        lingering_spells=[s.model_copy(deep=True) for s in state.lingering_spells],
         grid_scene=state.grid,
     )
     _register_default_turn_hooks(live)

@@ -591,6 +591,15 @@ class ActivityResolutionContext:
     # target's reactions here (``_offer_hit_reactions``); ``None`` (pure tests)
     # offers nothing.
     on_would_hit: Callable[[Combatant, int, int, bool], int] | None = None
+    # Called once an attack roll has hit and dealt its damage, with the target
+    # and whether it is a Critical Hit: the orchestrator fires a spell's
+    # "whenever you hit it with an attack roll" rider (Hunter's Mark, Hex;
+    # ``dnd5e_engine.lingering``). ``None`` (pure tests) fires nothing.
+    on_hit: Callable[[Combatant, bool], None] | None = None
+    # ``@item.uses.value``: a lingering spell's counter when one of its later
+    # activities resolves (Delayed Blast Fireball's extra dice, Tsunami's
+    # dwindling wave). ``None`` leaves the token unresolved.
+    item_uses_value: int | None = None
 
     def ability_mod(self, ability: str) -> int:
         return (self.caster_abilities.get(ability, 10) - 10) // 2

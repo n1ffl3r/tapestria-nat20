@@ -94,6 +94,9 @@ EffectExpiryReason = Literal[
     # SRD 5.2 Polymorph: "The spell ends early on the target if it has no
     # Temporary Hit Points left." (C21)
     "temp_hp_depleted",
+    # SRD 5.2.1 Weird: "On a successful save, the spell ends on that target";
+    # Searing Smite: "On a successful save, the spell ends." (spec 02a B3b)
+    "spell_ended",
 ]
 
 CastFailedReason = Literal[
