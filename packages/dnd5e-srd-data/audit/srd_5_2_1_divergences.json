@@ -357,5 +357,33 @@
   }
  },
  "subclasses": {},
- "class_features": {}
+ "class_features": {},
+ "backgrounds": {},
+ "conditions": {},
+ "feats": {},
+ "monster_traits": {
+  "standing-leap": {
+   "fields": [
+    "numbers_outside_the_stat_block"
+   ],
+   "issue": "https://github.com/n1ffl3r/tapestria-nat20/issues/18",
+   "reason": "The shared text says the Long Jump is 20 feet and the High Jump 10 feet; the Frog stat block it was taken from says 10 and 5. One shared text cannot suit every monster with the trait."
+  },
+  "stench": {
+   "fields": [
+    "numbers_outside_the_stat_block"
+   ],
+   "issue": "https://github.com/n1ffl3r/tapestria-nat20/issues/18",
+   "reason": "Foundry adds '(other than a monster)' and a Success clause (immune to the Stench for 1 hour) that the Hezrou stat block does not have."
+  },
+  "water-susceptibility": {
+   "fields": [
+    "numbers_outside_the_stat_block"
+   ],
+   "issue": "https://github.com/n1ffl3r/tapestria-nat20/issues/18",
+   "reason": "The text ends with a Foundry Note about scaling dice, which the Fire Elemental stat block does not have."
+  }
+ },
+ "species": {},
+ "species_traits": {}
 }

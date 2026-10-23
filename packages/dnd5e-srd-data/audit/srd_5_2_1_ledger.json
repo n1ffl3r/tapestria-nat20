@@ -1,15 +1,115 @@
 {
  "audited_categories": [
+  "backgrounds",
   "class_features",
   "classes",
+  "conditions",
+  "feats",
   "items",
+  "monster_traits",
   "monsters",
+  "species",
+  "species_traits",
   "spell_lists",
   "spells",
   "subclasses"
  ],
  "description": "The SRD 5.2.1 rules-text audit (spec 02a, acceptance criterion 4): one entry per audited corpus record, built by tools/srd_audit/ledger.py from the pinned PDF.",
  "records": {
+  "backgrounds": {
+   "acolyte": {
+    "compared": {
+     "ability_options": [
+      "cha",
+      "int",
+      "wis"
+     ],
+     "equipment_b_gold": 50,
+     "feat": "Magic Initiate",
+     "skills": [
+      "Insight",
+      "Religion"
+     ],
+     "tool": "Calligrapher's Supplies"
+    },
+    "name": "Acolyte",
+    "not_compared": {
+     "equipment": "The corpus holds the starting equipment as item links and the option B Gold Pieces; option A's items and Gold Pieces are not compared.",
+     "feat_list": "The corpus names the feat (Magic Initiate), not the spell list the SRD's entry picks (Cleric, Wizard)."
+    },
+    "srd_page": 83,
+    "status": "verified"
+   },
+   "criminal": {
+    "compared": {
+     "ability_options": [
+      "con",
+      "dex",
+      "int"
+     ],
+     "equipment_b_gold": 50,
+     "feat": "Alert",
+     "skills": [
+      "Sleight of Hand",
+      "Stealth"
+     ],
+     "tool": "Thieves' Tools"
+    },
+    "name": "Criminal",
+    "not_compared": {
+     "equipment": "The corpus holds the starting equipment as item links and the option B Gold Pieces; option A's items and Gold Pieces are not compared.",
+     "feat_list": "The corpus names the feat (Magic Initiate), not the spell list the SRD's entry picks (Cleric, Wizard)."
+    },
+    "srd_page": 83,
+    "status": "verified"
+   },
+   "sage": {
+    "compared": {
+     "ability_options": [
+      "con",
+      "int",
+      "wis"
+     ],
+     "equipment_b_gold": 50,
+     "feat": "Magic Initiate",
+     "skills": [
+      "Arcana",
+      "History"
+     ],
+     "tool": "Calligrapher's Supplies"
+    },
+    "name": "Sage",
+    "not_compared": {
+     "equipment": "The corpus holds the starting equipment as item links and the option B Gold Pieces; option A's items and Gold Pieces are not compared.",
+     "feat_list": "The corpus names the feat (Magic Initiate), not the spell list the SRD's entry picks (Cleric, Wizard)."
+    },
+    "srd_page": 83,
+    "status": "verified"
+   },
+   "soldier": {
+    "compared": {
+     "ability_options": [
+      "con",
+      "dex",
+      "str"
+     ],
+     "equipment_b_gold": 50,
+     "feat": "Savage Attacker",
+     "skills": [
+      "Athletics",
+      "Intimidation"
+     ],
+     "tool": "Choose one kind of Gaming Set"
+    },
+    "name": "Soldier",
+    "not_compared": {
+     "equipment": "The corpus holds the starting equipment as item links and the option B Gold Pieces; option A's items and Gold Pieces are not compared.",
+     "feat_list": "The corpus names the feat (Magic Initiate), not the spell list the SRD's entry picks (Cleric, Wizard)."
+    },
+    "srd_page": 83,
+    "status": "verified"
+   }
+  },
   "class_features": {
    "abjure-foes": {
     "compared": {
@@ -3942,6 +4042,608 @@
      "spell_slots": "The corpus holds a spellcasting progression, not slot counts; the slot counts are the engine's tables (see BACKLOG.md)."
     },
     "srd_page": 77,
+    "status": "verified"
+   }
+  },
+  "conditions": {
+   "blinded": {
+    "compared": {
+     "effects": [
+      "advantage_attacks_against",
+      "auto_fail_sight_checks",
+      "disadvantage_own_attacks"
+     ],
+     "implies": []
+    },
+    "name": "Blinded",
+    "read_by_hand": {
+     "effects": [
+      "Can't See. You can't see and automatically fail any ability check that requires sight.",
+      "Attack rolls against you have Advantage, and your attack rolls have Disadvantage."
+     ]
+    },
+    "srd_page": 177,
+    "status": "verified"
+   },
+   "charmed": {
+    "compared": {
+     "effects": [
+      "cant_attack_charmer",
+      "charmer_social_advantage"
+     ],
+     "implies": []
+    },
+    "name": "Charmed",
+    "read_by_hand": {
+     "effects": [
+      "Can't Harm the Charmer. You can't attack the charmer or target the charmer with damaging abilities or magical effects.",
+      "Social Advantage. The charmer has Advantage on any ability check to interact with you socially."
+     ]
+    },
+    "srd_page": 178,
+    "status": "verified"
+   },
+   "deafened": {
+    "compared": {
+     "effects": [
+      "auto_fail_hearing_checks"
+     ],
+     "implies": []
+    },
+    "name": "Deafened",
+    "read_by_hand": {
+     "effects": [
+      "Can't Hear. You can't hear and automatically fail"
+     ]
+    },
+    "srd_page": 181,
+    "status": "verified"
+   },
+   "exhaustion": {
+    "compared": {
+     "effects": [
+      "d20_test_penalty_per_level=2",
+      "death_at_level=6",
+      "speed_penalty_per_level=5"
+     ],
+     "implies": []
+    },
+    "name": "Exhaustion",
+    "read_by_hand": {
+     "effects": [
+      "You die if your Exhaustion level is 6.",
+      "the roll is reduced by 2 times your Exhaustion level.",
+      "Your Speed is reduced by a number of feet equal to 5 times your Exhaustion level."
+     ]
+    },
+    "srd_page": 181,
+    "status": "verified"
+   },
+   "frightened": {
+    "compared": {
+     "effects": [
+      "cant_move_toward_fear_source",
+      "disadvantage_ability_checks",
+      "disadvantage_own_attacks"
+     ],
+     "implies": []
+    },
+    "name": "Frightened",
+    "read_by_hand": {
+     "effects": [
+      "You have Disadvantage on ability checks and attack rolls while the source of fear is within line of sight.",
+      "Can't Approach. You can't willingly move closer to the source of fear."
+     ]
+    },
+    "srd_page": 182,
+    "status": "verified"
+   },
+   "grappled": {
+    "compared": {
+     "effects": [
+      "disadvantage_attacks_except_grappler",
+      "movable_by_grappler",
+      "speed_zero"
+     ],
+     "implies": []
+    },
+    "name": "Grappled",
+    "read_by_hand": {
+     "effects": [
+      "Speed 0. Your Speed is 0 and can't increase.",
+      "You have Disadvantage on attack rolls against any target other than the grappler.",
+      "Movable. The grappler can drag or carry you when it moves,"
+     ]
+    },
+    "srd_page": 182,
+    "status": "verified"
+   },
+   "incapacitated": {
+    "compared": {
+     "effects": [
+      "breaks_concentration",
+      "cannot_speak",
+      "cannot_take_actions",
+      "disadvantage_initiative"
+     ],
+     "implies": []
+    },
+    "name": "Incapacitated",
+    "read_by_hand": {
+     "effects": [
+      "Inactive. You can't take any action, Bonus Action, or Reaction.",
+      "No Concentration. Your Concentration is broken.",
+      "Speechless. You can't speak.",
+      "If you're Incapacitated when you roll Initiative, you have Disadvantage on the roll."
+     ]
+    },
+    "srd_page": 184,
+    "status": "verified"
+   },
+   "invisible": {
+    "compared": {
+     "effects": [
+      "advantage_initiative",
+      "advantage_own_attacks",
+      "disadvantage_attacks_against",
+      "unseen"
+     ],
+     "implies": []
+    },
+    "name": "Invisible",
+    "read_by_hand": {
+     "effects": [
+      "If you're Invisible when you roll Initiative, you have Advantage on the roll.",
+      "You aren't affected by any effect that requires its target to be seen",
+      "Attack rolls against you have Disadvantage, and your attack rolls have Advantage."
+     ]
+    },
+    "srd_page": 184,
+    "status": "verified"
+   },
+   "paralyzed": {
+    "compared": {
+     "effects": [
+      "advantage_attacks_against",
+      "auto_crit_within_5ft=5",
+      "auto_fail_save/dex,str",
+      "speed_zero"
+     ],
+     "implies": [
+      "incapacitated"
+     ]
+    },
+    "name": "Paralyzed",
+    "read_by_hand": {
+     "effects": [
+      "Incapacitated. You have the Incapacitated condition.",
+      "Speed 0. Your Speed is 0 and can't increase.",
+      "You automatically fail Strength and Dexterity saving throws.",
+      "Attack rolls against you have Advantage.",
+      "Any attack roll that hits you is a Critical Hit if the attacker is within 5 feet of you."
+     ]
+    },
+    "srd_page": 186,
+    "status": "verified"
+   },
+   "petrified": {
+    "compared": {
+     "effects": [
+      "advantage_attacks_against",
+      "auto_fail_save/dex,str",
+      "immune_to_condition",
+      "resist_all_damage",
+      "speed_zero"
+     ],
+     "implies": [
+      "incapacitated"
+     ]
+    },
+    "name": "Petrified",
+    "read_by_hand": {
+     "effects": [
+      "Incapacitated. You have the Incapacitated condition.",
+      "Speed 0. Your Speed is 0 and can't increase.",
+      "Attack rolls against you have Advantage.",
+      "You automatically fail Strength and Dexterity saving throws.",
+      "Resist Damage. You have Resistance to all damage.",
+      "Poison Immunity. You have Immunity to the Poisoned condition."
+     ]
+    },
+    "srd_page": 186,
+    "status": "verified"
+   },
+   "poisoned": {
+    "compared": {
+     "effects": [
+      "disadvantage_ability_checks",
+      "disadvantage_own_attacks"
+     ],
+     "implies": []
+    },
+    "name": "Poisoned",
+    "read_by_hand": {
+     "effects": [
+      "Ability Checks and Attacks Affected. You have"
+     ]
+    },
+    "srd_page": 186,
+    "status": "verified"
+   },
+   "prone": {
+    "compared": {
+     "effects": [
+      "advantage_attacks_against=5",
+      "disadvantage_attacks_against=5",
+      "disadvantage_own_attacks",
+      "restricted_movement_crawl"
+     ],
+     "implies": []
+    },
+    "name": "Prone",
+    "read_by_hand": {
+     "effects": [
+      "Restricted Movement. Your only movement options are to crawl or to spend an amount of movement equal to half your Speed (round down) to right yourself",
+      "You have Disadvantage on attack rolls. An attack roll against you has Advantage if the attacker is within 5 feet of you. Otherwise, that attack roll has Disadvantage."
+     ]
+    },
+    "srd_page": 186,
+    "status": "verified"
+   },
+   "restrained": {
+    "compared": {
+     "effects": [
+      "advantage_attacks_against",
+      "disadvantage_own_attacks",
+      "disadvantage_save/dex",
+      "speed_zero"
+     ],
+     "implies": []
+    },
+    "name": "Restrained",
+    "read_by_hand": {
+     "effects": [
+      "Speed 0. Your Speed is 0 and can't increase.",
+      "Attack rolls against you have Advantage, and your attack rolls have Disadvantage.",
+      "Saving Throws Affected. You have Disadvantage on Dexterity saving throws."
+     ]
+    },
+    "srd_page": 187,
+    "status": "verified"
+   },
+   "stunned": {
+    "compared": {
+     "effects": [
+      "advantage_attacks_against",
+      "auto_fail_save/dex,str"
+     ],
+     "implies": [
+      "incapacitated"
+     ]
+    },
+    "name": "Stunned",
+    "read_by_hand": {
+     "effects": [
+      "Incapacitated. You have the Incapacitated condition.",
+      "You automatically fail Strength and Dexterity saving throws.",
+      "Attack rolls against you have Advantage."
+     ]
+    },
+    "srd_page": 189,
+    "status": "verified"
+   },
+   "unconscious": {
+    "compared": {
+     "effects": [
+      "advantage_attacks_against",
+      "auto_crit_within_5ft=5",
+      "auto_fail_save/dex,str",
+      "drops_held_items",
+      "speed_zero"
+     ],
+     "implies": [
+      "incapacitated",
+      "prone"
+     ]
+    },
+    "name": "Unconscious",
+    "read_by_hand": {
+     "effects": [
+      "Inert. You have the Incapacitated and Prone conditions, and you drop whatever you're holding.",
+      "Speed 0. Your Speed is 0 and can't increase.",
+      "Attack rolls against you have Advantage.",
+      "You automatically fail Strength and Dexterity saving throws.",
+      "Any attack roll that hits you is a Critical Hit"
+     ]
+    },
+    "srd_page": 191,
+    "status": "verified"
+   }
+  },
+  "feats": {
+   "ability-score-improvement": {
+    "compared": {
+     "category": "general",
+     "needs_fighting_style": false,
+     "prerequisite": "",
+     "prerequisite_level": 4,
+     "repeatable": true
+    },
+    "name": "Ability Score Improvement",
+    "not_compared": {
+     "benefits": "A feat's benefits are its text; the audit compares its category and prerequisite."
+    },
+    "srd_page": 87,
+    "status": "verified"
+   },
+   "alert": {
+    "compared": {
+     "category": "origin",
+     "needs_fighting_style": false,
+     "prerequisite": "",
+     "prerequisite_level": null,
+     "repeatable": false
+    },
+    "name": "Alert",
+    "not_compared": {
+     "benefits": "A feat's benefits are its text; the audit compares its category and prerequisite."
+    },
+    "srd_page": 87,
+    "status": "verified"
+   },
+   "archery": {
+    "compared": {
+     "category": "fighting_style",
+     "needs_fighting_style": true,
+     "prerequisite": "",
+     "prerequisite_level": null,
+     "repeatable": false
+    },
+    "name": "Archery",
+    "not_compared": {
+     "benefits": "A feat's benefits are its text; the audit compares its category and prerequisite."
+    },
+    "srd_page": 87,
+    "status": "verified"
+   },
+   "boon-of-combat-prowess": {
+    "compared": {
+     "category": "epic_boon",
+     "needs_fighting_style": false,
+     "prerequisite": "",
+     "prerequisite_level": 19,
+     "repeatable": false
+    },
+    "name": "Boon of Combat Prowess",
+    "not_compared": {
+     "benefits": "A feat's benefits are its text; the audit compares its category and prerequisite."
+    },
+    "srd_page": 88,
+    "status": "verified"
+   },
+   "boon-of-dimensional-travel": {
+    "compared": {
+     "category": "epic_boon",
+     "needs_fighting_style": false,
+     "prerequisite": "",
+     "prerequisite_level": 19,
+     "repeatable": false
+    },
+    "name": "Boon of Dimensional Travel",
+    "not_compared": {
+     "benefits": "A feat's benefits are its text; the audit compares its category and prerequisite."
+    },
+    "srd_page": 88,
+    "status": "verified"
+   },
+   "boon-of-fate": {
+    "changes": [
+     {
+      "field": "prerequisite_level",
+      "from": null,
+      "srd": [
+       "Epic Boon Feat (Prerequisite: Level 19+)"
+      ],
+      "to": 19
+     }
+    ],
+    "compared": {
+     "category": "epic_boon",
+     "needs_fighting_style": false,
+     "prerequisite": "",
+     "prerequisite_level": 19,
+     "repeatable": false
+    },
+    "name": "Boon of Fate",
+    "not_compared": {
+     "benefits": "A feat's benefits are its text; the audit compares its category and prerequisite."
+    },
+    "srd_page": 88,
+    "status": "corrected"
+   },
+   "boon-of-irresistible-offense": {
+    "changes": [
+     {
+      "field": "prerequisite_level",
+      "from": null,
+      "srd": [
+       "Epic Boon Feat (Prerequisite: Level 19+)"
+      ],
+      "to": 19
+     }
+    ],
+    "compared": {
+     "category": "epic_boon",
+     "needs_fighting_style": false,
+     "prerequisite": "",
+     "prerequisite_level": 19,
+     "repeatable": false
+    },
+    "name": "Boon of Irresistible Offense",
+    "not_compared": {
+     "benefits": "A feat's benefits are its text; the audit compares its category and prerequisite."
+    },
+    "srd_page": 88,
+    "status": "corrected"
+   },
+   "boon-of-spell-recall": {
+    "changes": [
+     {
+      "field": "prerequisite",
+      "from": "",
+      "srd": [
+       "Epic Boon Feat (Prerequisite: Level 19+, Spellcasting Feature)"
+      ],
+      "to": "Spellcasting Feature"
+     }
+    ],
+    "compared": {
+     "category": "epic_boon",
+     "needs_fighting_style": false,
+     "prerequisite": "Spellcasting Feature",
+     "prerequisite_level": 19,
+     "repeatable": false
+    },
+    "name": "Boon of Spell Recall",
+    "not_compared": {
+     "benefits": "A feat's benefits are its text; the audit compares its category and prerequisite."
+    },
+    "srd_page": 88,
+    "status": "corrected"
+   },
+   "boon-of-the-night-spirit": {
+    "compared": {
+     "category": "epic_boon",
+     "needs_fighting_style": false,
+     "prerequisite": "",
+     "prerequisite_level": 19,
+     "repeatable": false
+    },
+    "name": "Boon of the Night Spirit",
+    "not_compared": {
+     "benefits": "A feat's benefits are its text; the audit compares its category and prerequisite."
+    },
+    "srd_page": 88,
+    "status": "verified"
+   },
+   "boon-of-truesight": {
+    "compared": {
+     "category": "epic_boon",
+     "needs_fighting_style": false,
+     "prerequisite": "",
+     "prerequisite_level": 19,
+     "repeatable": false
+    },
+    "name": "Boon of Truesight",
+    "not_compared": {
+     "benefits": "A feat's benefits are its text; the audit compares its category and prerequisite."
+    },
+    "srd_page": 88,
+    "status": "verified"
+   },
+   "defense": {
+    "compared": {
+     "category": "fighting_style",
+     "needs_fighting_style": true,
+     "prerequisite": "",
+     "prerequisite_level": null,
+     "repeatable": false
+    },
+    "name": "Defense",
+    "not_compared": {
+     "benefits": "A feat's benefits are its text; the audit compares its category and prerequisite."
+    },
+    "srd_page": 88,
+    "status": "verified"
+   },
+   "grappler": {
+    "compared": {
+     "category": "general",
+     "needs_fighting_style": false,
+     "prerequisite": "Strength or Dexterity 13+",
+     "prerequisite_level": 4,
+     "repeatable": false
+    },
+    "name": "Grappler",
+    "not_compared": {
+     "benefits": "A feat's benefits are its text; the audit compares its category and prerequisite."
+    },
+    "srd_page": 87,
+    "status": "verified"
+   },
+   "great-weapon-fighting": {
+    "compared": {
+     "category": "fighting_style",
+     "needs_fighting_style": true,
+     "prerequisite": "",
+     "prerequisite_level": null,
+     "repeatable": false
+    },
+    "name": "Great Weapon Fighting",
+    "not_compared": {
+     "benefits": "A feat's benefits are its text; the audit compares its category and prerequisite."
+    },
+    "srd_page": 88,
+    "status": "verified"
+   },
+   "magic-initiate": {
+    "compared": {
+     "category": "origin",
+     "needs_fighting_style": false,
+     "prerequisite": "",
+     "prerequisite_level": null,
+     "repeatable": true
+    },
+    "name": "Magic Initiate",
+    "not_compared": {
+     "benefits": "A feat's benefits are its text; the audit compares its category and prerequisite."
+    },
+    "srd_page": 87,
+    "status": "verified"
+   },
+   "savage-attacker": {
+    "compared": {
+     "category": "origin",
+     "needs_fighting_style": false,
+     "prerequisite": "",
+     "prerequisite_level": null,
+     "repeatable": false
+    },
+    "name": "Savage Attacker",
+    "not_compared": {
+     "benefits": "A feat's benefits are its text; the audit compares its category and prerequisite."
+    },
+    "srd_page": 87,
+    "status": "verified"
+   },
+   "skilled": {
+    "compared": {
+     "category": "origin",
+     "needs_fighting_style": false,
+     "prerequisite": "",
+     "prerequisite_level": null,
+     "repeatable": true
+    },
+    "name": "Skilled",
+    "not_compared": {
+     "benefits": "A feat's benefits are its text; the audit compares its category and prerequisite."
+    },
+    "srd_page": 87,
+    "status": "verified"
+   },
+   "two-weapon-fighting": {
+    "compared": {
+     "category": "fighting_style",
+     "needs_fighting_style": true,
+     "prerequisite": "",
+     "prerequisite_level": null,
+     "repeatable": false
+    },
+    "name": "Two-Weapon Fighting",
+    "not_compared": {
+     "benefits": "A feat's benefits are its text; the audit compares its category and prerequisite."
+    },
+    "srd_page": 88,
     "status": "verified"
    }
   },
@@ -11610,6 +12312,1381 @@
     },
     "name": "Yew wand",
     "srd_page": 97,
+    "status": "verified"
+   }
+  },
+  "monster_traits": {
+   "abduct": {
+    "compared": {
+     "in_a_stat_block": true,
+     "numbers_outside_the_stat_block": []
+    },
+    "name": "Abduct",
+    "not_compared": {
+     "description": "Compared by the numbers it states, not word for word.",
+     "mechanic": "A translator tag for the engine, not SRD text."
+    },
+    "srd_page": 271,
+    "status": "verified"
+   },
+   "aberrant-ground": {
+    "compared": {
+     "in_a_stat_block": true,
+     "numbers_outside_the_stat_block": []
+    },
+    "name": "Aberrant Ground",
+    "not_compared": {
+     "description": "Compared by the numbers it states, not word for word.",
+     "mechanic": "A translator tag for the engine, not SRD text."
+    },
+    "srd_page": 288,
+    "status": "verified"
+   },
+   "acid-absorption": {
+    "compared": {
+     "in_a_stat_block": true,
+     "numbers_outside_the_stat_block": []
+    },
+    "name": "Acid Absorption",
+    "not_compared": {
+     "description": "Compared by the numbers it states, not word for word.",
+     "mechanic": "A translator tag for the engine, not SRD text."
+    },
+    "srd_page": 274,
+    "status": "verified"
+   },
+   "agile": {
+    "compared": {
+     "in_a_stat_block": true,
+     "numbers_outside_the_stat_block": []
+    },
+    "name": "Agile",
+    "not_compared": {
+     "description": "Compared by the numbers it states, not word for word.",
+     "mechanic": "A translator tag for the engine, not SRD text."
+    },
+    "srd_page": 347,
+    "status": "verified"
+   },
+   "air-form": {
+    "compared": {
+     "in_a_stat_block": true,
+     "numbers_outside_the_stat_block": []
+    },
+    "name": "Air Form",
+    "not_compared": {
+     "description": "Compared by the numbers it states, not word for word.",
+     "mechanic": "A translator tag for the engine, not SRD text."
+    },
+    "srd_page": 258,
+    "status": "verified"
+   },
+   "amorphous": {
+    "compared": {
+     "in_a_stat_block": true,
+     "numbers_outside_the_stat_block": []
+    },
+    "name": "Amorphous",
+    "not_compared": {
+     "description": "Compared by the numbers it states, not word for word.",
+     "mechanic": "A translator tag for the engine, not SRD text."
+    },
+    "srd_page": 265,
+    "status": "verified"
+   },
+   "amphibious": {
+    "compared": {
+     "in_a_stat_block": true,
+     "numbers_outside_the_stat_block": []
+    },
+    "name": "Amphibious",
+    "not_compared": {
+     "description": "Compared by the numbers it states, not word for word.",
+     "mechanic": "A translator tag for the engine, not SRD text."
+    },
+    "srd_page": 258,
+    "status": "verified"
+   },
+   "aura-of-authority": {
+    "compared": {
+     "in_a_stat_block": true,
+     "numbers_outside_the_stat_block": []
+    },
+    "name": "Aura of Authority",
+    "not_compared": {
+     "description": "Compared by the numbers it states, not word for word.",
+     "mechanic": "A translator tag for the engine, not SRD text."
+    },
+    "srd_page": 299,
+    "status": "verified"
+   },
+   "aversion-to-fire": {
+    "compared": {
+     "in_a_stat_block": true,
+     "numbers_outside_the_stat_block": []
+    },
+    "name": "Aversion to Fire",
+    "not_compared": {
+     "description": "Compared by the numbers it states, not word for word.",
+     "mechanic": "A translator tag for the engine, not SRD text."
+    },
+    "srd_page": 285,
+    "status": "verified"
+   },
+   "barbed-hide": {
+    "compared": {
+     "in_a_stat_block": true,
+     "numbers_outside_the_stat_block": []
+    },
+    "name": "Barbed Hide",
+    "not_compared": {
+     "description": "Compared by the numbers it states, not word for word.",
+     "mechanic": "A translator tag for the engine, not SRD text."
+    },
+    "srd_page": 262,
+    "status": "verified"
+   },
+   "beast-of-burden": {
+    "compared": {
+     "in_a_stat_block": true,
+     "numbers_outside_the_stat_block": []
+    },
+    "name": "Beast of Burden",
+    "not_compared": {
+     "description": "Compared by the numbers it states, not word for word.",
+     "mechanic": "A translator tag for the engine, not SRD text."
+    },
+    "srd_page": 357,
+    "status": "verified"
+   },
+   "berserk": {
+    "compared": {
+     "in_a_stat_block": true,
+     "numbers_outside_the_stat_block": []
+    },
+    "name": "Berserk",
+    "not_compared": {
+     "description": "Compared by the numbers it states, not word for word.",
+     "mechanic": "A translator tag for the engine, not SRD text."
+    },
+    "srd_page": 274,
+    "status": "verified"
+   },
+   "blood-frenzy": {
+    "compared": {
+     "in_a_stat_block": true,
+     "numbers_outside_the_stat_block": []
+    },
+    "name": "Blood Frenzy",
+    "not_compared": {
+     "description": "Compared by the numbers it states, not word for word.",
+     "mechanic": "A translator tag for the engine, not SRD text."
+    },
+    "srd_page": 321,
+    "status": "verified"
+   },
+   "bloodied-frenzy": {
+    "compared": {
+     "in_a_stat_block": true,
+     "numbers_outside_the_stat_block": []
+    },
+    "name": "Bloodied Frenzy",
+    "not_compared": {
+     "description": "Compared by the numbers it states, not word for word.",
+     "mechanic": "A translator tag for the engine, not SRD text."
+    },
+    "srd_page": 263,
+    "status": "verified"
+   },
+   "bloodied-fury": {
+    "compared": {
+     "in_a_stat_block": true,
+     "numbers_outside_the_stat_block": []
+    },
+    "name": "Bloodied Fury",
+    "not_compared": {
+     "description": "Compared by the numbers it states, not word for word.",
+     "mechanic": "A translator tag for the engine, not SRD text."
+    },
+    "srd_page": 346,
+    "status": "verified"
+   },
+   "blurred-form": {
+    "compared": {
+     "in_a_stat_block": true,
+     "numbers_outside_the_stat_block": []
+    },
+    "name": "Blurred Form",
+    "not_compared": {
+     "description": "Compared by the numbers it states, not word for word.",
+     "mechanic": "A translator tag for the engine, not SRD text."
+    },
+    "srd_page": 308,
+    "status": "verified"
+   },
+   "bound": {
+    "compared": {
+     "in_a_stat_block": true,
+     "numbers_outside_the_stat_block": []
+    },
+    "name": "Bound",
+    "not_compared": {
+     "description": "Compared by the numbers it states, not word for word.",
+     "mechanic": "A translator tag for the engine, not SRD text."
+    },
+    "srd_page": 323,
+    "status": "verified"
+   },
+   "celestial-restoration": {
+    "compared": {
+     "in_a_stat_block": true,
+     "numbers_outside_the_stat_block": []
+    },
+    "name": "Celestial Restoration",
+    "not_compared": {
+     "description": "Compared by the numbers it states, not word for word.",
+     "mechanic": "A translator tag for the engine, not SRD text."
+    },
+    "srd_page": 296,
+    "status": "verified"
+   },
+   "compression": {
+    "compared": {
+     "in_a_stat_block": true,
+     "numbers_outside_the_stat_block": []
+    },
+    "name": "Compression",
+    "not_compared": {
+     "description": "Compared by the numbers it states, not word for word.",
+     "mechanic": "A translator tag for the engine, not SRD text."
+    },
+    "srd_page": 357,
+    "status": "verified"
+   },
+   "confer-fire-resistance": {
+    "compared": {
+     "in_a_stat_block": true,
+     "numbers_outside_the_stat_block": []
+    },
+    "name": "Confer Fire Resistance",
+    "not_compared": {
+     "description": "Compared by the numbers it states, not word for word.",
+     "mechanic": "A translator tag for the engine, not SRD text."
+    },
+    "srd_page": 311,
+    "status": "verified"
+   },
+   "corrosive-form": {
+    "compared": {
+     "in_a_stat_block": true,
+     "numbers_outside_the_stat_block": []
+    },
+    "name": "Corrosive Form",
+    "not_compared": {
+     "description": "Compared by the numbers it states, not word for word.",
+     "mechanic": "A translator tag for the engine, not SRD text."
+    },
+    "srd_page": 265,
+    "status": "verified"
+   },
+   "death-burst": {
+    "compared": {
+     "in_a_stat_block": true,
+     "numbers_outside_the_stat_block": []
+    },
+    "name": "Death Burst",
+    "not_compared": {
+     "description": "Compared by the numbers it states, not word for word.",
+     "mechanic": "A translator tag for the engine, not SRD text."
+    },
+    "srd_page": 307,
+    "status": "verified"
+   },
+   "death-throes": {
+    "compared": {
+     "in_a_stat_block": true,
+     "numbers_outside_the_stat_block": []
+    },
+    "name": "Death Throes",
+    "not_compared": {
+     "description": "Compared by the numbers it states, not word for word.",
+     "mechanic": "A translator tag for the engine, not SRD text."
+    },
+    "srd_page": 261,
+    "status": "verified"
+   },
+   "demonic-restoration": {
+    "compared": {
+     "in_a_stat_block": true,
+     "numbers_outside_the_stat_block": []
+    },
+    "name": "Demonic Restoration",
+    "not_compared": {
+     "description": "Compared by the numbers it states, not word for word.",
+     "mechanic": "A translator tag for the engine, not SRD text."
+    },
+    "srd_page": 289,
+    "status": "verified"
+   },
+   "diabolical-restoration": {
+    "compared": {
+     "in_a_stat_block": true,
+     "numbers_outside_the_stat_block": []
+    },
+    "name": "Diabolical Restoration",
+    "not_compared": {
+     "description": "Compared by the numbers it states, not word for word.",
+     "mechanic": "A translator tag for the engine, not SRD text."
+    },
+    "srd_page": 262,
+    "status": "verified"
+   },
+   "divine-awareness": {
+    "compared": {
+     "in_a_stat_block": true,
+     "numbers_outside_the_stat_block": []
+    },
+    "name": "Divine Awareness",
+    "not_compared": {
+     "description": "Compared by the numbers it states, not word for word.",
+     "mechanic": "A translator tag for the engine, not SRD text."
+    },
+    "srd_page": 315,
+    "status": "verified"
+   },
+   "draconic-origin": {
+    "compared": {
+     "in_a_stat_block": true,
+     "numbers_outside_the_stat_block": []
+    },
+    "name": "Draconic Origin",
+    "not_compared": {
+     "description": "Compared by the numbers it states, not word for word.",
+     "mechanic": "A translator tag for the engine, not SRD text."
+    },
+    "srd_page": 297,
+    "status": "verified"
+   },
+   "earth-glide": {
+    "compared": {
+     "in_a_stat_block": true,
+     "numbers_outside_the_stat_block": []
+    },
+    "name": "Earth Glide",
+    "not_compared": {
+     "description": "Compared by the numbers it states, not word for word.",
+     "mechanic": "A translator tag for the engine, not SRD text."
+    },
+    "srd_page": 282,
+    "status": "verified"
+   },
+   "elemental-restoration": {
+    "compared": {
+     "in_a_stat_block": true,
+     "numbers_outside_the_stat_block": []
+    },
+    "name": "Elemental Restoration",
+    "not_compared": {
+     "description": "Compared by the numbers it states, not word for word.",
+     "mechanic": "A translator tag for the engine, not SRD text."
+    },
+    "srd_page": 280,
+    "status": "verified"
+   },
+   "ephemeral": {
+    "compared": {
+     "in_a_stat_block": true,
+     "numbers_outside_the_stat_block": []
+    },
+    "name": "Ephemeral",
+    "not_compared": {
+     "description": "Compared by the numbers it states, not word for word.",
+     "mechanic": "A translator tag for the engine, not SRD text."
+    },
+    "srd_page": 341,
+    "status": "verified"
+   },
+   "ethereal-sight": {
+    "compared": {
+     "in_a_stat_block": true,
+     "numbers_outside_the_stat_block": []
+    },
+    "name": "Ethereal Sight",
+    "not_compared": {
+     "description": "Compared by the numbers it states, not word for word.",
+     "mechanic": "A translator tag for the engine, not SRD text."
+    },
+    "srd_page": 313,
+    "status": "verified"
+   },
+   "evasion": {
+    "compared": {
+     "in_a_stat_block": true,
+     "numbers_outside_the_stat_block": []
+    },
+    "name": "Evasion",
+    "not_compared": {
+     "description": "Compared by the numbers it states, not word for word.",
+     "mechanic": "A translator tag for the engine, not SRD text."
+    },
+    "srd_page": 260,
+    "status": "verified"
+   },
+   "exalted-restoration": {
+    "compared": {
+     "in_a_stat_block": true,
+     "numbers_outside_the_stat_block": []
+    },
+    "name": "Exalted Restoration",
+    "not_compared": {
+     "description": "Compared by the numbers it states, not word for word.",
+     "mechanic": "A translator tag for the engine, not SRD text."
+    },
+    "srd_page": 279,
+    "status": "verified"
+   },
+   "fear-aura": {
+    "compared": {
+     "in_a_stat_block": true,
+     "numbers_outside_the_stat_block": []
+    },
+    "name": "Fear Aura",
+    "not_compared": {
+     "description": "Compared by the numbers it states, not word for word.",
+     "mechanic": "A translator tag for the engine, not SRD text."
+    },
+    "srd_page": 314,
+    "status": "verified"
+   },
+   "fiendish-restoration": {
+    "compared": {
+     "in_a_stat_block": true,
+     "numbers_outside_the_stat_block": []
+    },
+    "name": "Fiendish Restoration",
+    "not_compared": {
+     "description": "Compared by the numbers it states, not word for word.",
+     "mechanic": "A translator tag for the engine, not SRD text."
+    },
+    "srd_page": 317,
+    "status": "verified"
+   },
+   "fire-absorption": {
+    "compared": {
+     "in_a_stat_block": true,
+     "numbers_outside_the_stat_block": []
+    },
+    "name": "Fire Absorption",
+    "not_compared": {
+     "description": "Compared by the numbers it states, not word for word.",
+     "mechanic": "A translator tag for the engine, not SRD text."
+    },
+    "srd_page": 302,
+    "status": "verified"
+   },
+   "fire-aura": {
+    "compared": {
+     "in_a_stat_block": true,
+     "numbers_outside_the_stat_block": []
+    },
+    "name": "Fire Aura",
+    "not_compared": {
+     "description": "Compared by the numbers it states, not word for word.",
+     "mechanic": "A translator tag for the engine, not SRD text."
+    },
+    "srd_page": 261,
+    "status": "verified"
+   },
+   "fire-form": {
+    "compared": {
+     "in_a_stat_block": true,
+     "numbers_outside_the_stat_block": []
+    },
+    "name": "Fire Form",
+    "not_compared": {
+     "description": "Compared by the numbers it states, not word for word.",
+     "mechanic": "A translator tag for the engine, not SRD text."
+    },
+    "srd_page": 284,
+    "status": "verified"
+   },
+   "flyby": {
+    "compared": {
+     "in_a_stat_block": true,
+     "numbers_outside_the_stat_block": []
+    },
+    "name": "Flyby",
+    "not_compared": {
+     "description": "Compared by the numbers it states, not word for word.",
+     "mechanic": "A translator tag for the engine, not SRD text."
+    },
+    "srd_page": 358,
+    "status": "verified"
+   },
+   "freeze": {
+    "compared": {
+     "in_a_stat_block": true,
+     "numbers_outside_the_stat_block": []
+    },
+    "name": "Freeze",
+    "not_compared": {
+     "description": "Compared by the numbers it states, not word for word.",
+     "mechanic": "A translator tag for the engine, not SRD text."
+    },
+    "srd_page": 337,
+    "status": "verified"
+   },
+   "gibbering": {
+    "compared": {
+     "in_a_stat_block": true,
+     "numbers_outside_the_stat_block": []
+    },
+    "name": "Gibbering",
+    "not_compared": {
+     "description": "Compared by the numbers it states, not word for word.",
+     "mechanic": "A translator tag for the engine, not SRD text."
+    },
+    "srd_page": 288,
+    "status": "verified"
+   },
+   "greater-magic-resistance": {
+    "compared": {
+     "in_a_stat_block": true,
+     "numbers_outside_the_stat_block": []
+    },
+    "name": "Greater Magic Resistance",
+    "not_compared": {
+     "description": "Compared by the numbers it states, not word for word.",
+     "mechanic": "A translator tag for the engine, not SRD text."
+    },
+    "srd_page": 317,
+    "status": "verified"
+   },
+   "hellish-restoration": {
+    "compared": {
+     "in_a_stat_block": true,
+     "numbers_outside_the_stat_block": []
+    },
+    "name": "Hellish Restoration",
+    "not_compared": {
+     "description": "Compared by the numbers it states, not word for word.",
+     "mechanic": "A translator tag for the engine, not SRD text."
+    },
+    "srd_page": 304,
+    "status": "verified"
+   },
+   "hold-breath": {
+    "compared": {
+     "in_a_stat_block": true,
+     "numbers_outside_the_stat_block": []
+    },
+    "name": "Hold Breath",
+    "not_compared": {
+     "description": "Compared by the numbers it states, not word for word.",
+     "mechanic": "A translator tag for the engine, not SRD text."
+    },
+    "srd_page": 347,
+    "status": "verified"
+   },
+   "ice-walk": {
+    "compared": {
+     "in_a_stat_block": true,
+     "numbers_outside_the_stat_block": []
+    },
+    "name": "Ice Walk",
+    "not_compared": {
+     "description": "Compared by the numbers it states, not word for word.",
+     "mechanic": "A translator tag for the engine, not SRD text."
+    },
+    "srd_page": 340,
+    "status": "verified"
+   },
+   "illumination": {
+    "compared": {
+     "in_a_stat_block": true,
+     "numbers_outside_the_stat_block": []
+    },
+    "name": "Illumination",
+    "not_compared": {
+     "description": "Compared by the numbers it states, not word for word.",
+     "mechanic": "A translator tag for the engine, not SRD text."
+    },
+    "srd_page": 351,
+    "status": "verified"
+   },
+   "immutable-form": {
+    "compared": {
+     "in_a_stat_block": true,
+     "numbers_outside_the_stat_block": []
+    },
+    "name": "Immutable Form",
+    "not_compared": {
+     "description": "Compared by the numbers it states, not word for word.",
+     "mechanic": "A translator tag for the engine, not SRD text."
+    },
+    "srd_page": 274,
+    "status": "verified"
+   },
+   "incorporeal-movement": {
+    "compared": {
+     "in_a_stat_block": true,
+     "numbers_outside_the_stat_block": []
+    },
+    "name": "Incorporeal Movement",
+    "not_compared": {
+     "description": "Compared by the numbers it states, not word for word.",
+     "mechanic": "A translator tag for the engine, not SRD text."
+    },
+    "srd_page": 232,
+    "status": "verified"
+   },
+   "inscrutable": {
+    "compared": {
+     "in_a_stat_block": true,
+     "numbers_outside_the_stat_block": []
+    },
+    "name": "Inscrutable",
+    "not_compared": {
+     "description": "Compared by the numbers it states, not word for word.",
+     "mechanic": "A translator tag for the engine, not SRD text."
+    },
+    "srd_page": 327,
+    "status": "verified"
+   },
+   "invisibility": {
+    "compared": {
+     "in_a_stat_block": true,
+     "numbers_outside_the_stat_block": []
+    },
+    "name": "Invisibility",
+    "not_compared": {
+     "description": "Compared by the numbers it states, not word for word.",
+     "mechanic": "A translator tag for the engine, not SRD text."
+    },
+    "srd_page": 301,
+    "status": "verified"
+   },
+   "iron-scent": {
+    "compared": {
+     "in_a_stat_block": true,
+     "numbers_outside_the_stat_block": []
+    },
+    "name": "Iron Scent",
+    "not_compared": {
+     "description": "Compared by the numbers it states, not word for word.",
+     "mechanic": "A translator tag for the engine, not SRD text."
+    },
+    "srd_page": 320,
+    "status": "verified"
+   },
+   "jumper": {
+    "compared": {
+     "in_a_stat_block": true,
+     "numbers_outside_the_stat_block": []
+    },
+    "name": "Jumper",
+    "not_compared": {
+     "description": "Compared by the numbers it states, not word for word.",
+     "mechanic": "A translator tag for the engine, not SRD text."
+    },
+    "srd_page": 346,
+    "status": "verified"
+   },
+   "legendary-resistance": {
+    "compared": {
+     "in_a_stat_block": true,
+     "numbers_outside_the_stat_block": []
+    },
+    "name": "Legendary Resistance",
+    "not_compared": {
+     "description": "Compared by the numbers it states, not word for word.",
+     "mechanic": "A translator tag for the engine, not SRD text."
+    },
+    "srd_page": 258,
+    "status": "verified"
+   },
+   "life-bond": {
+    "compared": {
+     "in_a_stat_block": true,
+     "numbers_outside_the_stat_block": []
+    },
+    "name": "Life Bond",
+    "not_compared": {
+     "description": "Compared by the numbers it states, not word for word.",
+     "mechanic": "A translator tag for the engine, not SRD text."
+    },
+    "srd_page": 131,
+    "status": "verified"
+   },
+   "light-sensitivity": {
+    "compared": {
+     "in_a_stat_block": true,
+     "numbers_outside_the_stat_block": []
+    },
+    "name": "Light Sensitivity",
+    "not_compared": {
+     "description": "Compared by the numbers it states, not word for word.",
+     "mechanic": "A translator tag for the engine, not SRD text."
+    },
+    "srd_page": 274,
+    "status": "verified"
+   },
+   "lightning-absorption": {
+    "compared": {
+     "in_a_stat_block": true,
+     "numbers_outside_the_stat_block": []
+    },
+    "name": "Lightning Absorption",
+    "not_compared": {
+     "description": "Compared by the numbers it states, not word for word.",
+     "mechanic": "A translator tag for the engine, not SRD text."
+    },
+    "srd_page": 285,
+    "status": "verified"
+   },
+   "limited-amphibiousness": {
+    "compared": {
+     "in_a_stat_block": true,
+     "numbers_outside_the_stat_block": []
+    },
+    "name": "Limited Amphibiousness",
+    "not_compared": {
+     "description": "Compared by the numbers it states, not word for word.",
+     "mechanic": "A translator tag for the engine, not SRD text."
+    },
+    "srd_page": 321,
+    "status": "verified"
+   },
+   "magic-resistance": {
+    "compared": {
+     "in_a_stat_block": true,
+     "numbers_outside_the_stat_block": []
+    },
+    "name": "Magic Resistance",
+    "not_compared": {
+     "description": "Compared by the numbers it states, not word for word.",
+     "mechanic": "A translator tag for the engine, not SRD text."
+    },
+    "srd_page": 279,
+    "status": "verified"
+   },
+   "magic-rope": {
+    "compared": {
+     "in_a_stat_block": true,
+     "numbers_outside_the_stat_block": []
+    },
+    "name": "Magic Rope",
+    "not_compared": {
+     "description": "Compared by the numbers it states, not word for word.",
+     "mechanic": "A translator tag for the engine, not SRD text."
+    },
+    "srd_page": 283,
+    "status": "verified"
+   },
+   "misty-escape": {
+    "compared": {
+     "in_a_stat_block": true,
+     "numbers_outside_the_stat_block": []
+    },
+    "name": "Misty Escape",
+    "not_compared": {
+     "description": "Compared by the numbers it states, not word for word.",
+     "mechanic": "A translator tag for the engine, not SRD text."
+    },
+    "srd_page": 335,
+    "status": "verified"
+   },
+   "mucus-cloud": {
+    "compared": {
+     "in_a_stat_block": true,
+     "numbers_outside_the_stat_block": []
+    },
+    "name": "Mucus Cloud",
+    "not_compared": {
+     "description": "Compared by the numbers it states, not word for word.",
+     "mechanic": "A translator tag for the engine, not SRD text."
+    },
+    "srd_page": 258,
+    "status": "verified"
+   },
+   "multiple-heads": {
+    "compared": {
+     "in_a_stat_block": true,
+     "numbers_outside_the_stat_block": []
+    },
+    "name": "Multiple Heads",
+    "not_compared": {
+     "description": "Compared by the numbers it states, not word for word.",
+     "mechanic": "A translator tag for the engine, not SRD text."
+    },
+    "srd_page": 300,
+    "status": "verified"
+   },
+   "ooze-cube": {
+    "compared": {
+     "in_a_stat_block": true,
+     "numbers_outside_the_stat_block": []
+    },
+    "name": "Ooze Cube",
+    "not_compared": {
+     "description": "Compared by the numbers it states, not word for word.",
+     "mechanic": "A translator tag for the engine, not SRD text."
+    },
+    "srd_page": 286,
+    "status": "verified"
+   },
+   "pack-tactics": {
+    "compared": {
+     "in_a_stat_block": true,
+     "numbers_outside_the_stat_block": []
+    },
+    "name": "Pack Tactics",
+    "not_compared": {
+     "description": "Compared by the numbers it states, not word for word.",
+     "mechanic": "A translator tag for the engine, not SRD text."
+    },
+    "srd_page": 345,
+    "status": "verified"
+   },
+   "probing-telepathy": {
+    "compared": {
+     "in_a_stat_block": true,
+     "numbers_outside_the_stat_block": []
+    },
+    "name": "Probing Telepathy",
+    "not_compared": {
+     "description": "Compared by the numbers it states, not word for word.",
+     "mechanic": "A translator tag for the engine, not SRD text."
+    },
+    "srd_page": 258,
+    "status": "verified"
+   },
+   "reactive": {
+    "compared": {
+     "in_a_stat_block": true,
+     "numbers_outside_the_stat_block": []
+    },
+    "name": "Reactive",
+    "not_compared": {
+     "description": "Compared by the numbers it states, not word for word.",
+     "mechanic": "A translator tag for the engine, not SRD text."
+    },
+    "srd_page": 306,
+    "status": "verified"
+   },
+   "reactive-heads": {
+    "compared": {
+     "in_a_stat_block": true,
+     "numbers_outside_the_stat_block": []
+    },
+    "name": "Reactive Heads",
+    "not_compared": {
+     "description": "Compared by the numbers it states, not word for word.",
+     "mechanic": "A translator tag for the engine, not SRD text."
+    },
+    "srd_page": 300,
+    "status": "verified"
+   },
+   "reflective-carapace": {
+    "compared": {
+     "in_a_stat_block": true,
+     "numbers_outside_the_stat_block": []
+    },
+    "name": "Reflective Carapace",
+    "not_compared": {
+     "description": "Compared by the numbers it states, not word for word.",
+     "mechanic": "A translator tag for the engine, not SRD text."
+    },
+    "srd_page": 331,
+    "status": "verified"
+   },
+   "regeneration": {
+    "compared": {
+     "in_a_stat_block": true,
+     "numbers_outside_the_stat_block": []
+    },
+    "name": "Regeneration",
+    "not_compared": {
+     "description": "Compared by the numbers it states, not word for word.",
+     "mechanic": "A translator tag for the engine, not SRD text."
+    },
+    "srd_page": 323,
+    "status": "verified"
+   },
+   "running-leap": {
+    "compared": {
+     "in_a_stat_block": true,
+     "numbers_outside_the_stat_block": []
+    },
+    "name": "Running Leap",
+    "not_compared": {
+     "description": "Compared by the numbers it states, not word for word.",
+     "mechanic": "A translator tag for the engine, not SRD text."
+    },
+    "srd_page": 356,
+    "status": "verified"
+   },
+   "sense-magic": {
+    "compared": {
+     "in_a_stat_block": true,
+     "numbers_outside_the_stat_block": []
+    },
+    "name": "Sense Magic",
+    "not_compared": {
+     "description": "Compared by the numbers it states, not word for word.",
+     "mechanic": "A translator tag for the engine, not SRD text."
+    },
+    "srd_page": 273,
+    "status": "verified"
+   },
+   "shared-resistances": {
+    "compared": {
+     "in_a_stat_block": true,
+     "numbers_outside_the_stat_block": []
+    },
+    "name": "Shared Resistances",
+    "not_compared": {
+     "description": "Compared by the numbers it states, not word for word.",
+     "mechanic": "A translator tag for the engine, not SRD text."
+    },
+    "srd_page": 166,
+    "status": "verified"
+   },
+   "shark-telepathy": {
+    "compared": {
+     "in_a_stat_block": true,
+     "numbers_outside_the_stat_block": []
+    },
+    "name": "Shark Telepathy",
+    "not_compared": {
+     "description": "Compared by the numbers it states, not word for word.",
+     "mechanic": "A translator tag for the engine, not SRD text."
+    },
+    "srd_page": 321,
+    "status": "verified"
+   },
+   "shielded-mind": {
+    "compared": {
+     "in_a_stat_block": true,
+     "numbers_outside_the_stat_block": []
+    },
+    "name": "Shielded Mind",
+    "not_compared": {
+     "description": "Compared by the numbers it states, not word for word.",
+     "mechanic": "A translator tag for the engine, not SRD text."
+    },
+    "srd_page": 277,
+    "status": "verified"
+   },
+   "siege-monster": {
+    "compared": {
+     "in_a_stat_block": true,
+     "numbers_outside_the_stat_block": []
+    },
+    "name": "Siege Monster",
+    "not_compared": {
+     "description": "Compared by the numbers it states, not word for word.",
+     "mechanic": "A translator tag for the engine, not SRD text."
+    },
+    "srd_page": 282,
+    "status": "verified"
+   },
+   "soul-bag": {
+    "compared": {
+     "in_a_stat_block": true,
+     "numbers_outside_the_stat_block": []
+    },
+    "name": "Soul Bag",
+    "not_compared": {
+     "description": "Compared by the numbers it states, not word for word.",
+     "mechanic": "A translator tag for the engine, not SRD text."
+    },
+    "srd_page": 311,
+    "status": "verified"
+   },
+   "speak-with-beasts-and-plants": {
+    "compared": {
+     "in_a_stat_block": true,
+     "numbers_outside_the_stat_block": []
+    },
+    "name": "Speak with Beasts and Plants",
+    "not_compared": {
+     "description": "Compared by the numbers it states, not word for word.",
+     "mechanic": "A translator tag for the engine, not SRD text."
+    },
+    "srd_page": 282,
+    "status": "verified"
+   },
+   "spell-storing": {
+    "compared": {
+     "in_a_stat_block": true,
+     "numbers_outside_the_stat_block": []
+    },
+    "name": "Spell Storing",
+    "not_compared": {
+     "description": "Compared by the numbers it states, not word for word.",
+     "mechanic": "A translator tag for the engine, not SRD text."
+    },
+    "srd_page": 323,
+    "status": "verified"
+   },
+   "spider-climb": {
+    "compared": {
+     "in_a_stat_block": true,
+     "numbers_outside_the_stat_block": []
+    },
+    "name": "Spider Climb",
+    "not_compared": {
+     "description": "Compared by the numbers it states, not word for word.",
+     "mechanic": "A translator tag for the engine, not SRD text."
+    },
+    "srd_page": 320,
+    "status": "verified"
+   },
+   "spirit-jar": {
+    "compared": {
+     "in_a_stat_block": true,
+     "numbers_outside_the_stat_block": []
+    },
+    "name": "Spirit Jar",
+    "not_compared": {
+     "description": "Compared by the numbers it states, not word for word.",
+     "mechanic": "A translator tag for the engine, not SRD text."
+    },
+    "srd_page": 304,
+    "status": "verified"
+   },
+   "standing-leap": {
+    "compared": {
+     "in_a_stat_block": true,
+     "numbers_outside_the_stat_block": []
+    },
+    "differences": {
+     "numbers_outside_the_stat_block": {
+      "corpus": [
+       "20"
+      ],
+      "srd": []
+     }
+    },
+    "divergence": {
+     "fields": [
+      "numbers_outside_the_stat_block"
+     ],
+     "issue": "https://github.com/n1ffl3r/tapestria-nat20/issues/18",
+     "reason": "The shared text says the Long Jump is 20 feet and the High Jump 10 feet; the Frog stat block it was taken from says 10 and 5. One shared text cannot suit every monster with the trait."
+    },
+    "name": "Standing Leap",
+    "not_compared": {
+     "description": "Compared by the numbers it states, not word for word.",
+     "mechanic": "A translator tag for the engine, not SRD text."
+    },
+    "srd_page": 348,
+    "status": "divergence"
+   },
+   "stench": {
+    "compared": {
+     "in_a_stat_block": true,
+     "numbers_outside_the_stat_block": []
+    },
+    "differences": {
+     "numbers_outside_the_stat_block": {
+      "corpus": [
+       "1"
+      ],
+      "srd": []
+     }
+    },
+    "divergence": {
+     "fields": [
+      "numbers_outside_the_stat_block"
+     ],
+     "issue": "https://github.com/n1ffl3r/tapestria-nat20/issues/18",
+     "reason": "Foundry adds '(other than a monster)' and a Success clause (immune to the Stench for 1 hour) that the Hezrou stat block does not have."
+    },
+    "name": "Stench",
+    "not_compared": {
+     "description": "Compared by the numbers it states, not word for word.",
+     "mechanic": "A translator tag for the engine, not SRD text."
+    },
+    "srd_page": 298,
+    "status": "divergence"
+   },
+   "succubus-form": {
+    "compared": {
+     "in_a_stat_block": true,
+     "numbers_outside_the_stat_block": []
+    },
+    "name": "Succubus Form",
+    "not_compared": {
+     "description": "Compared by the numbers it states, not word for word.",
+     "mechanic": "A translator tag for the engine, not SRD text."
+    },
+    "srd_page": 301,
+    "status": "verified"
+   },
+   "sunlight-sensitivity": {
+    "compared": {
+     "in_a_stat_block": true,
+     "numbers_outside_the_stat_block": []
+    },
+    "name": "Sunlight Sensitivity",
+    "not_compared": {
+     "description": "Compared by the numbers it states, not word for word.",
+     "mechanic": "A translator tag for the engine, not SRD text."
+    },
+    "srd_page": 302,
+    "status": "verified"
+   },
+   "sunlight-weakness": {
+    "compared": {
+     "in_a_stat_block": true,
+     "numbers_outside_the_stat_block": []
+    },
+    "name": "Sunlight Weakness",
+    "not_compared": {
+     "description": "Compared by the numbers it states, not word for word.",
+     "mechanic": "A translator tag for the engine, not SRD text."
+    },
+    "srd_page": 322,
+    "status": "verified"
+   },
+   "swallow": {
+    "compared": {
+     "in_a_stat_block": true,
+     "numbers_outside_the_stat_block": []
+    },
+    "name": "Swallow",
+    "not_compared": {
+     "description": "Compared by the numbers it states, not word for word.",
+     "mechanic": "A translator tag for the engine, not SRD text."
+    },
+    "srd_page": 351,
+    "status": "verified"
+   },
+   "swarm": {
+    "compared": {
+     "in_a_stat_block": true,
+     "numbers_outside_the_stat_block": []
+    },
+    "name": "Swarm",
+    "not_compared": {
+     "description": "Compared by the numbers it states, not word for word.",
+     "mechanic": "A translator tag for the engine, not SRD text."
+    },
+    "srd_page": 361,
+    "status": "verified"
+   },
+   "telepathic-bond": {
+    "compared": {
+     "in_a_stat_block": true,
+     "numbers_outside_the_stat_block": []
+    },
+    "name": "Telepathic Bond",
+    "not_compared": {
+     "description": "Compared by the numbers it states, not word for word.",
+     "mechanic": "A translator tag for the engine, not SRD text."
+    },
+    "srd_page": 299,
+    "status": "verified"
+   },
+   "training": {
+    "compared": {
+     "in_a_stat_block": true,
+     "numbers_outside_the_stat_block": []
+    },
+    "name": "Training",
+    "not_compared": {
+     "description": "Compared by the numbers it states, not word for word.",
+     "mechanic": "A translator tag for the engine, not SRD text."
+    },
+    "srd_page": 275,
+    "status": "verified"
+   },
+   "transparent": {
+    "compared": {
+     "in_a_stat_block": true,
+     "numbers_outside_the_stat_block": []
+    },
+    "name": "Transparent",
+    "not_compared": {
+     "description": "Compared by the numbers it states, not word for word.",
+     "mechanic": "A translator tag for the engine, not SRD text."
+    },
+    "srd_page": 286,
+    "status": "verified"
+   },
+   "treasure-sense": {
+    "compared": {
+     "in_a_stat_block": true,
+     "numbers_outside_the_stat_block": []
+    },
+    "name": "Treasure Sense",
+    "not_compared": {
+     "description": "Compared by the numbers it states, not word for word.",
+     "mechanic": "A translator tag for the engine, not SRD text."
+    },
+    "srd_page": 343,
+    "status": "verified"
+   },
+   "troll-spawn": {
+    "compared": {
+     "in_a_stat_block": true,
+     "numbers_outside_the_stat_block": []
+    },
+    "name": "Troll Spawn",
+    "not_compared": {
+     "description": "Compared by the numbers it states, not word for word.",
+     "mechanic": "A translator tag for the engine, not SRD text."
+    },
+    "srd_page": 333,
+    "status": "verified"
+   },
+   "tunneler": {
+    "compared": {
+     "in_a_stat_block": true,
+     "numbers_outside_the_stat_block": []
+    },
+    "name": "Tunneler",
+    "not_compared": {
+     "description": "Compared by the numbers it states, not word for word.",
+     "mechanic": "A translator tag for the engine, not SRD text."
+    },
+    "srd_page": 259,
+    "status": "verified"
+   },
+   "undead-fortitude": {
+    "compared": {
+     "in_a_stat_block": true,
+     "numbers_outside_the_stat_block": []
+    },
+    "name": "Undead Fortitude",
+    "not_compared": {
+     "description": "Compared by the numbers it states, not word for word.",
+     "mechanic": "A translator tag for the engine, not SRD text."
+    },
+    "srd_page": 344,
+    "status": "verified"
+   },
+   "undead-restoration": {
+    "compared": {
+     "in_a_stat_block": true,
+     "numbers_outside_the_stat_block": []
+    },
+    "name": "Undead Restoration",
+    "not_compared": {
+     "description": "Compared by the numbers it states, not word for word.",
+     "mechanic": "A translator tag for the engine, not SRD text."
+    },
+    "srd_page": 309,
+    "status": "verified"
+   },
+   "vampire-weakness": {
+    "compared": {
+     "in_a_stat_block": true,
+     "numbers_outside_the_stat_block": []
+    },
+    "name": "Vampire Weakness",
+    "not_compared": {
+     "description": "Compared by the numbers it states, not word for word.",
+     "mechanic": "A translator tag for the engine, not SRD text."
+    },
+    "srd_page": 334,
+    "status": "verified"
+   },
+   "vampiric-connection": {
+    "compared": {
+     "in_a_stat_block": true,
+     "numbers_outside_the_stat_block": []
+    },
+    "name": "Vampiric Connection",
+    "not_compared": {
+     "description": "Compared by the numbers it states, not word for word.",
+     "mechanic": "A translator tag for the engine, not SRD text."
+    },
+    "srd_page": 334,
+    "status": "verified"
+   },
+   "vile-appearance": {
+    "compared": {
+     "in_a_stat_block": true,
+     "numbers_outside_the_stat_block": []
+    },
+    "name": "Vile Appearance",
+    "not_compared": {
+     "description": "Compared by the numbers it states, not word for word.",
+     "mechanic": "A translator tag for the engine, not SRD text."
+    },
+    "srd_page": 322,
+    "status": "verified"
+   },
+   "water-breathing": {
+    "compared": {
+     "in_a_stat_block": true,
+     "numbers_outside_the_stat_block": []
+    },
+    "name": "Water Breathing",
+    "not_compared": {
+     "description": "Compared by the numbers it states, not word for word.",
+     "mechanic": "A translator tag for the engine, not SRD text."
+    },
+    "srd_page": 352,
+    "status": "verified"
+   },
+   "water-form": {
+    "compared": {
+     "in_a_stat_block": true,
+     "numbers_outside_the_stat_block": []
+    },
+    "name": "Water Form",
+    "not_compared": {
+     "description": "Compared by the numbers it states, not word for word.",
+     "mechanic": "A translator tag for the engine, not SRD text."
+    },
+    "srd_page": 337,
+    "status": "verified"
+   },
+   "water-susceptibility": {
+    "compared": {
+     "in_a_stat_block": true,
+     "numbers_outside_the_stat_block": []
+    },
+    "differences": {
+     "numbers_outside_the_stat_block": {
+      "corpus": [
+       "1",
+       "10",
+       "2"
+      ],
+      "srd": []
+     }
+    },
+    "divergence": {
+     "fields": [
+      "numbers_outside_the_stat_block"
+     ],
+     "issue": "https://github.com/n1ffl3r/tapestria-nat20/issues/18",
+     "reason": "The text ends with a Foundry Note about scaling dice, which the Fire Elemental stat block does not have."
+    },
+    "name": "Water Susceptibility",
+    "not_compared": {
+     "description": "Compared by the numbers it states, not word for word.",
+     "mechanic": "A translator tag for the engine, not SRD text."
+    },
+    "srd_page": 284,
+    "status": "divergence"
+   },
+   "web-walker": {
+    "compared": {
+     "in_a_stat_block": true,
+     "numbers_outside_the_stat_block": []
+    },
+    "name": "Web Walker",
+    "not_compared": {
+     "description": "Compared by the numbers it states, not word for word.",
+     "mechanic": "A translator tag for the engine, not SRD text."
+    },
+    "srd_page": 353,
     "status": "verified"
    }
   },
@@ -46439,6 +48516,718 @@
     "name": "Zombie",
     "srd_page": 343,
     "status": "corrected"
+   }
+  },
+  "species": {
+   "dragonborn": {
+    "compared": {
+     "creature_type": "humanoid",
+     "darkvision": 60,
+     "resistance_choices": [
+      "acid",
+      "cold",
+      "fire",
+      "lightning",
+      "poison"
+     ],
+     "resistances": [],
+     "scale.Breath Weapon": {
+      "1": "d10",
+      "10": "2d10",
+      "11": "3d10",
+      "12": "3d10",
+      "13": "3d10",
+      "14": "3d10",
+      "15": "3d10",
+      "16": "3d10",
+      "17": "4d10",
+      "18": "4d10",
+      "19": "4d10",
+      "2": "d10",
+      "20": "4d10",
+      "3": "d10",
+      "4": "d10",
+      "5": "2d10",
+      "6": "2d10",
+      "7": "2d10",
+      "8": "2d10",
+      "9": "2d10"
+     },
+     "sizes": [
+      "medium"
+     ],
+     "speed": 30,
+     "traits.Breath Weapon": 0,
+     "traits.Draconic Flight": 5
+    },
+    "name": "Dragonborn",
+    "read_by_hand": {
+     "resistance_choices": [
+      "Black Acid Gold Fire Blue Lightning Green Poison Brass Fire Red Fire Bronze Lightning Silver Cold Copper Acid White Cold"
+     ],
+     "scale.Breath Weapon": [
+      "you take the Attack action on your turn, you can replace one of your attacks",
+      "On a failed save, a creature takes 1d10 damage",
+      "This damage increases by 1d10 when you reach character levels 5 (2d10), 11 (3d10), and 17 (4d10)."
+     ]
+    },
+    "srd_page": 84,
+    "status": "verified"
+   },
+   "dwarf": {
+    "compared": {
+     "creature_type": "humanoid",
+     "darkvision": 120,
+     "resistances": [
+      "poison"
+     ],
+     "sizes": [
+      "medium"
+     ],
+     "speed": 30,
+     "traits.Dwarven Resilience": 0,
+     "traits.Dwarven Toughness": 0,
+     "traits.Stonecunning": 0
+    },
+    "name": "Dwarf",
+    "read_by_hand": {
+     "resistances": [
+      "Dwarven Resilience. You have Resistance to Poison damage."
+     ]
+    },
+    "srd_page": 84,
+    "status": "verified"
+   },
+   "elf-drow": {
+    "compared": {
+     "creature_type": "humanoid",
+     "darkvision": 120,
+     "resistances": [],
+     "sizes": [
+      "medium"
+     ],
+     "speed": 30,
+     "spells.1": [
+      "Dancing Lights"
+     ],
+     "spells.3": [
+      "Faerie Fire"
+     ],
+     "spells.5": [
+      "Darkness"
+     ],
+     "traits.Elven Lineage": 0,
+     "traits.Fey Ancestry": 0,
+     "traits.Keen Senses": 0,
+     "traits.Trance": 0
+    },
+    "name": "Elf, Drow",
+    "read_by_hand": {
+     "darkvision": [
+      "Drow The range of your Darkvision increases to 120 feet. You also know the Dancing Lights cantrip. Faerie Fire Darkness"
+     ],
+     "spells": [
+      "You also know the Dancing Lights cantrip. Faerie Fire Darkness"
+     ]
+    },
+    "srd_page": 84,
+    "status": "verified"
+   },
+   "elf-high": {
+    "compared": {
+     "creature_type": "humanoid",
+     "darkvision": 60,
+     "resistances": [],
+     "sizes": [
+      "medium"
+     ],
+     "speed": 30,
+     "spells.1": [
+      "Prestidigitation"
+     ],
+     "spells.3": [
+      "Detect Magic"
+     ],
+     "spells.5": [
+      "Misty Step"
+     ],
+     "traits.Elven Lineage": 0,
+     "traits.Fey Ancestry": 0,
+     "traits.Keen Senses": 0,
+     "traits.Trance": 0
+    },
+    "name": "Elf, High",
+    "read_by_hand": {
+     "spells": [
+      "High Elf You know the Prestidigitation cantrip. Whenever you finish a Long Rest, you can replace that cantrip with a different cantrip from the Wizard spell list. Detect Magic Misty Step"
+     ]
+    },
+    "srd_page": 84,
+    "status": "verified"
+   },
+   "elf-wood": {
+    "compared": {
+     "creature_type": "humanoid",
+     "darkvision": 60,
+     "resistances": [],
+     "sizes": [
+      "medium"
+     ],
+     "speed": 35,
+     "spells.1": [
+      "Druidcraft"
+     ],
+     "spells.3": [
+      "Longstrider"
+     ],
+     "spells.5": [
+      "Pass without Trace"
+     ],
+     "traits.Elven Lineage": 0,
+     "traits.Fey Ancestry": 0,
+     "traits.Keen Senses": 0,
+     "traits.Trance": 0
+    },
+    "name": "Elf, Wood",
+    "read_by_hand": {
+     "speed": [
+      "Wood Elf Your Speed increases to 35 feet. You also know the Druidcraft cantrip. Longstrider Pass without Trace"
+     ],
+     "spells": [
+      "You also know the Druidcraft cantrip. Longstrider Pass without Trace"
+     ]
+    },
+    "srd_page": 84,
+    "status": "verified"
+   },
+   "gnome-forest": {
+    "compared": {
+     "creature_type": "humanoid",
+     "darkvision": 60,
+     "resistances": [],
+     "sizes": [
+      "small"
+     ],
+     "speed": 30,
+     "spells.0": [
+      "Minor Illusion",
+      "Speak with Animals"
+     ],
+     "traits.Gnomish Cunning": 0,
+     "traits.Gnomish Lineage": 0
+    },
+    "name": "Gnome, Forest",
+    "read_by_hand": {
+     "spells": [
+      "Forest Gnome. You know the Minor Illusion cantrip. You also always have the Speak with Animals spell prepared."
+     ]
+    },
+    "srd_page": 85,
+    "status": "verified"
+   },
+   "gnome-rock": {
+    "compared": {
+     "creature_type": "humanoid",
+     "darkvision": 60,
+     "resistances": [],
+     "sizes": [
+      "small"
+     ],
+     "speed": 30,
+     "spells.0": [
+      "Mending",
+      "Prestidigitation"
+     ],
+     "traits.Gnomish Cunning": 0,
+     "traits.Gnomish Lineage": 0
+    },
+    "name": "Gnome, Rock",
+    "read_by_hand": {
+     "spells": [
+      "Rock Gnome. You know the Mending and Prestidigitation cantrips."
+     ]
+    },
+    "srd_page": 85,
+    "status": "verified"
+   },
+   "goliath": {
+    "compared": {
+     "creature_type": "humanoid",
+     "darkvision": null,
+     "resistances": [],
+     "sizes": [
+      "medium"
+     ],
+     "speed": 35,
+     "traits.Giant Ancestry": 0,
+     "traits.Large Form": 5,
+     "traits.Powerful Build": 0
+    },
+    "name": "Goliath",
+    "srd_page": 85,
+    "status": "verified"
+   },
+   "halfling": {
+    "compared": {
+     "creature_type": "humanoid",
+     "darkvision": null,
+     "resistances": [],
+     "sizes": [
+      "small"
+     ],
+     "speed": 30,
+     "traits.Brave": 0,
+     "traits.Halfling Nimbleness": 0,
+     "traits.Luck": 0,
+     "traits.Naturally Stealthy": 0
+    },
+    "name": "Halfling",
+    "srd_page": 86,
+    "status": "verified"
+   },
+   "human": {
+    "compared": {
+     "creature_type": "humanoid",
+     "darkvision": null,
+     "resistances": [],
+     "sizes": [
+      "medium",
+      "small"
+     ],
+     "speed": 30,
+     "traits.Resourceful": 0,
+     "traits.Skillful": 0,
+     "traits.Versatile": 0
+    },
+    "name": "Human",
+    "srd_page": 86,
+    "status": "verified"
+   },
+   "orc": {
+    "compared": {
+     "creature_type": "humanoid",
+     "darkvision": 120,
+     "resistances": [],
+     "sizes": [
+      "medium"
+     ],
+     "speed": 30,
+     "traits.Adrenaline Rush": 0,
+     "traits.Relentless Endurance": 0
+    },
+    "name": "Orc",
+    "srd_page": 86,
+    "status": "verified"
+   },
+   "tiefling-abyssal": {
+    "compared": {
+     "creature_type": "humanoid",
+     "darkvision": 60,
+     "resistances": [
+      "poison"
+     ],
+     "sizes": [
+      "medium",
+      "small"
+     ],
+     "speed": 30,
+     "spells.0": [
+      "Thaumaturgy"
+     ],
+     "spells.1": [
+      "Poison Spray"
+     ],
+     "spells.3": [
+      "Ray of Sickness"
+     ],
+     "spells.5": [
+      "Hold Person"
+     ],
+     "traits.Fiendish Legacy": 0,
+     "traits.Otherworldly Presence": 0
+    },
+    "name": "Tiefling, Abyssal",
+    "read_by_hand": {
+     "resistances": [
+      "Abyssal You have Resistance to Poison damage. You also know"
+     ],
+     "spells": [
+      "Abyssal You have Resistance to Poison damage. You also know the Poison Spray cantrip. Ray of Sickness Hold Person",
+      "Otherworldly Presence. You know the Thaumaturgy cantrip."
+     ]
+    },
+    "srd_page": 86,
+    "status": "verified"
+   },
+   "tiefling-chthonic": {
+    "compared": {
+     "creature_type": "humanoid",
+     "darkvision": 60,
+     "resistances": [
+      "necrotic"
+     ],
+     "sizes": [
+      "medium",
+      "small"
+     ],
+     "speed": 30,
+     "spells.0": [
+      "Thaumaturgy"
+     ],
+     "spells.1": [
+      "Chill Touch"
+     ],
+     "spells.3": [
+      "False Life"
+     ],
+     "spells.5": [
+      "Ray of Enfeeblement"
+     ],
+     "traits.Fiendish Legacy": 0,
+     "traits.Otherworldly Presence": 0
+    },
+    "name": "Tiefling, Chthonic",
+    "read_by_hand": {
+     "resistances": [
+      "Chthonic You have Resistance to Necrotic damage. You also know"
+     ],
+     "spells": [
+      "Chthonic You have Resistance to Necrotic damage. You also know the Chill Touch cantrip. False Life Ray of Enfeeblement",
+      "Otherworldly Presence. You know the Thaumaturgy cantrip."
+     ]
+    },
+    "srd_page": 86,
+    "status": "verified"
+   },
+   "tiefling-infernal": {
+    "compared": {
+     "creature_type": "humanoid",
+     "darkvision": 60,
+     "resistances": [
+      "fire"
+     ],
+     "sizes": [
+      "medium",
+      "small"
+     ],
+     "speed": 30,
+     "spells.0": [
+      "Thaumaturgy"
+     ],
+     "spells.1": [
+      "Fire Bolt"
+     ],
+     "spells.3": [
+      "Hellish Rebuke"
+     ],
+     "spells.5": [
+      "Darkness"
+     ],
+     "traits.Fiendish Legacy": 0,
+     "traits.Otherworldly Presence": 0
+    },
+    "name": "Tiefling, Infernal",
+    "read_by_hand": {
+     "resistances": [
+      "Infernal You have Resistance to Fire damage. You also know"
+     ],
+     "spells": [
+      "Infernal You have Resistance to Fire damage. You also know the Fire Bolt cantrip. Hellish Rebuke Darkness",
+      "Otherworldly Presence. You know the Thaumaturgy cantrip."
+     ]
+    },
+    "srd_page": 86,
+    "status": "verified"
+   }
+  },
+  "species_traits": {
+   "adrenaline-rush": {
+    "compared": {
+     "level": 0
+    },
+    "name": "Adrenaline Rush",
+    "srd_page": 86,
+    "status": "verified"
+   },
+   "brave": {
+    "compared": {
+     "level": 0
+    },
+    "name": "Brave",
+    "srd_page": 86,
+    "status": "verified"
+   },
+   "breath-weapon": {
+    "compared": {
+     "level": 0
+    },
+    "name": "Breath Weapon",
+    "srd_page": 84,
+    "status": "verified"
+   },
+   "clouds-jaunt": {
+    "compared": {
+     "listed_as_an_option": true
+    },
+    "name": "Cloud's Jaunt",
+    "srd_page": 85,
+    "status": "verified"
+   },
+   "draconic-flight": {
+    "compared": {
+     "level": 5
+    },
+    "name": "Draconic Flight",
+    "srd_page": 84,
+    "status": "verified"
+   },
+   "dwarven-resilience": {
+    "compared": {
+     "level": 0
+    },
+    "name": "Dwarven Resilience",
+    "srd_page": 84,
+    "status": "verified"
+   },
+   "dwarven-toughness": {
+    "compared": {
+     "level": 0
+    },
+    "name": "Dwarven Toughness",
+    "srd_page": 84,
+    "status": "verified"
+   },
+   "elven-lineage-drow": {
+    "compared": {
+     "level": 0
+    },
+    "name": "Elven Lineage, Drow",
+    "srd_page": 84,
+    "status": "verified"
+   },
+   "elven-lineage-high-elf": {
+    "compared": {
+     "level": 0
+    },
+    "name": "Elven Lineage, High Elf",
+    "srd_page": 84,
+    "status": "verified"
+   },
+   "elven-lineage-wood-elf": {
+    "compared": {
+     "level": 0
+    },
+    "name": "Elven Lineage, Wood Elf",
+    "srd_page": 84,
+    "status": "verified"
+   },
+   "fey-ancestry": {
+    "compared": {
+     "level": 0
+    },
+    "name": "Fey Ancestry",
+    "srd_page": 85,
+    "status": "verified"
+   },
+   "fiendish-legacy-abyssal": {
+    "compared": {
+     "level": 0
+    },
+    "name": "Fiendish Legacy, Abyssal",
+    "srd_page": 86,
+    "status": "verified"
+   },
+   "fiendish-legacy-chthonic": {
+    "compared": {
+     "level": 0
+    },
+    "name": "Fiendish Legacy, Chthonic",
+    "srd_page": 86,
+    "status": "verified"
+   },
+   "fiendish-legacy-infernal": {
+    "compared": {
+     "level": 0
+    },
+    "name": "Fiendish Legacy, Infernal",
+    "srd_page": 86,
+    "status": "verified"
+   },
+   "fires-burn": {
+    "compared": {
+     "listed_as_an_option": true
+    },
+    "name": "Fire's Burn",
+    "srd_page": 85,
+    "status": "verified"
+   },
+   "frosts-chill": {
+    "compared": {
+     "listed_as_an_option": true
+    },
+    "name": "Frost's Chill",
+    "srd_page": 85,
+    "status": "verified"
+   },
+   "giant-ancestry": {
+    "compared": {
+     "level": 0
+    },
+    "name": "Giant Ancestry",
+    "srd_page": 85,
+    "status": "verified"
+   },
+   "gnomish-cunning": {
+    "compared": {
+     "level": 0
+    },
+    "name": "Gnomish Cunning",
+    "srd_page": 85,
+    "status": "verified"
+   },
+   "gnomish-lineage-forest": {
+    "compared": {
+     "level": 0
+    },
+    "name": "Gnomish Lineage, Forest",
+    "srd_page": 85,
+    "status": "verified"
+   },
+   "gnomish-lineage-rock": {
+    "compared": {
+     "level": 0
+    },
+    "name": "Gnomish Lineage, Rock",
+    "srd_page": 85,
+    "status": "verified"
+   },
+   "halfling-nimbleness": {
+    "compared": {
+     "level": 0
+    },
+    "name": "Halfling Nimbleness",
+    "srd_page": 86,
+    "status": "verified"
+   },
+   "hills-tumble": {
+    "compared": {
+     "listed_as_an_option": true
+    },
+    "name": "Hill's Tumble",
+    "srd_page": 85,
+    "status": "verified"
+   },
+   "keen-senses": {
+    "compared": {
+     "level": 0
+    },
+    "name": "Keen Senses",
+    "srd_page": 85,
+    "status": "verified"
+   },
+   "large-form": {
+    "compared": {
+     "level": 5
+    },
+    "name": "Large Form",
+    "srd_page": 86,
+    "status": "verified"
+   },
+   "luck": {
+    "compared": {
+     "level": 0
+    },
+    "name": "Luck",
+    "srd_page": 86,
+    "status": "verified"
+   },
+   "naturally-stealthy": {
+    "compared": {
+     "level": 0
+    },
+    "name": "Naturally Stealthy",
+    "srd_page": 86,
+    "status": "verified"
+   },
+   "otherworldly-presence": {
+    "compared": {
+     "level": 0
+    },
+    "name": "Otherworldly Presence",
+    "srd_page": 86,
+    "status": "verified"
+   },
+   "powerful-build": {
+    "compared": {
+     "level": 0
+    },
+    "name": "Powerful Build",
+    "srd_page": 86,
+    "status": "verified"
+   },
+   "relentless-endurance": {
+    "compared": {
+     "level": 0
+    },
+    "name": "Relentless Endurance",
+    "srd_page": 86,
+    "status": "verified"
+   },
+   "resourceful": {
+    "compared": {
+     "level": 0
+    },
+    "name": "Resourceful",
+    "srd_page": 86,
+    "status": "verified"
+   },
+   "skillful": {
+    "compared": {
+     "level": 0
+    },
+    "name": "Skillful",
+    "srd_page": 86,
+    "status": "verified"
+   },
+   "stonecunning": {
+    "compared": {
+     "level": 0
+    },
+    "name": "Stonecunning",
+    "srd_page": 84,
+    "status": "verified"
+   },
+   "stones-endurance": {
+    "compared": {
+     "listed_as_an_option": true
+    },
+    "name": "Stone's Endurance",
+    "srd_page": 85,
+    "status": "verified"
+   },
+   "storms-thunder": {
+    "compared": {
+     "listed_as_an_option": true
+    },
+    "name": "Storm's Thunder",
+    "srd_page": 86,
+    "status": "verified"
+   },
+   "trance": {
+    "compared": {
+     "level": 0
+    },
+    "name": "Trance",
+    "srd_page": 85,
+    "status": "verified"
+   },
+   "versatile": {
+    "compared": {
+     "level": 0
+    },
+    "name": "Versatile",
+    "srd_page": 86,
+    "status": "verified"
    }
   },
   "spell_lists": {

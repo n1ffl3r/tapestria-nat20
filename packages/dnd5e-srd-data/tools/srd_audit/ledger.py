@@ -31,10 +31,19 @@ from typing import Any
 
 import yaml
 
-from tools.srd_audit import classes, items, pdf_text, spell_lists, spells, stat_blocks
+from tools.srd_audit import (
+    classes,
+    items,
+    origins,
+    pdf_text,
+    spell_lists,
+    spells,
+    stat_blocks,
+)
 from tools.srd_audit.spells import Facts
 from tools.translators.foundry import (
     class_srd_corrections,
+    feat_srd_corrections,
     item_srd_corrections,
     monster_srd_corrections,
     spell_srd_corrections,
@@ -52,10 +61,16 @@ INDEX_PATH = ROOT / "srd" / "index.json"
 CANONICAL = ROOT / "src" / "dnd5e_srd_data" / "canonical"
 FOUNDRY = ROOT / "raw_sources" / "foundry"
 AUDITED_CATEGORIES = (
+    "backgrounds",
     "class_features",
     "classes",
+    "conditions",
+    "feats",
     "items",
+    "monster_traits",
     "monsters",
+    "species",
+    "species_traits",
     "spell_lists",
     "spells",
     "subclasses",
@@ -80,7 +95,11 @@ def load_json(path: Path) -> Any:
 
 
 # A ledger category that is part of a corpus directory: the records a predicate keeps.
-CATEGORY_DIRECTORIES = {"class_features": "features"}
+CATEGORY_DIRECTORIES = {
+    "class_features": "features",
+    "species_traits": "features",
+    "monster_traits": "traits",
+}
 
 
 def canonical_records(category: str) -> dict[str, dict[str, Any]]:
@@ -89,8 +108,9 @@ def canonical_records(category: str) -> dict[str, dict[str, Any]]:
         path.stem: load_json(path) for path in sorted((CANONICAL / directory).glob("*.json"))
     }
     if category == "class_features":
-        # A species trait is audited with its species.
         return {s: r for s, r in records.items() if r["feature_type"] != "species_trait"}
+    if category == "species_traits":
+        return {s: r for s, r in records.items() if r["feature_type"] == "species_trait"}
     return records
 
 
@@ -141,7 +161,8 @@ def _set_path(blob: dict[str, Any], path: str, value: Any) -> None:
         name, _, selector = step.partition("[")
         node = node[name]
         if selector:
-            node = next(item for item in node if item.get("id") == selector.rstrip("]"))
+            key = selector.rstrip("]")
+            node = node[int(key)] if key.isdigit() else next(i for i in node if i.get("id") == key)
     node[steps[-1]] = value
 
 
@@ -613,7 +634,7 @@ def _flat(facts: Mapping[str, Any]) -> Facts:
     difference names the feature or scale: ``feature_levels.Rage``, ``scale.Rages``."""
     out: Facts = {}
     for field, value in facts.items():
-        if field in ("feature_levels", "scale"):
+        if field in ("feature_levels", "scale", "traits", "spells"):
             out.update({f"{field}.{key}": item for key, item in value.items()})
         else:
             out[field] = value
@@ -877,6 +898,317 @@ def feature_entries(
     return entries
 
 
+ORIGIN_NOT_COMPARED = {
+    "backgrounds": {
+        "feat_list": (
+            "The corpus names the feat (Magic Initiate), not the spell list the SRD's entry picks"
+            " (Cleric, Wizard)."
+        ),
+        "equipment": (
+            "The corpus holds the starting equipment as item links and the option B Gold Pieces;"
+            " option A's items and Gold Pieces are not compared."
+        ),
+    },
+    "feats": {
+        "benefits": (
+            "A feat's benefits are its text; the audit compares its category and prerequisite."
+        ),
+    },
+    "conditions": {},
+}
+
+
+def _origin_aliases(category: str) -> dict[str, dict[str, Any]]:
+    return {
+        a["name"]: a for a in load_json(ALIASES_PATH)["aliases"] if a["corpus_category"] == category
+    }
+
+
+def origin_entries(
+    index: Mapping[str, Any], divergences: Mapping[str, Any], with_changes: bool
+) -> dict[str, dict[str, Any]]:
+    """Species, species traits, backgrounds, feats, conditions, and monster traits against
+    their SRD text."""
+    errors: list[str] = []
+    out: dict[str, dict[str, Any]] = {}
+    out["species"] = _species_entries(index, divergences, errors)
+    out["species_traits"] = _species_trait_entries(index, divergences, errors)
+    out["backgrounds"] = _background_entries(index, divergences, errors)
+    out["feats"] = _feat_entries(index, divergences, with_changes, errors)
+    out["conditions"] = _condition_entries(index, divergences, errors)
+    out["monster_traits"] = _monster_trait_entries(index, divergences, errors)
+    if errors:
+        raise ValueError("\n".join(errors))
+    return out
+
+
+def _species_entries(
+    index: Mapping[str, Any], divergences: Mapping[str, Any], errors: list[str]
+) -> dict[str, Any]:
+    texts = origins.species_texts()
+    chapter = "\n".join(line for _, line in pdf_text.plain_lines(*origins.SPECIES_PAGES))
+    pages = {s["name"]: s["page"] for s in index["categories"]["species"]}
+    parents = {n: a["of"] for n, a in _origin_aliases("species").items()}
+    features = canonical_records("features")
+    lineage = {
+        n: a["of"]
+        for n, a in _origin_aliases("features").items()
+        if a["of_category"] == "species_traits"
+    }
+    spell_names = {s: r["name"] for s, r in canonical_records("spells").items()}
+    entries: dict[str, Any] = {}
+    for slug, record in canonical_records("species").items():
+        parent = parents.get(record["name"], record["name"])
+        srd, readings = origins.species_with_readings(slug, origins.species_facts(texts[parent]))
+        corpus = {
+            **origins.corpus_species(record, features, lineage),
+            **origins.corpus_species_more(record, spell_names),
+        }
+        corpus["traits"] = {
+            n: lv for n, lv in corpus["traits"].items() if n not in origins.FIELD_TRAITS
+        }
+        try:
+            _verify_quotes(slug, chapter, (q for r in readings.values() for q in r.srd))
+            entry: dict[str, Any] = {
+                "name": record["name"],
+                "srd_page": pages[parent],
+                "compared": _flat(srd),
+            }
+            if readings:
+                entry["read_by_hand"] = {f: list(r.srd) for f, r in sorted(readings.items())}
+            entries[slug] = _finish(
+                slug,
+                entry,
+                spells.compare(_flat(srd), _flat(corpus)),
+                divergences["species"].get(slug),
+                [],
+            )
+        except ValueError as error:
+            errors.append(str(error))
+    return entries
+
+
+def _species_trait_entries(
+    index: Mapping[str, Any], divergences: Mapping[str, Any], errors: list[str]
+) -> dict[str, Any]:
+    texts = origins.species_texts()
+    pages = {classes.canon(t["name"]): t["page"] for t in index["categories"]["species_traits"]}
+    species = canonical_records("species")
+    lineage = {
+        n: a["of"]
+        for n, a in _origin_aliases("features").items()
+        if a["of_category"] == "species_traits"
+    }
+    parents = {n: a["of"] for n, a in _origin_aliases("species").items()}
+    granted: dict[str, list[tuple[str, int]]] = {}
+    chosen: dict[str, str] = {}
+    for sp_slug, record in species.items():
+        for g in record["granted_features"]:
+            if g["ref_type"] == "feature":
+                granted.setdefault(g["slug"], []).append((sp_slug, g["level"]))
+        for choice in record["feature_choices"]:
+            for option in choice["pool"]:
+                if option["ref_type"] == "feature":
+                    chosen[option["slug"]] = sp_slug
+    entries: dict[str, Any] = {}
+    for slug, feature in canonical_records("species_traits").items():
+        name = lineage.get(feature["name"], feature["name"])
+        try:
+            if slug in granted:
+                sp_slug, level = granted[slug][0]
+                parent = parents.get(species[sp_slug]["name"], species[sp_slug]["name"])
+                srd_traits = origins.species_traits(texts[parent])
+                srd = {"level": srd_traits[name][0] if name in srd_traits else None}
+                corpus = {"level": level}
+            elif slug in chosen:
+                srd = {"listed_as_an_option": classes.canon(name) in pages}
+                corpus = {"listed_as_an_option": True}
+            else:
+                errors.append(f"{slug}: no species grants this trait")
+                continue
+            entry = {
+                "name": feature["name"],
+                "srd_page": pages[classes.canon(name)],
+                "compared": srd,
+            }
+            entries[slug] = _finish(
+                slug,
+                entry,
+                spells.compare(srd, corpus),
+                divergences["species_traits"].get(slug),
+                [],
+            )
+        except (ValueError, KeyError) as error:
+            errors.append(f"{slug}: {error!r}")
+    return entries
+
+
+def _background_entries(
+    index: Mapping[str, Any], divergences: Mapping[str, Any], errors: list[str]
+) -> dict[str, Any]:
+    texts = origins.background_texts()
+    pages = {b["name"]: b["page"] for b in index["categories"]["backgrounds"]}
+    feats = canonical_records("feats")
+    entries: dict[str, Any] = {}
+    for slug, record in canonical_records("backgrounds").items():
+        text = texts[record["name"]]
+        srd = origins.background_facts(text)
+        srd.pop("feat_list")
+        corpus = origins.corpus_background(record, feats)
+        entry: dict[str, Any] = {
+            "name": record["name"],
+            "srd_page": pages[record["name"]],
+            "compared": srd,
+            "not_compared": ORIGIN_NOT_COMPARED["backgrounds"],
+        }
+        entries[slug] = _finish(
+            slug, entry, spells.compare(srd, corpus), divergences["backgrounds"].get(slug), []
+        )
+    return entries
+
+
+def _feat_entries(
+    index: Mapping[str, Any], divergences: Mapping[str, Any], with_changes: bool, errors: list[str]
+) -> dict[str, Any]:
+    texts = origins.feat_texts()
+    pages = {f["name"]: f["page"] for f in index["categories"]["feats"]}
+    entries: dict[str, Any] = {}
+    for slug, record in canonical_records("feats").items():
+        text = texts[record["name"]]
+        srd = origins.feat_facts(text)
+        corpus = origins.corpus_feat(record)
+        corrections = feat_srd_corrections(slug)
+        try:
+            _verify_quotes(slug, text.text, (c.srd for c in corrections))
+            entry: dict[str, Any] = {
+                "name": record["name"],
+                "srd_page": pages[record["name"]],
+                "compared": srd,
+                "not_compared": ORIGIN_NOT_COMPARED["feats"],
+            }
+            changes: list[dict[str, Any]] = []
+            if with_changes and corrections:
+                view = copy.deepcopy(dict(record))
+                for c in corrections:
+                    _set_path(view, c.path, copy.deepcopy(c.was))
+                before = origins.corpus_feat(view)
+                changes = [
+                    {
+                        "field": field,
+                        "from": before[field],
+                        "to": corpus[field],
+                        "srd": [c.srd for c in corrections],
+                    }
+                    for field in sorted(corpus)
+                    if before[field] != corpus[field]
+                ]
+            entries[slug] = _finish(
+                slug,
+                entry,
+                spells.compare(srd, corpus),
+                divergences["feats"].get(slug),
+                changes,
+            )
+        except ValueError as error:
+            errors.append(str(error))
+    return entries
+
+
+def _condition_entries(
+    index: Mapping[str, Any], divergences: Mapping[str, Any], errors: list[str]
+) -> dict[str, Any]:
+    texts = origins.condition_texts()
+    pages = {c["name"]: c["page"] for c in index["categories"]["conditions"]}
+    entries: dict[str, Any] = {}
+    for slug, record in canonical_records("conditions").items():
+        reading = origins.CONDITION_READINGS[slug]
+        try:
+            _verify_quotes(slug, texts[record["name"]].text, reading.srd)
+            entry: dict[str, Any] = {
+                "name": record["name"],
+                "srd_page": pages[record["name"]],
+                "compared": reading.value,
+                "read_by_hand": {"effects": list(reading.srd)},
+            }
+            entries[slug] = _finish(
+                slug,
+                entry,
+                spells.compare(reading.value, origins.corpus_condition(record)),
+                divergences["conditions"].get(slug),
+                [],
+            )
+        except ValueError as error:
+            errors.append(str(error))
+    return entries
+
+
+def _numbers(text: str) -> set[str]:
+    """The numbers and dice a trait's text states, without the Foundry markup that stands
+    in for a number (``[[lookup ...]]``)."""
+    text = re.sub(r"\[\[.*?\]\]|&amp;Reference\[[^\]]*\]", " ", text)
+    return set(re.findall(r"\d+(?:d\d+)?", text))
+
+
+def _monster_trait_entries(
+    index: Mapping[str, Any], divergences: Mapping[str, Any], errors: list[str]
+) -> dict[str, Any]:
+    """Each monster trait against the stat block of the monster it was taken from: the
+    trait is in the block's Traits, and the numbers its text states are the block's."""
+    texts = stat_blocks.stat_block_texts(pdf_text.plain_lines(*STAT_BLOCK_PAGES))
+    pages = {s["name"]: s["page"] for s in index["categories"]["stat_blocks"]}
+    parents = {n: a["of"] for n, a in _origin_aliases("monsters").items()}
+    monsters = {
+        r["provenance"]["source_url"].rsplit("/", 1)[1]: r
+        for r in canonical_records("monsters").values()
+    }
+    entries: dict[str, Any] = {}
+    trait_slugs = set(canonical_records("monster_traits"))
+    for slug, trait in canonical_records("monster_traits").items():
+        source = monsters[trait["provenance"]["source_url"].rsplit("/", 1)[1]]
+        name = parents.get(source["name"], source["name"])
+        _, rest = stat_blocks._header(texts[name])
+        listed = stat_blocks.entries(rest)
+        position = next(
+            (i for i, e in enumerate(listed) if stat_blocks._slug(e.name) == slug), None
+        )
+        if position is None:
+            errors.append(f"{slug}: not in the {name} stat block")
+            continue
+        # A trait that lists sub-traits ("Vampire Weakness": Forbiddance, Running Water) has
+        # them as the entries that follow it, which are no trait of their own.
+        trait_text = listed[position].text
+        for following in listed[position + 1 :]:
+            if following.section != "traits" or stat_blocks._slug(following.name) in trait_slugs:
+                break
+            trait_text += " " + following.text
+        block = _numbers(trait_text)
+        srd = {"in_a_stat_block": True, "numbers_outside_the_stat_block": []}
+        corpus = {
+            "in_a_stat_block": True,
+            "numbers_outside_the_stat_block": sorted(_numbers(trait["description"]) - block),
+        }
+        entry: dict[str, Any] = {
+            "name": trait["name"],
+            "srd_page": pages[name],
+            "compared": srd,
+            "not_compared": {
+                "mechanic": "A translator tag for the engine, not SRD text.",
+                "description": "Compared by the numbers it states, not word for word.",
+            },
+        }
+        try:
+            entries[slug] = _finish(
+                slug,
+                entry,
+                spells.compare(srd, corpus),
+                divergences["monster_traits"].get(slug),
+                [],
+            )
+        except ValueError as error:
+            errors.append(str(error))
+    return entries
+
+
 def build(with_changes: bool = True) -> dict[str, Any]:
     """The ledger. ``with_changes`` reads the raw Foundry sources to list what the
     translator changed; without them every matching record reads as verified."""
@@ -933,6 +1265,7 @@ def build(with_changes: bool = True) -> dict[str, Any]:
         "audited_categories": list(AUDITED_CATEGORIES),
         "records": {
             **class_entries(index, divergences, with_changes),
+            **origin_entries(index, divergences, with_changes),
             "items": item_entries(index, divergences, with_changes),
             "monsters": monster_entries(index, divergences, with_changes),
             "spell_lists": list_records,

@@ -63,6 +63,18 @@ dungeons-and-agents fork, workstream A).
   (#16); 12 subclasses and 225 features verified. A test checks the engine's
   spell slot tables (`derive_spell_slots`, `derive_pact_slots`) against each
   caster's table.
+- **The origins audit** (`tools/srd_audit/origins.py`): each species' creature
+  type, sizes, Speed, Darkvision, and traits with their levels (Draconic Flight
+  at 5), with a lineage's Darkvision, Speed, resistances and spells, and the
+  Dragonborn's Breath Weapon scale and resistance choices, read by hand with
+  quoted sentences; each of the 36 species traits at the level its species grants
+  it; each background's ability scores, feat, skills, tool, and Gold Pieces; each
+  feat's category, prerequisite, and Repeatable; each condition's implied
+  conditions and effects, read by hand and quoted; and each of the 102 shared
+  monster traits against the stat block it was taken from. 14 species, 36 species
+  traits, 4 backgrounds, and 15 conditions verified; 17 feats: 14 verified, 3
+  corrected; 102 monster traits: 99 verified, 3 divergence (#18). With this, every
+  corpus record has a ledger entry.
 
 ### Changed
 
@@ -95,6 +107,9 @@ dungeons-and-agents fork, workstream A).
   Spell Scrolls, +1 Ammunition, Bead of Nourishment, Feather Token, Figurine of
   Wondrous Power, Handy Haversack, Horn of Valhalla) are magic items, the
   Handy Haversack Rare.
+- **Feat corrections against SRD 5.2.1** (`_FEAT_SRD_CORRECTIONS`, each quoting
+  the feat's header): Boon of Fate and Boon of Irresistible Offense need Level
+  19+, and Boon of Spell Recall needs a Spellcasting Feature too.
 - **Class corrections against SRD 5.2.1** (`_CLASS_SRD_CORRECTIONS`, each quoting
   its Features table): the Barbarian's Rages rise to 6 at level 17, not 16; a
   Monk has no Focus Points at level 1. The engine's
