@@ -8013,6 +8013,11 @@ def _build_foe_combatants(
                     template_kw["legendary_resistances_remaining"] = legendary_resistances_max
                 if foe.dexterity == 10:
                     template_kw["dexterity"] = sc.dex
+                # SRD 5.2.1 stat blocks give each creature's attack numbers:
+                # a host that set no ``attack_bonus`` leaves the creature to
+                # attack with its stat block's (``_stat_block_magnitudes_of``).
+                if "attack_bonus" not in foe.model_fields_set:
+                    template_kw["attack_bonus"] = None
         combatants.append(
             Combatant(
                 entity_id=foe.entity_id,
@@ -8022,7 +8027,7 @@ def _build_foe_combatants(
                 hp_current=foe.hp_current,
                 hp_max=foe.hp_max,
                 ac=foe.ac,
-                attack_bonus=foe.attack_bonus,
+                attack_bonus=template_kw.pop("attack_bonus", foe.attack_bonus),
                 damage_dice=foe.damage_dice,
                 damage_type=foe.damage_type,
                 behavior_profile=foe.behavior_profile,
@@ -10865,11 +10870,34 @@ def _stat_block_magnitudes_of(live: _LiveCombat, current: Combatant) -> StatBloc
     form's physical ones; Wild Shape keeps its own INT / WIS / CHA) and the
     form's Proficiency Bonus, which its stat-block attacks use. A summon's are
     the ones fixed when it was seated, its summoner's to-hit and damage bonus
-    included. ``None`` for any other creature."""
+    included. A monster built from a stat block whose host set no
+    ``attack_bonus`` rolls with that stat block's six scores and Proficiency
+    Bonus (SRD 5.2.1: a stat block's attack bonus is its ability modifier plus
+    its Proficiency Bonus, and its damage adds the modifier). ``None`` for any
+    other creature."""
     transform = live.transforms.get(current.entity_id)
     if transform is None:
         summon = live.summons.get(current.entity_id)
-        return summon.magnitudes if summon is not None else None
+        if summon is not None:
+            return summon.magnitudes
+        if (
+            current.entity_type == "Monster"
+            and current.attack_bonus is None
+            and current.proficiency_bonus_override is not None
+            and current.entity_id in live.monster_slug_by_entity
+        ):
+            return StatBlockMagnitudes(
+                ability_scores={
+                    "str": current.strength,
+                    "dex": current.dexterity,
+                    "con": current.constitution,
+                    "int": current.intelligence,
+                    "wis": current.wisdom,
+                    "cha": current.charisma,
+                },
+                proficiency_bonus=current.proficiency_bonus_override,
+            )
+        return None
     return StatBlockMagnitudes(
         ability_scores={
             "str": current.strength,

@@ -186,11 +186,13 @@ def test_a_multiattack_resolves_its_area_part_against_its_area() -> None:
     # "The sphinx makes two Claw attacks and uses Roar": the claws strike its
     # target, the Roar reaches each enemy in its 500-foot Emanation. Both
     # heroes stand within 15 ft, so its daily Zone of Truth would catch the
-    # sphinx itself and it takes its Multiattack.
+    # sphinx itself and it takes its Multiattack. The hero has hit points to
+    # spare, the lowest of the two so the claws still pick it: they add the stat block's +12 and Strength modifier to hit
+    # and damage, and a hero they drop is out of the Roar.
     handle, live = start(
         [
-            pc(hp_current=20, hp_max=20, zone_id=cell_id(5, 6)),
-            pc("char:far", zone_id=cell_id(7, 7)),
+            pc(hp_current=200, hp_max=200, zone_id=cell_id(5, 6)),
+            pc("char:far", zone_id=cell_id(7, 7), hp_current=500, hp_max=500),
         ],
         seed=1,
         encounter=[_monster("sphinx-of-valor", 5, 5)],
