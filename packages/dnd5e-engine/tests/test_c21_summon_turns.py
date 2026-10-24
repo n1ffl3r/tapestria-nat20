@@ -378,12 +378,16 @@ def test_a_broken_concentration_dismisses_the_spirit_on_seed_4() -> None:
         hp_current=15,
         hp_max=15,
     )
+    # A host-set ``attack_bonus`` keeps the uniform +0 and no ability modifier
+    # on damage, so this seeded narrative about concentration stands; a
+    # monster with none rolls with its stat block's numbers (issue #40).
     breaker = foe(
         entity_id="mon:breaker",
         name="Breaker",
         initiative=19,
         hp_current=100,
         hp_max=100,
+        attack_bonus=0,
         monster_template_slug="hill-giant",
     )
     distant = foe(zone_id=cell_id(2, 0), initiative=5, ac=15, hp_current=100, hp_max=100)

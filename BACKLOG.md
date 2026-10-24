@@ -242,20 +242,16 @@ counts are pinned by `packages/dnd5e-engine/tests/test_capability_matrix.py`.
   the bearer's HP but together exceed it never triggers the save at all and
   the bearer drops without rolling.
   (`packages/dnd5e-engine/src/dnd5e_engine/activities/apply.py`)
-- **A template monster attacks at its spec's `attack_bonus`, +0 by default
-  (2026-09-25, C21a).** Its to-hit, every `@mod` it rolls, its passive skill
-  scores (`@skills.<code>.passive`: a template Crocodile's grapple escape DC is
-  `10 + attack_bonus`, where SRD 5.2 says 12) and its fallback save DC
-  (`8 + attack_bonus`) come from `EncounterMemberSpec.attack_bonus`, not its
-  stat block, and a natural weapon's base damage (folded into
-  `parts[0]` without Foundry's implicit `@mod`) adds no ability modifier: by
-  default a Tough's Mace rolls d20 + 0 for 1d6 where SRD 5.2 says +4 and
-  1d6 + 2. Only a transformed creature gets its stat block's real numbers
-  (`StatBlockMagnitudes`); giving them to every template monster re-pins
-  every template-monster fixture. The bridge's `/v1/combat` passes no
-  `attack_bonus`, so every foe it builds rolls at +0.
-  (`packages/dnd5e-engine/src/dnd5e_engine/activities/build_context.py::_attack_bonus_override`,
-  `packages/nat20-bridge/src/nat20_bridge/routes_combat.py::_build_encounter_specs`)
+- **A template monster with a host-set `attack_bonus` keeps the uniform
+  model (2026-09-25, C21a; narrowed 2026-10-24, issue #40).** A template
+  monster whose host set no `attack_bonus` now rolls with its stat block's six
+  scores and Proficiency Bonus (`_stat_block_magnitudes_of`): the Tough's Mace
+  is +4 for 1d6 + 2, and a Crocodile's grapple escape DC is 12. A host that
+  sets `attack_bonus` explicitly still gets the old model: its to-hit, every
+  `@mod`, its passive skill scores (`10 + attack_bonus`) and its fallback save
+  DC (`8 + attack_bonus`) come from that field, and a natural weapon's base
+  damage adds no ability modifier. A template-less foe always uses the field.
+  (`packages/dnd5e-engine/src/dnd5e_engine/orchestrator.py::_stat_block_magnitudes_of`)
 
 ## Core combat rules not modelled (2026-08-22)
 

@@ -91,6 +91,14 @@ Fall.
   its "when the spell ends" activities, and `ActivityResolutionContext.on_hit`
   fires its on-hit damage, doubled on a Critical Hit. `@item.uses.value` reads
   its counter. `EffectExpired` gains `reason="spell_ended"`.
+- **A monster attacks with its stat block's numbers.** A monster built from a
+  stat block (`monster_template_slug`) whose `EncounterMemberSpec` sets no
+  `attack_bonus` rolls with the stat block's six ability scores and
+  Proficiency Bonus: SRD 5.2.1's Bandit hits at +3 for 1d6 + 1, the Ogre at +6
+  for 2d8 + 4. Before, it rolled d20 + 0 and added no ability modifier to its
+  damage (issue #40). A spec that sets `attack_bonus` keeps the old model.
+  Seven seeded tests changed to the new numbers, or pin `attack_bonus=0` where
+  the narrative is not about to-hit.
 - **`make test-roundtrip`** reruns the suite with every handle call rebuilding
   its combat from its `CombatState`; **`make test-hashseed`** (part of `make
   check`) does it under two string-hash seeds and requires identical traces.
