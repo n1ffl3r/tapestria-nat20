@@ -44,7 +44,7 @@ def test_translates_acolyte() -> None:
     assert bg.starting_feat_slug == "magic-initiate"
     assert bg.wealth == "50"
     assert bg.starting_equipment  # preserved structurally
-    assert bg.provenance.srd_version == frozenset({"5.2"})
+    assert bg.provenance.srd_version == frozenset({"5.2.1"})
 
 
 def test_translates_criminal_advancement_order_independent() -> None:

@@ -42,7 +42,7 @@ def test_prone_carries_typed_effects_and_cleaned_prose():
     assert "within 5 feet" in adv.qualifier
     assert "<p>" not in prone.description
     assert "&amp;Reference" not in prone.description
-    assert prone.provenance.srd_version == frozenset({"5.2"})
+    assert prone.provenance.srd_version == frozenset({"5.2.1"})
     assert prone.provenance.source_url.endswith("packs/_source/journals/rules-glossary.yml")
 
 

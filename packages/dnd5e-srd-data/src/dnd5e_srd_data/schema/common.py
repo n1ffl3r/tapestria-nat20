@@ -48,7 +48,7 @@ class Provenance(BaseModel, frozen=True):
     source_url: str
     ingest_date: date
     ingest_version: str
-    srd_version: frozenset[Literal["5.1", "5.2"]]
+    srd_version: frozenset[Literal["5.1", "5.2", "5.2.1"]]
     license_tag: Literal["CC-BY-4.0"] = "CC-BY-4.0"
 
     @field_serializer("srd_version")

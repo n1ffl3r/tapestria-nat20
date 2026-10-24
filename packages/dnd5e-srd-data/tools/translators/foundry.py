@@ -540,7 +540,7 @@ def _provenance(yaml_path: Path, ingest_date: date, ingest_version: str) -> Prov
         source_url=f"https://github.com/foundryvtt/dnd5e/blob/{sha}/packs/_source/{relative}",
         ingest_date=ingest_date,
         ingest_version=ingest_version,
-        srd_version=frozenset({"5.2"}),
+        srd_version=frozenset({"5.2.1"}),
     )
 
 

@@ -50,6 +50,6 @@ def test_every_condition_has_provenance_and_prose():
         c = loader.get_condition(slug)
         assert c is not None
         assert c.provenance.license_tag == "CC-BY-4.0"
-        assert c.provenance.srd_version == frozenset({"5.2"})
+        assert c.provenance.srd_version == frozenset({"5.2.1"})
         assert c.description and "<" not in c.description
         assert c.effects, slug
