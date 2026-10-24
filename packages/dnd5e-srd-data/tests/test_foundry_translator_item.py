@@ -33,13 +33,13 @@ def test_translates_longsword():
     assert w.provenance.source == "foundry"
 
 
-def test_translated_provenance_srd_version_is_5_2():
+def test_translated_provenance_srd_version_is_5_2_1():
     w = translate_weapon_yaml(
         yaml_path=FIXTURE / "weapons" / "longsword.yml",
         ingest_date=date(2026, 5, 30),
         ingest_version="foundry-translator-v1",
     )
-    assert w.provenance.srd_version == frozenset({"5.2"})
+    assert w.provenance.srd_version == frozenset({"5.2.1"})
 
 
 def test_translates_chain_shirt():
