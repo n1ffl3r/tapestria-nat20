@@ -1,0 +1,27 @@
+{
+  "activities": [],
+  "advancement": [],
+  "description": "Through sheer force of will, you can remove one of the following conditions from yourself at the end of each of your turns: Charmed, Frightened, or Poisoned.\n\nIn addition, forgoing food and drink doesn't give you levels of Exhaustion.",
+  "entry_kind": "feature",
+  "feature_type": "class_feature",
+  "foundry_id": "phbmnkSelfrestor",
+  "name": "Self-Restoration",
+  "passive_effects": [],
+  "provenance": {
+    "ingest_date": "2026-05-30",
+    "ingest_version": "foundry-translator-v1",
+    "license_tag": "CC-BY-4.0",
+    "source": "srd_pdf",
+    "source_url": "srd/SRD_CC_v5.2.1.pdf#page=52",
+    "srd_version": [
+      "5.2"
+    ]
+  },
+  "review": {
+    "known_divergence": null,
+    "requires_user_decision": false
+  },
+  "slug": "self-restoration",
+  "source_slug": "monk",
+  "uses": null
+}

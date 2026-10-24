@@ -16,7 +16,7 @@ from typing import Any
 
 import pytest
 
-from tools.srd_audit import classes, items, spells, stat_blocks
+from tools.srd_audit import classes, items, origins, spells, stat_blocks
 from tools.srd_audit import ledger as ledger_tool
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -27,10 +27,16 @@ DIVERGENCES = json.loads(
 INDEX = json.loads((ROOT / "srd" / "index.json").read_text(encoding="utf-8"))
 CANONICAL = ROOT / "src" / "dnd5e_srd_data" / "canonical"
 CATEGORIES = (
+    "backgrounds",
     "class_features",
     "classes",
+    "conditions",
+    "feats",
     "items",
+    "monster_traits",
     "monsters",
+    "species",
+    "species_traits",
     "spell_lists",
     "spells",
     "subclasses",
@@ -240,6 +246,52 @@ def test_the_corpus_holds_what_the_ledger_compared_for_class_features() -> None:
         assert entry["compared"].get("levels", [1]) != [], slug
 
 
+def test_the_corpus_holds_what_the_ledger_compared_for_origins() -> None:
+    """Each background, feat and condition holds the SRD values the ledger compared it
+    against, and a feat correction's ``to`` is the corpus value."""
+    feats = _records("feats")
+    for slug, entry in LEDGER["records"]["backgrounds"].items():
+        corpus = origins.corpus_background(_records("backgrounds")[slug], feats)
+        for field, value in entry["compared"].items():
+            assert corpus[field] == value, (slug, field)
+    for slug, entry in LEDGER["records"]["feats"].items():
+        corpus = origins.corpus_feat(feats[slug])
+        assert corpus == entry["compared"], slug
+        for change in entry.get("changes", []):
+            assert change["to"] == corpus[change["field"]], slug
+    for slug, entry in LEDGER["records"]["conditions"].items():
+        assert origins.corpus_condition(_records("conditions")[slug]) == entry["compared"], slug
+
+
+def test_the_corpus_holds_what_the_ledger_compared_for_species() -> None:
+    features = _records("features")
+    spell_names = {s: r["name"] for s, r in _records("spells").items()}
+    aliases = json.loads((ROOT / "srd" / "aliases.json").read_text(encoding="utf-8"))["aliases"]
+    lineage = {
+        a["name"]: a["of"]
+        for a in aliases
+        if a["corpus_category"] == "features" and a["of_category"] == "species_traits"
+    }
+    for slug, entry in LEDGER["records"]["species"].items():
+        record = _records("species")[slug]
+        corpus = {
+            **origins.corpus_species(record, features, lineage),
+            **origins.corpus_species_more(record, spell_names),
+        }
+        corpus["traits"] = {
+            n: lv for n, lv in corpus["traits"].items() if n not in origins.FIELD_TRAITS
+        }
+        flat = ledger_tool._flat(corpus)
+        for field, value in entry["compared"].items():
+            assert flat.get(field) == value, (slug, field)
+
+
+def test_species_traits_and_conditions_are_all_verified() -> None:
+    for category in ("species_traits", "conditions", "backgrounds"):
+        for slug, entry in LEDGER["records"][category].items():
+            assert entry["status"] == "verified", (category, slug)
+
+
 def test_class_pages_are_the_indexs() -> None:
     for category, key in (("classes", "classes"), ("subclasses", "subclasses")):
         pages = {c["name"]: c["page"] for c in INDEX["categories"][key]}
@@ -258,10 +310,17 @@ def test_status_counts() -> None:
         for category in CATEGORIES
     }
     assert sum(counts["spells"].values()) == 339
+    assert counts["species"] == {"verified": 14, "corrected": 0, "divergence": 0}
+    assert counts["species_traits"]["verified"] == 36
+    assert counts["backgrounds"]["verified"] == 4
+    assert counts["conditions"]["verified"] == 15
+    assert counts["feats"] == {"verified": 14, "corrected": 3, "divergence": 0}
+    assert counts["monster_traits"] == {"verified": 99, "corrected": 3, "divergence": 0}
+    assert counts["monster_traits"]["divergence"] == len(DIVERGENCES["monster_traits"])
     assert sum(counts["classes"].values()) == 12
     assert sum(counts["subclasses"].values()) == 12
-    assert sum(counts["class_features"].values()) == 225
-    assert counts["classes"] == {"verified": 10, "corrected": 1, "divergence": 1}
+    assert sum(counts["class_features"].values()) == 226
+    assert counts["classes"] == {"verified": 10, "corrected": 2, "divergence": 0}
     assert counts["subclasses"]["divergence"] == len(DIVERGENCES["subclasses"])
     assert counts["class_features"]["divergence"] == len(DIVERGENCES["class_features"])
     assert counts["classes"]["divergence"] == len(DIVERGENCES["classes"])
