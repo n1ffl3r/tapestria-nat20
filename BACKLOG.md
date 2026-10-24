@@ -242,20 +242,16 @@ counts are pinned by `packages/dnd5e-engine/tests/test_capability_matrix.py`.
   the bearer's HP but together exceed it never triggers the save at all and
   the bearer drops without rolling.
   (`packages/dnd5e-engine/src/dnd5e_engine/activities/apply.py`)
-- **A template monster attacks at its spec's `attack_bonus`, +0 by default
-  (2026-09-25, C21a).** Its to-hit, every `@mod` it rolls, its passive skill
-  scores (`@skills.<code>.passive`: a template Crocodile's grapple escape DC is
-  `10 + attack_bonus`, where SRD 5.2 says 12) and its fallback save DC
-  (`8 + attack_bonus`) come from `EncounterMemberSpec.attack_bonus`, not its
-  stat block, and a natural weapon's base damage (folded into
-  `parts[0]` without Foundry's implicit `@mod`) adds no ability modifier: by
-  default a Tough's Mace rolls d20 + 0 for 1d6 where SRD 5.2 says +4 and
-  1d6 + 2. Only a transformed creature gets its stat block's real numbers
-  (`StatBlockMagnitudes`); giving them to every template monster re-pins
-  every template-monster fixture. The bridge's `/v1/combat` passes no
-  `attack_bonus`, so every foe it builds rolls at +0.
-  (`packages/dnd5e-engine/src/dnd5e_engine/activities/build_context.py::_attack_bonus_override`,
-  `packages/nat20-bridge/src/nat20_bridge/routes_combat.py::_build_encounter_specs`)
+- **A template monster with a host-set `attack_bonus` keeps the uniform
+  model (2026-09-25, C21a; narrowed 2026-10-24, issue #40).** A template
+  monster whose host set no `attack_bonus` now rolls with its stat block's six
+  scores and Proficiency Bonus (`_stat_block_magnitudes_of`): the Tough's Mace
+  is +4 for 1d6 + 2, and a Crocodile's grapple escape DC is 12. A host that
+  sets `attack_bonus` explicitly still gets the old model: its to-hit, every
+  `@mod`, its passive skill scores (`10 + attack_bonus`) and its fallback save
+  DC (`8 + attack_bonus`) come from that field, and a natural weapon's base
+  damage adds no ability modifier. A template-less foe always uses the field.
+  (`packages/dnd5e-engine/src/dnd5e_engine/orchestrator.py::_stat_block_magnitudes_of`)
 
 ## Core combat rules not modelled (2026-08-22)
 
@@ -410,8 +406,8 @@ counts are pinned by `packages/dnd5e-engine/tests/test_capability_matrix.py`.
   activity, and Rod of Rulership's choice save carries no measured template;
   none of the four resolves an area, so `PlayerIntent.excluded_target_ids`
   sent with any of them is refused with `target_invalid`. Spirit Guardians'
-  "designate creatures to be unaffected" stays unexpressed until a persistent
-  emanation is modelled (see "No ongoing-damage producer").
+  "designate creatures to be unaffected" is taken as its allies by the
+  lingering end-of-turn save (`lingering.LATER_RULES`), never chosen.
   (`packages/dnd5e-engine/src/dnd5e_engine/areas.py::is_choice`,
   `packages/dnd5e-engine/src/dnd5e_engine/orchestrator.py::_area_target_failure`)
 
@@ -1304,24 +1300,24 @@ zone + apply logic:
   `advance_monster_turn` has no branch that chooses any of the five C14
   actions; a monster only ever attacks, casts, moves, or flees.
   (`packages/dnd5e-engine/src/dnd5e_engine/orchestrator.py::advance_monster_turn`)
-- **No ongoing-damage producer.** (2026-08-26, narrowed 2026-09-03 C18) F3a
-  gave it a place to land — `turn_lifecycle.py` runs `round_start` /
-  `turn_start` / `turn_end` hooks off the single `_end_turn_and_advance` path —
-  but the only registered hooks are the pre-existing duration tick and
-  reaction-effect expiry, plus F3b's timed-effect expiry. Start-of-turn damage
-  (Acid Arrow, Spirit Guardians) still has no producer. (Regeneration and
-  recharge rolls closed C18 — they run at the head of a driven monster turn,
-  `_run_monster_turn_start`, rather than as a registered `turn_start` hook;
-  see `docs/migration/v0.5-to-v0.6.md`.)
+- **Ongoing damage comes only from a spell's later activities (2026-08-26;
+  narrowed 2026-09-03 C18 and 2026-10-23, spec 02a B3b).** The lingering-spell
+  hooks (`engine:lingering-turn-start`, `engine:lingering-turn-end`) fire a
+  spell's turn-boundary activities (Acid Arrow, Spirit Guardians' end-of-turn
+  save; see "Some of a spell's later activities never fire"). A spell whose
+  later part has no activity of its own (Moonbeam, Cloudkill, Heroism,
+  Regenerate) still has no producer. (Regeneration and recharge rolls closed
+  C18; they run at the head of a driven monster turn, `_run_monster_turn_start`.)
   (`packages/dnd5e-engine/src/dnd5e_engine/turn_lifecycle.py`,
-  `packages/dnd5e-engine/src/dnd5e_engine/orchestrator.py::_register_default_turn_hooks`)
+  `packages/dnd5e-engine/src/dnd5e_engine/lingering.py`)
 - **Initiative has no "Delay" option.** C14 (2026-09-01) added the
   engine-rolled `d20 + DEX modifier` path (`initiative=None`) with Surprise
   and Incapacitated Disadvantage; the SRD "Delay" combat option (holding
   your Initiative count to act later) is still absent.
   (`packages/dnd5e-engine/src/dnd5e_engine/specs.py`)
-- **Movement rules beyond the budget are absent:** crawling, climb/swim
-  cost, jumping; `Combatant.movement_modes` is hydrated and never read.
+- **Movement rules beyond the budget are absent:** crawling, swimming cost,
+  jumping. (Climbing cost closed 2026-10-21 with the grid's elevation; a Climb
+  or Fly Speed in `Combatant.movement_modes` prices it.)
   Standing from Prone (half Speed, rounded down) closed in C14
   (2026-09-01) via the `stand_up` `IntentType`
   (`packages/dnd5e-engine/src/dnd5e_engine/orchestrator.py::_handle_stand_up`).
@@ -1334,17 +1330,51 @@ zone + apply logic:
 
 ## Audit 2026-08-26 — spellcasting & concentration
 
-- **A spell's turn-boundary activities resolve at cast time (2026-10-04,
-  C26a).** Every activity a spell carries resolves when it is cast, including
-  the ones Foundry fires on a later turn: Weird's "End of Turn Save" makes
-  every creature in the sphere save twice at once, taking the damage twice.
-  Vitriolic Sphere's "End of Turn Damage", Incendiary Cloud's "Per Turn Save",
-  Storm of Vengeance's turn-2-to-5 activities, Earthquake's "End of Turn
-  Fissures", Delayed Blast Fireball's bead activities and the start-of-turn
-  activities of Ensnaring Strike, Searing Smite, Stinking Cloud and Tsunami
-  have the same shape. Needs a per-activity timing signal and a turn-boundary
-  producer (see "No ongoing-damage producer").
-  (`packages/dnd5e-engine/src/dnd5e_engine/orchestrator.py::submit_player_intent`)
+- **Some of a spell's later activities never fire (2026-10-04, C26a;
+  narrowed 2026-10-23, spec 02a B3b).** A cast now resolves only its cast-time
+  activities (`activities.timing`), and the engine fires the later ones it has
+  a producer for (`lingering.LATER_RULES`, see `docs/concepts/spell-timing.md`).
+  The rest are held back and never resolve:
+  - a creature entering an area: Spirit Guardians, Conjure Woodland Beings,
+    Wall of Ice, Wall of Thorns, Forbiddance, Antipathy/Sympathy, Prismatic
+    Wall (their end-of-turn halves fire where the area can be placed);
+  - an area the grid can't place or move: Wall of Fire, Incendiary Cloud
+    (moves 10 feet a round), Flaming Sphere and Guardian of Faith (centred on
+    a construct), Symbol (a triggered glyph), Earthquake's fissures, Tsunami's
+    moving wall (its wave stays on the creatures its cast caught);
+  - the caster's later action: Hex's "Curse New Creature", Freezing Sphere's
+    thrown globe, Alter Self's attacks, Detect Thoughts' "Probe Deeper",
+    Dispel Evil and Good, Eyebite, Sunbeam, Control Weather and others
+    (`caster_action` rows in `docs/srd-5.2.1-spell-timing.md`);
+  - being attacked or damaged: Sanctuary, Holy Aura, Heat Metal's save;
+  - Prismatic Spray's Indigo and Violet saves, which need each ray's own
+    failed saves, and Finger of Death's zombie.
+  Once a producer exists, an entry in `LATER_RULES` fires it.
+  (`packages/dnd5e-engine/src/dnd5e_engine/lingering.py::LATER_RULES`)
+- **Spell activities whose content disagrees with SRD 5.2.1 (2026-10-23,
+  spec 02a B3b).** Found while timing every multi-activity spell; each is a
+  corpus fix (workstream A):
+  - Ensnaring Strike's cast activity deals 1d6 Piercing, which the SRD deals
+    only at the start of the Restrained target's turns;
+  - Bestow Curse's "Curse Resilience" carries the 1d8 Necrotic the SRD deals
+    when the caster later damages the target;
+  - Conjure Woodland Beings' cast is a 5d8 Wisdom save, and Control Water's
+    whirlpool a Strength save at the cast; the SRD has neither at the cast;
+  - Call Lightning's bolt deals 4d10 with no save; the SRD's is a Dexterity
+    save for half;
+  - Tsunami's wave takes half on a success; the SRD says "succeed ... or take
+    5d10";
+  - Conjure Fey's "Teleport and Attack" spends a slot on every Bonus Action;
+  - Heroes' Feast's activation is 1 hour (the casting time is 10 minutes);
+  - Meld into Stone's damage, Glyph of Warding's Explosive Rune, and the saves
+    of Conjure Animals, Flaming Sphere and Guardian of Faith are marked
+    cast-time (`spell_slot` true); the timing table holds them back;
+  - Detect Thoughts has no "Read Thoughts" activity, and Wind Wall's two
+    shapes and Gate's four portals are not in the SRD;
+  - later parts with no activity at all: Blade Barrier's save, Earthquake's
+    repeat save, Faithful Hound's bite, Bestow Curse's turn-start save,
+    Forcecage's Charisma save, Magic Jar's save.
+  (`docs/srd-5.2.1-spell-timing.md`)
 - **An item's hazard area saves at use time, not when a creature enters it
   (2026-10-04, C26a).** SRD 5.2 Ball Bearings and Caltrops: "A creature that
   enters this area for the first time on a turn must succeed on a DC …
@@ -1425,15 +1455,6 @@ zone + apply logic:
   Shield or Hellish Rebuke cast as a Reaction, but Counterspell is offered only
   at a character's on-turn cast and a monster's stat-block cast.
   (`packages/dnd5e-engine/src/dnd5e_engine/orchestrator.py::_counterspell_cast`)
-- **Two spells raise after spending their slot (2026-09-26, pre-existing;
-  narrowed 2026-10-23, spec 02a B3).** Delayed Blast Fireball and Tsunami read
-  `@item.uses.value` in an activity that belongs to a later turn, and the
-  formula resolver has no handler for it, so `submit_player_intent` raises
-  `ValueError` once the slot is spent. The later-turn activities are the fix
-  (see "A spell's turn-boundary activities resolve at cast time"). Spider Climb
-  and Freedom of Movement now read the target's Speed, and Phantasmal Killer's
-  save names its ability since the spell audit.
-  (`packages/dnd5e-engine/src/dnd5e_engine/activities/formula.py::_resolve_token`)
 - **A readied spell always targets its own caster (2026-09-26,
   pre-existing).** SRD 5.2 Ready: "When you Ready a spell, you cast it as
   normal ... but hold its energy, which you release with your Reaction when

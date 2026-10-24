@@ -523,16 +523,15 @@ def test_use_item_potion_of_healing_heals_drinker():
 
 
 def test_detect_thoughts_stays_single_target_despite_large_aoe():
-    """Detect Thoughts — its TYPED targeting SaveActivity is
-    ``target.affects.count`` == "1" (explicit single-target). It must probe
-    exactly the named target, never every creature nearby. Regression for the
-    over-expansion confirmed bug in the Task 5 cutover."""
+    """Detect Thoughts never probes every creature nearby (a regression for
+    the over-expansion bug in the Task 5 cutover), and its cast probes no one:
+    SRD 5.2.1 Detect Thoughts, Read Thoughts: "As a Magic action on your next
+    turn, you can try to probe deeper into the target's mind. If you probe
+    deeper, the target makes a Wisdom saving throw." Probe Deeper waits for
+    that later action (``activities.timing``), so the cast rolls no save."""
     live = _run_aoe_cast("detect-thoughts")
     saved = {e.target_id for e in _events_of(live, SaveRolled)}
-    assert saved == {"mon:foe"}, (
-        f"detect-thoughts is single-target (affects.count=='1'); "
-        f"it must not expand to every creature nearby, got {saved}"
-    )
+    assert saved == set(), f"casting Detect Thoughts probes no one, got {saved}"
 
 
 # ── (g) Restrained → DEX-save disadvantage projected end-to-end (FIX 4) ──────

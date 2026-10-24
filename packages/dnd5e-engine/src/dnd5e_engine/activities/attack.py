@@ -282,6 +282,8 @@ def resolve_attack(
             apply_activity_effects(
                 activity, ctx, target, save_succeeded=None, cast_level=cast_level
             )
+            if ctx.on_hit is not None:
+                ctx.on_hit(target, is_crit)
             # SRD 5.2 §Weapon Mastery — Cleave: "If you hit a
             # creature with a melee attack roll using this weapon, you can
             # make a melee attack roll with the weapon against a second
@@ -429,6 +431,8 @@ def _resolve_cleave_chain(
         is_crit=is_crit,
         source_id_override="mastery:cleave",
     )
+    if ctx.on_hit is not None:
+        ctx.on_hit(candidate, is_crit)
 
 
 def _attack_roll_sources(

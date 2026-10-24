@@ -267,12 +267,26 @@ def test_a_polymorphed_monster_attacks_with_its_form_on_its_turn() -> None:
     assert (damage.target_id, damage.amount, damage.damage_type) == ("char:hero", 7, "piercing")
 
 
-def test_an_untransformed_template_monster_keeps_the_legacy_magnitudes() -> None:
-    """Only a transformed creature gets its stat block's real magnitudes: a
-    template monster still rolls to hit at its spec's ``attack_bonus`` (+0 by
-    default) and adds no ability modifier to its damage (BACKLOG). Seed 11: the
-    Tough's Mace, d20 15 → 15 against AC 10; d6 5 → 5."""
+def test_a_template_monster_attacks_with_its_stat_blocks_numbers() -> None:
+    """A monster built from a stat block whose host set no ``attack_bonus``
+    rolls with the stat block's numbers (issue #40): SRD 5.2.1 Tough, Mace
+    "+4 to hit" and "1d6 + 2" Bludgeoning damage. Seed 11: the Mace, d20 15 →
+    19 against AC 10; d6 5 → 7."""
     handle, live = start([pc()], seed=11, encounter=[foe(monster_template_slug="tough")])
+    act(handle, "char:hero", intent_type="pass")
+    monster_turn(handle)
+    (roll,) = events(live, AttackRolled)
+    (damage,) = events(live, DamageApplied)
+    assert (roll.modifier, roll.roll_total, damage.amount) == (4, 19, 7)
+
+
+def test_a_host_set_attack_bonus_still_overrides_the_stat_block() -> None:
+    """The stat block's numbers apply when the host sets none; an explicit
+    ``attack_bonus`` keeps the legacy model (a uniform modifier, no ability
+    modifier on the damage)."""
+    handle, live = start(
+        [pc()], seed=11, encounter=[foe(monster_template_slug="tough", attack_bonus=0)]
+    )
     act(handle, "char:hero", intent_type="pass")
     monster_turn(handle)
     (roll,) = events(live, AttackRolled)

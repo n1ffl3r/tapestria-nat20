@@ -420,9 +420,13 @@ def test_duration_expiry_removes_the_force() -> None:
 @pytest.mark.parametrize(
     ("seed", "rolls", "damage"),
     [
-        (1, [(5, False), (19, True)], [(1, "bludgeoning"), (4, "radiant")]),
+        (1, [(5, True), (4, False)], [(8, "bludgeoning"), (4, "radiant")]),
         (2, [(2, False), (3, False)], []),
-        (9, [(15, True), (5, False)], [(5, "bludgeoning"), (6, "radiant")]),
+        (
+            9,
+            [(15, True), (5, True)],
+            [(8, "bludgeoning"), (6, "radiant"), (5, "bludgeoning"), (4, "radiant")],
+        ),
     ],
 )
 def test_the_priest_opens_with_its_multiattack(
@@ -432,7 +436,8 @@ def test_the_priest_opens_with_its_multiattack(
     Flame in any combination." Its bundled 1/Day Spellcasting entry points at
     Spiritual Weapon where the SRD's says Spirit Guardians (a data slip), and
     no monster casts a construct spell (BACKLOG), so its first turn is that
-    Multiattack, pinned roll for roll."""
+    Multiattack, pinned roll for roll. Both attacks add +5, the stat block's
+    (Strength or Wisdom modifier +3 and Proficiency Bonus +2), against AC 10."""
     handle, live = start(
         [pc(initiative=1, zone_id=cell_id(1, 0))],
         seed=seed,
