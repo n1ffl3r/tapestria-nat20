@@ -105,6 +105,9 @@ CastFailedReason = Literal[
     "target_invalid",
     "concentration_blocked",
     "components_missing",
+    # SRD 5.2.1 "Casting Time": a spell cast "in 1 minute" or more "takes too
+    # long" for a combat turn (spec 02a, issue #41).
+    "casting_time",
     "no_action_economy",
     # SRD 5.2 Counterspell — "On a failed save, the spell dissipates with no
     # effect, and the action, Bonus Action, or Reaction used to cast it is

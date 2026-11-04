@@ -99,6 +99,18 @@ Fall.
   damage (issue #40). A spec that sets `attack_bonus` keeps the old model.
   Seven seeded tests changed to the new numbers, or pin `attack_bonus=0` where
   the narrative is not about to-hit.
+- **`cast_outside_combat`** (`dnd5e_engine.combat_state`): resolves one
+  `cast_spell` declared in a narrative turn (contract 03, "Who may declare
+  what") with the same code as an on-turn cast and returns a `CombatStep`: the
+  events and the `CombatState` the cast leaves. No initiative is rolled and no
+  turn passes; the caster's turn stays open. Without a `grid_scene` the
+  creatures are seated within reach of the caster, so range never refuses the
+  cast. SRD 5.2.1 "Casting Time": a spell that takes a minute or more is cast
+  here (issue #41).
+- **A spell of a minute or more is refused on a combat turn**:
+  `CastFailed(reason="casting_time")`, before its slot is spent. Before, Raise
+  Dead and Teleportation Circle resolved within one turn. A seeded test that
+  cast Tsunami (1 minute) in combat now casts it outside combat.
 - **`make test-roundtrip`** reruns the suite with every handle call rebuilding
   its combat from its `CombatState`; **`make test-hashseed`** (part of `make
   check`) does it under two string-hash seeds and requires identical traces.

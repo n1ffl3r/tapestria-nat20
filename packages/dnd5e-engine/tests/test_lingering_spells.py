@@ -44,7 +44,13 @@ from dnd5e_engine import (
     submit_player_intent,
 )
 from dnd5e_engine.activities.timing import SPELL_ACTIVITY_TIMINGS, cast_time_activities
-from dnd5e_engine.combat_state import CombatState, begin_combat, resolve_intent
+from dnd5e_engine.combat_state import (
+    CombatState,
+    begin_combat,
+    cast_outside_combat,
+    resolve_intent,
+    resolve_monster_turn,
+)
 from dnd5e_engine.events import (
     AttackRolled,
     ConditionApplied,
@@ -236,13 +242,35 @@ def test_vitriolic_sphere_waits_for_each_failing_creatures_next_turn() -> None:
     assert 5 <= extra.amount <= 20
 
 
-def test_tsunami_casts_and_its_wave_dwindles_each_round() -> None:
+def test_tsunami_cast_between_fights_dwindles_through_the_fight_that_follows() -> None:
+    """SRD 5.2.1 Tsunami: "Casting Time: 1 minute", so it is cast outside
+    combat (``cast_outside_combat``) and its wave then rolls at the start of the
+    caster's turns in the fight that follows: "must succeed on a Strength
+    saving throw or take 5d10 Bludgeoning damage", "reduced by 1d10" each
+    later round."""
+
     async def _run() -> list[list[Any]]:
-        handle = await _open(_caster("tsunami", "druid"))
-        rounds = [await _cast(handle, "tsunami", 8, target_id=FOE)]
-        for _ in range(3):
-            rounds.append(await _to_caster(handle))
-            await _pass(handle)
+        step = await cast_outside_combat(
+            session_id="tsunami",
+            caster_id=CASTER,
+            intent=PlayerIntent(
+                intent_type="cast_spell", spell_id="tsunami", slot_level=8, target_id=FOE
+            ),
+            party=[_caster("tsunami", "druid")],
+            others=[_foe()],
+            seed=5,
+        )
+        rounds = [list(step.events)]
+        state = step.state
+        for turn in range(1, 4):
+            # The caster's turn is open; it passes, the foe takes its turn, and the
+            # caster's next turn starts the wave.
+            passed = await resolve_intent(
+                state, actor_id=CASTER, intent=PlayerIntent(intent_type="pass"), seed=turn
+            )
+            foe_turn = await resolve_monster_turn(passed.state, seed=turn)
+            rounds.append(list(passed.events) + list(foe_turn.events))
+            state = foe_turn.state
         return rounds
 
     cast, *later = asyncio.run(_run())

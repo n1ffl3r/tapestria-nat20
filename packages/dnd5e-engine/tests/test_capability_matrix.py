@@ -878,6 +878,14 @@ _PROBES: dict[str, tuple[Any, str]] = {
         ),
         "⚠️",
     ),
+    # A narrative cast resolves outside combat; a long cast is refused in it.
+    "| Casting outside combat |": (
+        lambda: (
+            "async def cast_outside_combat(" in _src("combat_state.py")
+            and "def _casting_time_failure(" in _src("orchestrator.py")
+        ),
+        "✅",
+    ),
     # A fall offers Feather Fall before its damage.
     "| Feather Fall |": (
         lambda: "def _offer_feather_fall(" in _src("orchestrator.py"),

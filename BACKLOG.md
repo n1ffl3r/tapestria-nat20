@@ -358,14 +358,22 @@ counts are pinned by `packages/dnd5e-engine/tests/test_capability_matrix.py`.
   spirit while the old one still stands: the old spirit's space counts as
   occupied, though the old spirit leaves before the new one joins.
   (`packages/dnd5e-engine/src/dnd5e_engine/orchestrator.py::_record_effect_lifecycle_links`)
-- **A cast longer than a turn resolves as an Action (2026-09-25, C21a;
-  amended 2026-09-26, C21b).** `_classify_action_cost` special-cases only
-  Bonus Action and Reaction casts, so a 1-minute or 1-hour cast resolves
-  within one turn. Of the creature summons, Find Familiar (1 hour or a
-  ritual), Animate Dead and Create Undead (1 minute each) can't be cast in a
-  combat turn at all, and `start_combat` has no input for a creature summoned
-  before the combat that outlives it, so all three stay narrative.
-  (`packages/dnd5e-engine/src/dnd5e_engine/orchestrator.py::_classify_action_cost`)
+- **A creature summoned outside combat does not join the next one
+  (2026-09-25, C21a; amended 2026-10-24, issue #41).** A cast longer than a
+  turn is refused on a combat turn (`CastFailed(reason="casting_time")`) and
+  resolves in `cast_outside_combat`. Of the creature summons, Find Familiar (1
+  hour or a ritual), Animate Dead and Create Undead (1 minute each) are
+  casts of that kind, but `start_combat` has no input for a creature summoned
+  before the combat that outlives it, so all three still leave no creature
+  behind.
+  (`packages/dnd5e-engine/src/dnd5e_engine/combat_state.py::cast_outside_combat`)
+- **An out-of-combat cast knows no time (2026-10-24, issue #41).**
+  `cast_outside_combat` resolves the cast and leaves the clock to the host: a
+  1-hour spell spends no hour, a duration does not run, and a spell whose
+  effect lasts longer than the scene (Alarm, Teleportation Circle) leaves only
+  the effect it applies. The creatures are seated within 5 or 10 feet of the
+  caster unless the host passes a grid, and a spell of more than 25 creatures
+  is refused. A ritual is still `resolve_ritual_cast` (it spends no slot).
 - **Concentration can start for a caster who fell Unconscious during its own
   cast (2026-09-26, C21a).** SRD 5.2 Incapacitated: "Your Concentration is
   broken." The fold records concentration after the resolution — C13's
