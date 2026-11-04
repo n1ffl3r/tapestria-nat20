@@ -40,6 +40,7 @@ nav:
       - Spell timing: concepts/spell-timing.md
   - Capability matrix: capabilities.md
   - SRD 5.2.1 spell timing: srd-5.2.1-spell-timing.md
+  - SRD 5.2.1 rules audit: srd-5.2.1-rules-audit.md
   - API reference: api.md
   - Hosting:
       - Character-sheet contract: hosting/character-sheet-contract.md

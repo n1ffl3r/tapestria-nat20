@@ -113,7 +113,9 @@ def test_the_audit_exists_and_lists_rows() -> None:
 
 def test_every_capability_row_has_an_audit_row() -> None:
     audited = {(r.section, r.name) for r in AUDIT_ROWS}
-    missing = [f"{r.section}: {r.name}" for r in CAPABILITY_ROWS if (r.section, r.name) not in audited]
+    missing = [
+        f"{r.section}: {r.name}" for r in CAPABILITY_ROWS if (r.section, r.name) not in audited
+    ]
     assert not missing, "capabilities.md rows with no audit row: " + "; ".join(missing)
 
 
