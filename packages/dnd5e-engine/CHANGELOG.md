@@ -111,6 +111,13 @@ Fall.
   `CastFailed(reason="casting_time")`, before its slot is spent. Before, Raise
   Dead and Teleportation Circle resolved within one turn. A seeded test that
   cast Tsunami (1 minute) in combat now casts it outside combat.
+- **SRD 5.2.1 rules-application audit** (`docs/srd-5.2.1-rules-audit.md`):
+  every mechanic row of the capability matrix, with its SRD section, a
+  verdict and the tests that pin it. `tests/test_rules_audit.py` keeps the
+  page in step with `docs/capabilities.md` and `BACKLOG.md`. The audit found
+  36 places where the engine differs from the SRD (BACKLOG.md, "SRD 5.2.1
+  rules-application audit"); each has a strict `xfail` test that states the
+  SRD outcome (`tests/test_srd_audit_*.py`). No engine behaviour changed.
 - **`make test-roundtrip`** reruns the suite with every handle call rebuilding
   its combat from its `CombatState`; **`make test-hashseed`** (part of `make
   check`) does it under two string-hash seeds and requires identical traces.
