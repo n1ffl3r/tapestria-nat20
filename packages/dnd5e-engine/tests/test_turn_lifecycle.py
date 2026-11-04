@@ -300,6 +300,12 @@ def test_hooks_registered_by_the_engine_are_present_and_ordered():
     * ``engine:rage-extension`` (C20, SRD 5.2 Rage) is appended LAST — it reads
       only the ending turn's own events and the Bonus-Action mark, and follows
       the round tick so the corpus Rage's ``rounds`` stays the outer cap.
+    * ``engine:lingering-turn-end`` (spec 02a B3b) follows the repeat save: a
+      lingering spell's end-of-turn activity (Weird's save) resolves while its
+      effect is live and before its concentration can run out on the same
+      boundary. ``engine:lingering-turn-start`` follows the reaction-effect
+      expiry, so a Shield cast last round is gone before a start-of-turn
+      activity resolves.
     """
 
     async def _run():
@@ -309,9 +315,10 @@ def test_hooks_registered_by_the_engine_are_present_and_ordered():
 
     assert asyncio.run(_run()) == {
         "round_start": [],
-        "turn_start": ["engine:reaction-effect-expiry"],
+        "turn_start": ["engine:reaction-effect-expiry", "engine:lingering-turn-start"],
         "turn_end": [
             "engine:repeat-save",
+            "engine:lingering-turn-end",
             "engine:duration-tick",
             "engine:timed-effect-expiry",
             "engine:concentration-expiry",

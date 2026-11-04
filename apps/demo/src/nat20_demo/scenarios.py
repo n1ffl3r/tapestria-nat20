@@ -8,6 +8,12 @@ move cells directly from the live view.
 Scenarios are pure data; nothing here talks to the engine. ``fresh_specs``
 hands the replay core deep copies so a scenario's module-level ``Scenario``
 instance is never mutated by a replay.
+
+A template foe whose scenario sets no ``attack_bonus`` pins ``attack_bonus=0``.
+The engine attacks with a stat block's own numbers when none is set, which
+makes these foes much stronger than the encounters were balanced for; the pin
+keeps the encounters as they were. Rebalancing them to the stat blocks is the
+owner's call.
 """
 
 from __future__ import annotations
@@ -117,6 +123,7 @@ def _goblin_ambush() -> Scenario:
                 ac=13,
                 dexterity=14,
                 monster_template_slug="goblin-warrior",
+                attack_bonus=0,  # uniform +0, see the module note
                 xp_value=50,
                 zone_id=cell_id(col, row),
             )
@@ -205,6 +212,7 @@ def _burning_hands() -> Scenario:
                 ac=12,
                 dexterity=15,
                 monster_template_slug="giant-rat",
+                attack_bonus=0,  # uniform +0, see the module note
                 xp_value=25,
                 # All four stand on one cell at the corridor mouth, inside
                 # Orin's 15-ft cone. ``start_combat`` accepts a shared start
@@ -311,6 +319,7 @@ def _hold_the_line() -> Scenario:
                 ac=12,
                 dexterity=12,
                 monster_template_slug="bandit",
+                attack_bonus=0,  # uniform +0, see the module note
                 xp_value=25,
                 # Close enough to reach Mira within one turn's move budget —
                 # the captain is held, so a bandit landing a hit is what
@@ -327,6 +336,7 @@ def _hold_the_line() -> Scenario:
                 ac=12,
                 dexterity=12,
                 monster_template_slug="bandit",
+                attack_bonus=0,  # uniform +0, see the module note
                 xp_value=25,
                 zone_id=cell_id(3, 4),
             ),
@@ -413,6 +423,7 @@ def _marsh_crossing() -> Scenario:
                 ac=8,
                 dexterity=6,
                 monster_template_slug="zombie",
+                attack_bonus=0,  # uniform +0, see the module note
                 xp_value=50,
                 zone_id=cell_id(col, row),
             )

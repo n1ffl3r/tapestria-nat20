@@ -34,17 +34,21 @@ Tremorsense, Truesight — unless the spec's `senses` is set
 creature its own), and its condition immunities while the spec's
 `condition_immunities` is empty (a Skeleton can't be Poisoned). So a Goblin
 Warrior sees a character standing in Darkness, and a Bat sees an Invisible one
-within its Blindsight. Its Armor Class, Hit Points, speed and `attack_bonus`
-stay the spec's. A template monster's attacks roll to hit at that `attack_bonus` and
-add no ability modifier to their damage, and with no spellcasting ability its
-save DC is `8 + attack_bonus` — so with the default `attack_bonus=0` a Tough's
-Mace rolls d20 + 0 for 1d6, where its stat block says +4 and 1d6 + 2. Pin `ac`
-and `attack_bonus` from the stat block: every SRD monster in the dataset now
-carries its Armor Class (`Monster.ac`, C21).
+within its Blindsight. Its Armor Class, Hit Points and speed stay the spec's
+(pin `ac` from the stat block: every SRD monster in the dataset carries its
+Armor Class, `Monster.ac`).
 
-Only a transformed creature — a druid in a Wild Shape form, or a creature
-under *Polymorph* — rolls at a stat block's real numbers: the form's ability
-scores and Proficiency Bonus, so a Wolf form bites at +4 for 1d6 + 2 (C21). A
+A template monster whose spec sets no `attack_bonus` attacks with its stat
+block's numbers: its six ability scores and Proficiency Bonus, so a Tough's
+Mace rolls d20 + 4 for 1d6 + 2 and a Bandit's Scimitar +3 for 1d6 + 1. Set
+`attack_bonus` and the creature keeps the uniform model instead: that to-hit
+on every roll, no ability modifier on its damage, and a save DC of
+`8 + attack_bonus` when it has no spellcasting ability. A creature with no
+template always uses the field.
+
+A transformed creature — a druid in a Wild Shape form, or a creature under
+*Polymorph* — rolls at its form's ability scores and Proficiency Bonus, so a
+Wolf form bites at +4 for 1d6 + 2 (C21). A
 host can command one attack from a creature's current stat block with
 `PlayerIntent(intent_type="attack", stat_block_action_id=..., target_id=...)`.
 
@@ -121,8 +125,7 @@ engine consumes.
 - **Lair actions** — the corpus ships none.
 - Some `special_abilities` (Flyby, Nimble Escape) and the ability-check half of
   Sunlight Sensitivity.
-- Real stat-block numbers for a template monster that is not transformed, and
-  commanding a stat block's save actions (a Breath Weapon).
+- Commanding a stat block's save actions (a Breath Weapon).
 - Moving into reach and then using an area: a monster chooses an area only
   from where its turn starts (an area its Multiattack uses is placed after
   the Multiattack's walk).

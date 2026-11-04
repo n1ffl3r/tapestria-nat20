@@ -53,6 +53,7 @@ def fresh_specs() -> tuple[list[PartyMemberSpec], list[EncounterMemberSpec], Gri
             entity_type="Monster",
             name="Goblin Warrior",
             monster_template_slug="goblin-warrior",
+            attack_bonus=0,  # the uniform model, so the hero outlasts the scripted turns
             initiative=1,
             # SRD goblin-warrior HP is 7, but a single longsword hit ends the
             # fight — which would make the prefix / delta proofs below vacuous.

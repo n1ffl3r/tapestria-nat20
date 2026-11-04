@@ -353,8 +353,10 @@ def test_c06_s03_prearmed_shield_raises_ac_by_5_expires_next_turn():
     points per the catalog.
 
     rng_seed=7 both runs — verified empirically that this seed's
-    goblin-scimitar attack resolves to roll_total=11 deterministically
-    regardless of which non-dice-consuming intent the hero submits first.
+    goblin-scimitar attack resolves to roll_total=15 (natural 11 plus the
+    stat block's +4) deterministically regardless of which
+    non-dice-consuming intent the hero submits first. The hero's AC 12 is
+    hit by it, and AC 17 with Shield is not.
     """
 
     def _party():
@@ -365,7 +367,7 @@ def test_c06_s03_prearmed_shield_raises_ac_by_5_expires_next_turn():
                 initiative=20,
                 hp_current=20,
                 hp_max=20,
-                ac=10,
+                ac=12,
                 class_slug="wizard",
                 spells_known=["shield"],
                 spell_slots={1: 2},
@@ -406,7 +408,8 @@ def test_c06_s03_prearmed_shield_raises_ac_by_5_expires_next_turn():
     attacks_a = [e for e in events_of(live_a, AttackRolled) if e.target_id == "char:hero"]
     assert attacks_a
     rolled_a = attacks_a[0]
-    assert rolled_a.roll_total == 11
+    # Natural 11 plus the Goblin Warrior's +4 (SRD 5.2.1 Scimitar "+4 to hit").
+    assert rolled_a.roll_total == 15
     assert rolled_a.is_hit is True
     damage_a = [e for e in events_of(live_a, DamageApplied) if e.target_id == "char:hero"]
     assert damage_a
@@ -426,8 +429,8 @@ def test_c06_s03_prearmed_shield_raises_ac_by_5_expires_next_turn():
     attacks_b = [e for e in events_of(live_b, AttackRolled) if e.target_id == "char:hero"]
     assert attacks_b
     rolled_b = attacks_b[0]
-    assert rolled_b.roll_total == 11  # identical natural roll — Shield never touches it
-    assert rolled_b.is_hit is False  # 11 < 10 + 5
+    assert rolled_b.roll_total == 15  # identical natural roll — Shield never touches it
+    assert rolled_b.is_hit is False  # 15 < 12 + 5
     assert not [e for e in events_of(live_b, DamageApplied) if e.target_id == "char:hero"]
 
     reactions_b = [

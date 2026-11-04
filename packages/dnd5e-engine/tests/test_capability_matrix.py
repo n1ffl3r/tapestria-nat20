@@ -869,6 +869,15 @@ _PROBES: dict[str, tuple[Any, str]] = {
         lambda: "def _offer_damage_reactions(" in _src("orchestrator.py"),
         "✅",
     ),
+    # Later activities fire at the triggers the engine produces; entering an
+    # area and the caster's later actions have no producer yet.
+    "| Spell activities on later turns |": (
+        lambda: (
+            "LATER_RULES" in _src("lingering.py")
+            and "enters_area" not in _src("lingering.py").split("LATER_RULES:")[1]
+        ),
+        "⚠️",
+    ),
     # A fall offers Feather Fall before its damage.
     "| Feather Fall |": (
         lambda: "def _offer_feather_fall(" in _src("orchestrator.py"),

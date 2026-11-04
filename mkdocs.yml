@@ -37,7 +37,9 @@ nav:
       - Reactions: concepts/reactions.md
       - Monsters: concepts/monsters.md
       - Grid: concepts/grid.md
+      - Spell timing: concepts/spell-timing.md
   - Capability matrix: capabilities.md
+  - SRD 5.2.1 spell timing: srd-5.2.1-spell-timing.md
   - API reference: api.md
   - Hosting:
       - Character-sheet contract: hosting/character-sheet-contract.md

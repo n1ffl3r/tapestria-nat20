@@ -48,6 +48,8 @@ if TYPE_CHECKING:
 
     from .context import ActivityResolutionContext
 
+from .timing import cast_time_activities
+
 _LOGGER = logging.getLogger(__name__)
 
 
@@ -124,5 +126,5 @@ def resolve_cast(activity: CastActivity, ctx: ActivityResolutionContext) -> None
         cast_level_override=None,
         parent_chain=(*ctx.parent_chain, uuid),
     )
-    for child_activity in spell.activities:
+    for child_activity in cast_time_activities(spell.slug, spell.activities):
         resolve_activity(child_activity, child_ctx)
