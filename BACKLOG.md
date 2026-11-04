@@ -216,19 +216,6 @@ counts are pinned by `packages/dnd5e-engine/tests/test_capability_matrix.py`.
   always starts its next encounter fully recharged, with no cross-combat
   "still on cooldown" model.
   (`packages/dnd5e-engine/src/dnd5e_engine/orchestrator.py`)
-- **Neither PC nor monster cast path drains a readied Shield reaction on a
-  spell ATTACK** (2026-09-03). Both `hit_by_attack`-trigger drain sites gate
-  on an ATTACK activity, not any attack roll: the PC's
-  `_drain_pre_resolution_reactions` fires the drain only for
-  `intent.intent_type == "attack"` (and Spiritual Weapon's cast, whose force
-  attacks at once: C21a), and the monster's shared
-  `_resolve_monster_attack_activities` fires it only from the mundane
-  attack/legendary-action attack path. A spell attack roll
-  (`intent_type == "cast_spell"` on the PC side, `_resolve_monster_cast` on
-  the monster side) never pops a target's readied Shield, even though a
-  spell attack roll is exactly the kind of "attack roll" Shield's SRD 5.2
-  text protects against.
-  (`packages/dnd5e-engine/src/dnd5e_engine/orchestrator.py`)
 - **Undead Fortitude's trigger ignores temporary HP on the live combat
   path** (2026-09-23). `activities/apply.py::apply_damage` gates the trait's
   CON save on `final_amount >= target.hp_current` — the pure resolver's
@@ -1776,15 +1763,14 @@ re-discovered.
 
 ## Blocked
 
-- **Lair actions are blocked on translator support** (2026-09-03, C18).
-  All 343 bundled monsters ship `lair_actions == []` (schema field exists,
-  the translator never populates it from a Foundry source), so there is
-  nothing for the engine to spend. The initiative-20 pseudo-turn a lair
-  action needs (a scene-owned action outside any creature's own turn) is
-  designed but unimplemented; blocked on dataset/translator work to source
-  lair-action content before an engine seam is worth building.
-  (`packages/dnd5e-srd-data/src/dnd5e_srd_data/schema/monster.py`,
-  `packages/dnd5e-engine/src/dnd5e_engine/activities/monster_actions.py`)
+- **Lair actions are not modelled because SRD 5.2.1 has none** (2026-09-03,
+  C18; corrected 2026-11-04). SRD 5.2.1 contains no Lair Actions rule or
+  section: no initiative-count-20 text and no lair stat-block entries. It prints
+  only lair variants of numbers ("Legendary Action Uses: 3 (4 in Lair)",
+  "Legendary Resistance (3/Day, or 4/Day in Lair)"). All bundled monsters
+  ship `lair_actions == []` because there is nothing to source, so the
+  initiative-20 pseudo-turn stays unbuilt.
+  (`packages/dnd5e-srd-data/src/dnd5e_srd_data/schema/monster.py`)
 - **`custom` `ActiveEffectChange` mode — needs a product decision** (2026-07-02).
   No Foundry-core semantics to port: Foundry itself delegates `custom` to
   host-registered `applyChangeCustom` callbacks, so there is no SRD or
@@ -1950,15 +1936,6 @@ pool entries.
 (`packages/dnd5e-srd-data/src/dnd5e_srd_data/canonical/subclasses/champion.json`)
 
 ## Class scale-value defects (2026-09-25)
-
-- **A Barbarian 16 has 6 Rages; SRD 5.2 gives 5.** The SRD 5.2 Barbarian
-  Features table lists 5 Rages from level 12 through 16 and 6 from level 17,
-  but the Rages `ScaleValue` in `classes/barbarian.json` steps to 6 at level
-  16 (`"16": 6`), so the Rage use cap lets a Barbarian 16 rage once too often.
-  This predates C20. The fix belongs in the translator, as a correction like
-  `_WEAPON_BASE_DAMAGE_CORRECTIONS`.
-  (`packages/dnd5e-srd-data/src/dnd5e_srd_data/canonical/classes/barbarian.json`,
-  `packages/dnd5e-srd-data/tools/translators/foundry.py`)
 
 ## Conjuration and monster data (2026-09-25, C21a)
 
@@ -2132,6 +2109,228 @@ pool entries.
   a species trait's uses and damage, a background's equipment items and Magic
   Initiate spell list, and a monster trait's wording (only its numbers) are not.
   (`packages/dnd5e-srd-data/tools/srd_audit/origins.py`)
+
+## SRD 5.2.1 rules-application audit (2026-11-04, spec 02a workstream C)
+
+Each entry is a place where the engine applies a rule differently from SRD
+5.2.1's text, found by reading the rule and running the engine
+(`docs/srd-5.2.1-rules-audit.md`). Where the engine differs, SRD 5.2.1 is the
+rule. Each has a strict `xfail` test that states the SRD's outcome
+(`tests/test_srd_audit_*.py`); fixing the engine turns it into an unexpected
+pass, which fails the suite until the marker is removed.
+
+### Combat loop
+
+- **Resistance and Vulnerability apply in the wrong order.** SRD 5.2.1
+  "Damage Resistance and Vulnerability": Resistance halves first (round down),
+  then Vulnerability doubles; its example takes 23 to 11 to 22. The engine
+  doubles first, so a creature with both takes 23, and 5 damage becomes 5 where
+  the SRD gives 4. The existing order test uses an even number, which passes
+  under either order.
+  (`packages/dnd5e-engine/src/dnd5e_engine/activities/apply.py::_apply_modifiers`)
+- **Damage has no floor of zero.** SRD 5.2.1 "Damage Rolls": "it's possible to
+  deal 0 damage but not negative damage." A Strength 3 attacker with a dagger
+  deals net -3 and the target gains Hit Points.
+  (`packages/dnd5e-engine/src/dnd5e_engine/activities/apply.py::apply_damage`)
+- **Dash uses only the walking Speed.** SRD 5.2.1 "Dash": "you gain extra
+  movement for the current turn. The increase equals your Speed after applying
+  any modifiers." A creature with Speed 30 and a Fly Speed of 60 gains 30.
+  (`packages/dnd5e-engine/src/dnd5e_engine/orchestrator.py::_handle_dash`)
+- **Dodge, Help, Grapple and Shove end the turn and forfeit the rest of it.**
+  SRD 5.2.1 "Combat": "You decide whether to move first or take your action
+  first." These four end the turn at once, so a creature that has not moved
+  cannot move afterward, and a Fighter 5 who Grapples loses the second Extra
+  Attack swing.
+  (`packages/dnd5e-engine/src/dnd5e_engine/orchestrator.py::_end_action`)
+- **Help leaks into the helper's own Opportunity Attack.** SRD 5.2.1 "Help":
+  the Advantage goes to "the next attack roll" an ally makes against the
+  target. The helper's Opportunity Attack on another creature's turn rolls with
+  it, because the helper counts as its own ally.
+  (`packages/dnd5e-engine/src/dnd5e_engine/orchestrator.py::_allied_ids`)
+- **Initiative ties, group rolls and Exhaustion differ.** SRD 5.2.1
+  "Initiative": ties are the GM's to settle, and identical monsters may share a
+  roll. The engine breaks ties by Dexterity then entity id, rolls every monster
+  on its own, and ignores Exhaustion on the roll.
+  (`packages/dnd5e-engine/src/dnd5e_engine/orchestrator.py::_resolve_initiative`)
+- **A dead monster still takes its turn.** A creature that is dead gets
+  `TurnStarted`, a pass and `TurnEnded`, and its turn hooks run. Whether hooks
+  should run for a dead caster is unsettled.
+  (`packages/dnd5e-engine/src/dnd5e_engine/orchestrator.py::_end_turn_and_advance`)
+- **Damage does not end Stable, and becoming Stable keeps the tallies.** SRD
+  5.2.1 "Stable": a creature that takes damage "stops being Stable and starts
+  making Death Saving Throws again", and on becoming Stable both counts reset
+  to zero. The engine leaves `is_stable` set when damage lands, so the creature
+  never rolls again, and keeps 3 successes and 2 failures into the next dying
+  spell. Help plus a DC 10 Wisdom (Medicine) check to stabilize, and the
+  1d4-hour regain, have no producer.
+  (`packages/dnd5e-engine/src/dnd5e_engine/death_saves.py`)
+- **Healing revives the dead.** SRD 5.2.1 "Dead": a dead creature "can't
+  regain them unless it is first revived by magic such as the Raise Dead or
+  Revivify spell." Healing Word on an ally killed by massive damage leaves it
+  at 7 Hit Points, alive, while it stays in `dead_ids`.
+  (`packages/dnd5e-engine/src/dnd5e_engine/orchestrator.py::_emit_apply_healing`)
+- **Concentration checks roll per damage type and on zero damage, and Eldritch
+  Mind is ignored.** SRD 5.2.1 "Concentration": one Constitution save for each
+  time you take damage, DC 10 or half the damage taken. A hit of 12 slashing
+  and 20 fire rolls two DC 10 saves, not one DC 16, and `DamageApplied` with
+  amount 0 (an immunity, Shield against Magic Missile) rolls a DC 10 save. The
+  Warlock's Eldritch Mind (Advantage on these saves) is never read.
+  (`packages/dnd5e-engine/src/dnd5e_engine/orchestrator.py::_emit_apply_damage`)
+- **Exhaustion does not accumulate, and level 6 does not kill.** SRD 5.2.1
+  "Exhaustion": each time you get the condition your level rises by one, and
+  at level 6 you die. A second receipt stays at level 1, `PartyMemberSpec` has
+  no exhaustion field, the death at level 6 is unmodelled, and engine-rolled
+  Initiative ignores the penalty.
+  (`packages/dnd5e-engine/src/dnd5e_engine/orchestrator.py::_emit_condition_applied`)
+- **Two-weapon fighting compares weapons by slug.** SRD 5.2.1 "Light": the
+  bonus attack is with "a different Light weapon". Two Handaxes or two Daggers
+  are refused (`no_action_economy`), and a test pins the refusal.
+  (`packages/dnd5e-engine/src/dnd5e_engine/orchestrator.py::_is_offhand_attack_swing`)
+
+### Spatial
+
+- **The Cone is wider than the SRD's.** SRD 5.2.1 "Areas of Effect": "A Cone's
+  width at any point along its length is equal to that point's distance from
+  the point of origin." `cells_in_template` keeps `lateral <= forward`, a
+  90-degree wedge, so a 15-foot Cone is 35 feet wide at its end where the SRD
+  makes it 15. `docs/dev/spatial-geometry.md` calls this a grid convention and
+  existing tests pin it; changing it changes which creatures a Cone catches.
+  (`packages/dnd5e-engine/src/dnd5e_engine/spatial.py::GridTopology.cells_in_template`)
+- **An area's aim snaps to eight directions.** The Cone, Cube or Line is aimed
+  along the sign of caster-to-target on each axis, so a target 6 squares east
+  and 1 south gets a diagonal area and can be missed.
+  (`packages/dnd5e-engine/src/dnd5e_engine/orchestrator.py::_aoe_direction`)
+- **Line of sight and cover are not symmetric.** SRD 5.2.1 "Total Cover": a
+  line is blocked only by an obstruction that provides Total Cover. The
+  Bresenham walk breaks ties by direction, so with `blocked_cells=['1,1']`
+  sight from 0,0 to 1,2 is blocked and from 1,2 to 0,0 is not; about 5 percent
+  of cell pairs on an 8x8 grid differ.
+  (`packages/dnd5e-engine/src/dnd5e_engine/spatial.py::_bresenham_cells`)
+- **A `total` cover tag does not block line of sight.** A `blocked_cells`
+  entry does. A `cover_cells` entry tagged `total` still makes its occupant
+  untargetable, but sight and `can_see` pass through it.
+  (`packages/dnd5e-engine/src/dnd5e_engine/spatial.py::GridTopology.has_line_of_sight`)
+- **Cover from creatures ignores size.** SRD 5.2.1 "Cover": a creature gives
+  Half Cover when it "covers at least half of the target". Any creature on the
+  line gives it, so a Tiny one does too.
+  (`packages/dnd5e-engine/src/dnd5e_engine/spatial.py::GridTopology.cover_between`)
+- **Several spell pushes are not wired.** Thunderwave, Shove and the Push
+  mastery push; Gust of Wind, Repelling Blast, Forceful Blow and the Ring of
+  the Ram do not, and `FORCED_MOVEMENT_RIDERS` has no entry for them.
+  (`packages/dnd5e-engine/src/dnd5e_engine/activities/forced_movement.py`)
+
+### Spells
+
+- **A slot below the spell's level is accepted.** SRD 5.2.1 "Spell Slots": you
+  expend "a slot of that spell's level or higher". Fireball cast with
+  `slot_level=1` resolves at full power, 24 damage, and spends a level 1 slot.
+  (`packages/dnd5e-engine/src/dnd5e_engine/orchestrator.py::_consume_spell_slot`)
+- **One spell with a slot per turn is not enforced.** SRD 5.2.1 "Bonus Action
+  Spells": "you can't cast another spell with a spell slot that turn unless it
+  is a cantrip". Shield of Faith as a Bonus Action and then Magic Missile as
+  the Magic action both resolve in one turn.
+  (`packages/dnd5e-engine/src/dnd5e_engine/orchestrator.py::_submit_player_intent`)
+- **A countered Bonus Action spell ends the whole turn.** SRD 5.2.1
+  Counterspell wastes "the action, Bonus Action, or Reaction used to cast it",
+  only the one used. The engine ends the turn on any countered cast, so a
+  countered Bonus Action Shield of Faith also forfeits the Action.
+  `docs/concepts/reactions.md` says a cast always ends the turn.
+  (`packages/dnd5e-engine/src/dnd5e_engine/orchestrator.py::_drain_counterspell_reaction`)
+- **Ready costs and lasts nothing.** SRD 5.2.1 "Ready": readying a spell
+  expends the slot when you ready it, takes Concentration "up to the start of
+  your next turn", and needs a casting time of an action. A `ready` intent
+  spends no slot (even with none), holds no Concentration, accepts a Bonus
+  Action spell and an unknown spell, and the readied reaction never lapses: a
+  readied Shield fired in round 2. A `ready` with no spell and no trigger
+  spends the Action and arms nothing, without a refusal.
+  (`packages/dnd5e-engine/src/dnd5e_engine/orchestrator.py::_register_pending_reaction`)
+- **An active Shield does not stop a later Magic Missile.** SRD 5.2.1 Shield:
+  "you take no damage from Magic Missile" until the start of your next turn. The
+  carve-out covers only a Shield cast in response to that Magic Missile; a
+  Shield already up takes the full 3 + 3 + 3 force damage.
+  (`packages/dnd5e-engine/src/dnd5e_engine/orchestrator.py::_apply_magic_missile_shield_carveout`)
+- **An item cast offers no Shield or Counterspell.** A Wand of Magic Missiles
+  used through `use_item` gives the target no chance to cast Shield, and a
+  creature that sees the cast cannot counter it; only the `cast_spell` intent
+  and a monster's stat-block cast offer them.
+  (`packages/dnd5e-engine/src/dnd5e_engine/orchestrator.py::_submit_player_intent`)
+- **Hellish Rebuke is always cast at the lowest slot the reactor can pay.** The
+  SRD lets the reactor choose a higher slot for the extra damage dice. Damage
+  from an aura, a zone or a turn-start effect offers no Rebuke either.
+  (`packages/dnd5e-engine/src/dnd5e_engine/orchestrator.py::_offer_damage_reactions`)
+- **Dispel Magic spends the slot and ends nothing.** SRD 5.2.1 Dispel Magic:
+  an ongoing spell of level 3 or lower on the target ends, and a higher one
+  needs an ability check. Narrative no-op, as the capability row says.
+  (`packages/dnd5e-engine/src/dnd5e_engine/lingering.py`)
+- **Casting without armor training is not modelled.** SRD 5.2.1 "Armor
+  Training": wearing armor you lack training for means you can't cast spells.
+
+### Monsters
+
+- **Regeneration heals and suppresses wrongly.** SRD 5.2.1 Troll: "Regeneration.
+  The troll regains 15 Hit Points at the start of each of its turns. If the
+  troll takes Acid or Fire damage, this trait doesn't function on the troll's
+  next turn. The troll dies only if it starts its turn with 0 Hit Points and
+  doesn't regenerate." The shared Foundry trait heals a flat 10 for the Troll
+  (15) and the Troll Limb (5), Acid or Fire never suppresses the next turn, and
+  a Troll at 0 Hit Points gets Death at once. The Oni and the Shield Guardian
+  (10) are right.
+  (`packages/dnd5e-srd-data/src/dnd5e_srd_data/canonical/traits/regeneration.json`,
+  `packages/dnd5e-engine/src/dnd5e_engine/orchestrator.py::_run_monster_turn_start`)
+- **A monster's Bonus Actions are ranked as its Action.** The 80 stat-block
+  `bonus_action` entries (14 with Recharge) compete for the turn's single
+  Action. A live Recharge ranks first, so a Medusa or Basilisk turn is only
+  the Petrifying Gaze, with no Bite or Multiattack, which the SRD prints under
+  Bonus Actions. Vampire Charm, Marilith Teleport, Roc Swoop and Stone Golem
+  Slow behave the same. SRD 5.2.1 "Running a Monster": use a special ability
+  "as quickly and as often as possible".
+  (`packages/dnd5e-engine/src/dnd5e_engine/activities/monster_actions.py::rank_monster_actions`)
+- **Multiattack replacement riders are ignored.** About 34 SRD Multiattack
+  entries say "It can replace one attack with ..."; the engine repeats the
+  listed attacks and never substitutes.
+  (`packages/dnd5e-engine/src/dnd5e_engine/activities/monster_actions.py`)
+- **Legendary Action Uses has no lair variant.** SRD 5.2.1 prints "Legendary
+  Action Uses: 3 (4 in Lair)" for 27 monsters. The engine always uses 3, and
+  has no lair mode. (The Lair actions entry above records why there are no lair
+  actions: SRD 5.2.1 has no lair-action rules.)
+  (`packages/dnd5e-engine/src/dnd5e_engine/orchestrator.py::_legendary_action_uses_max`)
+- **Monster casts skip utility spells, and a Short-Rest recharge is at will.**
+  The Cloaker's Phantasms ("Recharge after a Short or Long Rest") is treated
+  as at will.
+  (`packages/dnd5e-engine/src/dnd5e_engine/orchestrator.py::_monster_cast_candidate`)
+
+### Characters
+
+- **Weapon Mastery is not gated by the feature.** SRD 5.2.1 "Mastery
+  Properties": a weapon's mastery property is "usable only by a character who
+  has a feature, such as Weapon Mastery, that unlocks the property". Nothing
+  checks the feature or the chosen weapon kinds, so a Wizard hitting with a
+  Mace leaves a Sap mark.
+  (`packages/dnd5e-engine/src/dnd5e_engine/activities/mastery.py`)
+- **Rage Damage and Strength Advantage are applied wrongly.** SRD 5.2.1 Rage:
+  the damage bonus is for "an attack using Strength", and you have Advantage on
+  Strength checks and saves. Rage Damage rides the melee-weapon bucket, so a
+  Rapier attack on Dexterity gets +2, and a raging character's Strength save
+  rolls at normal.
+  (`packages/dnd5e-srd-data/src/dnd5e_srd_data/canonical/features/rage.json`)
+- **A Long Rest does not recover features the dataset lists as Short Rest
+  only.** SRD 5.2.1 says "Short or Long Rest" for Action Surge, Adrenaline
+  Rush, Monk's Focus, Relentless Rage and Stroke of Luck; the dataset gives
+  them a Short Rest recovery only, so `recover_feature_uses(..., "lr")` leaves
+  them spent. A rest also does not require 1 Hit Point and does not restore a
+  reduced Hit Point maximum or ability scores.
+  (`packages/dnd5e-engine/src/dnd5e_engine/rest.py::recover_feature_uses`)
+- **Martial Arts ignores the off hand.** SRD 5.2.1 Martial Arts: "wielding only
+  Monk weapons". A Monk with a non-Monk weapon in the other hand keeps the
+  benefit. (`packages/dnd5e-engine/src/dnd5e_engine/orchestrator.py`)
+- **A multiclass Monk gains weapon proficiencies.** SRD 5.2.1 Monk, "As a
+  Multiclass Character": only the Hit Point Die and the level 1 features. The
+  dataset's Monk weapon trait carries no `primary` restriction, so a Wizard 1
+  / Monk 1 gains Simple weapons, Hand Crossbow, Scimitar and Shortsword.
+  (`packages/dnd5e-srd-data/src/dnd5e_srd_data/canonical/classes/monk.json`)
+- **Dragonborn Draconic Ancestry is not a choice.** The ancestry's damage type
+  and Damage Resistance are absent from the character build.
+  (`packages/dnd5e-srd-data/src/dnd5e_srd_data/canonical/species/dragonborn.json`)
 
 ---
 

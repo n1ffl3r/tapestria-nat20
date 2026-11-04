@@ -150,7 +150,7 @@ def test_a_divergence_names_a_backlog_entry_that_exists() -> None:
     backlog = _normal(BACKLOG_MD.read_text())
     for row in AUDIT_ROWS:
         verdict = row.cells[VERDICT_CELL]
-        for title in re.findall(r"BACKLOG: ([^;|]+?)(?:;|\||$)", verdict):
+        for title in re.findall(r"BACKLOG: ([^;|)]+)", verdict):
             assert _normal(title.strip(" .*`")) in backlog, (
                 f"{row.name}: BACKLOG.md has no entry titled {title!r}"
             )
