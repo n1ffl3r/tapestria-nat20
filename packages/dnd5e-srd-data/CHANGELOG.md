@@ -78,6 +78,12 @@ dungeons-and-agents fork, workstream A).
 
 ### Changed
 
+- **Every record is tagged SRD 5.2.1** (spec 02a, acceptance criterion 5):
+  `Provenance.srd_version` accepts `5.2.1`, the translator and the authored features
+  emit it, and the 1,675 records of the corpus carry it (a class spell list names
+  the SRD 5.2.1 document it comes from). `tests/test_corpus_srd_tag.py` checks
+  each record.
+
 - **Monster attacks keep what Foundry stores on the item**: a melee attack's
   reach (`system.range.reach`, else 5 feet: SRD 5.2.1 "A creature has a reach of
   5 feet unless a rule says otherwise"), a ranged attack's normal range, and

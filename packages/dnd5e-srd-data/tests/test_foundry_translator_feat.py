@@ -36,7 +36,7 @@ def test_translates_origin_feat() -> None:
     assert feat.activities == []
     assert feat.prerequisites == []  # level=null, no items, empty requirements
     assert feat.repeatable is False
-    assert feat.provenance.srd_version == frozenset({"5.2"})
+    assert feat.provenance.srd_version == frozenset({"5.2.1"})
 
 
 def test_translates_general_feat_with_prerequisite() -> None:

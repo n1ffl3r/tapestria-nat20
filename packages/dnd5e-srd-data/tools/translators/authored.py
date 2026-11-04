@@ -65,7 +65,7 @@ def translate_authored_feature(
             source_url=f"{PDF_URL}#page={authored.page}",
             ingest_date=ingest_date,
             ingest_version=ingest_version,
-            srd_version=frozenset({"5.2"}),
+            srd_version=frozenset({"5.2.1"}),
         ),
         review=ReviewState(),
     )
