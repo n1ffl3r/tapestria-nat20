@@ -48,7 +48,7 @@ import hashlib
 import json
 import random
 from collections.abc import Sequence
-from typing import Any, Literal
+from typing import Any, Final, Literal
 
 from pydantic import BaseModel, ConfigDict, Field, TypeAdapter
 
@@ -105,6 +105,7 @@ __all__ = [
     "TurnKey",
     "arm_legendary_resistance",
     "begin_combat",
+    "cast_outside_combat",
     "close_combat",
     "combat_state_of",
     "load_combat",
@@ -807,6 +808,106 @@ async def begin_combat(
     return CombatStep(
         events=_EVENTS.validate_json(_EVENTS.dump_json(events)), state=_state_from_live(live)
     )
+
+
+#: Where ``cast_outside_combat`` seats the creatures it is not given cells for:
+#: the caster in the middle, the others in the ring around it. Every creature
+#: is within 5 feet of the caster (touch range) up to eight others, and within
+#: 10 feet up to sixteen.
+_SCENE_OFFSETS: Final = (
+    (0, 0),
+    (1, 0),
+    (0, 1),
+    (-1, 0),
+    (0, -1),
+    (1, 1),
+    (-1, 1),
+    (-1, -1),
+    (1, -1),
+)
+
+
+async def cast_outside_combat(
+    *,
+    session_id: str,
+    caster_id: str,
+    intent: PlayerIntent,
+    party: list[PartyMemberSpec],
+    others: list[EncounterMemberSpec] | None = None,
+    grid_scene: GridScene | None = None,
+    seed: int,
+    scene_location_id: str = "loc:unknown",
+    active_effects: Sequence[ActiveEffect] = (),
+) -> CombatStep:
+    """Resolve one ``cast_spell`` declared in a narrative turn, outside combat
+    (contract 03, "Who may declare what"), and return its events and the
+    state the cast leaves.
+
+    SRD 5.2.1 "Casting Time": a spell takes as long as its casting time says,
+    in or out of a fight; outside one, a minute-long or hour-long spell is
+    cast like any other. Everything else is the on-turn cast: the slot or
+    slotless cast it spends, the concentration it begins and ends, its attack
+    or save, its damage and its effects, resolved by the same code with the
+    same dice. No initiative is rolled, no turn passes, no Action is spent
+    (``CombatState.round`` stays 1 and the caster's turn stays open), so
+    ``CombatState.effects``, ``concentration``, ``lingering_spells`` and the
+    resource fields are what the host stores.
+
+    ``party`` holds the caster and the creatures that are on its side;
+    ``others`` the creatures that are not (a bandit, a door's guardian). The
+    spell reaches who ``intent`` names, or its area catches. With no
+    ``grid_scene`` the creatures are seated around the caster
+    (``_SCENE_OFFSETS``), so range and line of sight never refuse a cast;
+    with one, each ``zone_id`` is its cell (the spec requires one either way,
+    and ignores it without a scene). Raises ``ValueError`` when
+    ``caster_id`` is not in ``party`` or ``intent`` is not a ``cast_spell``.
+    """
+    if intent.intent_type != "cast_spell":
+        raise ValueError("cast_outside_combat: only a cast_spell resolves outside combat")
+    if all(member.entity_id != caster_id for member in party):
+        raise ValueError(f"cast_outside_combat: {caster_id!r} is not in the party")
+    others = list(others or [])
+    seated = grid_scene
+    if seated is None:
+        seated = GridScene(width=7, height=7)
+        ids = [caster_id, *(m.entity_id for m in party if m.entity_id != caster_id)]
+        ids += [e.entity_id for e in others]
+        cells = _scene_cells(len(ids))
+        cell_of = dict(zip(ids, cells, strict=True))
+        party = [m.model_copy(update={"zone_id": cell_of[m.entity_id]}) for m in party]
+        others = [e.model_copy(update={"zone_id": cell_of[e.entity_id]}) for e in others]
+    # The caster goes first and nobody rolls: a fixed count draws no dice.
+    party = [
+        m.model_copy(update={"initiative": 10_000 if m.entity_id == caster_id else 0})
+        for m in party
+    ]
+    others = [e.model_copy(update={"initiative": 0}) for e in others]
+    live, _opened = _open_combat(
+        session_id=session_id,
+        party=party,
+        encounter=others,
+        grid_scene=seated,
+        rng=random.Random(seed),
+        handle_id=f"narrative:{session_id}:{seed:08x}",
+        scene_location_id=scene_location_id,
+        active_effects=active_effects,
+        allow_empty_encounter=True,
+    )
+    live.narrative = True
+    events = _capture(live)
+    await _submit_player_intent(live, caster_id, intent)
+    return _step(live, events)
+
+
+def _scene_cells(count: int) -> list[str]:
+    """``count`` cell ids around ``(3, 3)``, nearest first (``_SCENE_OFFSETS``,
+    then the next ring)."""
+    offsets = list(_SCENE_OFFSETS)
+    ring = [(dx, dy) for dx in range(-2, 3) for dy in range(-2, 3) if max(abs(dx), abs(dy)) == 2]
+    offsets += ring
+    if count > len(offsets):
+        raise ValueError(f"cast_outside_combat seats at most {len(offsets)} creatures")
+    return [f"{3 + dx},{3 + dy}" for dx, dy in offsets[:count]]
 
 
 def state_digest(state: CombatState) -> str:

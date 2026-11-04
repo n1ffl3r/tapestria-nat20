@@ -3404,6 +3404,10 @@ class _LiveCombat:
     current_turn_index: int = 0
     round_number: int = 1
     ended: bool = False
+    # A cast outside combat (``combat_state.cast_outside_combat``): the combat
+    # is a scene for one declaration, so no turn passes and no casting time
+    # gates the cast.
+    narrative: bool = False
     final_outcome: CombatOutcome | None = None
     # each combatant's cell, per entity_id (read through ``topology``)
     actor_zone: dict[str, str] = field(default_factory=dict)
@@ -8300,6 +8304,7 @@ def _open_combat(
     handle_id: str,
     scene_location_id: str,
     active_effects: Sequence[ActiveEffect],
+    allow_empty_encounter: bool = False,
 ) -> tuple[_LiveCombat, list[CombatEvent]]:
     """The body of ``start_combat`` and ``begin_combat``: build the combat
     from its specs, open the first turn, and return it with the events the
@@ -8309,7 +8314,7 @@ def _open_combat(
     """
     if not party:
         raise ValueError("start_combat: party must be non-empty")
-    if not encounter:
+    if not encounter and not allow_empty_encounter:
         raise ValueError("start_combat: encounter must be non-empty")
 
     # SRD 5.2 Initiative: "every participant rolls Initiative; they make a
@@ -9396,6 +9401,8 @@ def _end_action(live: _LiveCombat, actor_id: str, intent: PlayerIntent) -> None:
     Surge extra action is still unspent — SRD 5.2: "On your turn, you can take
     one additional action" — so the turn stays open for it (an unused one
     lapses at the actor's next turn start). ``pass`` always ends the turn."""
+    if live.narrative:
+        return
     actor = _find_combatant(live, actor_id)
     if intent.intent_type != "pass" and actor is not None and actor.extra_actions_remaining > 0:
         _maybe_roll_death_save(live)
@@ -11060,6 +11067,29 @@ def _spell_out_of_range(
         ):
             return True
     return False
+
+
+def _casting_time_failure(
+    live: _LiveCombat,
+    actor_id: str,
+    intent: PlayerIntent,
+    cast_spell_for_timing: Spell | None,
+) -> CombatEvent | None:
+    """``CastFailed(reason="casting_time")`` for a cast on a combat turn of a
+    spell that takes a minute or more. SRD 5.2.1 "Casting Time": "Most spells
+    have a casting time of an action, but some ... take 1 minute or even
+    longer"; a turn lasts about six seconds, so such a spell is cast between
+    fights (``combat_state.cast_outside_combat``). One of the
+    ``pre_resolution_gates``."""
+    if (
+        live.narrative
+        or intent.intent_type != "cast_spell"
+        or cast_spell_for_timing is None
+        or cast_spell_for_timing.casting_time.unit
+        not in (CastingTimeUnit.MINUTE, CastingTimeUnit.HOUR)
+    ):
+        return None
+    return CastFailed(actor_id=actor_id, spell_id=intent.spell_id or "", reason="casting_time")
 
 
 def _spell_out_of_range_failure(
@@ -13597,6 +13627,7 @@ async def _submit_player_intent(live: _LiveCombat, actor_id: str, intent: Player
     # returns a non-``None`` event wins; that event is emitted and the intent
     # is rejected.
     pre_resolution_gates: tuple[Callable[[], CombatEvent | None], ...] = (
+        lambda: _casting_time_failure(live, actor_id, intent, cast_spell_for_timing),
         lambda: _spell_out_of_range_failure(live, actor_id, intent, cast_spell_for_timing),
         lambda: _attack_out_of_range_failure(live, actor_id, intent),
         lambda: _loading_weapon_already_fired_failure(current, actor_id, intent, attack_weapon),

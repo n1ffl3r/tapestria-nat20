@@ -74,6 +74,7 @@ TOP_LEVEL = {
     "EndCombatStep",
     "arm_legendary_resistance",
     "begin_combat",
+    "cast_outside_combat",
     "close_combat",
     "combat_state_of",
     "load_combat",
