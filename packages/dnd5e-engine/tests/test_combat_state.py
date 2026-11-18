@@ -1014,11 +1014,12 @@ async def test_start_turn_runs_turn_start_hooks() -> None:
 
     # Register a hook on a live combat created from the state
     calls: list[str] = []
-    live = _live_from_state(state, __import__('random').Random(42))
+    live = _live_from_state(state, __import__("random").Random(42))
     live.lifecycle.register("turn_start", lambda _l, a: calls.append(a), key="test-hook")
 
     # Call _begin_turn directly
     from dnd5e_engine.orchestrator import _begin_turn
+
     _begin_turn(live, new_round=False)
 
     # The hook should have been called with the actor_id

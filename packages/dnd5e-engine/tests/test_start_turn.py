@@ -66,9 +66,9 @@ class TestStartTurn:
     async def test_start_turn_emits_turn_started_event(self) -> None:
         """start_turn emits a TurnStarted event with the correct actor_id."""
         state = await _open_party_only("char:hero")
-        
+
         step = await state.start_turn(seed=42)
-        
+
         turn_started = [e for e in step.events if isinstance(e, TurnStarted)]
         assert len(turn_started) == 1
         assert turn_started[0].actor_id == "char:hero"
@@ -77,9 +77,9 @@ class TestStartTurn:
     async def test_start_turn_emits_turn_phase_event(self) -> None:
         """start_turn emits a TurnPhase event with phase='turn_start'."""
         state = await _open_party_only("char:hero")
-        
+
         step = await state.start_turn(seed=42)
-        
+
         turn_phases = [e for e in step.events if isinstance(e, TurnPhase)]
         assert len(turn_phases) == 1
         assert turn_phases[0].phase == "turn_start"
@@ -89,18 +89,18 @@ class TestStartTurn:
     async def test_start_turn_runs_turn_start_hooks(self) -> None:
         """start_turn executes registered turn_start hooks on its own live combat."""
         state = await _open_party_only("char:hero")
-        
+
         # Create a live combat from the state, register a hook, then call _begin_turn directly
         from dnd5e_engine.combat_state import _live_from_state
         from dnd5e_engine.orchestrator import _begin_turn
-        
+
         calls: list[str] = []
-        live = _live_from_state(state, __import__('random').Random(42))
+        live = _live_from_state(state, __import__("random").Random(42))
         live.lifecycle.register("turn_start", lambda _l, actor: calls.append(actor), key="test")
-        
+
         # Call _begin_turn directly on the live combat
         _begin_turn(live, new_round=False)
-        
+
         # Hook should have been called
         assert "char:hero" in calls
 
@@ -109,7 +109,7 @@ class TestStartTurn:
         """start_turn rolls death save for PCs at 0 HP."""
         # Create a PC at 0 HP
         state = await _open_party_only("char:hero", hp_current=0)
-        
+
         # Set death saves to initial state
         state = state.model_copy(
             update={
@@ -129,9 +129,9 @@ class TestStartTurn:
                 ]
             }
         )
-        
+
         step = await state.start_turn(seed=42)
-        
+
         # Should have rolled a death save
         death_saves = [e for e in step.events if isinstance(e, DeathSaveRolled)]
         assert len(death_saves) == 1
@@ -141,9 +141,9 @@ class TestStartTurn:
     async def test_start_turn_returns_combat_step(self) -> None:
         """start_turn returns a CombatStep with events and state."""
         state = await _open_party_only("char:hero")
-        
+
         result = await state.start_turn(seed=42)
-        
+
         assert hasattr(result, "events")
         assert hasattr(result, "state")
         assert result.state.active_combatant == "char:hero"
@@ -152,10 +152,10 @@ class TestStartTurn:
     async def test_start_turn_is_deterministic(self) -> None:
         """start_turn produces the same results with the same seed."""
         state = await _open_party_only("char:hero")
-        
+
         step1 = await state.start_turn(seed=42)
         step2 = await state.start_turn(seed=42)
-        
+
         # Events should be identical
         assert len(step1.events) == len(step2.events)
         for e1, e2 in zip(step1.events, step2.events, strict=True):
@@ -165,7 +165,7 @@ class TestStartTurn:
     async def test_start_turn_with_different_seeds(self) -> None:
         """Different seeds produce different results when there are dice rolls."""
         state = await _open_party_only("char:hero", hp_current=0)  # 0 HP to trigger death save
-        
+
         # Set death saves to initial state
         state = state.model_copy(
             update={
@@ -185,12 +185,12 @@ class TestStartTurn:
                 ]
             }
         )
-        
+
         results = []
         for seed in range(1, 10):
             step = await state.start_turn(seed=seed)
             results.append(step)
-        
+
         # Death save rolls should differ based on seed
         # Check that not all death save results are identical
         death_save_results = []
@@ -198,7 +198,7 @@ class TestStartTurn:
             death_saves = [e for e in step.events if isinstance(e, DeathSaveRolled)]
             if death_saves:
                 death_save_results.append(death_saves[0].model_dump_json())
-        
+
         # At least some death saves should differ
         unique_results = set(death_save_results)
         assert len(unique_results) > 1
