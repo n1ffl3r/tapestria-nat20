@@ -9,8 +9,6 @@ These tests verify that start_turn properly implements the turn-start lifecycle:
 
 from __future__ import annotations
 
-import asyncio
-
 import pytest
 
 from dnd5e_engine.combat_state import CombatState, begin_combat
@@ -19,9 +17,8 @@ from dnd5e_engine.events import (
     TurnPhase,
     TurnStarted,
 )
-from dnd5e_engine.specs import EncounterMemberSpec, GridScene, PartyMemberSpec
 from dnd5e_engine.spatial import cell_id
-from dnd5e_engine.turn_lifecycle import TurnLifecycle
+from dnd5e_engine.specs import EncounterMemberSpec, GridScene, PartyMemberSpec
 
 
 def _pc(entity_id: str, hp_current: int = 30, **fields: any) -> PartyMemberSpec:
@@ -161,7 +158,7 @@ class TestStartTurn:
         
         # Events should be identical
         assert len(step1.events) == len(step2.events)
-        for e1, e2 in zip(step1.events, step2.events):
+        for e1, e2 in zip(step1.events, step2.events, strict=True):
             assert e1.model_dump_json() == e2.model_dump_json()
 
     @pytest.mark.asyncio

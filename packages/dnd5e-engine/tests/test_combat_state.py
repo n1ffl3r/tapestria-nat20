@@ -1007,7 +1007,6 @@ async def test_start_turn_emits_turn_started_and_resets_resources() -> None:
 @pytest.mark.asyncio
 async def test_start_turn_runs_turn_start_hooks() -> None:
     """start_turn runs registered turn_start hooks on its own live combat."""
-    from dnd5e_engine.turn_lifecycle import TurnLifecycle
     from dnd5e_engine.combat_state import _live_from_state
 
     state = await _gate1_fight_async()
@@ -1034,7 +1033,7 @@ async def test_start_turn_rolls_death_save_for_unconscious_pc() -> None:
     actor_id = state.combatants[state.turn_index].entity_id
     if not actor_id.startswith("pc:"):
         # Use the first PC in the party
-        actor_id = [c.entity_id for c in state.combatants if c.entity_id.startswith("pc:")][0]
+        actor_id = next(c.entity_id for c in state.combatants if c.entity_id.startswith("pc:"))
 
     state = state.model_copy(
         update={
